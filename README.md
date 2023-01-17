@@ -4,21 +4,21 @@ Basic boilerplate to create laravel projects with Admin Panel, Role Based Access
 
 # Features 
 
-**Generate Table with Table**
+**Generate CRUD with Database Table**
 
-- Put you data on required selections and input fields system will automatically create table in your database and will create curd in you project.
+- Provide the related data. And system will automatically create a table in your database and also create it's CRUD in you project.
 
 
 **Rollback Module**
 
 - You can easily revert back you generated crud.
 
-**Generate Table from Database Table**
+**Generate CRUD from a created Database Table**
 
-- You should design your database through your preferred Database Administration tool then generate modules from the admin panel.
+- You should create your table in connected database then generate it's CRUD from the admin panel.
 
 ## Whats used?
-- **PHP ^8.0** 
+- **PHP ^8.* 
 - **Laravel 8.75**
 - InfyOm Laravel Generator
 - AdminLTE Theme
@@ -50,23 +50,16 @@ Basic boilerplate to create laravel projects with Admin Panel, Role Based Access
 - spatie/laravel-permission: ^5.7,
 
 ## Installation
-- Download or Clone the zip of this repository 
+- Download the zip or Clone this repository 
 - Upload it on Web Server
-- Install libraries with `composer install`
+- Goto the project folder
+- Create a `.ENV`
+- Create a database connect with `.ENV` 
+- Install dependencies with `composer install`
 - Run Migration and Seeder `php artisan migrate:refresh --seed`
 - Run optimize or clear cache commands `php artisan optimize:clear` 
 
 Boilerplate will create tables and insert basic users, roles, permissions in the database. 
-
-## How To?
-**Step 1**
-
-- Make Schema Architecture in your preferred database administration tool.
-- Click on Generator Builder.
-- Scroll and go to **Crud Generator From Table** section.
-- Select the table you want to create a module for.
-- Check Custom Model Name checkbox if you need and enter Model Name (Only alphanumeric characters and spaces are not allowed for module names. Use CamelCase for module name and it will add underscore in your routes and permission names).
-- Table name should be plural name with created_at(datetime) default(current timestamp), updated_at(datetime) default(current timestamp) and deleted_at(datetime) default(null) columns.
 
 **Check Generated Files:**
 

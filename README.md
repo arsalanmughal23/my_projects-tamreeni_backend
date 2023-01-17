@@ -1,12 +1,12 @@
 # Laravel 8 Boilerplate
 
-Basic boilerplate to create laravel projects with Admin Panel, Role Based Access Control and Dynamic Menus generate .
+Basic boilerplate to create laravel projects with Admin Panel, Role Based Access Control and Dynamic Menus generate.
 
 # Features 
 
 **Generate Table with Table**
 
-- Put you data on required selection and input field system will automatically create table in your database and will create curd in you project .
+- Put you data on required selections and input fields system will automatically create table in your database and will create curd in you project.
 
 
 **Rollback Module**

@@ -18,7 +18,7 @@ Basic boilerplate to create laravel projects with Admin Panel, Role Based Access
 - You should create your table in connected database then generate it's CRUD from the admin panel.
 
 ## Whats used?
-- **PHP ^8.* 
+- **PHP ^8.1.* 
 - **Laravel 8.75**
 - InfyOm Laravel Generator
 - AdminLTE Theme

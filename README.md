@@ -1,13 +1,23 @@
 # Laravel 8 Boilerplate
 
-Basic boilerplate to create laravel projects with Admin Panel, Role Based Access Control. 
+Basic boilerplate to create laravel projects with Admin Panel, Role Based Access Control and Dynamic Menus generate .
 
-This boilerplate works on Database First Approach, After the installation, you should design your database through your preferred Database Administration tool then generate modules from the admin panel selecting your tables one by one.
+# Features 
 
-- Table name should be plural name with created_at(datetime) default(current timestamp), updated_at(datetime) default(current timestamp) and deleted_at(datetime) default(null) columns.
+**Generate Table with Table**
+
+- Put you data on required selection and input field system will automatically create table in your database and will create curd in you project .
+
+
+**Rollback Module**
+
+- You can easily revert back you generated crud.
+
+**Generate Table from Database Table**
+
+- You should design your database through your preferred Database Administration tool then generate modules from the admin panel.
 
 ## Whats used?
-
 - **PHP ^8.0** 
 - **Laravel 8.75**
 - InfyOm Laravel Generator
@@ -18,6 +28,7 @@ This boilerplate works on Database First Approach, After the installation, you s
 
 ## Libraries
 **Laravel 8.75**
+
 - laravel/framework: ^8.75,
 - laravel/sanctum: ^2.11,
 - laravel/tinker: ^2.5,
@@ -26,6 +37,7 @@ This boilerplate works on Database First Approach, After the installation, you s
 - doctrine/dbal: ~2.3,
 
 **InfyOm (with AdminLTE Template and DataTables)**
+
 - infyomlabs/adminlte-templates: ^3.0,
 - infyomlabs/generator-builder: ^1.0,
 - infyomlabs/laravel-generator: ^3.0,
@@ -48,13 +60,16 @@ Boilerplate will create tables and insert basic users, roles, permissions in the
 
 ## How To?
 **Step 1**
+
 - Make Schema Architecture in your preferred database administration tool.
 - Click on Generator Builder.
 - Scroll and go to **Crud Generator From Table** section.
 - Select the table you want to create a module for.
 - Check Custom Model Name checkbox if you need and enter Model Name (Only alphanumeric characters and spaces are not allowed for module names. Use CamelCase for module name and it will add underscore in your routes and permission names).
+- Table name should be plural name with created_at(datetime) default(current timestamp), updated_at(datetime) default(current timestamp) and deleted_at(datetime) default(null) columns.
 
 **Check Generated Files:**
+
 - DataTable, 
 - Admin Controller, 
 - Api Controller, 

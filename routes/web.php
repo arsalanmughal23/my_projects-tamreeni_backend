@@ -14,16 +14,21 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
-
-Auth::routes();
+// Auth::routes();
+Auth::routes(['register' => false]);
+// Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::group(['middleware' => ['auth', 'dynamic_permission']], function () {
 
     Route::post('/generate-crud-from-table', [App\Http\Controllers\GenerateTableController::class, 'generateCrudFromTable'])->name('dbtables.generate_crud_from_table');
+
+    Route::get('/create-menus', [App\Http\Controllers\GenerateTableController::class, 'createMenu'])->name('dbtables.create_menus');
+
+    Route::get('/delete-menus', [App\Http\Controllers\GenerateTableController::class, 'deleteMenu'])->name('dbtables.delete_menus');
 
     Route::get('/generated-crud-delete-permissions', [App\Http\Controllers\GenerateTableController::class, 'deletePermissions'])->name('dbtables.generated_crud_delete_permissions');
 
@@ -47,7 +52,6 @@ Route::group(['middleware' => ['auth', 'dynamic_permission']], function () {
     )->name('io_generator_builder_generate_from_file');
 
 
-    Route::resource('users', App\Http\Controllers\UsersController::class);
 
     Route::get('/users/assignroles/{id}', [App\Http\Controllers\UsersController::class, 'assignRoles'])->name('users.assignroles');
     Route::patch('/users/updateroles/{id}', [App\Http\Controllers\UsersController::class, 'updateRoles'])->name("roles.rolesupdate");
@@ -55,12 +59,15 @@ Route::group(['middleware' => ['auth', 'dynamic_permission']], function () {
     Route::get('/roles/assignpermissions/{id}', [App\Http\Controllers\RolesController::class, 'assignPermissions'])->name('roles.assignpermissions');
     Route::patch('/roles/updatepermissions/{id}', [App\Http\Controllers\RolesController::class, 'updatePermissions'])->name("roles.permissionsupdate");
 
+    Route::resource('menus', App\Http\Controllers\MenuController::class);
 
     Route::resource('roles', App\Http\Controllers\RolesController::class);
 
     Route::resource('permissions', App\Http\Controllers\PermissionsController::class);
 
-    
 });
+
+Route::resource('users', App\Http\Controllers\UsersController::class);
+
 
 

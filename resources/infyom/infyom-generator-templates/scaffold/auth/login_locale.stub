@@ -98,7 +98,7 @@
                 <a href="{{ route('password.request') }}">@lang('auth.login.forgot_password')</a>
             </p>
             <p class="mb-0">
-                <a href="{{ route('register') }}" class="text-center">@lang('auth.login.register_membership')</a>
+                <a href="#" class="text-center">@lang('auth.login.register_membership')</a>
             </p>
         </div>
         <!-- /.login-card-body -->

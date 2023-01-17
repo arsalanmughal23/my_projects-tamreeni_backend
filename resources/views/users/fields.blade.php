@@ -26,10 +26,18 @@
     </script>
 @endpush
 
+
 <!-- Password Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('password', 'Password:') !!}
     {!! Form::password('password', ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
+</div>
+
+
+<!-- Password Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('password_confirmation', 'Confirm Password:') !!}
+    {!! Form::password('password_confirmation', ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
 </div>
 
 <!-- Remember Token Field -->
@@ -38,14 +46,17 @@
     {!! Form::text('remember_token', null, ['class' => 'form-control','maxlength' => 100,'maxlength' => 100]) !!}
 </div>
 
-<div class="col-sm-12">
-    {!! Form::label('roles', 'Roles:') !!}
-    <div class="form-group">
+@role('Super-Admin')
+    <div class="col-sm-12">
+        {!! Form::label('roles', 'Roles:') !!}
+        <div class="form-group">
 
-        @foreach($roles as $role)
-            <label class="control-label col-2">
-            <input class="checkbox-inline" type="checkbox" name="role[{{$role->id}}]" @if(isset($users) && $users->hasRole($role->name)) checked @endif >
-                {{ \Str::replace('-', ' ',  $role->name) }}</label>
-        @endforeach
+            @foreach($roles as $role)
+                <label class="control-label col-2">
+                <input class="checkbox-inline" type="checkbox" name="role[{{$role->id}}]" @if(isset($users) && $users->hasRole($role->name)) checked @endif >
+                    {{ \Str::replace('-', ' ',  $role->name) }}</label>
+            @endforeach
+        </div>
     </div>
-</div>
+@endrole
+

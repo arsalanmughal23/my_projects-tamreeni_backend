@@ -11,6 +11,9 @@
         <style>
             body {margin: 20px}
         </style>
+        <script>
+            window.print();
+        </script>
     </head>
     <body>
         <table class="table table-bordered table-condensed table-striped">

@@ -95,3 +95,30 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Route::resource('menus', App\Http\Controllers\API\MenuAPIController::class);
+
+
+
+
+
+
+
+

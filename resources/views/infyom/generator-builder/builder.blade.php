@@ -6,7 +6,7 @@
 @extends('layouts.app')
 
 @push('third_party_stylesheets')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/iCheck/1.0.2/skins/all.css">
@@ -33,6 +33,9 @@
         .btn-blue {
             background-color: #2489C5 !important;
         }
+        .fa-select {
+            font-family: sans-serif, 'FontAwesome';
+        }
     </style>
 @endpush
 @section('content')
@@ -55,12 +58,24 @@
                 <div class="box-body">
                     <form id="form">
                         <input type="hidden" name="_token" id="token" value="{!! csrf_token() !!}"/>
+                        <div class="col-md-12">
+                            <div class="form-group col-md-6">
+                                <label for="txtModelName">Model Name<span class="required">*</span></label>
+                                <input type="text" class="form-control" required id="txtModelName" placeholder="Enter name">
+                            </div>
+                            <div class="form-group col-md-6">
+                                {{ Form::label('menu_icon', 'Icon*') }}
+                                <select class="form-control" id="txtIconName" name="icon" style="width: 100%;" required  >
+                                    @foreach(getIcons() as $item)
+                                        <option data-icon="fa-{{$item}}"
+                                        value="{{$item}}"> {{ ucwords($item) }}</option>
+                                    @endforeach
+                                </select>
 
-                        <div class="form-group col-md-4">
-                            <label for="txtModelName">Model Name<span class="required">*</span></label>
-                            <input type="text" class="form-control" required id="txtModelName" placeholder="Enter name">
+                            </div>
                         </div>
-                        <div class="form-group col-md-4">
+
+                        <div class="form-group col-md-6">
                             <label for="drdCommandType">Command Type</label>
                             <select id="drdCommandType" class="form-control" style="width: 100%">
                                 <option value="infyom:api_scaffold">API Scaffold Generator</option>
@@ -68,7 +83,7 @@
                                 <option value="infyom:scaffold">Scaffold Generator</option>
                             </select>
                         </div>
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-6">
                             <label for="txtCustomTblName">Custom Table Name</label>
                             <input type="text" class="form-control" id="txtCustomTblName" placeholder="Enter table name">
                         </div>
@@ -315,12 +330,22 @@
                         <input type="hidden" name="_token" id="rbToken" value="{!! csrf_token() !!}"/>
 
                         <div class="form-group col-md-4">
-                            <label >Tables</label>
+                            <label>Tables</label>
                             <select name="db_tables" class="form-control" style="width: 100%">
                                 @foreach($tables as $table)
-                                    <option value="{{  $table->{$db} }}">{{  $table->{$db} }}</option>
+                                    <option value="{{ $table->{$db} }}">{{  $table->{$db} }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{ Form::label('menu_icon', 'Icon*') }}
+                            <select class="form-control" name="menu_icon" style="width: 100%;" required>
+                                @foreach(getIcons() as $item)
+                                    <option data-icon="fa-{{$item}}"
+                                    value="{{$item}}"> {{ ucwords($item) }}</option>
+                                @endforeach
+                            </select>
+
                         </div>
 
                         <div class="form-group col-md-12">
@@ -414,7 +439,6 @@
             }
         });
 
-        $("select").select2({width: '100%'});
         var fieldIdArr = [];
         $(function () {
             $('input').iCheck({
@@ -571,6 +595,19 @@
                         contentType: 'application/json',
                         data: JSON.stringify(data),
                         success: function (result) {
+
+                            $.ajax({
+                                url: '{{ route('dbtables.create_menus') }}',
+                                data:  {
+                                    model_name: $('#txtModelName').val(),
+                                    db_tables: $('#txtCustomTblName').val(),
+                                    menu_icon: $('#txtIconName').val()
+                                },
+                                success: function(html){
+                                    console.log(html);
+                                }
+                            });
+
                             $.ajax({
                                 url: "{{ url('run_artisan_command/optimize') }}",
                                 success: function(html){
@@ -582,7 +619,9 @@
                                             $("#info").show();
                                             var $container = $("html,body");
                                             var $scrollTo = $('#info');
-                                            $container.animate({scrollTop: $scrollTo.offset().top - $container.offset().top, scrollLeft: 0},300);
+                                            $container.animate({
+                                                scrollTop: $scrollTo.offset().top - $container.offset().top, scrollLeft: 0},
+                                            300);
                                             setTimeout(function () {
                                                 $('#info').fadeOut('fast');
                                             }, 3000);
@@ -651,7 +690,21 @@
                                 data: {model : $('#txtRBModelName').val()},
                                 success: function(html){
                                     $("#results").append(html);
-                                    location.reload();
+
+                                    $.ajax({
+                                        url: '{{ route('dbtables.delete_menus') }}',
+                                        data:  {
+                                            model_name: $('#txtRBModelName').val(),
+                                        },
+                                        success: function(html){
+                                            location.reload();
+                                        }
+                                    });
+
+
+
+
+
                                 }
                             });
                         },

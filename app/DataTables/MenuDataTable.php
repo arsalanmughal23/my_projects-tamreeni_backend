@@ -2,11 +2,11 @@
 
 namespace App\DataTables;
 
-use App\Models\Permissions;
+use App\Models\Menu;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 
-class PermissionsDataTable extends DataTable
+class MenuDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -18,16 +18,16 @@ class PermissionsDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'permissions.datatables_actions');
+        return $dataTable->addColumn('action', 'menus.datatables_actions');
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Permissions $model
+     * @param \App\Models\Menu $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Permissions $model)
+    public function query(Menu $model)
     {
         return $model->newQuery();
     }
@@ -48,7 +48,7 @@ class PermissionsDataTable extends DataTable
                 'stateSave' => true,
                 'order'     => [[0, 'desc']],
                 'buttons'   => [
-                    ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner',],
+                    // ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner',],
                     ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner',],
                     ['extend' => 'print', 'className' => 'btn btn-default btn-sm no-corner',],
                     // ['extend' => 'reset', 'className' => 'btn btn-default btn-sm no-corner',],
@@ -66,6 +66,10 @@ class PermissionsDataTable extends DataTable
     {
         return [
             'name',
+            'icon',
+            'slug',
+            'position',
+            'status'
         ];
     }
 
@@ -76,6 +80,6 @@ class PermissionsDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'permissions_datatable_' . time();
+        return 'menus_datatable_' . time();
     }
 }

@@ -39,6 +39,15 @@
         integrity="sha512-aEe/ZxePawj0+G2R+AaIxgrQuKT68I28qh+wgLrcAJOz3rxCP+TwrK5SPN+E5I+1IQjNtcfvb96HDagwrKRdBw=="
         crossorigin="anonymous" />
 
+    <style>
+        label.required:after {
+            color: #cc0000;
+            content: "*";
+            font-weight: bold;
+            margin-left: 3px;
+        }
+    </style>
+
     @stack('third_party_stylesheets')
 
     @stack('page_css')

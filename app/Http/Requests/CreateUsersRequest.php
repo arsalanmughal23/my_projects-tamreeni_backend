@@ -24,6 +24,6 @@ class CreateUsersRequest extends FormRequest
      */
     public function rules()
     {
-        return Users::$rules;
+        return Users::rules();
     }
 }

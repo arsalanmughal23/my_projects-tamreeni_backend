@@ -53,12 +53,15 @@ class Permissions extends Model
      *
      * @var array
      */
-    public static $rules = [
-        'name' => 'required|string|max:255',
-        // 'guard_name' => 'required|string|max:255',
-        'created_at' => 'nullable',
-        'updated_at' => 'nullable'
-    ];
+    public static function rules()
+    {
+        return [
+            'name' => 'required|string|max:'.config('constants.validation.permissions.name.size_max'),
+            // 'guard_name' => 'required|string|max:255',
+            'created_at' => 'nullable',
+            'updated_at' => 'nullable'
+        ];
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
@@ -86,7 +89,7 @@ class Permissions extends Model
     {
         $routes = array();
         foreach (self::ROUTES as $key => $route) {
-            $routes[]['name']= $table_name .".".$route;
+            $routes[]['name'] = $table_name . "." . $route;
         }
         return $routes;
     }

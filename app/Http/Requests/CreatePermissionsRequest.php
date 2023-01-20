@@ -24,6 +24,6 @@ class CreatePermissionsRequest extends FormRequest
      */
     public function rules()
     {
-        return Permissions::$rules;
+        return Permissions::rules();
     }
 }

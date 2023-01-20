@@ -53,12 +53,15 @@ class Roles extends Model
      *
      * @var array
      */
-    public static $rules = [
-        'name' => 'required|string|max:255',
-        // 'guard_name' => 'nullable|string|max:255',
-        'created_at' => 'nullable',
-        'updated_at' => 'nullable'
-    ];
+    public static function rules()
+    {
+        return [
+            'name' => 'required|string|max:'.config('constants.validation.role.name.size_max'),
+            // 'guard_name' => 'nullable|string|max:255',
+            'created_at' => 'nullable',
+            'updated_at' => 'nullable'
+        ];
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

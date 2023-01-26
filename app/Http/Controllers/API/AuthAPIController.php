@@ -8,9 +8,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Requests\API\LoginAPIRequest;
+use App\Http\Requests\API\RegistrationAPIRequest;
+use App\Repositories\UsersRepository;
 
 class AuthAPIController extends AppBaseController
 {
+    private $usersRepository;
+    private $rolesRepository;
+
+    public function __construct(UsersRepository $usersRepo)
+    {
+        $this->usersRepository = $usersRepo;
+    }
+
     public function login(LoginAPIRequest $request)
     {
         $credentials = request(['email', 'password']);
@@ -29,4 +39,19 @@ class AuthAPIController extends AppBaseController
 
     }
 
+    public function register(RegistrationAPIRequest $request)
+    {
+        try {
+            $input = $request->all();
+            $user = $this->usersRepository->create($input);
+
+            return $this->sendResponse([
+                'user'  => $user,
+            ], 'User saved successfully.');
+
+        } catch (\Exception $e) {
+
+            return $this->sendError($e->getMessage(), 500);
+        }
+    }
 }

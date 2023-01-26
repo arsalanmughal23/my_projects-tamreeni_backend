@@ -17,12 +17,12 @@ return [
         ],
         'role' => [
             'name' => [
-                'size_max' => 1,
+                'size_max' => 255,
             ],
         ],
         'permissions' => [
             'name' => [
-                'size_max' => 1,
+                'size_max' => 255,
             ],
         ],
 

@@ -3,13 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\AppBaseController;
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-
 use App\Http\Requests\API\LoginAPIRequest;
 use App\Http\Requests\API\RegistrationAPIRequest;
+use App\Http\Requests\API\ForgetPasswordRequest;
 use App\Repositories\UsersRepository;
+use Illuminate\Support\Facades\Password;
 
 class AuthAPIController extends AppBaseController
 {
@@ -34,7 +32,7 @@ class AuthAPIController extends AppBaseController
 
         return $this->sendResponse([
             'token' => $token,
-            'user'  => $user,
+            'user' => $user,
         ], 'Logged In Successfully');
 
     }
@@ -46,8 +44,23 @@ class AuthAPIController extends AppBaseController
             $user = $this->usersRepository->create($input);
 
             return $this->sendResponse([
-                'user'  => $user,
+                'user' => $user,
             ], 'User saved successfully.');
+
+        } catch (\Exception$e) {
+
+            return $this->sendError($e->getMessage(), 500);
+        }
+    }
+
+    public function forgetPassword(ForgetPasswordRequest $request)
+    {
+        try {
+            $status = Password::sendResetLink($request->only('email'));
+
+            if ($status) {
+                return $this->sendResponse([], 'Reset Password Email Sent Successfully');
+            }
 
         } catch (\Exception $e) {
 

@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\Route;
 Route::post('login', [App\Http\Controllers\API\AuthAPIController::class, 'login'])->name('login');
 Route::post('register', [App\Http\Controllers\API\AuthAPIController::class, 'register'])->name('register');
 Route::get('forget-password', [App\Http\Controllers\API\AuthAPIController::class, 'forgetPassword'])->name('forget_password');
+Route::post('verify-password-reset-code', [App\Http\Controllers\API\AuthAPIController::class, 'verifyPasswordResetCode'])->name('verify_password_reset_code');
+Route::post('update-password', [App\Http\Controllers\API\AuthAPIController::class, 'updatePassword'])->name('update_password');
 
 Route::middleware('auth:sanctum')->group(function() {
 

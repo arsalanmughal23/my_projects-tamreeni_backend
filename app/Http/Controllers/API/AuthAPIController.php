@@ -89,9 +89,9 @@ class AuthAPIController extends AppBaseController
     public function verifyPasswordResetCode(PasswordResetCodeRequest $request)
     {
         try {
-            $resetPassword = PasswordReset::where('token', $request->verification_code)->first();
-
-            if (is_null($resetPassword)) {
+            $resetPassword = PasswordReset::where('token', $request->verification_code)->exists();
+            
+            if (!$resetPassword) {
                 return $this->sendError('Invalid Code', 403);
             }
 

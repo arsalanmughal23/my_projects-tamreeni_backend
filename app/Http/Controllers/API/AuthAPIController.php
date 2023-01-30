@@ -54,7 +54,7 @@ class AuthAPIController extends AppBaseController
                 'user' => $user,
             ], 'User saved successfully.');
 
-        } catch (\Exception$e) {
+        } catch (\Exception $e) {
 
             return $this->sendError($e->getMessage(), 500);
         }

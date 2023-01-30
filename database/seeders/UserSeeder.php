@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'super-admin',
             'email' => 'super-admin@boilerplate.com',
-            'password' => Hash::make('123456'),
+            'password' => '123456',
         ]);
 
         DB::table('roles')->insert([

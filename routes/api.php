@@ -25,7 +25,7 @@ Route::post('verify-password-reset-code', [App\Http\Controllers\API\AuthAPIContr
 Route::post('update-password', [App\Http\Controllers\API\AuthAPIController::class, 'updatePassword'])->name('update_password');
 
 Route::middleware('auth:sanctum')->group(function() {
-
+    Route::resource('pages', App\Http\Controllers\API\PageAPIController::class);
 });
 
 Route::resource('menus', App\Http\Controllers\API\MenuAPIController::class);

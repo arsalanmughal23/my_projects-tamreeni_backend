@@ -39,6 +39,8 @@
         integrity="sha512-aEe/ZxePawj0+G2R+AaIxgrQuKT68I28qh+wgLrcAJOz3rxCP+TwrK5SPN+E5I+1IQjNtcfvb96HDagwrKRdBw=="
         crossorigin="anonymous" />
 
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+
     <style>
         label.required:after {
             color: #cc0000;
@@ -68,15 +70,14 @@
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item dropdown user-menu">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                        <img src="{{ asset('image/user.png') }}"
-                            class="user-image img-circle elevation-2" alt="User Image">
+                        <img src="{{ asset('public/image/user.png') }}"
+                            class="user-image img-circle elevation-2 imag-placeholder" alt="User Image ">
                         <span class="d-none d-md-inline">{{ Auth::user()->name }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                         <!-- User image -->
                         <li class="user-header bg-primary">
-                            <img src="{{ asset('image/user.png') }}"
-                                class="img-circle elevation-2" alt="User Image">
+                            <img src="{{ asset('public/image/user.png') }}" class="img-circle elevation-2" alt="User Image">
                             <p>
                                 {{ Auth::user()->name }}
                                 <small>Member since {{ Auth::user()->created_at->format('M. Y') }}</small>
@@ -84,7 +85,8 @@
                         </li>
                         <!-- Menu Footer-->
                         <li class="user-footer">
-                            <a href="{{ route('users.edit', auth()->user()->id) }}" class="btn btn-default btn-flat">Profile</a>
+                            <a href="{{ route('users.edit', auth()->user()->id) }}"
+                                class="btn btn-default btn-flat">Profile</a>
                             <a href="#" class="btn btn-default btn-flat float-right"
                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 Sign out
@@ -156,6 +158,7 @@
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/1.3/bootstrapSwitch.min.js"
         integrity="sha512-DAc/LqVY2liDbikmJwUS1MSE3pIH0DFprKHZKPcJC7e3TtAOzT55gEMTleegwyuIWgCfOPOM8eLbbvFaG9F/cA=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
     <script>
         $(function() {
@@ -173,6 +176,15 @@
             allowHtml: true
         });
 
+        $(document).ready(function() {
+            $('.summernote').summernote();
+
+            $("img").each(function() {
+                if ((typeof this.naturalWidth != "undefined" && this.naturalWidth == 0) || this.readyState == "uninitialized") {
+                    $(this).attr("src","https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM=");
+                }
+            });
+        });
 
         // $("input[data-bootstrap-switch]").each(function () {
         //     $(this).bootstrapSwitch('state', $(this).prop('checked'));

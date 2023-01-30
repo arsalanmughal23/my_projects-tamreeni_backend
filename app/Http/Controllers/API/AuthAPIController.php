@@ -90,7 +90,7 @@ class AuthAPIController extends AppBaseController
     {
         try {
             $resetPassword = PasswordReset::where('token', $request->verification_code)->exists();
-            
+
             if (!$resetPassword) {
                 return $this->sendError('Invalid Code', 403);
             }
@@ -104,18 +104,32 @@ class AuthAPIController extends AppBaseController
 
     public function updatePassword(UpdatePasswordRequest $request)
     {
-        $user = User::where('email', $request->email)->first();
-        $user->update([
-            'password' => $request->password,
-        ]);
+        try {
+            $resetPassword = PasswordReset::where([
+                ['email', $request->email],
+                ['token', $request->verification_code]
+            ])->exists();
 
-        Mail::to($request->email)->send(
-            new PasswordChanged([
-                'user' => $user
-            ])
-        );
+            if(!$resetPassword) {
+                return $this->sendError('Invalid Code', 403);
+            }
 
-        return $this->sendResponse(['user' => $user], 'Password Changed Successfully');
+            $user = User::where('email', $request->email)->first();
+            $user->update([
+                'password' => $request->password,
+            ]);
+
+            Mail::to($request->email)->send(
+                new PasswordChanged([
+                    'user' => $user
+                ])
+            );
+
+            return $this->sendResponse(['user' => $user], 'Password Changed Successfully');
+
+        } catch (\Exception $e) {
+            return $this->sendError($e->getMessage(), 500);
+        }
     }
 }
 

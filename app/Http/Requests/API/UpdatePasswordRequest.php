@@ -24,7 +24,8 @@ class UpdatePasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'             => 'required|email|exists:password_resets,email',
+            'verification_code' => 'required',
+            'email'             => 'required|email',
             'password'              => 'min:6|required_with:password_confirmation|same:password_confirmation',
             'password_confirmation' => 'min:6'
         ];

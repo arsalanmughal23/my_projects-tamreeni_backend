@@ -53,6 +53,11 @@
     @stack('third_party_stylesheets')
 
     @stack('page_css')
+    <script>
+        function brokenImageHandler(img) {
+            img.src = "https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM=";
+        }
+    </script>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -71,13 +76,13 @@
                 <li class="nav-item dropdown user-menu">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
                         <img src="{{ asset('public/image/user.png') }}"
-                            class="user-image img-circle elevation-2 imag-placeholder" alt="User Image ">
+                            class="user-image img-circle elevation-2 imag-placeholder" alt="User Image " onerror="brokenImageHandler(this);">
                         <span class="d-none d-md-inline">{{ Auth::user()->name }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                         <!-- User image -->
                         <li class="user-header bg-primary">
-                            <img src="{{ asset('public/image/user.png') }}" class="img-circle elevation-2" alt="User Image">
+                            <img src="{{ asset('public/image/user.png') }}" class="img-circle elevation-2" alt="User Image" onerror="brokenImageHandler(this);">
                             <p>
                                 {{ Auth::user()->name }}
                                 <small>Member since {{ Auth::user()->created_at->format('M. Y') }}</small>
@@ -178,12 +183,6 @@
 
         $(document).ready(function() {
             $('.summernote').summernote();
-
-            $("img").each(function() {
-                if ((typeof this.naturalWidth != "undefined" && this.naturalWidth == 0) || this.readyState == "uninitialized") {
-                    $(this).attr("src","https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM=");
-                }
-            });
         });
 
         // $("input[data-bootstrap-switch]").each(function () {

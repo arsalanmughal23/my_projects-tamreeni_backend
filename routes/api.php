@@ -26,6 +26,7 @@ Route::post('update-password', [App\Http\Controllers\API\AuthAPIController::clas
 
 Route::middleware('auth:sanctum')->group(function() {
     Route::resource('pages', App\Http\Controllers\API\PageAPIController::class);
+    Route::resource('settings', App\Http\Controllers\API\SettingAPIController::class);
 });
 
 Route::resource('menus', App\Http\Controllers\API\MenuAPIController::class);

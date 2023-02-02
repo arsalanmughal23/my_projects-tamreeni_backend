@@ -10,3 +10,13 @@
 @endcan
 
 
+@canany(['settings.index', 'settings.create', 'settings.show', 'settings.edit', 'settings.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('settings.index') }}"
+        class="nav-link {{ Request::is('settings*') ? 'active' : '' }}">
+            <p>Settings</p>
+        </a>
+    </li>
+@endcan
+
+

@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Repositories\UsersRepository;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
+use Aws\S3\S3Client;
 
 class AuthAPIController extends AppBaseController
 {
@@ -130,6 +131,34 @@ class AuthAPIController extends AppBaseController
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 500);
         }
+    }
+
+    public function awsBucketToken()
+    {
+        $s3Client = new S3Client([
+            'version' => 'latest',
+            'region' => config('filesystems.disks.s3.region'),
+            'credentials' => [
+                'key'    => config('filesystems.disks.s3.key'),
+                'secret' => config('filesystems.disks.s3.secret')
+            ]
+        ]);
+
+        $s3Bucket = config('filesystems.disks.s3.bucket');
+        $s3Key = "file";
+        $s3Options = [];
+
+        $command = $s3Client->getCommand('PutObject', [
+            'Bucket' => $s3Bucket,
+            'Key' => $s3Key,
+            'MetaData' => $s3Options,
+        ]);
+
+        $request = $s3Client->createPresignedRequest($command, '+20 minutes');
+
+        $url = (string) $request->getUri();
+
+        return response()->json(['url' => $url], 201);
     }
 }
 

@@ -1,4 +1,59 @@
+// Form Submit using S3 Token
 
+// $(document).on("submit", "form", function (e) {
+
+//     event.preventDefault();
+
+//     let awsBucketToken = "";
+//     let formData = new FormData(this);
+//     // formData.append('file', full_number);
+
+//     ajaxGet("{{route('api.get_aws_bucket_token')}}", {}, (status, data) => {
+//         if(status){
+//             awsBucketToken = getURL(data.url);
+//         }
+//     });
+
+//     uploadToS3(awsBucketToken, formData);
+// });
+
+function uploadToS3(awsBucketToken, formData) {
+    let response;
+    $.ajax({
+        type: 'POST',
+        url: awsBucketToken.url,
+        headers: awsBucketToken.headers,
+        data: formData,
+        contentType: false,
+        cache: false,
+        processData: false,
+        dataType: 'json',
+        async: false,
+        success: function (data) {
+            response = data;
+        },
+        error: function (data) {
+            response = data;
+        }
+    });
+
+    if (response.status == 200 || response.status == 204) {
+        return true;
+    }
+
+    return false;
+}
+
+function getURL(url) {
+    let awsURL = new URL(url).origin + new URL(url).pathname;
+    let params = {};
+
+	new URL(url).searchParams.forEach(function (val, key) {
+		params[key] = val;
+	});
+
+    return {url: awsURL, headers: params};
+}
 
 function ajaxPost(url, data, callback, formdata = true) {
     $.ajaxSetup({
@@ -45,12 +100,12 @@ function ajaxGet(url, queryParam, callback) {
         url: url,
         data: queryParam,
         dataType: 'json',
+        async: false,
         success: function (rdata) {
             callback(true, rdata)
         }, error: function (edata) {
 
             callback(false, edata)
-
         }
     });
 }

@@ -28,7 +28,7 @@
                 <tr>
                     @foreach($row as $key => $value)
                         @if(is_string($value) || is_numeric($value))
-                            <td>{!! $value !!}12121</td>
+                            <td>{!! $value !!}</td>
                         @else
                             <td></td>
                         @endif

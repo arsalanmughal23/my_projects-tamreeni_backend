@@ -79,3 +79,6 @@ Route::resource('settings', App\Http\Controllers\SettingController::class);
 
 
 Route::resource('constants', App\Http\Controllers\ConstantController::class);
+
+
+Route::resource('stacks', App\Http\Controllers\StackController::class);

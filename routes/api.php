@@ -34,3 +34,4 @@ Route::get('get-aws-bucket-token', [App\Http\Controllers\API\AuthAPIController::
 
 
 Route::resource('constants', App\Http\Controllers\API\ConstantAPIController::class);
+Route::resource('stacks', App\Http\Controllers\API\StackAPIController::class);

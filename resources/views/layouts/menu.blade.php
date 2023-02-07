@@ -30,3 +30,13 @@
 @endcan
 
 
+@canany(['stacks.index', 'stacks.create', 'stacks.show', 'stacks.edit', 'stacks.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('stacks.index') }}"
+        class="nav-link {{ Request::is('stacks*') ? 'active' : '' }}">
+            <p>Stacks</p>
+        </a>
+    </li>
+@endcan
+
+

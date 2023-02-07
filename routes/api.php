@@ -31,3 +31,6 @@ Route::middleware('auth:sanctum')->group(function() {
 
 Route::resource('menus', App\Http\Controllers\API\MenuAPIController::class);
 Route::get('get-aws-bucket-token', [App\Http\Controllers\API\AuthAPIController::class, 'awsBucketToken'])->name('get_aws_bucket_token');
+
+
+Route::resource('constants', App\Http\Controllers\API\ConstantAPIController::class);

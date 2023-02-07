@@ -76,3 +76,6 @@ Route::resource('users', App\Http\Controllers\UsersController::class);
 Route::resource('pages', App\Http\Controllers\PageController::class);
 
 Route::resource('settings', App\Http\Controllers\SettingController::class);
+
+
+Route::resource('constants', App\Http\Controllers\ConstantController::class);

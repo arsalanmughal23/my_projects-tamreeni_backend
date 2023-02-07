@@ -20,3 +20,13 @@
 @endcan
 
 
+@canany(['constants.index', 'constants.create', 'constants.show', 'constants.edit', 'constants.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('constants.index') }}"
+        class="nav-link {{ Request::is('constants*') ? 'active' : '' }}">
+            <p>Constants</p>
+        </a>
+    </li>
+@endcan
+
+

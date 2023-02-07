@@ -82,3 +82,6 @@ Route::resource('constants', App\Http\Controllers\ConstantController::class);
 
 
 Route::resource('stacks', App\Http\Controllers\StackController::class);
+
+
+Route::resource('employees', App\Http\Controllers\EmployeeController::class);

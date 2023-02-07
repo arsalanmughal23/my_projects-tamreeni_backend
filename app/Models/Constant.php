@@ -22,7 +22,7 @@ class Constant extends Model
     use HasFactory;
 
     public $table = 'constants';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
@@ -35,6 +35,10 @@ class Constant extends Model
         'instance_type',
         'text',
         'value'
+    ];
+
+    public static $instance_type = [
+        'employee_level' => 1
     ];
 
     /**
@@ -63,5 +67,5 @@ class Constant extends Model
         'deleted_at' => 'nullable'
     ];
 
-    
+
 }

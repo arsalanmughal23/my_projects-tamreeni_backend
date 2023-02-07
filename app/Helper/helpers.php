@@ -1,5 +1,13 @@
 <?php
 
+if (! function_exists('getConstantValue')) {
+    function getConstantValue($value)
+    {
+        return \App\Models\Constant::where('value', $value)->value('text');
+    }
+}
+
+
 if (! function_exists('getPermissionModelName')) {
     function getPermissionModelName($value)
     {

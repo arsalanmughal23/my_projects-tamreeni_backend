@@ -2,24 +2,26 @@
 
 namespace App\Repositories;
 
-use App\Models\Constant;
+use App\Models\Employee;
 use App\Repositories\BaseRepository;
 
 /**
- * Class ConstantRepository
+ * Class EmployeeRepository
  * @package App\Repositories
- * @version February 7, 2023, 10:10 am UTC
+ * @version February 7, 2023, 11:52 am UTC
 */
 
-class ConstantRepository extends BaseRepository
+class EmployeeRepository extends BaseRepository
 {
     /**
      * @var array
      */
     protected $fieldSearchable = [
-        'instance_type',
-        'text',
-        'value'
+        'name',
+        'email',
+        'level',
+        'code',
+        'stack_id'
     ];
 
     /**
@@ -37,11 +39,6 @@ class ConstantRepository extends BaseRepository
      **/
     public function model()
     {
-        return Constant::class;
-    }
-
-    public function getInstanceType($instanceType)
-    {
-        return $this->model->where('instance_type', $instanceType)->get();
+        return Employee::class;
     }
 }

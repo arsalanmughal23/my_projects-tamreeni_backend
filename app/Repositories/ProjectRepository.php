@@ -2,26 +2,27 @@
 
 namespace App\Repositories;
 
-use App\Models\Employee;
+use App\Models\Project;
 use App\Repositories\BaseRepository;
 
 /**
- * Class EmployeeRepository
+ * Class ProjectRepository
  * @package App\Repositories
- * @version February 7, 2023, 11:52 am UTC
+ * @version February 7, 2023, 1:35 pm UTC
 */
 
-class EmployeeRepository extends BaseRepository
+class ProjectRepository extends BaseRepository
 {
     /**
      * @var array
      */
     protected $fieldSearchable = [
         'name',
-        'email',
-        'level',
-        'code',
-        'stack_id'
+        'start_date',
+        'end_date',
+        'project_manager_id',
+        'business_analyst_id',
+        'active'
     ];
 
     /**
@@ -39,11 +40,6 @@ class EmployeeRepository extends BaseRepository
      **/
     public function model()
     {
-        return Employee::class;
-    }
-
-    public function role($stackIds)
-    {
-        return $this->model->where('stack_id', $stackIds)->get();
+        return Project::class;
     }
 }

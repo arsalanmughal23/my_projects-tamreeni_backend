@@ -38,3 +38,6 @@ Route::resource('stacks', App\Http\Controllers\API\StackAPIController::class);
 
 
 Route::resource('employees', App\Http\Controllers\API\EmployeeAPIController::class);
+
+
+Route::resource('projects', App\Http\Controllers\API\ProjectAPIController::class);

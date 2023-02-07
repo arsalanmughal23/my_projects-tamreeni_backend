@@ -20,7 +20,7 @@ class CreateProjectsTable extends Migration
             $table->date('end_date');
             $table->foreignId('project_manager_id')->constrained('employees')->onUpdate('cascade')->onDelete('restrict');
             $table->foreignId('business_analyst_id')->constrained('employees')->onUpdate('cascade')->onDelete('restrict');
-            $table->boolean('status')->default(1);
+            $table->boolean('active')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });

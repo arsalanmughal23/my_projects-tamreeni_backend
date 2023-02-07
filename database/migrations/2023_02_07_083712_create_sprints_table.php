@@ -15,8 +15,8 @@ class CreateSprintsTable extends Migration
     {
         Schema::create('sprints', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('project_manager_id')->constrained('resources')->onUpdate('cascade')->onDelete('restrict');
-            $table->foreignId('business_analyst_id')->constrained('resources')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('project_manager_id')->constrained('employees')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('business_analyst_id')->constrained('employees')->onUpdate('cascade')->onDelete('restrict');
             $table->string('name');
             $table->date('start_date');
             $table->date('end_date');

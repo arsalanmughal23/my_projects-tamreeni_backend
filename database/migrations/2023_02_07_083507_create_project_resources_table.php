@@ -15,8 +15,8 @@ class CreateProjectResourcesTable extends Migration
     {
         Schema::create('project_resources', function (Blueprint $table) {
             $table->foreignId('project_id')->constrained('projects')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignId('resource_id')->constrained('resources')->onUpdate('cascade')->onDelete('cascade');
-            $table->primary(['project_id', 'resource_id']);
+            $table->foreignId('employee_id')->constrained('employees')->onUpdate('cascade')->onDelete('cascade');
+            $table->primary(['project_id', 'employee_id']);
         });
     }
 

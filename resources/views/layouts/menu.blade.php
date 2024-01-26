@@ -31,15 +31,6 @@
 
 
 
-@canany(['employees.index', 'employees.create', 'employees.show', 'employees.edit', 'employees.destroy'])
-    <li class="nav-item">
-        <a href="{{ route('employees.index') }}"
-        class="nav-link {{ Request::is('employees*') ? 'active' : '' }}">
-            <p>Employees</p>
-        </a>
-    </li>
-@endcan
-
 
 @canany(['projects.index', 'projects.create', 'projects.show', 'projects.edit', 'projects.destroy'])
     <li class="nav-item">

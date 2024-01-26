@@ -28,7 +28,7 @@ class UsersController extends AppBaseController
     }
 
     /**
-     * Display a listing of the Users.
+     * Display a listing of the User.
      *
      * @param UsersDataTable $usersDataTable
      *
@@ -40,7 +40,7 @@ class UsersController extends AppBaseController
     }
 
     /**
-     * Show the form for creating a new Users.
+     * Show the form for creating a new User.
      *
      * @return Response
      */
@@ -51,7 +51,7 @@ class UsersController extends AppBaseController
     }
 
     /**
-     * Store a newly created Users in storage.
+     * Store a newly created User in storage.
      *
      * @param CreateUsersRequest $request
      *
@@ -74,13 +74,13 @@ class UsersController extends AppBaseController
             }
         }
 
-        Flash::success('Users saved successfully.');
+        Flash::success('User saved successfully.');
 
         return redirect(route('users.index'));
     }
 
     /**
-     * Display the specified Users.
+     * Display the specified User.
      *
      * @param int $id
      *
@@ -91,7 +91,7 @@ class UsersController extends AppBaseController
         $users = $this->usersRepository->find($id);
 
         if (empty($users)) {
-            Flash::error('Users not found');
+            Flash::error('User not found');
 
             return redirect(route('users.index'));
         }
@@ -100,7 +100,7 @@ class UsersController extends AppBaseController
     }
 
     /**
-     * Show the form for editing the specified Users.
+     * Show the form for editing the specified User.
      *
      * @param int $id
      *
@@ -112,7 +112,7 @@ class UsersController extends AppBaseController
         $roles = $this->rolesRepository->all();
 
         if (empty($users)) {
-            Flash::error('Users not found');
+            Flash::error('User not found');
             return redirect(route('users.index'));
         }
 
@@ -120,7 +120,7 @@ class UsersController extends AppBaseController
     }
 
     /**
-     * Update the specified Users in storage.
+     * Update the specified User in storage.
      *
      * @param int $id
      * @param UpdateUsersRequest $request
@@ -132,7 +132,7 @@ class UsersController extends AppBaseController
         $users = $this->usersRepository->find($id);
 
         if (empty($users)) {
-            Flash::error('Users not found');
+            Flash::error('User not found');
 
             return redirect(route('users.index'));
         }
@@ -150,13 +150,13 @@ class UsersController extends AppBaseController
             }
         }
 
-        Flash::success('Users updated successfully.');
+        Flash::success('User updated successfully.');
 
         return redirect(route('users.index'));
     }
 
     /**
-     * Remove the specified Users from storage.
+     * Remove the specified User from storage.
      *
      * @param int $id
      *
@@ -167,14 +167,14 @@ class UsersController extends AppBaseController
         $users = $this->usersRepository->find($id);
 
         if (empty($users)) {
-            Flash::error('Users not found');
+            Flash::error('User not found');
 
             return redirect(route('users.index'));
         }
 
         $this->usersRepository->delete($id);
 
-        Flash::success('Users deleted successfully.');
+        Flash::success('User deleted successfully.');
 
         return redirect(route('users.index'));
     }

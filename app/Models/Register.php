@@ -10,9 +10,10 @@ class Register extends Model
     use HasFactory;
 
     public static $rules = [
-        'name'                  => 'nullable',
         'email'                 => 'required|email|unique:users,email|max:255',
-        'password'              => 'min:6|required_with:password_confirmation|same:password_confirmation',
-        'password_confirmation' => 'min:6'
+        'password'              => 'min:6|required|same:password_confirmation',
+        'password_confirmation' => 'min:6|required_with:password',
+        'device_token'          => 'required',
+        'device_type'           => 'required|string|in:ios,android,web',
     ];
 }

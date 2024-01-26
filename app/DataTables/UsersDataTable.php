@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\Users;
+use App\Models\User;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 
@@ -28,10 +28,10 @@ class UsersDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Users $model
+     * @param \App\Models\User $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Users $model)
+    public function query(User $model)
     {
         return $model->newQuery();
         // return $model->with('user_details')->select('users.*')->newQuery();

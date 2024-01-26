@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\API;
 
-use App\Models\Register;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RegistrationAPIRequest extends FormRequest
@@ -24,6 +24,6 @@ class RegistrationAPIRequest extends FormRequest
      */
     public function rules()
     {
-        return Register::$rules;
+        return User::$api_rules;
     }
 }

@@ -65,9 +65,9 @@ class Users extends Model
 
     public static function rules() {
         return  [
-            'name' => 'required|string|max:'.config('constants.validation.users.name.size_max'),
+            'name' => 'nullable|string|max:'.config('constants.validation.users.name.size_max'),
             'email' => 'required|string|max:'.config('constants.validation.users.email.size_max'),
-            'email_verified_at' => 'nullable',
+            // 'email_verified_at' => 'nullable',
             'password' => 'required|confirmed|min:'.config('constants.validation.users.password.size_min'),
             'remember_token' => 'nullable|string|max:'.config('constants.validation.users.remember_token.size_max'),
             'created_at' => 'nullable',
@@ -76,9 +76,8 @@ class Users extends Model
     }
 
     // public static $rules = [
-    //     'name' => 'required|string|max:255',
+    //     'name' => 'nullable|string|max:255',
     //     'email' => 'required|string|max:255',
-    //     'email_verified_at' => 'nullable',
     //     'password' => 'required|confirmed|min:6',
     //     'remember_token' => 'nullable|string|max:100',
     //     'created_at' => 'nullable',

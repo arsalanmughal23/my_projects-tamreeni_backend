@@ -40,7 +40,7 @@ class CreateUsersTable extends Migration
             $table->boolean('email_verified_at')->nullable()->default(0)->comment('0,1');
             $table->tinyInteger('is_social_login')->default(0)->comment('0,1');
 
-            $table->enum('gender', ['male, female'])->nullable()->comment('male, female'); // CONSTANT: male, female
+            $table->enum('gender', ['male', 'female'])->nullable()->comment('male, female'); // CONSTANT: male, female
 
             $table->softDeletes();
             $table->timestamps();

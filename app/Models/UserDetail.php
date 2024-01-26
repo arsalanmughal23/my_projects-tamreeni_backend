@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 /**
  * Class UserDetail
  * @package App\Models
- * @version January 26, 2024, 8:34 pm UTC
+ * @version January 26, 2024, 11:01 pm UTC
  *
  * @property \App\Models\User $user
  * @property integer $user_id

@@ -72,10 +72,10 @@ class UsersController extends AppBaseController
 
         foreach($roles as $role) {
             if (isset(request()->role[$role->id])) {
-                $users->assignRole($role->id);
+                $user->assignRole($role->id);
             }
             else {
-                $users->removeRole($role->id);
+                $user->removeRole($role->id);
             }
         }
 

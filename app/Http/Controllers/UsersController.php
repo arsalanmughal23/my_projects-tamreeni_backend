@@ -68,16 +68,8 @@ class UsersController extends AppBaseController
         $userDetail = ['user_id' => $user->id];
         $this->userDetailRepository->create($userDetail);
 
-        $roles = $this->rolesRepository->all();
-
-        foreach($roles as $role) {
-            if (isset(request()->role[$role->id])) {
-                $user->assignRole($role->id);
-            }
-            else {
-                $user->removeRole($role->id);
-            }
-        }
+        $roleIds = array_keys(request()->role);
+        $user->syncRoles($roleIds);
 
         Flash::success('User saved successfully.');
 
@@ -144,16 +136,8 @@ class UsersController extends AppBaseController
 
         $user = $this->userRepository->update($request->all(), $id);
 
-        $roles = $this->rolesRepository->all();
-
-        foreach($roles as $role) {
-            if (isset(request()->role[$role->id])) {
-                $user->assignRole($role->id);
-            }
-            else {
-                $user->removeRole($role->id);
-            }
-        }
+        $roleIds = array_keys(request()->role);
+        $user->syncRoles($roleIds);
 
         Flash::success('User updated successfully.');
 
@@ -194,16 +178,11 @@ class UsersController extends AppBaseController
 
     public function updateRoles($id)
     {
-        $user = User::findOrFail($id);;
-        $roles = Role::all();
-        foreach($roles as $role) {
-            if (isset(request()->role[$role->id])) {
-                $user->assignRole($role);
-            }
-            else {
-                $user->removeRole($role);
-            }
-        }
+        $user = User::findOrFail($id);
+
+        $roleIds = array_keys(request()->role);
+        $user->syncRoles($roleIds);
+
         Flash::success('Roles updated successfully.');
         return redirect(route('users.index'));
     }

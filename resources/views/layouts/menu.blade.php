@@ -42,3 +42,13 @@
 @endcan
 
 
+@canany(['user_details.index', 'user_details.create', 'user_details.show', 'user_details.edit', 'user_details.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('user_details.index') }}"
+        class="nav-link {{ Request::is('user_details*') ? 'active' : '' }}">
+            <p>User Details</p>
+        </a>
+    </li>
+@endcan
+
+

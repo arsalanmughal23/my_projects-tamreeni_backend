@@ -15,6 +15,15 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
 
+    public static function boot ()
+    {
+        parent::boot();
+
+        self::deleting(function (User $user) {
+            $user->details()->delete();
+        });
+    }
+
     /**
      * The attributes that are mass assignable.
      *
@@ -56,5 +65,13 @@ class User extends Authenticatable
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = Hash::make($value);
+    }
+    
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function details()
+    {
+        return $this->hasOne(UserDetail::class, 'user_id', 'id');
     }
 }

@@ -12,17 +12,20 @@ use App\Repositories\RolesRepository;
 use App\Http\Controllers\AppBaseController;
 use Spatie\Permission\Models\Role as Role;
 use App\Models\User as User;
+use App\Repositories\UserDetailRepository;
 use Response;
 
 class UsersController extends AppBaseController
 {
-    /** @var UsersRepository $usersRepository*/
-    private $usersRepository;
+    /** @var UsersRepository $userRepository*/
+    private $userRepository;
+    private $userDetailRepository;
     private $rolesRepository;
 
-    public function __construct(UsersRepository $usersRepo, RolesRepository $rolesRepo)
+    public function __construct(UsersRepository $userRepo, UserDetailRepository $userDetailRepo, RolesRepository $rolesRepo)
     {
-        $this->usersRepository = $usersRepo;
+        $this->userRepository = $userRepo;
+        $this->userDetailRepository = $userDetailRepo;
         $this->rolesRepository = $rolesRepo;
 
     }
@@ -30,13 +33,13 @@ class UsersController extends AppBaseController
     /**
      * Display a listing of the User.
      *
-     * @param UsersDataTable $usersDataTable
+     * @param UsersDataTable $userDataTable
      *
      * @return Response
      */
-    public function index(UsersDataTable $usersDataTable)
+    public function index(UsersDataTable $userDataTable)
     {
-        return $usersDataTable->render('users.index');
+        return $userDataTable->render('users.index');
     }
 
     /**
@@ -61,7 +64,9 @@ class UsersController extends AppBaseController
     {
         $input = $request->all();
 
-        $users = $this->usersRepository->create($input);
+        $user = $this->userRepository->create($input);
+        $userDetail = ['user_id' => $user->id];
+        $this->userDetailRepository->create($userDetail);
 
         $roles = $this->rolesRepository->all();
 
@@ -88,15 +93,15 @@ class UsersController extends AppBaseController
      */
     public function show($id)
     {
-        $users = $this->usersRepository->find($id);
+        $user = $this->userRepository->find($id);
 
-        if (empty($users)) {
+        if (empty($user)) {
             Flash::error('User not found');
 
             return redirect(route('users.index'));
         }
 
-        return view('users.show')->with('users', $users);
+        return view('users.show')->with('users', $user);
     }
 
     /**
@@ -108,15 +113,15 @@ class UsersController extends AppBaseController
      */
     public function edit($id)
     {
-        $users = $this->usersRepository->find($id);
+        $user = $this->userRepository->find($id);
         $roles = $this->rolesRepository->all();
 
-        if (empty($users)) {
+        if (empty($user)) {
             Flash::error('User not found');
             return redirect(route('users.index'));
         }
 
-        return view('users.edit')->with(['users' => $users,'roles' => $roles, ]);
+        return view('users.edit')->with(['users' => $user,'roles' => $roles, ]);
     }
 
     /**
@@ -129,24 +134,24 @@ class UsersController extends AppBaseController
      */
     public function update($id, UpdateUsersRequest $request)
     {
-        $users = $this->usersRepository->find($id);
+        $user = $this->userRepository->find($id);
 
-        if (empty($users)) {
+        if (empty($user)) {
             Flash::error('User not found');
 
             return redirect(route('users.index'));
         }
 
-        $users = $this->usersRepository->update($request->all(), $id);
+        $user = $this->userRepository->update($request->all(), $id);
 
         $roles = $this->rolesRepository->all();
 
         foreach($roles as $role) {
             if (isset(request()->role[$role->id])) {
-                $users->assignRole($role->id);
+                $user->assignRole($role->id);
             }
             else {
-                $users->removeRole($role->id);
+                $user->removeRole($role->id);
             }
         }
 
@@ -164,15 +169,15 @@ class UsersController extends AppBaseController
      */
     public function destroy($id)
     {
-        $users = $this->usersRepository->find($id);
+        $user = $this->userRepository->find($id);
 
-        if (empty($users)) {
+        if (empty($user)) {
             Flash::error('User not found');
 
             return redirect(route('users.index'));
         }
 
-        $this->usersRepository->delete($id);
+        $this->userRepository->delete($id);
 
         Flash::success('User deleted successfully.');
 

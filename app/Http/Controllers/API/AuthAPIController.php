@@ -12,6 +12,7 @@ use App\Mail\PasswordResetCode;
 use App\Mail\PasswordChanged;
 use App\Models\PasswordReset;
 use App\Models\User;
+use App\Repositories\UserDetailRepository;
 use App\Repositories\UsersRepository;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
@@ -20,11 +21,13 @@ use Aws\S3\S3Client;
 class AuthAPIController extends AppBaseController
 {
     private $usersRepository;
+    private $userDetailRepository;
     private $rolesRepository;
 
-    public function __construct(UsersRepository $usersRepo)
+    public function __construct(UsersRepository $usersRepo, UserDetailRepository $userDetailRepo)
     {
         $this->usersRepository = $usersRepo;
+        $this->userDetailRepository = $userDetailRepo;
     }
 
     public function login(LoginAPIRequest $request)
@@ -50,6 +53,8 @@ class AuthAPIController extends AppBaseController
         try {
             $input = $request->all();
             $user = $this->usersRepository->create($input);
+            $userDetail = ['user_id' => $user->id];
+            $this->userDetailRepository->create($userDetail);
 
             return $this->sendResponse([
                 'user' => $user,

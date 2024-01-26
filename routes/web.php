@@ -87,3 +87,6 @@ Route::resource('stacks', App\Http\Controllers\StackController::class);
 Route::resource('employees', App\Http\Controllers\EmployeeController::class);
 
 Route::resource('projects', App\Http\Controllers\ProjectController::class);
+
+
+Route::resource('user_details', App\Http\Controllers\UserDetailController::class);

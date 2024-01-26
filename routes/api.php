@@ -41,3 +41,6 @@ Route::resource('employees', App\Http\Controllers\API\EmployeeAPIController::cla
 
 
 Route::resource('projects', App\Http\Controllers\API\ProjectAPIController::class);
+
+
+Route::resource('user_details', App\Http\Controllers\API\UserDetailAPIController::class);

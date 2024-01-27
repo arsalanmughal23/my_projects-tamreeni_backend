@@ -24,6 +24,6 @@ class LoginAPIRequest extends FormRequest
      */
     public function rules()
     {
-        return Login::$rules;
+        return Login::$api_rules;
     }
 }

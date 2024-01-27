@@ -21,6 +21,7 @@ class User extends Authenticatable
 
         self::deleting(function (User $user) {
             $user->details()->delete();
+            $user->devices()->delete();
         });
     }
 
@@ -76,7 +77,7 @@ class User extends Authenticatable
         'email'                 => 'required|email|max:255|unique:users,email,NULL,id,deleted_at,NULL',
         'password'              => 'min:6|required|same:password_confirmation',
         'password_confirmation' => 'min:6|required_with:password',
-        'device_token'          => 'required',
+        'device_token'          => 'required|max:255',
         'device_type'           => 'required|string|in:ios,android,web',
     ];
 
@@ -103,5 +104,13 @@ class User extends Authenticatable
     public function details()
     {
         return $this->hasOne(UserDetail::class, 'user_id', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function devices()
+    {
+        return $this->hasMany(UserDevice::class);
     }
 }

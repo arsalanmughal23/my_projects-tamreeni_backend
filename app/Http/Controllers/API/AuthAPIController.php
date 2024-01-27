@@ -13,6 +13,7 @@ use App\Mail\PasswordChanged;
 use App\Models\PasswordReset;
 use App\Models\User;
 use App\Repositories\UserDetailRepository;
+use App\Repositories\UserDeviceRepository;
 use App\Repositories\UsersRepository;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
@@ -22,12 +23,14 @@ class AuthAPIController extends AppBaseController
 {
     private $usersRepository;
     private $userDetailRepository;
+    private $userDeviceRepository;
     private $rolesRepository;
 
-    public function __construct(UsersRepository $usersRepo, UserDetailRepository $userDetailRepo)
+    public function __construct(UsersRepository $usersRepo, UserDetailRepository $userDetailRepo, UserDeviceRepository $userDeviceRepo)
     {
         $this->usersRepository = $usersRepo;
         $this->userDetailRepository = $userDetailRepo;
+        $this->userDeviceRepository = $userDeviceRepo;
     }
 
     public function login(LoginAPIRequest $request)
@@ -39,6 +42,13 @@ class AuthAPIController extends AppBaseController
         }
 
         $user = auth()->user();
+        $userDevice = $searchUserDevice = [
+            'device_type' => $request->device_type,
+            'device_token' => $request->device_token
+        ];
+        $userDevice['user_id'] = $user->id;
+        $this->userDeviceRepository->updateOrCreate($searchUserDevice, $userDevice);
+
         $token = $user->createToken('access_token')->plainTextToken;
 
         return $this->sendResponse([
@@ -53,8 +63,16 @@ class AuthAPIController extends AppBaseController
         try {
             $input = $request->all();
             $user = $this->usersRepository->create($input);
+
             $userDetail = ['user_id' => $user->id];
             $this->userDetailRepository->create($userDetail);
+
+            $userDevice = [
+                'user_id' => $user->id,
+                'device_type' => $input['device_type'],
+                'device_token' => $input['device_token'],
+            ];
+            $this->userDeviceRepository->create($userDevice);
 
             return $this->sendResponse([
                 'user' => $user,

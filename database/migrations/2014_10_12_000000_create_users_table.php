@@ -51,7 +51,7 @@ class CreateUsersTable extends Migration
         Schema::create('user_devices', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedBigInteger('user_id');
-            $table->string('device_type');
+            $table->string('device_type')->comment('ios, android, web');
             $table->string('device_token');
             $table->tinyInteger('push_notification')->default(0)->comment('0,1');
 

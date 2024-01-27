@@ -28,27 +28,3 @@
         </a>
     </li>
 @endcan
-
-
-
-
-@canany(['projects.index', 'projects.create', 'projects.show', 'projects.edit', 'projects.destroy'])
-    <li class="nav-item">
-        <a href="{{ route('projects.index') }}"
-        class="nav-link {{ Request::is('projects*') ? 'active' : '' }}">
-            <p>Projects</p>
-        </a>
-    </li>
-@endcan
-
-
-@canany(['user_details.index', 'user_details.create', 'user_details.show', 'user_details.edit', 'user_details.destroy'])
-    <li class="nav-item">
-        <a href="{{ route('user_details.index') }}"
-        class="nav-link {{ Request::is('user_details*') ? 'active' : '' }}">
-            <p>User Details</p>
-        </a>
-    </li>
-@endcan
-
-

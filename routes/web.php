@@ -90,3 +90,6 @@ Route::resource('projects', App\Http\Controllers\ProjectController::class);
 
 
 Route::resource('user_details', App\Http\Controllers\UserDetailController::class);
+
+
+Route::resource('user_devices', App\Http\Controllers\UserDeviceController::class);

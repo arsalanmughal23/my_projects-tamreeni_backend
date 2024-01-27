@@ -32,15 +32,6 @@ Route::middleware('auth:sanctum')->group(function() {
 Route::resource('menus', App\Http\Controllers\API\MenuAPIController::class);
 Route::get('get-aws-bucket-token', [App\Http\Controllers\API\AuthAPIController::class, 'awsBucketToken'])->name('get_aws_bucket_token');
 
-
 Route::resource('constants', App\Http\Controllers\API\ConstantAPIController::class);
-Route::resource('stacks', App\Http\Controllers\API\StackAPIController::class);
-
-
-Route::resource('employees', App\Http\Controllers\API\EmployeeAPIController::class);
-
-
-Route::resource('projects', App\Http\Controllers\API\ProjectAPIController::class);
-
 
 Route::resource('user_details', App\Http\Controllers\API\UserDetailAPIController::class);

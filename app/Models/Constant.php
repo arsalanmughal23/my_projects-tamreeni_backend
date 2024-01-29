@@ -9,11 +9,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 /**
  * Class Constant
  * @package App\Models
- * @version February 7, 2023, 10:10 am UTC
+ * @version January 29, 2024, 2:22 pm UTC
  *
- * @property integer $instance_type
- * @property string $text
- * @property integer $value
+ * @property string $name
+ * @property string $group
+ * @property string $key
+ * @property string $value
  */
 class Constant extends Model
 {
@@ -22,7 +23,7 @@ class Constant extends Model
     use HasFactory;
 
     public $table = 'constants';
-
+    
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
@@ -32,13 +33,10 @@ class Constant extends Model
 
 
     public $fillable = [
-        'instance_type',
-        'text',
+        'name',
+        'group',
+        'key',
         'value'
-    ];
-
-    public static $instance_type = [
-        'employee_level' => 1
     ];
 
     /**
@@ -48,9 +46,10 @@ class Constant extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'instance_type' => 'integer',
-        'text' => 'string',
-        'value' => 'integer'
+        'name' => 'string',
+        'group' => 'string',
+        'key' => 'string',
+        'value' => 'string'
     ];
 
     /**
@@ -59,13 +58,25 @@ class Constant extends Model
      * @var array
      */
     public static $rules = [
-        'instance_type' => 'required|integer',
-        'text' => 'required|string|max:255',
-        'value' => 'required|integer',
+        'name' => 'required|string|max:255',
+        'group' => 'required|string|max:255',
+        'key' => 'required|string|max:255',
+        'value' => 'nullable|string|max:255',
         'created_at' => 'nullable',
         'updated_at' => 'nullable',
         'deleted_at' => 'nullable'
     ];
 
+    /**
+     * Set the value attribute by concatenating group and key.
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public function setValueAttribute($value)
+    {
+        $this->attributes['value'] = $this->attributes['group'] . '__' . $this->attributes['key'];
+    }
 
+    
 }

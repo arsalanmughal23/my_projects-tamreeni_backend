@@ -1,13 +1,19 @@
-<!-- Instance Type Field -->
+<!-- Name Field -->
 <div class="col-sm-12">
-    {!! Form::label('instance_type', 'Instance Type:') !!}
-    <p>{{ $constant->instance_type }}</p>
+    {!! Form::label('name', 'Name:') !!}
+    <p>{{ $constant->name }}</p>
 </div>
 
-<!-- Text Field -->
+<!-- Group Field -->
 <div class="col-sm-12">
-    {!! Form::label('text', 'Text:') !!}
-    <p>{{ $constant->text }}</p>
+    {!! Form::label('group', 'Group:') !!}
+    <p>{{ $constant->group }}</p>
+</div>
+
+<!-- Key Field -->
+<div class="col-sm-12">
+    {!! Form::label('key', 'Key:') !!}
+    <p>{{ $constant->key }}</p>
 </div>
 
 <!-- Value Field -->

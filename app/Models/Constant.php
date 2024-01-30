@@ -78,6 +78,7 @@ class Constant extends Model
     public function setValueAttribute($value)
     {
         $this->attributes['value'] = $this->attributes['group'] . '__' . $this->attributes['key'];
+        $this->attributes['name'] = str_replace('_', ' ', ucwords($this->attributes['key'], '_'));
     }
 
     

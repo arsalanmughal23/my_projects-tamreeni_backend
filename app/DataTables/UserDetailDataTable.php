@@ -74,7 +74,16 @@ class UserDetailDataTable extends DataTable
             'image',
             'email_verified_at',
             'is_social_login',
-            'gender'
+            'gender',
+            'language',
+            'current_weight_in_kg',
+            'target_weight_in_kg',
+            'height_in_m',
+            'goal',
+            'diet_type',
+            'current_weight_unit',
+            'target_weight_unit',
+            'height_unit'
         ];
     }
 

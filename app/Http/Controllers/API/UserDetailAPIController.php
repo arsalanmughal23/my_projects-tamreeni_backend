@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Requests\API\CreateUserDetailAPIRequest;
 use App\Http\Requests\API\UpdateUserDetailAPIRequest;
 use App\Models\UserDetail;
+use App\Models\User;
 use App\Repositories\UserDetailRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
@@ -107,6 +108,27 @@ class UserDetailAPIController extends AppBaseController
         $userDetail = $this->userDetailRepository->update($input, $id);
 
         return $this->sendResponse($userDetail->toArray(), 'UserDetail updated successfully');
+    }
+
+    public function updateLanguage(Request $request)
+    {
+        $request->validate([
+            'language' => 'required|in:en,ar',
+        ]);
+
+        $user = auth()->user();
+        $user->details()->update(['language' => $request->language]);
+        $userDetails = $user->details;
+
+        return $this->sendResponse($userDetails->toArray(), 'Language updated successfully');
+    }
+
+    public function getUserProfile()
+    {
+        $user = auth()->user();
+        $userDetails = $user->details;
+        $userDetails->email = $user->email;
+        return $this->sendResponse($userDetails->toArray(), 'User profile retrieved successfully');
     }
 
     /**

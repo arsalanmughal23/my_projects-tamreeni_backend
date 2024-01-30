@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 /**
  * Class UserDetail
  * @package App\Models
- * @version January 26, 2024, 11:01 pm UTC
+ * @version January 30, 2024, 1:30 pm UTC
  *
  * @property \App\Models\User $user
  * @property integer $user_id
@@ -58,6 +58,7 @@ class UserDetail extends Model
         'is_social_login',
         'gender',
 
+        'language',
         'height_in_m',
         'current_weight_in_kg',
         'target_weight_in_kg',
@@ -108,6 +109,15 @@ class UserDetail extends Model
         'image' => 'nullable|string|max:255',
         'is_social_login' => 'required|boolean',
         'gender' => 'nullable|string',
+        'language' => 'nullable|string',
+        'current_weight_in_kg' => 'nullable|numeric',
+        'target_weight_in_kg' => 'nullable|numeric',
+        'height_in_m' => 'nullable|numeric',
+        'goal' => 'nullable|string|max:255',
+        'diet_type' => 'nullable|string|max:255',
+        'current_weight_unit' => 'nullable|string|max:255',
+        'target_weight_unit' => 'nullable|string|max:255',
+        'height_unit' => 'nullable|string|max:255',
         'deleted_at' => 'nullable',
         'created_at' => 'nullable',
         'updated_at' => 'nullable'

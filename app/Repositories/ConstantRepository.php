@@ -40,4 +40,9 @@ class ConstantRepository extends BaseRepository
     {
         return Constant::class;
     }
+
+    public function getConstantsByGroup($group)
+    {
+        return Constant::where('group', $group)->get();
+    }
 }

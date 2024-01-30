@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\API;
 
-use App\Models\User;
 use App\Http\Requests\API\BaseAPIRequest;
 
 class UpdateUserDetailAPIRequest extends BaseAPIRequest
@@ -24,6 +23,6 @@ class UpdateUserDetailAPIRequest extends BaseAPIRequest
      */
     public function rules()
     {
-        return User::$api_update_rules;
+        return [];
     }
 }

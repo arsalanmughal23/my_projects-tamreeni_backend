@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests\API;
 
-use App\Models\User;
-use App\Http\Requests\API\BaseAPIRequest;;
+use App\Http\Requests\API\BaseAPIRequest;
 
-class CreateUserDetailAPIRequest extends BaseAPIRequestuest
+class CreateUserDetailAPIRequest extends BaseAPIRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,6 +23,6 @@ class CreateUserDetailAPIRequest extends BaseAPIRequestuest
      */
     public function rules()
     {
-        return User::$api_rules;
+        return [];
     }
 }

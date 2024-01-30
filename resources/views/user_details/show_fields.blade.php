@@ -58,3 +58,57 @@
     <p>{{ $userDetail->gender }}</p>
 </div>
 
+<!-- Language Field -->
+<div class="col-sm-12">
+    {!! Form::label('language', 'Language:') !!}
+    <p>{{ $userDetail->language }}</p>
+</div>
+
+<!-- Current Weight In Kg Field -->
+<div class="col-sm-12">
+    {!! Form::label('current_weight_in_kg', 'Current Weight In Kg:') !!}
+    <p>{{ $userDetail->current_weight_in_kg }}</p>
+</div>
+
+<!-- Target Weight In Kg Field -->
+<div class="col-sm-12">
+    {!! Form::label('target_weight_in_kg', 'Target Weight In Kg:') !!}
+    <p>{{ $userDetail->target_weight_in_kg }}</p>
+</div>
+
+<!-- Height In M Field -->
+<div class="col-sm-12">
+    {!! Form::label('height_in_m', 'Height In M:') !!}
+    <p>{{ $userDetail->height_in_m }}</p>
+</div>
+
+<!-- Goal Field -->
+<div class="col-sm-12">
+    {!! Form::label('goal', 'Goal:') !!}
+    <p>{{ $userDetail->goal }}</p>
+</div>
+
+<!-- Diet Type Field -->
+<div class="col-sm-12">
+    {!! Form::label('diet_type', 'Diet Type:') !!}
+    <p>{{ $userDetail->diet_type }}</p>
+</div>
+
+<!-- Current Weight Unit Field -->
+<div class="col-sm-12">
+    {!! Form::label('current_weight_unit', 'Current Weight Unit:') !!}
+    <p>{{ $userDetail->current_weight_unit }}</p>
+</div>
+
+<!-- Target Weight Unit Field -->
+<div class="col-sm-12">
+    {!! Form::label('target_weight_unit', 'Target Weight Unit:') !!}
+    <p>{{ $userDetail->target_weight_unit }}</p>
+</div>
+
+<!-- Height Unit Field -->
+<div class="col-sm-12">
+    {!! Form::label('height_unit', 'Height Unit:') !!}
+    <p>{{ $userDetail->height_unit }}</p>
+</div>
+

@@ -22,6 +22,7 @@ class User extends Authenticatable
         self::deleting(function (User $user) {
             $user->details()->delete();
             $user->devices()->delete();
+            $user->userSocialAccounts()->delete();
         });
     }
 
@@ -46,6 +47,8 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public $with = ['details'];
 
     /**
      * The attributes that should be cast.
@@ -112,5 +115,13 @@ class User extends Authenticatable
     public function devices()
     {
         return $this->hasMany(UserDevice::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function userSocialAccounts()
+    {
+        return $this->hasMany(UserSocialAccount::class);
     }
 }

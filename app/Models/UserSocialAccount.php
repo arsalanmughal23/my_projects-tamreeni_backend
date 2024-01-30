@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Eloquent as Model;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -65,15 +65,17 @@ class UserSocialAccount extends Model
      * @var array
      */
     public static $rules = [
-        'user_id' => 'required',
-        'platform' => 'required|string|max:255',
-        'client_id' => 'required|string|max:255',
-        'token' => 'required|string|max:255',
-        'expires_at' => 'nullable',
-        'status' => 'required|boolean',
-        'deleted_at' => 'nullable',
-        'created_at' => 'nullable',
-        'updated_at' => 'nullable'
+        'name'          => 'sometimes',
+        'first_name'    => 'sometimes',
+        'last_name'     => 'sometimes',
+        'email'         => 'sometimes|required|email',
+        'image'         => 'sometimes',
+        'platform'      => 'required|in:google,apple',
+        'client_id'     => 'required',
+        'token'         => 'required',
+        'device_type'   => 'required|in:ios,android,web',
+        'device_token'  => 'sometimes|required',
+        'expires_at'   => 'sometimes|required|date_format:"Y-m-d H:i:s"',
     ];
 
     /**

@@ -35,3 +35,5 @@ Route::get('get-aws-bucket-token', [App\Http\Controllers\API\AuthAPIController::
 Route::resource('constants', App\Http\Controllers\API\ConstantAPIController::class);
 
 Route::resource('user_details', App\Http\Controllers\API\UserDetailAPIController::class);
+
+Route::post('social_login', [App\Http\Controllers\API\AuthAPIController::class, 'socialLogin']);

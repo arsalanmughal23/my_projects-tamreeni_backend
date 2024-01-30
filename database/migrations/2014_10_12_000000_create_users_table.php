@@ -66,7 +66,7 @@ class CreateUsersTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('platform');
             $table->string('client_id');
-            $table->string('token');
+            $table->text('token');
             $table->timestamp('expires_at')->nullable();
             $table->tinyInteger('status')->default(1)->comment('0,1');
 

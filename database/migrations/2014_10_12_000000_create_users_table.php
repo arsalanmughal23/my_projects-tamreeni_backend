@@ -18,6 +18,7 @@ class CreateUsersTable extends Migration
             $table->string('name')->nullable();
             $table->string('email');
             $table->string('password');
+            $table->timestamp('email_verified_at')->nullable();
             $table->enum('status', ['pending', 'active', 'in-active'])->default('pending'); // CONSTANT: pending, active, in-active
 
             $table->rememberToken();
@@ -35,9 +36,8 @@ class CreateUsersTable extends Migration
             $table->string('address')->nullable();
             $table->string('phone_number')->nullable();
             $table->date('dob')->nullable();
-            $table->string('image')->nullable();
+            $table->text('image')->nullable();
 
-            $table->boolean('email_verified_at')->nullable()->default(0)->comment('0,1');
             $table->tinyInteger('is_social_login')->default(0)->comment('0,1');
 
             $table->enum('gender', ['male', 'female'])->nullable()->comment('male, female'); // CONSTANT: male, female
@@ -52,7 +52,7 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->unsignedBigInteger('user_id');
             $table->string('device_type')->comment('ios, android, web');
-            $table->string('device_token');
+            $table->text('device_token');
             $table->tinyInteger('push_notification')->default(0)->comment('0,1');
 
             $table->softDeletes();

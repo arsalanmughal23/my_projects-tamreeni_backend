@@ -58,41 +58,37 @@ class User extends Authenticatable
     protected $casts = [];
 
     public static $rules = [
-        'name' => 'nullable|string|max:255',
-        'email' => 'required|email|max:255|unique:users,email,NULL,id,deleted_at,NULL',
+        'name' => 'nullable|string|max:250',
+        'email' => 'required|email|max:250|unique:users,email,NULL,id,deleted_at,NULL',
         'password' => 'required|confirmed|min:6',
         'remember_token' => 'nullable|string|max:100'
     ];
 
     public static $update_rules = [
-        'first_name' => 'nullable|string|max:255',
-        'last_name' => 'nullable|string|max:255',
-        'address' => 'nullable|string|max:255',
-        'phone_number' => 'nullable|string|max:255',
+        'first_name' => 'nullable|string|max:250',
+        'last_name' => 'nullable|string|max:250',
+        'address' => 'nullable|string|max:250',
+        'phone_number' => 'nullable|string|max:250',
         'dob' => 'nullable|date',
-        'image' => 'nullable|string|max:255',
-        'email_verified_at' => 'nullable|boolean',
-        'is_social_login' => 'required|boolean',
+        'image' => 'nullable|string',
         'gender' => 'nullable|string|in:male,female'
     ];
 
     public static $api_rules = [
-        'email'                 => 'required|email|max:255|unique:users,email,NULL,id,deleted_at,NULL',
+        'email'                 => 'required|email|max:250|unique:users,email,NULL,id,deleted_at,NULL',
         'password'              => 'min:6|required|same:password_confirmation',
         'password_confirmation' => 'min:6|required_with:password',
-        'device_token'          => 'required|max:255',
+        'device_token'          => 'required',
         'device_type'           => 'required|string|in:ios,android,web',
     ];
 
     public static $api_update_rules = [
-        'first_name' => 'nullable|string|max:255',
-        'last_name' => 'nullable|string|max:255',
-        'address' => 'nullable|string|max:255',
-        'phone_number' => 'nullable|string|max:255',
+        'first_name' => 'nullable|string|max:250',
+        'last_name' => 'nullable|string|max:250',
+        'address' => 'nullable|string|max:250',
+        'phone_number' => 'nullable|string|max:250',
         'dob' => 'nullable|date',
-        'image' => 'nullable|string|max:255',
-        'email_verified_at' => 'nullable|boolean',
-        'is_social_login' => 'required|boolean',
+        'image' => 'nullable|string',
         'gender' => 'nullable|string|in:male,female'
     ];
 

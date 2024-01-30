@@ -2,25 +2,29 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Constants\EmailServiceTemplateNames;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\API\ForgetPasswordRequest;
 use App\Http\Requests\API\LoginAPIRequest;
 use App\Http\Requests\API\PasswordResetCodeRequest;
 use App\Http\Requests\API\RegistrationAPIRequest;
-use App\Http\Requests\API\UpdatePasswordRequest;
+use App\Http\Requests\API\ResetPasswordRequest;
 use App\Http\Requests\API\SocialLoginAPIRequest;
-use App\Mail\PasswordResetCode;
-use App\Mail\PasswordChanged;
+use App\Http\Requests\ResendOTPRequest;
+use App\Http\Requests\VerifyOTPRequest;
+use App\Jobs\SendEmail;
 use App\Models\PasswordReset;
 use App\Models\User;
 use App\Models\Role;
+use App\Models\VerfiyEmail;
 use App\Repositories\UserDetailRepository;
 use App\Repositories\UserDeviceRepository;
 use App\Repositories\UsersRepository;
 use App\Repositories\UserSocialAccountRepository;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Hash;
 use Aws\S3\S3Client;
+use DateTime;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Support\Carbon;
 
 class AuthAPIController extends AppBaseController
 {
@@ -111,7 +115,6 @@ class AuthAPIController extends AppBaseController
                     $userDetails['email_verified_at'] = 1;
 
                     $this->userDetailRepository->create($userDetails);
-
                 }
 
                 // Add social media link to the user
@@ -155,20 +158,16 @@ class AuthAPIController extends AppBaseController
         }
     }
 
-    public static function getTokenResponse($token)
-    {
-        return [
-            'access_token' => $token->plainTextToken,
-            'token_type'   => 'bearer',
-            // 'expires_in' => Carbon::parse($token->accessToken->updated_at)->addMinutes(24 * 60),
-        ];
-    }
-
     public function register(RegistrationAPIRequest $request)
     {
         try {
             $input = $request->all();
             $user = $this->userRepository->create($input);
+
+            $code = rand(1111, 9999);
+            $this->saveVerifyEmailOTP($user->id, $code);
+            $this->sendOTPEmail($user, 'Email Verification Code', EmailServiceTemplateNames::OTP_TEMPLATE, $code);
+
             $userRole = Role::whereName(Role::API_USER)->first();
             $user->syncRoles($userRole);
 
@@ -184,7 +183,65 @@ class AuthAPIController extends AppBaseController
             ], 'User saved successfully.');
 
         } catch (\Exception $e) {
+            return $this->sendError($e->getMessage(), 500);
+        }
+    }
+    
+    public function resendOTP(ResendOTPRequest $request)
+    {
+        try {
+            $userModel = $this->userRepository->model();
+            $user = $userModel::where('email', $request->email)->first();
+            
+            if(!$user)
+                return $this->sendError('User not found.', 404);
 
+            $code = rand(1111, 9999);
+            match($request->type) {
+                'email' => $this->saveVerifyEmailOTP($user->id, $code),
+                'password' => $this->savePasswordResetOTP($user->email, $code)
+            };
+
+            $subject = ucfirst($request->type).' Verification Code';
+            $this->sendOTPEmail($user, $subject, EmailServiceTemplateNames::OTP_TEMPLATE, $code);
+
+            return $this->sendResponse([], 'Your OTP send to your email successfully.');
+        } catch (\Exception $e) {
+            return $this->sendError($e->getMessage(), 500);
+        }
+    }
+
+    public function verifyOTP(VerifyOTPRequest $request)
+    {
+        try {
+            $userModel = $this->userRepository->model();
+            $user = $userModel::where('email', $request->email)->first();
+
+            if(!$user)
+                return $this->sendError('User not found.', 404);
+
+            $otpCode = null;
+            $otp = $request->otp;
+            match($request->type) {
+                'email' => $otpCode = VerfiyEmail::where(['user_id' => $user->id, 'code' => $otp])->first(),
+                'password' => $otpCode = PasswordReset::where(['email' => $user->email, 'token' => $otp])->first()
+            };
+
+            if(!$otpCode)
+                return $this->sendError('Invalid OTP Code.', 401);
+
+            if($this->checkOTPExpiry($otpCode->created_at)) {
+                $otpCode->delete();
+                return $this->sendResponse([], 'Your OTP expired.');
+            }
+
+            if($otpCode instanceof VerifyEmail) {
+                $user->markEmailAsVerified();
+                $otpCode->delete();
+            }
+
+            return $this->sendResponse([], 'Your OTP is verified successfully.');
+        } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 500);
         }
     }
@@ -196,65 +253,81 @@ class AuthAPIController extends AppBaseController
             $email = $request->email;
             $user = User::where('email', $email)->first();
 
-            $resetPassword = PasswordReset::updateOrCreate(
-                ['email' => $email],
-                ['token' => $code]
-            );
+            if(!$user)
+                return $this->sendError('User not found.', 404);
 
-            Mail::to($email)->send(
-                new PasswordResetCode([
-                    'user' => $user,
-                    'verification_code' => $code,
-                ])
-            );
+            $this->savePasswordResetOTP($user->email, $code);
+            $this->sendOTPEmail($user, 'Password Verification Code', EmailServiceTemplateNames::OTP_TEMPLATE, $code);
 
-            return $this->sendResponse([], 'Password Verification Code Send To Your Email Successfully');
+            return $this->sendResponse([], 'Password Verification Code send to your email successfully');
 
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 500);
         }
     }
 
-    public function verifyPasswordResetCode(PasswordResetCodeRequest $request)
+
+    public static function getTokenResponse($token)
+    {
+        // $otpExpireInSeconds = config('constants.expiry_in_seconds.api_token');
+        return [
+            'access_token' => $token->plainTextToken,
+            'token_type'   => 'bearer',
+            // 'expires_in' => Carbon::parse($token->accessToken->updated_at)->addSeconds($otpExpireInSeconds),
+        ];
+    }
+    
+    public function checkOTPExpiry(DateTime $otpCreatedAt)
+    {
+        $otpExpireInSeconds = config('constants.expiry_in_seconds.otp');
+        return Carbon::parse($otpCreatedAt)->addSeconds($otpExpireInSeconds)->isPast();
+    }
+
+    public function savePasswordResetOTP($email, $code)
+    {
+        return PasswordReset::updateOrCreate(['email' => $email], ['token' => $code]);
+    }
+
+    public function saveVerifyEmailOTP($user_id, $code)
+    {
+        return VerfiyEmail::updateOrCreate(['user_id' => $user_id], ['code' => $code]);
+    }
+
+    public function sendOTPEmail($user, $subject, $tamplateName, $code)
     {
         try {
-            $resetPassword = PasswordReset::where('token', $request->verification_code)->exists();
-
-            if (!$resetPassword) {
-                return $this->sendError('Invalid Code', 403);
-            }
-
-            return $this->sendResponse([], 'Code Verify successfully');
+            $data = [
+                'name' => $user->details->first_name ?? 'User',
+                'otp' => $code
+            ];
+            $sendEmailJob = new SendEmail($user->email, $subject, $data, $tamplateName);
+            dispatch($sendEmailJob);
 
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 500);
         }
     }
 
-    public function updatePassword(UpdatePasswordRequest $request)
+    public function resetPassword(ResetPasswordRequest $request)
     {
         try {
-            $resetPassword = PasswordReset::where([
-                ['email', $request->email],
-                ['token', $request->verification_code]
-            ])->exists();
+            $resetPassword = PasswordReset::where(['email' => $request->email, 'token' => $request->code])->first();
+            if(!$resetPassword)
+                return $this->sendError('Invalid Code.', 403);
 
-            if(!$resetPassword) {
-                return $this->sendError('Invalid Code', 403);
+            if($this->checkOTPExpiry($resetPassword->created_at)) {
+                $resetPassword->delete();
+                return $this->sendResponse([], 'Your OTP expired.');
             }
 
             $user = User::where('email', $request->email)->first();
-            $user->update([
-                'password' => $request->password,
-            ]);
+            if(!$user)
+                return $this->sendError('User not found.', 404);
 
-            Mail::to($request->email)->send(
-                new PasswordChanged([
-                    'user' => $user
-                ])
-            );
+            $user->update(['password' => $request->password]);
+            $resetPassword->delete();
 
-            return $this->sendResponse(['user' => $user], 'Password Changed Successfully');
+            return $this->sendResponse(['user' => $user], 'Password Reset Successfully');
 
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 500);
@@ -290,17 +363,3 @@ class AuthAPIController extends AppBaseController
     }
 }
 
-// public function forgetPassword(ForgetPasswordRequest $request)
-// {
-//     try {
-//         $status = Password::sendResetLink($request->only('email'));
-
-//         if ($status) {
-//             return $this->sendResponse([], 'Reset Password Email Sent Successfully');
-//         }
-
-//     } catch (\Exception $e) {
-
-//         return $this->sendError($e->getMessage(), 500);
-//     }
-// }

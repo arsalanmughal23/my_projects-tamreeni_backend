@@ -19,7 +19,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $phone_number
  * @property string $dob
  * @property string $image
- * @property boolean $email_verified_at
  * @property boolean $is_social_login
  * @property string $gender
  */
@@ -47,7 +46,6 @@ class UserDetail extends Model
         'phone_number',
         'dob',
         'image',
-        'email_verified_at',
         'is_social_login',
         'gender'
     ];
@@ -66,7 +64,6 @@ class UserDetail extends Model
         'phone_number' => 'string',
         'dob' => 'date',
         'image' => 'string',
-        'email_verified_at' => 'boolean',
         'is_social_login' => 'boolean',
         'gender' => 'string'
     ];
@@ -84,7 +81,6 @@ class UserDetail extends Model
         'phone_number' => 'nullable|string|max:255',
         'dob' => 'nullable',
         'image' => 'nullable|string|max:255',
-        'email_verified_at' => 'nullable|boolean',
         'is_social_login' => 'required|boolean',
         'gender' => 'nullable|string',
         'deleted_at' => 'nullable',

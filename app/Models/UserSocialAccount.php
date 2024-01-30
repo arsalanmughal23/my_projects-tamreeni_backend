@@ -65,16 +65,16 @@ class UserSocialAccount extends Model
      * @var array
      */
     public static $rules = [
-        'name'          => 'sometimes',
-        'first_name'    => 'sometimes',
-        'last_name'     => 'sometimes',
-        'email'         => 'sometimes|required|email',
+        'name'          => 'sometimes|max:250',
+        'first_name'    => 'sometimes|max:250',
+        'last_name'     => 'sometimes|max:250',
+        'email'         => 'required|email|max:250',
         'image'         => 'sometimes',
         'platform'      => 'required|in:google,apple',
-        'client_id'     => 'required',
+        'client_id'     => 'required|max:250',
         'token'         => 'required',
         'device_type'   => 'required|in:ios,android,web',
-        'device_token'  => 'sometimes|required',
+        'device_token'  => 'required',
         'expires_at'   => 'sometimes|required|date_format:"Y-m-d H:i:s"',
     ];
 

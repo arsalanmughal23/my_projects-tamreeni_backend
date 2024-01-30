@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\API;
 
-use App\Models\User;
+use App\Models\UserDetail;
 use InfyOm\Generator\Request\APIRequest;
 
 class CreateUserDetailAPIRequest extends APIRequest
@@ -24,6 +24,6 @@ class CreateUserDetailAPIRequest extends APIRequest
      */
     public function rules()
     {
-        return User::$api_rules;
+        return UserDetail::$rules;
     }
 }

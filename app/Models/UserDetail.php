@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 /**
  * Class UserDetail
  * @package App\Models
- * @version January 26, 2024, 11:01 pm UTC
+ * @version January 30, 2024, 1:30 pm UTC
  *
  * @property \App\Models\User $user
  * @property integer $user_id
@@ -22,6 +22,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property boolean $email_verified_at
  * @property boolean $is_social_login
  * @property string $gender
+ * @property string $language
+ * @property number $current_weight_in_kg
+ * @property number $target_weight_in_kg
+ * @property number $height_in_m
+ * @property string $goal
+ * @property string $diet_type
+ * @property string $current_weight_unit
+ * @property string $target_weight_unit
+ * @property string $height_unit
  */
 class UserDetail extends Model
 {
@@ -49,7 +58,16 @@ class UserDetail extends Model
         'image',
         'email_verified_at',
         'is_social_login',
-        'gender'
+        'gender',
+        'language',
+        'current_weight_in_kg',
+        'target_weight_in_kg',
+        'height_in_m',
+        'goal',
+        'diet_type',
+        'current_weight_unit',
+        'target_weight_unit',
+        'height_unit'
     ];
 
     /**
@@ -68,7 +86,16 @@ class UserDetail extends Model
         'image' => 'string',
         'email_verified_at' => 'boolean',
         'is_social_login' => 'boolean',
-        'gender' => 'string'
+        'gender' => 'string',
+        'language' => 'string',
+        'current_weight_in_kg' => 'float',
+        'target_weight_in_kg' => 'float',
+        'height_in_m' => 'float',
+        'goal' => 'string',
+        'diet_type' => 'string',
+        'current_weight_unit' => 'string',
+        'target_weight_unit' => 'string',
+        'height_unit' => 'string'
     ];
 
     /**
@@ -87,6 +114,15 @@ class UserDetail extends Model
         'email_verified_at' => 'nullable|boolean',
         'is_social_login' => 'required|boolean',
         'gender' => 'nullable|string',
+        'language' => 'nullable|string',
+        'current_weight_in_kg' => 'nullable|numeric',
+        'target_weight_in_kg' => 'nullable|numeric',
+        'height_in_m' => 'nullable|numeric',
+        'goal' => 'nullable|string|max:255',
+        'diet_type' => 'nullable|string|max:255',
+        'current_weight_unit' => 'nullable|string|max:255',
+        'target_weight_unit' => 'nullable|string|max:255',
+        'height_unit' => 'nullable|string|max:255',
         'deleted_at' => 'nullable',
         'created_at' => 'nullable',
         'updated_at' => 'nullable'

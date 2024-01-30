@@ -9,7 +9,9 @@ use App\Http\Requests\API\PasswordResetCodeRequest;
 use App\Http\Requests\API\RegistrationAPIRequest;
 use App\Http\Requests\API\UpdatePasswordRequest;
 use App\Mail\PasswordResetCode;
+use App\Http\Requests\API\ChangePasswordRequest;
 use App\Mail\PasswordChanged;
+use Illuminate\Http\Request;
 use App\Models\PasswordReset;
 use App\Models\User;
 use App\Repositories\UserDetailRepository;
@@ -18,6 +20,7 @@ use App\Repositories\UsersRepository;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Aws\S3\S3Client;
+use DB;
 
 class AuthAPIController extends AppBaseController
 {
@@ -155,6 +158,52 @@ class AuthAPIController extends AppBaseController
             return $this->sendError($e->getMessage(), 500);
         }
     }
+
+    public function changePassword(ChangePasswordRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+    
+            $user = User::where('email', auth()->user()->email)->first();
+    
+            if (!Hash::check($request->current_password, $user->password)) {
+                return $this->sendError("Oops, the current password you entered is incorrect", 422);
+            }
+    
+            if ($user && Hash::check($request->password, $user->password)) {
+                return $this->sendError('New password must be different from the old password', 403);
+            }
+    
+            $user->update([
+                'password' => $request->password,
+            ]);
+    
+            DB::commit();
+            return $this->sendResponse(['user' => $user], 'Password updated Successfully');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return $this->sendError($e->getMessage(), 422);
+        }
+    }
+
+    public function logout(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $user = $request->user();
+
+            if ($user) {
+                $user->tokens()->delete();
+            }
+            
+        DB::commit();
+        return $this->sendResponse(new \stdClass(), 'Logout Successfully');
+    } catch (\Exception $e) {
+        DB::rollback();
+        return $this->sendError($e->getMessage(), 422);
+    }
+    }
+    
 
     public function awsBucketToken()
     {

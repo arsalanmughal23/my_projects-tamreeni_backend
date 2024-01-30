@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class UserDetailRepository
  * @package App\Repositories
- * @version January 26, 2024, 11:01 pm UTC
+ * @version January 30, 2024, 1:30 pm UTC
 */
 
 class UserDetailRepository extends BaseRepository
@@ -26,7 +26,16 @@ class UserDetailRepository extends BaseRepository
         'image',
         'email_verified_at',
         'is_social_login',
-        'gender'
+        'gender',
+        'language',
+        'current_weight_in_kg',
+        'target_weight_in_kg',
+        'height_in_m',
+        'goal',
+        'diet_type',
+        'current_weight_unit',
+        'target_weight_unit',
+        'height_unit'
     ];
 
     /**

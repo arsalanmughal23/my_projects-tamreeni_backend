@@ -41,6 +41,16 @@ class CreateUsersTable extends Migration
             $table->tinyInteger('is_social_login')->default(0)->comment('0,1');
 
             $table->enum('gender', ['male', 'female'])->nullable()->comment('male, female'); // CONSTANT: male, female
+            $table->enum('language', ['en', 'ar'])->nullable()->comment('en, ar'); // CONSTANT: en, ar
+
+            $table->float('current_weight_in_kg')->nullable()->default(0);
+            $table->float('target_weight_in_kg')->nullable()->default(0);
+            $table->float('height_in_m')->nullable()->default(0);
+            $table->string('goal')->nullable()->comment('goal__lose_weight, goal__gain_weight, goal__build_muscle, goal__get_fit'); // CONSTANT: lose_weight, gain_weight, build_muscle, get_fit
+            $table->string('diet_type')->nullable()->comment('diet_type__traditional, diet_type__keto'); // CONSTANT: traditional, keto
+            $table->string('current_weight_unit')->nullable()->comment('weight_unit__kg, weight_unit__lbs'); // CONSTANT: kg, lbs
+            $table->string('target_weight_unit')->nullable()->comment('weight_unit__kg, weight_unit__lbs'); // CONSTANT: kg, lbs
+            $table->string('height_unit')->nullable()->comment('height_unit__cm, height_unit__m'); // CONSTANT: cm, m
 
             $table->softDeletes();
             $table->timestamps();
@@ -66,7 +76,7 @@ class CreateUsersTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('platform');
             $table->string('client_id');
-            $table->string('token');
+            $table->text('token');
             $table->timestamp('expires_at')->nullable();
             $table->tinyInteger('status')->default(1)->comment('0,1');
 

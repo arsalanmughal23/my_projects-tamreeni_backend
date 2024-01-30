@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             MenuSeeder::class,
             ConstantSeeder::class,
+            WellnessTipsSeeder::class,
         ]);
         // \App\Models\User::factory(10)->create();
     }

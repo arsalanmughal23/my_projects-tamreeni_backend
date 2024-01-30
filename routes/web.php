@@ -90,3 +90,9 @@ Route::resource('projects', App\Http\Controllers\ProjectController::class);
 
 
 Route::resource('user_details', App\Http\Controllers\UserDetailController::class);
+
+
+Route::resource('faqs', App\Http\Controllers\FaqController::class);
+
+
+Route::resource('wellness_tips', App\Http\Controllers\WellnessTipController::class);

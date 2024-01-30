@@ -23,9 +23,14 @@ Route::post('register', [App\Http\Controllers\API\AuthAPIController::class, 'reg
 Route::get('forget-password', [App\Http\Controllers\API\AuthAPIController::class, 'forgetPassword'])->name('forget_password');
 Route::post('verify-password-reset-code', [App\Http\Controllers\API\AuthAPIController::class, 'verifyPasswordResetCode'])->name('verify_password_reset_code');
 Route::post('update-password', [App\Http\Controllers\API\AuthAPIController::class, 'updatePassword'])->name('update_password');
-
 Route::middleware('auth:sanctum')->group(function() {
-    Route::resource('pages', App\Http\Controllers\API\PageAPIController::class);
+    Route::post('change-password', [App\Http\Controllers\API\AuthAPIController::class, 
+    'changePassword'])->name('change_password');
+    Route::post('logout', [App\Http\Controllers\API\AuthAPIController::class, 'logout'])->name('logout');
+    Route::resource('faqs', App\Http\Controllers\API\FaqAPIController::class);
+    Route::get('profile', [App\Http\Controllers\API\UserDetailAPIController::class, 'getUserProfile']);
+    Route::put('update-language', [App\Http\Controllers\API\UserDetailAPIController::class, 'updateLanguage']);
+    Route::resource('wellness_tips', App\Http\Controllers\API\WellnessTipAPIController::class);
     Route::resource('settings', App\Http\Controllers\API\SettingAPIController::class);
 });
 
@@ -33,5 +38,8 @@ Route::resource('menus', App\Http\Controllers\API\MenuAPIController::class);
 Route::get('get-aws-bucket-token', [App\Http\Controllers\API\AuthAPIController::class, 'awsBucketToken'])->name('get_aws_bucket_token');
 
 Route::resource('constants', App\Http\Controllers\API\ConstantAPIController::class);
+Route::resource('pages', App\Http\Controllers\API\PageAPIController::class);
 
 Route::resource('user_details', App\Http\Controllers\API\UserDetailAPIController::class);
+Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, 
+'pageContent'])->name('page-content');

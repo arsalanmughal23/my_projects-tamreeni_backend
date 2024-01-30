@@ -5,9 +5,11 @@ namespace App\Models;
 use Eloquent as Model;
 // use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Spatie\Permission\Models\Permission as SpatiePermission;
 
 /**
- * Class Permissions
+ * Class Permission
  * @package App\Models
  * @version January 10, 2023, 9:09 am UTC
  *
@@ -16,7 +18,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $name
  * @property string $guard_name
  */
-class Permissions extends Model
+class Permission extends SpatiePermission
 {
     // use SoftDeletes;
 
@@ -66,21 +68,21 @@ class Permissions extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      **/
-    public function modelHasPermission()
-    {
-        return $this->hasOne(\App\Models\ModelHasPermission::class);
-    }
+    // public function modelHasPermission()
+    // {
+    //     return $this->hasOne(\App\Models\ModelHasPermission::class);
+    // }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      **/
-    public function roles()
+    public function roles(): BelongsToMany
     {
         return $this->belongsToMany(\App\Models\Role::class, 'role_has_permissions');
     }
 
     /**
-     * Generate Route Permissions Lists
+     * Generate Route Permission Lists
      *
      * @param  mixed $table_name
      * @return void

@@ -5,9 +5,11 @@ namespace App\Models;
 use Eloquent as Model;
 // use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Spatie\Permission\Models\Role as SpatieRole;
 
 /**
- * Class Roles
+ * Class Role
  * @package App\Models
  * @version January 10, 2023, 8:54 am UTC
  *
@@ -16,7 +18,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $name
  * @property string $guard_name
  */
-class Roles extends Model
+class Role extends SpatieRole
 {
     // use SoftDeletes;
 
@@ -27,12 +29,14 @@ class Roles extends Model
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
+    const SUPER_ADMIN = 'Super Admin';
+    const ADMIN = 'Admin';
+    const API_USER = 'Api User';
 
     protected $dates = ['deleted_at'];
 
-
-
     public $fillable = [
+        'slug',
         'name',
         'guard_name'
     ];
@@ -66,16 +70,16 @@ class Roles extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      **/
-    public function modelHasRole()
-    {
-        return $this->hasOne(\App\Models\ModelHasRole::class);
-    }
+    // public function modelHasRole()
+    // {
+    //     return $this->hasOne(\App\Models\ModelHasRole::class);
+    // }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     **/
-    public function permissions()
+     * The permissions that belong to the role.
+     */
+    public function permissions(): BelongsToMany
     {
-        return $this->belongsToMany(\App\Models\Permission::class, 'role_has_permissions');
+        return $this->belongsToMany(config('permission.models.permission'), config('permission.table_names.role_has_permissions'));
     }
 }

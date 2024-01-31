@@ -29,9 +29,9 @@ class Role extends SpatieRole
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
-    const SUPER_ADMIN = 'Super Admin';
+    const SUPER_ADMIN = 'Super-Admin';
     const ADMIN = 'Admin';
-    const API_USER = 'Api User';
+    const API_USER = 'Api-User';
 
     protected $dates = ['deleted_at'];
 

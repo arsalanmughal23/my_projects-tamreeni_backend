@@ -46,7 +46,7 @@
     {!! Form::text('remember_token', null, ['class' => 'form-control','maxlength' => 100,'maxlength' => 100]) !!}
 </div>
 
-@role('Super-Admin')
+@role(\App\Models\Role::SUPER_ADMIN)
     <div class="col-sm-12">
         {!! Form::label('roles', 'Roles:') !!}
         <div class="form-group">

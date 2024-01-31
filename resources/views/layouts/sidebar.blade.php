@@ -10,7 +10,7 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
 
-                @role('Super-Admin')
+                @role(\App\Models\Role::SUPER_ADMIN)
                     <li class="nav-item">
                         <a href="{{ route('io_generator_builder') }}"
                             class="nav-link {{ Request::is('generator_builder*') ? 'active' : '' }}">
@@ -45,7 +45,7 @@
                         </a>
                     </li>
                 @endrole
-                @role('admin')
+                @role(\App\Models\Role::ADMIN)
                     <li class="nav-item">
                         <a href="{{ route('users.index') }}" class="nav-link {{ Request::is('users*') ? 'active' : '' }}">
                             <i class="fa fa-users"></i> <span>Users</span>

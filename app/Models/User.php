@@ -15,6 +15,8 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
 
+    // MustVerifyEmail -> hasVerifiedEmail, markEmailAsVerified, sendEmailVerificationNotification, getEmailForVerification
+
     public static function boot ()
     {
         parent::boot();

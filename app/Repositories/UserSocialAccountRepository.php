@@ -42,4 +42,9 @@ class UserSocialAccountRepository extends BaseRepository
     {
         return UserSocialAccount::class;
     }
+    
+    public function updateOrCreate($search, $data)
+    {
+        return $this->model->updateOrCreate($search, $data);
+    }
 }

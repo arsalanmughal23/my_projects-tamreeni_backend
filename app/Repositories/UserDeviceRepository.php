@@ -41,8 +41,8 @@ class UserDeviceRepository extends BaseRepository
         return UserDevice::class;
     }
 
-    public function updateOrCreate($searchUserDevice, $userDevice)
+    public function updateOrCreate($search, $data)
     {
-        return $this->model->updateOrCreate($searchUserDevice, $userDevice);
+        return $this->model->updateOrCreate($search, $data);
     }
 }

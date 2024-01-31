@@ -15,14 +15,14 @@ use App\Jobs\SendEmail;
 use App\Models\PasswordReset;
 use App\Models\User;
 use App\Models\Role;
-use App\Models\VerfiyEmail;
+use App\Models\VerfiyEmail as VerfiyEmailModel;
 use App\Repositories\UserDetailRepository;
 use App\Repositories\UserDeviceRepository;
 use App\Repositories\UsersRepository;
 use App\Repositories\UserSocialAccountRepository;
 use Aws\S3\S3Client;
 use DateTime;
-use Illuminate\Auth\Notifications\VerifyEmail;
+use Error;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -46,7 +46,11 @@ class AuthAPIController extends AppBaseController
         }
 
         $user = auth()->user();
-        $userDevice = $searchUserDevice = $request->only(['device_type', 'device_token']);
+        if(!$user->hasVerifiedEmail())
+            return $this->sendError('Your email address is not verified.', 403);
+
+        $searchUserDevice = $request->only('device_token');
+        $userDevice = $request->only('device_type', 'device_token');
         $userDevice['user_id'] = $user->id;
         $this->userDeviceRepository->updateOrCreate($searchUserDevice, $userDevice);
 
@@ -65,7 +69,7 @@ class AuthAPIController extends AppBaseController
             $user    = null;
             $input   = $request->validated();
             $userSocialAccountModel = $this->userSocialAccountRepository->model();
-            $userSocialAccount = $userSocialAccountModel::where(['platform' => $input['platform'], 'client_id' => $input['client_id'], 'deleted_at' => null])->first();
+            $userSocialAccount = $userSocialAccountModel::where($request->only('platform', 'client_id'))->first();
 
             $userEmail = $input['email'] ?? null;
             $userName = $input['name'] ?? null;
@@ -79,6 +83,7 @@ class AuthAPIController extends AppBaseController
                     $jwtDecodeResponse = JWTDecodeUserInfo($request->token);
                     $jwtUserInfo = $jwtDecodeResponse['data'];
                     $userEmail  = $jwtUserInfo['email'];
+                    // $jwtUserInfo['email_verified']
 
                     // $emailName  = explode('@', $userEmail)[0];
                     // Replace & Explode: Number & Special Character with [SPACE] Seperator from {$emailName}
@@ -94,36 +99,40 @@ class AuthAPIController extends AppBaseController
                     $user = $userModel::where(['email' => $userEmail])->first();
                 }
 
-                // Check User is exists with Non-Social-User and Verified
-                if(($user->details->is_social_login ?? 0) == 0 && ($user->details->email_verified_at ?? 0) == 1){
+                // Check User is already exists with this email
+                if($user){
                     throw new Error('The email has already been taken.');
                 }
 
-                if (!$user) {
-                    // Register user with only social details and no password.
-                    $userData             = [];
-                    $userData['name']     = $userName ?? "user_" . $input['client_id'];
-                    $userData['email']    = $userEmail ?? $input['client_id'] . '_' . $input['platform'] . '@' . config('app.name') . '.com';
-                    $userData['password'] = bcrypt(substr(str_shuffle(MD5(microtime())), 0, 12));
-                    $user                 = $this->userRepository->create($userData);
+                // Register user with only social details and no password.
+                $userData             = [];
+                $userData['name']     = $userName ?? "user_" . $input['client_id'];
+                $userData['email']    = $userEmail ?? $input['client_id'] . '_' . $input['platform'] . '@' . config('app.name') . '.com';
+                $userData['password'] = bcrypt(substr(str_shuffle(MD5(microtime())), 0, 12));
+                $user                 = $this->userRepository->create($userData);
+                $user->markEmailAsVerified();
 
-                    $userRole = Role::whereName(Role::API_USER)->first();
-                    $user->syncRoles($userRole);
+                $userRole = Role::whereName(Role::API_USER)->first();
+                $user->syncRoles($userRole);
 
-                    $userDetails['user_id']    = $user->id;
-                    $userDetails['is_social_login'] = 1;
-                    $userDetails['email_verified_at'] = 1;
+                $userDetails['user_id']    = $user->id;
+                $userDetails['is_social_login'] = 1;
+                $userDetails['email_verified_at'] = 1;
 
-                    $this->userDetailRepository->create($userDetails);
-                }
+                $this->userDetailRepository->create($userDetails);
 
                 // Add social media link to the user
-                $userSocialAccountRequestData = $request->only(['platform', 'client_id', 'token', 'expires_at']);
+                $searchUserSocialAccount = $request->only('token');
+                $userSocialAccountRequestData = $request->only('platform', 'client_id', 'token', 'expires_at');
                 $userSocialAccountRequestData['user_id'] = $user->id;
-                $this->userSocialAccountRepository->create($userSocialAccountRequestData);
+                $this->userSocialAccountRepository->updateOrCreate($searchUserSocialAccount, $userSocialAccountRequestData);
             }
+            
+            if(!$user->hasVerifiedEmail())
+                return $this->sendError('Your email address is not verified.', 403);
 
-            $userDevice = $searchUserDevice = $request->only(['device_type', 'device_token']);
+            $searchUserDevice = $request->only('device_token');
+            $userDevice = $request->only('device_type', 'device_token');
             $userDevice['user_id'] = $user->id;
             $this->userDeviceRepository->updateOrCreate($searchUserDevice, $userDevice);
 
@@ -174,7 +183,8 @@ class AuthAPIController extends AppBaseController
             $userDetail = ['user_id' => $user->id];
             $this->userDetailRepository->create($userDetail);
 
-            $userDevice = $searchUserDevice = $request->only(['device_type', 'device_token']);
+            $searchUserDevice = $request->only('device_token');
+            $userDevice = $request->only('device_type', 'device_token');
             $userDevice['user_id'] = $user->id;
             $this->userDeviceRepository->updateOrCreate($searchUserDevice, $userDevice);
 
@@ -220,11 +230,10 @@ class AuthAPIController extends AppBaseController
             if(!$user)
                 return $this->sendError('User not found.', 404);
 
-            $otpCode = null;
             $otp = $request->otp;
-            match($request->type) {
-                'email' => $otpCode = VerfiyEmail::where(['user_id' => $user->id, 'code' => $otp])->first(),
-                'password' => $otpCode = PasswordReset::where(['email' => $user->email, 'token' => $otp])->first()
+            $otpCode = match($request->type) {
+                'email' => VerfiyEmailModel::where(['user_id' => $user->id, 'code' => $otp])->first(),
+                'password' => PasswordReset::where(['email' => $user->email, 'token' => $otp])->first()
             };
 
             if(!$otpCode)
@@ -235,7 +244,7 @@ class AuthAPIController extends AppBaseController
                 return $this->sendResponse([], 'Your OTP expired.');
             }
 
-            if($otpCode instanceof VerifyEmail) {
+            if($otpCode instanceof VerfiyEmailModel) {
                 $user->markEmailAsVerified();
                 $otpCode->delete();
             }
@@ -337,7 +346,7 @@ class AuthAPIController extends AppBaseController
 
     public static function saveVerifyEmailOTP($user_id, $code)
     {
-        return VerfiyEmail::updateOrCreate(['user_id' => $user_id], ['code' => $code]);
+        return VerfiyEmailModel::updateOrCreate(['user_id' => $user_id], ['code' => $code]);
     }
 
     public static function sendOTPEmail($user, $subject, $code)

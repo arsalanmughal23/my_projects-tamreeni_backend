@@ -6,7 +6,6 @@ use App\Constants\EmailServiceTemplateNames;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\API\ForgetPasswordRequest;
 use App\Http\Requests\API\LoginAPIRequest;
-use App\Http\Requests\API\PasswordResetCodeRequest;
 use App\Http\Requests\API\RegistrationAPIRequest;
 use App\Http\Requests\API\ResetPasswordRequest;
 use App\Http\Requests\API\SocialLoginAPIRequest;
@@ -24,6 +23,7 @@ use App\Repositories\UserSocialAccountRepository;
 use Aws\S3\S3Client;
 use DateTime;
 use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
 class AuthAPIController extends AppBaseController
@@ -165,8 +165,8 @@ class AuthAPIController extends AppBaseController
             $user = $this->userRepository->create($input);
 
             $code = rand(1111, 9999);
-            $this->saveVerifyEmailOTP($user->id, $code);
-            $this->sendOTPEmail($user, 'Email Verification Code', EmailServiceTemplateNames::OTP_TEMPLATE, $code);
+            self::saveVerifyEmailOTP($user->id, $code);
+            self::sendOTPEmail($user, 'Email Verification Code', $code);
 
             $userRole = Role::whereName(Role::API_USER)->first();
             $user->syncRoles($userRole);
@@ -198,12 +198,12 @@ class AuthAPIController extends AppBaseController
 
             $code = rand(1111, 9999);
             match($request->type) {
-                'email' => $this->saveVerifyEmailOTP($user->id, $code),
-                'password' => $this->savePasswordResetOTP($user->email, $code)
+                'email' => self::saveVerifyEmailOTP($user->id, $code),
+                'password' => self::savePasswordResetOTP($user->email, $code)
             };
 
             $subject = ucfirst($request->type).' Verification Code';
-            $this->sendOTPEmail($user, $subject, EmailServiceTemplateNames::OTP_TEMPLATE, $code);
+            self::sendOTPEmail($user, $subject, $code);
 
             return $this->sendResponse([], 'Your OTP send to your email successfully.');
         } catch (\Exception $e) {
@@ -230,7 +230,7 @@ class AuthAPIController extends AppBaseController
             if(!$otpCode)
                 return $this->sendError('Invalid OTP Code.', 401);
 
-            if($this->checkOTPExpiry($otpCode->created_at)) {
+            if(self::checkOTPExpiry($otpCode->created_at)) {
                 $otpCode->delete();
                 return $this->sendResponse([], 'Your OTP expired.');
             }
@@ -256,52 +256,10 @@ class AuthAPIController extends AppBaseController
             if(!$user)
                 return $this->sendError('User not found.', 404);
 
-            $this->savePasswordResetOTP($user->email, $code);
-            $this->sendOTPEmail($user, 'Password Verification Code', EmailServiceTemplateNames::OTP_TEMPLATE, $code);
+            self::savePasswordResetOTP($user->email, $code);
+            self::sendOTPEmail($user, 'Password Verification Code', $code);
 
             return $this->sendResponse([], 'Password Verification Code send to your email successfully');
-
-        } catch (\Exception $e) {
-            return $this->sendError($e->getMessage(), 500);
-        }
-    }
-
-
-    public static function getTokenResponse($token)
-    {
-        // $otpExpireInSeconds = config('constants.expiry_in_seconds.api_token');
-        return [
-            'access_token' => $token->plainTextToken,
-            'token_type'   => 'bearer',
-            // 'expires_in' => Carbon::parse($token->accessToken->updated_at)->addSeconds($otpExpireInSeconds),
-        ];
-    }
-    
-    public function checkOTPExpiry(DateTime $otpCreatedAt)
-    {
-        $otpExpireInSeconds = config('constants.expiry_in_seconds.otp');
-        return Carbon::parse($otpCreatedAt)->addSeconds($otpExpireInSeconds)->isPast();
-    }
-
-    public function savePasswordResetOTP($email, $code)
-    {
-        return PasswordReset::updateOrCreate(['email' => $email], ['token' => $code]);
-    }
-
-    public function saveVerifyEmailOTP($user_id, $code)
-    {
-        return VerfiyEmail::updateOrCreate(['user_id' => $user_id], ['code' => $code]);
-    }
-
-    public function sendOTPEmail($user, $subject, $tamplateName, $code)
-    {
-        try {
-            $data = [
-                'name' => $user->details->first_name ?? 'User',
-                'otp' => $code
-            ];
-            $sendEmailJob = new SendEmail($user->email, $subject, $data, $tamplateName);
-            dispatch($sendEmailJob);
 
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 500);
@@ -315,7 +273,7 @@ class AuthAPIController extends AppBaseController
             if(!$resetPassword)
                 return $this->sendError('Invalid Code.', 403);
 
-            if($this->checkOTPExpiry($resetPassword->created_at)) {
+            if(self::checkOTPExpiry($resetPassword->created_at)) {
                 $resetPassword->delete();
                 return $this->sendResponse([], 'Your OTP expired.');
             }
@@ -327,7 +285,77 @@ class AuthAPIController extends AppBaseController
             $user->update(['password' => $request->password]);
             $resetPassword->delete();
 
+            $message = 'Your password is reset successfully';
+            self::sendMessageEmail($user, 'Password Reset', $message);
+
             return $this->sendResponse(['user' => $user], 'Password Reset Successfully');
+
+        } catch (\Exception $e) {
+            return $this->sendError($e->getMessage(), 500);
+        }
+    }
+
+    public function deleteAccount(Request $request)
+    {
+        try{
+            $user = $request->user();
+            if(!$user)
+                return $this->sendError('User not found.', 404);
+
+            $message = 'Your account is deleted successfully';
+            self::sendMessageEmail($user, 'Account Deleted', $message);
+
+            $user->delete();
+
+            return $this->sendResponse([], 'Your account is deleted successfully');
+        
+        } catch (\Exception $e) {
+            return $this->sendError($e->getMessage(), 500);
+        }
+    }
+
+    public static function getTokenResponse($token)
+    {
+        // $otpExpireInSeconds = config('constants.expiry_in_seconds.api_token');
+        return [
+            'access_token' => $token->plainTextToken,
+            'token_type'   => 'bearer',
+            // 'expires_in' => Carbon::parse($token->accessToken->updated_at)->addSeconds($otpExpireInSeconds),
+        ];
+    }
+    
+    public static function checkOTPExpiry(DateTime $otpCreatedAt)
+    {
+        $otpExpireInSeconds = config('constants.expiry_in_seconds.otp');
+        return Carbon::parse($otpCreatedAt)->addSeconds($otpExpireInSeconds)->isPast();
+    }
+
+    public static function savePasswordResetOTP($email, $code)
+    {
+        return PasswordReset::updateOrCreate(['email' => $email], ['token' => $code]);
+    }
+
+    public static function saveVerifyEmailOTP($user_id, $code)
+    {
+        return VerfiyEmail::updateOrCreate(['user_id' => $user_id], ['code' => $code]);
+    }
+
+    public static function sendOTPEmail($user, $subject, $code)
+    {
+        $data = [
+            'name' => $user->details->first_name ?? 'User',
+            'otp' => $code
+        ];
+        $sendEmailJob = new SendEmail($user->email, $subject, $data, EmailServiceTemplateNames::OTP_TEMPLATE);
+        dispatch($sendEmailJob);
+    }
+
+    public static function sendMessageEmail($user, $subject, $message)
+    {
+        try {
+            $data = ['message' => $message];
+            $sendEmailJob = new SendEmail($user->email, $subject, $data, EmailServiceTemplateNames::MESSAGE_TEMPLATE);
+            dispatch($sendEmailJob);
 
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 500);

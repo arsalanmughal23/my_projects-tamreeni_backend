@@ -24,10 +24,12 @@ Route::post('forget-password', [App\Http\Controllers\API\AuthAPIController::clas
 Route::post('reset-password', [App\Http\Controllers\API\AuthAPIController::class, 'resetPassword'])->name('reset_password');
 Route::post('resend-otp', [\App\Http\Controllers\API\AuthAPIController::class, 'resendOTP']);
 Route::post('verify-otp', [\App\Http\Controllers\API\AuthAPIController::class, 'verifyOTP']);
-Route::post('social_login', [App\Http\Controllers\API\AuthAPIController::class, 'socialLogin']);
+Route::post('social-login', [App\Http\Controllers\API\AuthAPIController::class, 'socialLogin']);
 
 
 Route::middleware('auth:sanctum')->group(function() {
+    Route::delete('delete-account', [App\Http\Controllers\API\AuthAPIController::class, 'deleteAccount']);
+
     Route::resource('pages', App\Http\Controllers\API\PageAPIController::class);
     Route::resource('settings', App\Http\Controllers\API\SettingAPIController::class);
 });

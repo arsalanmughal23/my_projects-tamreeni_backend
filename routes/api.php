@@ -27,7 +27,7 @@ Route::post('verify-otp', [\App\Http\Controllers\API\AuthAPIController::class, '
 Route::post('social-login', [App\Http\Controllers\API\AuthAPIController::class, 'socialLogin']);
 
 
-Route::middleware('auth:sanctum')->group(function() {
+Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::delete('delete-account', [App\Http\Controllers\API\AuthAPIController::class, 'deleteAccount']);
 
     Route::resource('pages', App\Http\Controllers\API\PageAPIController::class);

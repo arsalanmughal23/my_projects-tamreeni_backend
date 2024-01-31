@@ -32,6 +32,11 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::put('update-language', [App\Http\Controllers\API\UserDetailAPIController::class, 'updateLanguage']);
     Route::resource('wellness_tips', App\Http\Controllers\API\WellnessTipAPIController::class);
     Route::resource('settings', App\Http\Controllers\API\SettingAPIController::class);
+    Route::resource('favourites', App\Http\Controllers\API\FavouriteAPIController::class);
+    Route::post('favorite', [App\Http\Controllers\API\FavouriteAPIController::class, 'markAsFavorite']);
+    Route::get('search', [App\Http\Controllers\API\MealAPIController::class, 'searchMeals']);
+    Route::resource('meal_categories', App\Http\Controllers\API\MealCategoryAPIController::class);
+    Route::resource('meals', App\Http\Controllers\API\MealAPIController::class);
 });
 
 Route::resource('menus', App\Http\Controllers\API\MenuAPIController::class);
@@ -43,3 +48,8 @@ Route::resource('pages', App\Http\Controllers\API\PageAPIController::class);
 Route::resource('user_details', App\Http\Controllers\API\UserDetailAPIController::class);
 Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, 
 'pageContent'])->name('page-content');
+
+
+
+
+

@@ -34,19 +34,21 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
 Route::post('update-password', [App\Http\Controllers\API\AuthAPIController::class, 'updatePassword'])->name('update_password');
 Route::middleware('auth:sanctum')->group(function() {
-    Route::post('change-password', [App\Http\Controllers\API\AuthAPIController::class, 
-    'changePassword'])->name('change_password');
-    Route::post('logout', [App\Http\Controllers\API\AuthAPIController::class, 'logout'])->name('logout');
+
     Route::resource('faqs', App\Http\Controllers\API\FaqAPIController::class);
     Route::get('profile', [App\Http\Controllers\API\UserDetailAPIController::class, 'getUserProfile']);
     Route::put('update-language', [App\Http\Controllers\API\UserDetailAPIController::class, 'updateLanguage']);
     Route::resource('wellness_tips', App\Http\Controllers\API\WellnessTipAPIController::class);
     Route::resource('settings', App\Http\Controllers\API\SettingAPIController::class);
 
-
     Route::post('change-password', [App\Http\Controllers\API\AuthAPIController::class, 'changePassword'])->name('change_password');
     Route::post('logout', [App\Http\Controllers\API\AuthAPIController::class, 'logout'])->name('logout');
 
+    Route::resource('favourites', App\Http\Controllers\API\FavouriteAPIController::class);
+    Route::post('favorite', [App\Http\Controllers\API\FavouriteAPIController::class, 'markAsFavorite']);
+    Route::get('search', [App\Http\Controllers\API\MealAPIController::class, 'searchMeals']);
+    Route::resource('meal_categories', App\Http\Controllers\API\MealCategoryAPIController::class);
+    Route::resource('meals', App\Http\Controllers\API\MealAPIController::class);
 });
 
 Route::resource('menus', App\Http\Controllers\API\MenuAPIController::class);
@@ -56,5 +58,4 @@ Route::resource('constants', App\Http\Controllers\API\ConstantAPIController::cla
 Route::resource('pages', App\Http\Controllers\API\PageAPIController::class);
 
 Route::resource('user_details', App\Http\Controllers\API\UserDetailAPIController::class);
-Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, 
-'pageContent'])->name('page-content');
+Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, 'pageContent'])->name('page-content');

@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             MenuSeeder::class,
             ConstantSeeder::class,
             WellnessTipsSeeder::class,
+            MealCategoriesSeeder::class,
+            MealsSeeder::class,
         ]);
         // \App\Models\User::factory(10)->create();
     }

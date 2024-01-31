@@ -88,3 +88,12 @@ Route::resource('faqs', App\Http\Controllers\FaqController::class);
 
 
 Route::resource('wellness_tips', App\Http\Controllers\WellnessTipController::class);
+
+
+Route::resource('favourites', App\Http\Controllers\FavouriteController::class);
+
+
+Route::resource('meal_categories', App\Http\Controllers\MealCategoryController::class);
+
+
+Route::resource('meals', App\Http\Controllers\MealController::class);

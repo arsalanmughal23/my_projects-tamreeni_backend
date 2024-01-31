@@ -58,3 +58,33 @@
 @endcan
 
 
+@canany(['favourites.index', 'favourites.create', 'favourites.show', 'favourites.edit', 'favourites.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('favourites.index') }}"
+        class="nav-link {{ Request::is('favourites*') ? 'active' : '' }}">
+            <p>Favourites</p>
+        </a>
+    </li>
+@endcan
+
+
+@canany(['meal_categories.index', 'meal_categories.create', 'meal_categories.show', 'meal_categories.edit', 'meal_categories.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('meal_categories.index') }}"
+        class="nav-link {{ Request::is('meal_categories*') ? 'active' : '' }}">
+            <p>Meal Categories</p>
+        </a>
+    </li>
+@endcan
+
+
+@canany(['meals.index', 'meals.create', 'meals.show', 'meals.edit', 'meals.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('meals.index') }}"
+        class="nav-link {{ Request::is('meals*') ? 'active' : '' }}">
+            <p>Meals</p>
+        </a>
+    </li>
+@endcan
+
+

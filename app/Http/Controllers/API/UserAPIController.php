@@ -1,0 +1,169 @@
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Models\User;
+use Illuminate\Http\Request;
+use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\API\UpdateUserAPIRequest;
+use App\Repositories\UsersRepository;
+use Error;
+use Response;
+
+/**
+ * Class UserController
+ * @package App\Http\Controllers\API
+ */
+
+class UserAPIController extends AppBaseController
+{
+    /** @var  UserRepository */
+    private $userRepository;
+
+    public function __construct(UsersRepository $userRepo)
+    {
+        $this->userRepository = $userRepo;
+    }
+
+    public function myProfile(Request $request)
+    {
+        try {
+            /** @var User $user */
+            $user = $request->user();
+
+            return $this->sendResponse($user->toArray(), 'User profile data');
+
+        } catch (\Exception $e) {
+            return $this->sendError($e->getMessage(), 500);
+        }
+    }
+    
+    public function updateProfile(UpdateUserAPIRequest $request)
+    {
+        try {
+            /** @var User $user */
+            $user = $request->user();
+            if(!$userDetails = $user->details)
+                throw new Error('User Detail not found');
+
+            if($request->name)
+                $user->update(['name' => $request->name]);
+    
+            $userDetails->update($request->validated());
+
+            return $this->sendResponse($user->fresh(), 'User profile is updated');
+
+        } catch (\Exception $e) {
+            return $this->sendError($e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Display a listing of the User.
+     * GET|HEAD /user
+     *
+     * @param Request $request
+     * @return Response
+     */
+
+    public function index(Request $request)
+    {
+        $user = $this->userRepository->all(
+            $request->except(['skip', 'limit']),
+            $request->get('skip'),
+            $request->get('limit')
+        );
+
+        return $this->sendResponse($user->toArray(), 'Users retrieved successfully');
+    }
+
+    /**
+     * Store a newly created User in storage.
+     * POST /user
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+
+    // public function store(Request $request)
+    // {
+    //     $input = $request->all();
+
+    //     $user = $this->userRepository->create($input);
+
+    //     return $this->sendResponse($user->toArray(), 'User saved successfully');
+    // }
+
+    /**
+     * Display the specified User.
+     * GET|HEAD /user/{id}
+     *
+     * @param int $id
+     *
+     * @return Response
+     */
+
+    public function show($id)
+    {
+        /** @var User $user */
+        $user = $this->userRepository->find($id);
+
+        if (empty($user)) {
+            return $this->sendError('User not found');
+        }
+
+        return $this->sendResponse($user->toArray(), 'User retrieved successfully');
+    }
+
+    /**
+     * Update the specified User in storage.
+     * PUT/PATCH /user/{id}
+     *
+     * @param int $id
+     * @param UpdateUserAPIRequest $request
+     *
+     * @return Response
+     */
+
+    public function update($id, UpdateUserAPIRequest $request)
+    {
+        $input = $request->all();
+
+        /** @var User $user */
+        $user = $this->userRepository->find($id);
+
+        if (empty($user)) {
+            return $this->sendError('User not found');
+        }
+
+        $user = $this->userRepository->update($input, $id);
+
+        return $this->sendResponse($user->toArray(), 'User updated successfully');
+    }
+
+    /**
+     * Remove the specified User from storage.
+     * DELETE /user/{id}
+     *
+     * @param int $id
+     *
+     * @throws \Exception
+     *
+     * @return Response
+     */
+
+    public function destroy($id)
+    {
+        /** @var User $user */
+        $user = $this->userRepository->find($id);
+
+        if (empty($user)) {
+            return $this->sendError('User not found');
+        }
+
+        $user->delete();
+
+        return $this->sendSuccess('User deleted successfully');
+    }
+}

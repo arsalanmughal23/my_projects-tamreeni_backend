@@ -15,10 +15,3 @@
     {!! Form::label('key', 'Key:') !!}
     <p>{{ $constant->key }}</p>
 </div>
-
-<!-- Value Field -->
-<div class="col-sm-12">
-    {!! Form::label('value', 'Value:') !!}
-    <p>{{ $constant->value }}</p>
-</div>
-

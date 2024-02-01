@@ -68,7 +68,7 @@ class ConstantDataTable extends DataTable
             'name',
             'group',
             'key',
-            'value'
+            'unique_key'
         ];
     }
 

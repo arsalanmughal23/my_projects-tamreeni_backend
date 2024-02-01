@@ -20,7 +20,7 @@ class ConstantRepository extends BaseRepository
         'name',
         'group',
         'key',
-        'value'
+        'unique_key'
     ];
 
     /**

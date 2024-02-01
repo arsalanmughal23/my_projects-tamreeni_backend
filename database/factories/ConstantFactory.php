@@ -25,7 +25,7 @@ class ConstantFactory extends Factory
             'name' => $this->faker->word,
         'group' => $this->faker->word,
         'key' => $this->faker->word,
-        'value' => $this->faker->word,
+        'unique_key' => $this->faker->word,
         'created_at' => $this->faker->date('Y-m-d H:i:s'),
         'updated_at' => $this->faker->date('Y-m-d H:i:s'),
         'deleted_at' => $this->faker->date('Y-m-d H:i:s')

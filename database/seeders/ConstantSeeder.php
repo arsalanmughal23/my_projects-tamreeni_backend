@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Constant;
+use Illuminate\Database\Seeder;
 
 class ConstantSeeder extends Seeder
 {
@@ -13,83 +13,78 @@ class ConstantSeeder extends Seeder
      * @return void
      */
     public function run()
-    {
+    {        
         // Values for the 'goal' group
-        $this->seedGroup('goal', [
-            'lose_weight',
-            'gain_weight',
-            'build_muscle',
-            'get_fit',
+        $this->seedGroup(Constant::GROUP_GOAL, [
+            'Lose Weight',
+            'Gain Weight',
+            'Build Muscle',
+            'Get Fit',
+        ]);
+        // Values for the 'size_unit' group
+        $this->seedGroup(Constant::GROUP_HEIGHT_UNIT, [
+            'Cm',
+            'M',
+        ]);
+        // Values for the 'weight_units' group
+        $this->seedGroup(Constant::GROUP_CURRENT_WEIGHT_UNIT, [
+            'Kg',
+            'Lbs',
+        ]);
+        // Values for the 'weight_units' group
+        $this->seedGroup(Constant::GROUP_TARGET_WEIGHT_UNIT, [
+            'Kg',
+            'Lbs',
+        ]);
+        // Values for the 'diet_types' group
+        $this->seedGroup(Constant::GROUP_DIET_TYPE, [
+            'Traditional',
+            'Keto',
+        ]);
+        // Values for the 'pages' group
+        $this->seedGroup(Constant::GROUP_DELETE_ACCOUNT_TYPE, [
+            'Privacy Concerns',
+            'Inactivity',
+            'Dissatisfaction with the platform or service',
+            'Lack of interest in the platform or service',
+            'Moving on to a different platform or service',
         ]);
 
         // Values for the 'gender' group
         $this->seedGroup('gender', [
-            'male',
-            'female',
+            'Male',
+            'Female',
         ]);
-
-        // Values for the 'diet_types' group
-        $this->seedGroup('diet_types', [
-            'traditional',
-            'keto',
-        ]);
-
-        // Values for the 'size_unit' group
-        $this->seedGroup('size_unit', [
-            'cm',
-            'm',
-        ]);
-
-        // Values for the 'weight_units' group
-        $this->seedGroup('weight_units', [
-            'kg',
-            'lbs',
-        ]);
-
         // Values for the 'languages' group
         $this->seedGroup('languages', [
-            'en',
-            'ar',
+            'En',
+            'Ar',
+        ]);
+        // Values for the 'meal_types' group
+        $this->seedGroup('meal_types', [
+            'Breakfast',
+            'Lunch',
+            'Dinner',
+        ]);
+        // Values for the 'pages' group
+        $this->seedGroup('pages', [
+            'About us',
+            'Terms and Conditions',
+            'Privacy Policy',
         ]);
 
         // Values for the 'user_variables' group
-        $this->seedGroup('user_variables', [
-            // Add user variable options here
-        ]);
-
-        // Values for the 'meal_types' group
-        $this->seedGroup('meal_types', [
-            'breakfast',
-            'lunch',
-            'dinner',
-        ]);
-
-        // Values for the 'pages' group
-        $this->seedGroup('pages', [
-            'about_us',
-            'terms_and_conditions',
-            'privacy_policy',
-        ]);
+        // $this->seedGroup('user_variables', [
+        //     // Add user variable options here
+        // ]);
     }
-
-    /**
-     * Seed constants for a specific group and keys.
-     *
-     * @param string $group
-     * @param array $keys
-     * @return void
-     */
+    
     private function seedGroup($group, $keys)
     {
         foreach ($keys as $key) {
             Constant::create([
-                'name' => $group,
                 'group' => $group,
-                'key' => $key,
-                'value' => '',
-                'created_at' => now(),
-                'updated_at' => now(),
-                'deleted_at' => null,
+                'name' => $key,
             ]);
         }
     }

@@ -18,9 +18,8 @@ class CreateConstantsTable extends Migration
             $table->string('name');
             $table->string('group');
             $table->string('key');
-            $table->string('value')->nullable();
+            $table->string('unique_key')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

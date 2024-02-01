@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Eloquent as Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -14,12 +13,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $name
  * @property string $group
  * @property string $key
- * @property string $value
+ * @property string $unique_key
  */
 class Constant extends Model
 {
-    use SoftDeletes;
-
     use HasFactory;
 
     public $table = 'constants';
@@ -27,7 +24,12 @@ class Constant extends Model
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
-    const GROUP_DELETE_ACCOUNT_TYPE = 'delete_account_types';
+    const GROUP_DELETE_ACCOUNT_TYPE = 'delete_account_type';
+    const GROUP_GOAL = 'goal';
+    const GROUP_DIET_TYPE = 'diet_type';
+    const GROUP_CURRENT_WEIGHT_UNIT = 'current_weight_unit';
+    const GROUP_TARGET_WEIGHT_UNIT = 'target_weight_unit';
+    const GROUP_HEIGHT_UNIT = 'height_unit';
 
 
     protected $dates = ['deleted_at'];
@@ -38,7 +40,7 @@ class Constant extends Model
         'name',
         'group',
         'key',
-        'value'
+        'unique_key'
     ];
 
     /**
@@ -51,7 +53,7 @@ class Constant extends Model
         'name' => 'string',
         'group' => 'string',
         'key' => 'string',
-        'value' => 'string'
+        'unique_key' => 'string'
     ];
 
     /**
@@ -63,22 +65,26 @@ class Constant extends Model
         'name' => 'required|string|max:255',
         'group' => 'required|string|max:255',
         'key' => 'required|string|max:255',
-        'value' => 'nullable|string|max:255',
+        'unique_key' => 'nullable|string|unique|max:255',
         'created_at' => 'nullable',
         'updated_at' => 'nullable',
         'deleted_at' => 'nullable'
     ];
 
     /**
-     * Set the value attribute by concatenating group and key.
+     * Set the unique_key attribute by concatenating group and key.
      *
-     * @param  string  $value
+     * @param  string  $unique_key
      * @return void
      */
-    public function setValueAttribute($value)
+    public function setNameAttribute($name)
     {
-        $this->attributes['value'] = $this->attributes['group'] . '__' . $this->attributes['key'];
-        $this->attributes['name'] = str_replace('_', ' ', ucwords($this->attributes['key'], '_'));
+        $this->attributes['name'] = $name;
+        $key = str_replace(' ', '_', strtolower($name));
+        $this->attributes['key'] = $key;
+        $this->attributes['unique_key'] = $this->attributes['group'] . '__' . $key;
+
+        return $this->attributes;
     }
 
     

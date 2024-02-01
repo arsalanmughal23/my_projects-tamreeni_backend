@@ -28,12 +28,11 @@ Route::post('social-login', [App\Http\Controllers\API\AuthAPIController::class, 
 // Route::post('verify-password-reset-code', [App\Http\Controllers\API\AuthAPIController::class, 'verifyPasswordResetCode'])->name('verify_password_reset_code');
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function() {
-    Route::delete('delete-account', [App\Http\Controllers\API\AuthAPIController::class, 'deleteAccount']);
     Route::get('my-profile', [App\Http\Controllers\API\UserAPIController::class, 'myProfile']);
     Route::put('update-profile', [App\Http\Controllers\API\UserAPIController::class, 'updateProfile']);
 
-Route::post('update-password', [App\Http\Controllers\API\AuthAPIController::class, 'updatePassword'])->name('update_password');
-Route::middleware('auth:sanctum')->group(function() {
+    Route::post('update-password', [App\Http\Controllers\API\AuthAPIController::class, 'updatePassword'])->name('update_password');
+    Route::delete('delete-account', [App\Http\Controllers\API\AuthAPIController::class, 'deleteAccount']);
 
     Route::resource('faqs', App\Http\Controllers\API\FaqAPIController::class);
     Route::get('profile', [App\Http\Controllers\API\UserDetailAPIController::class, 'getUserProfile']);

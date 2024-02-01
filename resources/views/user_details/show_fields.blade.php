@@ -40,12 +40,6 @@
     <p>{{ $userDetail->image }}</p>
 </div>
 
-<!-- Email Verified At Field -->
-<div class="col-sm-12">
-    {!! Form::label('email_verified_at', 'Email Verified At:') !!}
-    <p>{{ $userDetail->email_verified_at }}</p>
-</div>
-
 <!-- Is Social Login Field -->
 <div class="col-sm-12">
     {!! Form::label('is_social_login', 'Is Social Login:') !!}

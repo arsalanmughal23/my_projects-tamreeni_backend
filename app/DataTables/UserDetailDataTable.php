@@ -72,7 +72,6 @@ class UserDetailDataTable extends DataTable
             'phone_number',
             'dob',
             'image',
-            'email_verified_at',
             'is_social_login',
             'gender',
             'language',

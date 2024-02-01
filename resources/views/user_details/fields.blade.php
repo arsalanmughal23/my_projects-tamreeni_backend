@@ -50,16 +50,6 @@
     {!! Form::text('image', null, ['class' => 'form-control','maxlength' => 255,'maxlength' => 255,'maxlength' => 255]) !!}
 </div>
 
-<!-- Email Verified At Field -->
-<div class="form-group col-sm-6">
-    <div class="form-check">
-        {!! Form::hidden('email_verified_at', 0, ['class' => 'form-check-input']) !!}
-        {!! Form::checkbox('email_verified_at', '1', null, ['class' => 'form-check-input']) !!}
-        {!! Form::label('email_verified_at', 'Email Verified At', ['class' => 'form-check-label']) !!}
-    </div>
-</div>
-
-
 <!-- Is Social Login Field -->
 <div class="form-group col-sm-6">
     <div class="form-check">

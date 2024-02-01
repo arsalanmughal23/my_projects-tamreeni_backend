@@ -98,11 +98,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'current_weight_in_kg' => 'sometimes|numeric',
         'target_weight_in_kg' => 'sometimes|numeric',
 
-        // 'goal_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_GOAL,
-        // 'height_unit_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_HEIGHT_UNIT,
-        // 'current_weight_unit_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_CURRENT_WEIGHT_UNIT,
-        // 'target_weight_unit_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_TARGET_WEIGHT_UNIT,
-        // 'diet_type_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_DIET_TYPE,
+        'goal_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_GOAL,
+        'height_unit_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_HEIGHT_UNIT,
+        'current_weight_unit_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_CURRENT_WEIGHT_UNIT,
+        'target_weight_unit_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_TARGET_WEIGHT_UNIT,
+        'diet_type_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_DIET_TYPE,
     ];
 
     public function setPasswordAttribute($value)

@@ -29,7 +29,6 @@ class UserDetailFactory extends Factory
         'phone_number' => $this->faker->word,
         'dob' => $this->faker->word,
         'image' => $this->faker->word,
-        'email_verified_at' => $this->faker->word,
         'is_social_login' => $this->faker->word,
         'gender' => $this->faker->word,
         'language' => $this->faker->word,

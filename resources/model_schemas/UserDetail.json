@@ -96,18 +96,6 @@
         "inView": true
     },
     {
-        "name": "email_verified_at",
-        "dbType": "boolean:nullable",
-        "htmlType": "checkbox,1",
-        "validations": "nullable|boolean|nullable|boolean|nullable|boolean",
-        "searchable": true,
-        "fillable": true,
-        "primary": false,
-        "inForm": true,
-        "inIndex": true,
-        "inView": true
-    },
-    {
         "name": "is_social_login",
         "dbType": "boolean",
         "htmlType": "checkbox,1",

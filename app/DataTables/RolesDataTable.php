@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\Roles;
+use App\Models\Role;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 
@@ -24,10 +24,10 @@ class RolesDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Roles $model
+     * @param \App\Models\Role $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Roles $model)
+    public function query(Role $model)
     {
         return $model->where('name','!=','Super-Admin')->newQuery();
     }

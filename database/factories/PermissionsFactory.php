@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Permissions;
+use App\Models\Permission;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PermissionsFactory extends Factory
@@ -12,7 +12,7 @@ class PermissionsFactory extends Factory
      *
      * @var string
      */
-    protected $model = Permissions::class;
+    protected $model = Permission::class;
 
     /**
      * Define the model's default state.

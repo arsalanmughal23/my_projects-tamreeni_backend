@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\Permissions;
+use App\Models\Permission;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 
@@ -24,10 +24,10 @@ class PermissionsDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Permissions $model
+     * @param \App\Models\Permission $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Permissions $model)
+    public function query(Permission $model)
     {
         return $model->newQuery();
     }

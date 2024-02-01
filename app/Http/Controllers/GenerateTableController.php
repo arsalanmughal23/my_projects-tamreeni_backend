@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use App\Models\Permissions;
+use App\Models\Permission;
 use App\Models\Menu;
 
 class GenerateTableController extends Controller
@@ -16,7 +16,7 @@ class GenerateTableController extends Controller
      * @param  mixed $permissions
      * @return void
      */
-    public function generateCrudFromTable(Request $request, Permissions $permissions)
+    public function generateCrudFromTable(Request $request, Permission $permissions)
     {
         $table_name = $this->getPluralTableName($request->db_tables);
         $modal_name = !empty($request->model_name) ? $this->getSingularModalName($request->model_name) : $this->getSingularModalName($table_name);
@@ -104,7 +104,7 @@ class GenerateTableController extends Controller
     public function createPermissions($table_name)
     {
         $table_name = $this->getPluralTableName($table_name);
-        $permissions = new Permissions;
+        $permissions = new Permission;
         $isExists = $permissions->where('name', 'like', '%' . $table_name . '%')->exists();
         if (!$isExists) {
             $data = $permissions->generatePermissions($table_name);
@@ -123,7 +123,7 @@ class GenerateTableController extends Controller
     {
         $var = $request->model;
         $table_name = $this->getPluralTableName($var);
-        $permissions = new Permissions;
+        $permissions = new Permission;
         $isDeleted = $permissions->where('name', 'like', '%' . $table_name . '%')->delete();
         return $isDeleted;
     }

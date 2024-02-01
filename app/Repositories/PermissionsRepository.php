@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Models\Permissions;
+use App\Models\Permission;
 use App\Repositories\BaseRepository;
 
 /**
@@ -36,6 +36,6 @@ class PermissionsRepository extends BaseRepository
      **/
     public function model()
     {
-        return Permissions::class;
+        return Permission::class;
     }
 }

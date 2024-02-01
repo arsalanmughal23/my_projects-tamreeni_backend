@@ -85,13 +85,14 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     public static $api_update_rules = [
-        'first_name' => 'nullable|string|max:250',
-        'last_name' => 'nullable|string|max:250',
-        'address' => 'nullable|string|max:250',
-        'phone_number' => 'nullable|string|max:250',
-        'dob' => 'nullable|date',
-        'image' => 'nullable|string',
-        'gender' => 'nullable|string|in:male,female'
+        'name' => 'sometimes|string|max:250',
+        'first_name' => 'sometimes|string|max:250',
+        'last_name' => 'sometimes|string|max:250',
+        'address' => 'sometimes|string|max:250',
+        'phone_number' => 'sometimes|string|max:250',
+        'dob' => 'sometimes|date|date_format:"Y-m-d"',
+        'image' => 'sometimes|string',
+        'gender' => 'sometimes|string|in:male,female'
     ];
 
     public function setPasswordAttribute($value)

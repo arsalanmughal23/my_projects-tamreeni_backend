@@ -29,6 +29,8 @@ Route::post('social-login', [App\Http\Controllers\API\AuthAPIController::class, 
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::delete('delete-account', [App\Http\Controllers\API\AuthAPIController::class, 'deleteAccount']);
+    Route::get('my-profile', [App\Http\Controllers\API\UserAPIController::class, 'myProfile']);
+    Route::put('update-profile', [App\Http\Controllers\API\UserAPIController::class, 'updateProfile']);
 
     Route::resource('pages', App\Http\Controllers\API\PageAPIController::class);
     Route::resource('settings', App\Http\Controllers\API\SettingAPIController::class);

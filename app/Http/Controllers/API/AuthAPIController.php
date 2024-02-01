@@ -9,6 +9,7 @@ use App\Http\Requests\API\LoginAPIRequest;
 use App\Http\Requests\API\RegistrationAPIRequest;
 use App\Http\Requests\API\ResetPasswordRequest;
 use App\Http\Requests\API\SocialLoginAPIRequest;
+use App\Http\Requests\DeleteAccountRequest;
 use App\Http\Requests\ResendOTPRequest;
 use App\Http\Requests\VerifyOTPRequest;
 use App\Jobs\SendEmail;
@@ -304,12 +305,19 @@ class AuthAPIController extends AppBaseController
         }
     }
 
-    public function deleteAccount(Request $request)
+    public function deleteAccount(DeleteAccountRequest $request)
     {
         try{
             $user = $request->user();
             if(!$user)
                 return $this->sendError('User not found.', 404);
+
+            if(!$userDetail = $user->details)
+                return $this->sendError('User Detail not found.', 404);
+
+            $userDetail->update([
+                'delete_account_type_id' => $request->delete_account_type_id
+            ]);
 
             $message = 'Your account is deleted successfully';
             self::sendMessageEmail($user, 'Account Deleted', $message);

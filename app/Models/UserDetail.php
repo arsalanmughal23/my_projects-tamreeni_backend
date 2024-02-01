@@ -95,4 +95,9 @@ class UserDetail extends Model
     {
         return $this->belongsTo(\App\Models\User::class, 'user_id');
     }
+
+    public function deleteAccountType()
+    {
+        return $this->hasOne(Constant::class, 'id', 'delete_account_type_id');
+    }
 }

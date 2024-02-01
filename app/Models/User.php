@@ -92,7 +92,17 @@ class User extends Authenticatable implements MustVerifyEmail
         'phone_number' => 'sometimes|string|max:250',
         'dob' => 'sometimes|date|date_format:"Y-m-d"',
         'image' => 'sometimes|string',
-        'gender' => 'sometimes|string|in:male,female'
+        'gender' => 'sometimes|string|in:male,female',
+
+        'height_in_m' => 'sometimes|numeric',
+        'current_weight_in_kg' => 'sometimes|numeric',
+        'target_weight_in_kg' => 'sometimes|numeric',
+
+        'goal_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_GOAL,
+        'height_unit_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_HEIGHT_UNIT,
+        'current_weight_unit_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_CURRENT_WEIGHT_UNIT,
+        'target_weight_unit_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_TARGET_WEIGHT_UNIT,
+        'diet_type_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_DIET_TYPE,
     ];
 
     public function setPasswordAttribute($value)

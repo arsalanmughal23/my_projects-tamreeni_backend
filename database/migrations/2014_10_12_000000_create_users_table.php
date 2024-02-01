@@ -43,14 +43,15 @@ class CreateUsersTable extends Migration
             $table->enum('gender', ['male', 'female'])->nullable()->comment('male, female'); // CONSTANT: male, female
             $table->enum('language', ['en', 'ar'])->nullable()->comment('en, ar'); // CONSTANT: en, ar
 
+            $table->float('height_in_m')->nullable()->default(0);
             $table->float('current_weight_in_kg')->nullable()->default(0);
             $table->float('target_weight_in_kg')->nullable()->default(0);
-            $table->float('height_in_m')->nullable()->default(0);
-            $table->string('goal')->nullable()->comment('goal__lose_weight, goal__gain_weight, goal__build_muscle, goal__get_fit'); // CONSTANT: lose_weight, gain_weight, build_muscle, get_fit
-            $table->string('diet_type')->nullable()->comment('diet_type__traditional, diet_type__keto'); // CONSTANT: traditional, keto
-            $table->string('current_weight_unit')->nullable()->comment('weight_unit__kg, weight_unit__lbs'); // CONSTANT: kg, lbs
-            $table->string('target_weight_unit')->nullable()->comment('weight_unit__kg, weight_unit__lbs'); // CONSTANT: kg, lbs
-            $table->string('height_unit')->nullable()->comment('height_unit__cm, height_unit__m'); // CONSTANT: cm, m
+
+            $table->unsignedBigInteger('goal_id')->nullable()->comment('goal'); // CONSTANT: lose_weight, gain_weight, build_muscle, get_fit
+            $table->unsignedBigInteger('height_unit_id')->nullable()->comment('height_unit'); // CONSTANT: cm, m
+            $table->unsignedBigInteger('current_weight_unit_id')->nullable()->comment('weight_unit'); // CONSTANT: kg, lbs
+            $table->unsignedBigInteger('target_weight_unit_id')->nullable()->comment('weight_unit'); // CONSTANT: kg, lbs
+            $table->unsignedBigInteger('diet_type_id')->nullable()->comment('diet_type'); // CONSTANT: traditional, keto
 
             $table->unsignedBigInteger('delete_account_type_id')->nullable();
             $table->softDeletes();

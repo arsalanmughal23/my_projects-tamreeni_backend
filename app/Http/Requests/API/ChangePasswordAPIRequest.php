@@ -2,12 +2,11 @@
 
 namespace App\Http\Requests\API;
 
-use Illuminate\Foundation\Http\FormRequest;
-use App\Http\Requests\API\RequestResponse;
 use App\Http\Requests\API\BaseAPIRequest;
+use App\Http\Requests\API\RequestResponse;
 
 
-class ChangePasswordRequest extends BaseAPIRequest
+class ChangePasswordAPIRequest extends BaseAPIRequest
 {
     /**
      * Determine if the user is authorized to make this request.

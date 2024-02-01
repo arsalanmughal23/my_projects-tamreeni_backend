@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\API;
 
-use Illuminate\Foundation\Http\FormRequest;
-use App\Models\UserDevice;
+use App\Http\Requests\API\BaseAPIRequest;
 
-class UpdateUserDeviceRequest extends FormRequest
+class VerifyOTPAPIRequest extends BaseAPIRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +23,10 @@ class UpdateUserDeviceRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = UserDevice::$rules;
-        
-        return $rules;
+        return [
+            'otp' => 'required|string',
+            'email' => 'required|email|exists:users,email',
+            'type' => 'required|in:email,password'
+        ];
     }
 }

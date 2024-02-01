@@ -4,16 +4,16 @@ namespace App\Http\Controllers\API;
 
 use App\Constants\EmailServiceTemplateNames;
 use App\Http\Controllers\AppBaseController;
-use App\Http\Requests\API\ForgetPasswordRequest;
+use App\Http\Requests\API\ForgetPasswordAPIRequest;
 use App\Http\Requests\API\LoginAPIRequest;
 use App\Http\Requests\API\RegistrationAPIRequest;
-use App\Http\Requests\API\ResetPasswordRequest;
+use App\Http\Requests\API\ResetPasswordAPIRequest;
 use App\Http\Requests\API\SocialLoginAPIRequest;
-use App\Http\Requests\DeleteAccountRequest;
-use App\Http\Requests\ResendOTPRequest;
-use App\Http\Requests\VerifyOTPRequest;
+use App\Http\Requests\API\DeleteAccountAPIRequest;
+use App\Http\Requests\API\ResendOTPAPIRequest;
+use App\Http\Requests\API\VerifyOTPAPIRequest;
+use App\Http\Requests\API\ChangePasswordAPIRequest;
 use App\Jobs\SendEmail;
-use App\Http\Requests\API\ChangePasswordRequest;
 use Illuminate\Http\Request;
 use App\Models\PasswordReset;
 use App\Models\User;
@@ -200,7 +200,7 @@ class AuthAPIController extends AppBaseController
         }
     }
     
-    public function resendOTP(ResendOTPRequest $request)
+    public function resendOTP(ResendOTPAPIRequest $request)
     {
         try {
             $userModel = $this->userRepository->model();
@@ -224,7 +224,7 @@ class AuthAPIController extends AppBaseController
         }
     }
 
-    public function verifyOTP(VerifyOTPRequest $request)
+    public function verifyOTP(VerifyOTPAPIRequest $request)
     {
         try {
             $userModel = $this->userRepository->model();
@@ -258,7 +258,7 @@ class AuthAPIController extends AppBaseController
         }
     }
 
-    public function forgetPassword(ForgetPasswordRequest $request)
+    public function forgetPassword(ForgetPasswordAPIRequest $request)
     {
         try {
             $code = rand(1111, 9999);
@@ -278,7 +278,7 @@ class AuthAPIController extends AppBaseController
         }
     }
 
-    public function resetPassword(ResetPasswordRequest $request)
+    public function resetPassword(ResetPasswordAPIRequest $request)
     {
         try {
             $resetPassword = PasswordReset::where(['email' => $request->email, 'token' => $request->code])->first();
@@ -307,7 +307,7 @@ class AuthAPIController extends AppBaseController
         }
     }
 
-    public function deleteAccount(DeleteAccountRequest $request)
+    public function deleteAccount(DeleteAccountAPIRequest $request)
     {
         try{
             $user = $request->user();
@@ -381,7 +381,7 @@ class AuthAPIController extends AppBaseController
         }
     }
 
-    public function changePassword(ChangePasswordRequest $request)
+    public function changePassword(ChangePasswordAPIRequest $request)
     {
         try {
             $user = auth()->user();

@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\API;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\API\BaseAPIRequest;
 
-class ForgetPasswordRequest extends FormRequest
+class ResendOTPAPIRequest extends BaseAPIRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,8 @@ class ForgetPasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|email|exists:users',
+            'email' => 'required|email|exists:users,email',
+            'type' => 'required|in:email,password'
         ];
     }
 }

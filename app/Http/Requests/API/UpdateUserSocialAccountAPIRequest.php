@@ -3,9 +3,9 @@
 namespace App\Http\Requests\API;
 
 use App\Models\UserSocialAccount;
-use InfyOm\Generator\Request\APIRequest;
+use App\Http\Requests\API\BaseAPIRequest;
 
-class UpdateUserSocialAccountAPIRequest extends APIRequest
+class UpdateUserSocialAccountAPIRequest extends BaseAPIRequest
 {
     /**
      * Determine if the user is authorized to make this request.

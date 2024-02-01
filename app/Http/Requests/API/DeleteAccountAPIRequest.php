@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\API;
 
-use Illuminate\Foundation\Http\FormRequest;
-use App\Models\UserDevice;
+use App\Models\Constant;
+use App\Http\Requests\API\BaseAPIRequest;
 
-class CreateUserDeviceRequest extends FormRequest
+class DeleteAccountAPIRequest extends BaseAPIRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,6 +24,8 @@ class CreateUserDeviceRequest extends FormRequest
      */
     public function rules()
     {
-        return UserDevice::$rules;
+        return [
+            'delete_account_type_id' => 'required|int|exists:constants,id,group,'.Constant::GROUP_DELETE_ACCOUNT_TYPE
+        ];
     }
 }

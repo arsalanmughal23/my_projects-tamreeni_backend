@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\UserDetailDataTable;
-use App\Http\Requests;
-use App\Http\Requests\CreateUserDetailRequest;
-use App\Http\Requests\UpdateUserDetailRequest;
+use Illuminate\Http\Request;
 use App\Repositories\UserDetailRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
@@ -46,11 +44,11 @@ class UserDetailController extends AppBaseController
     /**
      * Store a newly created UserDetail in storage.
      *
-     * @param CreateUserDetailRequest $request
+     * @param Request $request
      *
      * @return Response
      */
-    public function store(CreateUserDetailRequest $request)
+    public function store(Request $request)
     {
         $input = $request->all();
 
@@ -105,11 +103,11 @@ class UserDetailController extends AppBaseController
      * Update the specified UserDetail in storage.
      *
      * @param int $id
-     * @param UpdateUserDetailRequest $request
+     * @param Request $request
      *
      * @return Response
      */
-    public function update($id, UpdateUserDetailRequest $request)
+    public function update($id, Request $request)
     {
         $userDetail = $this->userDetailRepository->find($id);
 

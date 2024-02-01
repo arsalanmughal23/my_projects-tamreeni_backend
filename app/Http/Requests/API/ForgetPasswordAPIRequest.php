@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\API;
 
-use Illuminate\Foundation\Http\FormRequest;
-use App\Models\UserDetail;
+use App\Http\Requests\API\BaseAPIRequest;
 
-class CreateUserDetailRequest extends FormRequest
+class ForgetPasswordAPIRequest extends BaseAPIRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,6 +23,8 @@ class CreateUserDetailRequest extends FormRequest
      */
     public function rules()
     {
-        return UserDetail::$rules;
+        return [
+            'email' => 'required|email|exists:users',
+        ];
     }
 }

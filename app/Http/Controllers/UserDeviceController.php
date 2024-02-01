@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\UserDeviceDataTable;
-use App\Http\Requests;
-use App\Http\Requests\CreateUserDeviceRequest;
-use App\Http\Requests\UpdateUserDeviceRequest;
+use Illuminate\Http\Request;
 use App\Repositories\UserDeviceRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
@@ -46,11 +44,11 @@ class UserDeviceController extends AppBaseController
     /**
      * Store a newly created UserDevice in storage.
      *
-     * @param CreateUserDeviceRequest $request
+     * @param Request $request
      *
      * @return Response
      */
-    public function store(CreateUserDeviceRequest $request)
+    public function store(Request $request)
     {
         $input = $request->all();
 
@@ -105,11 +103,11 @@ class UserDeviceController extends AppBaseController
      * Update the specified UserDevice in storage.
      *
      * @param int $id
-     * @param UpdateUserDeviceRequest $request
+     * @param Request $request
      *
      * @return Response
      */
-    public function update($id, UpdateUserDeviceRequest $request)
+    public function update($id, Request $request)
     {
         $userDevice = $this->userDeviceRepository->find($id);
 

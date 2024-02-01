@@ -78,8 +78,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public static $api_rules = [
         'email'                 => 'required|email|max:250|unique:users,email,NULL,id,deleted_at,NULL',
-        'password'              => 'min:6|required|same:password_confirmation',
-        'password_confirmation' => 'min:6|required_with:password',
+        'password'              => 'min:8|required|same:password_confirmation|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]+$/',
+        'password_confirmation' => 'min:8|required_with:password',
         'device_token'          => 'required',
         'device_type'           => 'required|string|in:ios,android,web',
     ];
@@ -98,11 +98,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'current_weight_in_kg' => 'sometimes|numeric',
         'target_weight_in_kg' => 'sometimes|numeric',
 
-        'goal_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_GOAL,
-        'height_unit_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_HEIGHT_UNIT,
-        'current_weight_unit_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_CURRENT_WEIGHT_UNIT,
-        'target_weight_unit_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_TARGET_WEIGHT_UNIT,
-        'diet_type_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_DIET_TYPE,
+        // 'goal_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_GOAL,
+        // 'height_unit_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_HEIGHT_UNIT,
+        // 'current_weight_unit_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_CURRENT_WEIGHT_UNIT,
+        // 'target_weight_unit_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_TARGET_WEIGHT_UNIT,
+        // 'diet_type_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_DIET_TYPE,
     ];
 
     public function setPasswordAttribute($value)

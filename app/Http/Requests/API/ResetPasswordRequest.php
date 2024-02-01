@@ -26,8 +26,8 @@ class ResetPasswordRequest extends FormRequest
         return [
             'code'      => 'required|string',
             'email'     => 'required|email|exists:users,email',
-            'password'  => 'min:6|required|same:password_confirmation',
-            'password_confirmation' => 'min:6|required_with:password'
+            'password'  => 'min:8|required|same:password_confirmation|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]+$/',
+            'password_confirmation' => 'min:8|required_with:password'
         ];
     }
 }

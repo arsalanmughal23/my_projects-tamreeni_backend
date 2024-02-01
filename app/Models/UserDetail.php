@@ -21,6 +21,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $image
  * @property boolean $is_social_login
  * @property string $gender
+ * @property string $language
+ * @property number $height_in_m
+ * @property number $current_weight_in_kg
+ * @property number $target_weight_in_kg
+ * @property string $goal
+ * @property string $height_unit
+ * @property string $current_weight_unit
+ * @property string $target_weight_unit
+ * @property string $diet_type
  */
 class UserDetail extends Model
 {

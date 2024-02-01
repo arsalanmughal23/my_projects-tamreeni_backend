@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,6 +33,11 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
     Route::resource('pages', App\Http\Controllers\API\PageAPIController::class);
     Route::resource('settings', App\Http\Controllers\API\SettingAPIController::class);
+
+
+    Route::post('change-password', [App\Http\Controllers\API\AuthAPIController::class, 'changePassword'])->name('change_password');
+    Route::post('logout', [App\Http\Controllers\API\AuthAPIController::class, 'logout'])->name('logout');
+
 });
 
 Route::resource('menus', App\Http\Controllers\API\MenuAPIController::class);

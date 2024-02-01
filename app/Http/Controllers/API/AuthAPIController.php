@@ -13,6 +13,8 @@ use App\Http\Requests\DeleteAccountRequest;
 use App\Http\Requests\ResendOTPRequest;
 use App\Http\Requests\VerifyOTPRequest;
 use App\Jobs\SendEmail;
+use App\Http\Requests\API\ChangePasswordRequest;
+use Illuminate\Http\Request;
 use App\Models\PasswordReset;
 use App\Models\User;
 use App\Models\Role;
@@ -24,8 +26,9 @@ use App\Repositories\UserSocialAccountRepository;
 use Aws\S3\S3Client;
 use DateTime;
 use Error;
-use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use DB;
+use Illuminate\Support\Facades\Hash;
 
 class AuthAPIController extends AppBaseController
 {
@@ -118,7 +121,6 @@ class AuthAPIController extends AppBaseController
 
                 $userDetails['user_id']    = $user->id;
                 $userDetails['is_social_login'] = 1;
-                $userDetails['email_verified_at'] = 1;
 
                 $this->userDetailRepository->create($userDetails);
 
@@ -376,6 +378,41 @@ class AuthAPIController extends AppBaseController
 
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 500);
+        }
+    }
+
+    public function changePassword(ChangePasswordRequest $request)
+    {
+        try {
+            $user = auth()->user();
+    
+            if (!Hash::check($request->current_password, $user->password))
+                return $this->sendError("Oops, the current password you entered is incorrect", 422);
+    
+            if ($user && Hash::check($request->password, $user->password))
+                return $this->sendError('New password must be different from the old password', 403);
+
+            $user->update(['password' => $request->password]);
+
+            return $this->sendResponse(['user' => $user], 'Password updated Successfully');
+
+        } catch (\Exception $e) {
+            return $this->sendError($e->getMessage(), 422);
+        }
+    }
+
+    public function logout(Request $request)
+    {
+        try {
+            $user = $request->user();
+
+            if ($user)
+                $user->tokens()->delete();
+
+            return $this->sendResponse(new \stdClass(), 'Logout Successfully');
+
+        } catch (\Exception $e) {
+            return $this->sendError($e->getMessage(), 422);
         }
     }
 

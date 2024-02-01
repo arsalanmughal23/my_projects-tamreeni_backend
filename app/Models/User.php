@@ -93,6 +93,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'dob' => 'sometimes|date|date_format:"Y-m-d"',
         'image' => 'sometimes|string',
         'gender' => 'sometimes|string|in:male,female',
+        'language' => 'sometimes|string|in:en,ar',
 
         'height_in_m' => 'sometimes|numeric',
         'current_weight_in_kg' => 'sometimes|numeric',

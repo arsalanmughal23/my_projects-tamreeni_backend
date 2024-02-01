@@ -117,10 +117,12 @@ class UserDetailAPIController extends AppBaseController
         ]);
 
         $user = auth()->user();
-        $user->details()->update(['language' => $request->language]);
-        $userDetails = $user->details;
+        if(!$userDetail = $user->details)
+            return $this->sendError('User Detail not found');
 
-        return $this->sendResponse($userDetails->toArray(), 'Language updated successfully');
+        $userDetail->update(['language' => $request->language]);
+
+        return $this->sendResponse($user->fresh(), 'Language updated successfully');
     }
 
     public function getUserProfile()

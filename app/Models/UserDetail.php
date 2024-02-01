@@ -126,16 +126,16 @@ class UserDetail extends Model
         return $this->hasOne(Constant::class, 'id', 'delete_account_type_id');
     }
 
-    public function toArray()
-    {
-        $variables = $this->only('goal_id', 'diet_type_id', 'current_weight_unit_id', 'target_weight_unit_id', 'height_unit_id');
+    // public function toArray()
+    // {
+    //     $variables = $this->only('goal_id', 'diet_type_id', 'current_weight_unit_id', 'target_weight_unit_id', 'height_unit_id');
 
-        // remove null values
-        $variables = array_values(array_diff(array_values($variables), [null]));
+    //     // remove null values
+    //     $variables = array_values(array_diff(array_values($variables), [null]));
 
-        $array = parent::toArray();
-        $array['variables'] = Constant::whereIn('id', array_values($variables))->pluck('name', 'group');
+    //     $array = parent::toArray();
+    //     $array['variables'] = Constant::whereIn('id', array_values($variables))->pluck('name', 'group');
 
-        return $array;
-    }
+    //     return $array;
+    // }
 }

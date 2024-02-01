@@ -15,7 +15,7 @@ use App\Jobs\SendEmail;
 use App\Models\PasswordReset;
 use App\Models\User;
 use App\Models\Role;
-use App\Models\VerfiyEmail as VerfiyEmailModel;
+use App\Models\VerfiyEmail as VerifyEmailModel;
 use App\Repositories\UserDetailRepository;
 use App\Repositories\UserDeviceRepository;
 use App\Repositories\UsersRepository;
@@ -232,7 +232,7 @@ class AuthAPIController extends AppBaseController
 
             $otp = $request->otp;
             $otpCode = match($request->type) {
-                'email' => VerfiyEmailModel::where(['user_id' => $user->id, 'code' => $otp])->first(),
+                'email' => VerifyEmailModel::where(['user_id' => $user->id, 'code' => $otp])->first(),
                 'password' => PasswordReset::where(['email' => $user->email, 'token' => $otp])->first()
             };
 
@@ -244,7 +244,7 @@ class AuthAPIController extends AppBaseController
                 return $this->sendResponse([], 'Your OTP expired.');
             }
 
-            if($otpCode instanceof VerfiyEmailModel) {
+            if($otpCode instanceof VerifyEmailModel) {
                 $user->markEmailAsVerified();
                 $otpCode->delete();
             }
@@ -346,7 +346,7 @@ class AuthAPIController extends AppBaseController
 
     public static function saveVerifyEmailOTP($user_id, $code)
     {
-        return VerfiyEmailModel::updateOrCreate(['user_id' => $user_id], ['code' => $code]);
+        return VerifyEmailModel::updateOrCreate(['user_id' => $user_id], ['code' => $code]);
     }
 
     public static function sendOTPEmail($user, $subject, $code)

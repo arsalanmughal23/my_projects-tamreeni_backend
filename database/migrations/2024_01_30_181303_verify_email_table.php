@@ -13,7 +13,7 @@ class VerifyEmailTable extends Migration
      */
     public function up()
     {
-        Schema::create('verfiy_emails', function (Blueprint $table) {
+        Schema::create('verify_emails', function (Blueprint $table) {
             $table->id();
             $table->string('user_id')->nullable();
             $table->string('code');

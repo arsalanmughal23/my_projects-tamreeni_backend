@@ -39,6 +39,7 @@ class CreateUsersTable extends Migration
             $table->text('image')->nullable();
 
             $table->tinyInteger('is_social_login')->default(0)->comment('0,1');
+            $table->tinyInteger('push_notification')->default(0)->comment('0,1');
 
             $table->enum('gender', ['male', 'female'])->nullable()->comment('male, female'); // CONSTANT: male, female
             $table->enum('language', ['en', 'ar'])->nullable()->comment('en, ar'); // CONSTANT: en, ar
@@ -65,7 +66,6 @@ class CreateUsersTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('device_type')->comment('ios, android, web');
             $table->text('device_token');
-            $table->tinyInteger('push_notification')->default(0)->comment('0,1');
 
             $table->softDeletes();
             $table->timestamps();

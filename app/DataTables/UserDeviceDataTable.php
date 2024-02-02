@@ -67,8 +67,7 @@ class UserDeviceDataTable extends DataTable
         return [
             'user_id',
             'device_type',
-            'device_token',
-            'push_notification'
+            'device_token'
         ];
     }
 

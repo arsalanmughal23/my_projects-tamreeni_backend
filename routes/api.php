@@ -31,7 +31,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::get('my-profile', [App\Http\Controllers\API\UserAPIController::class, 'myProfile']);
     Route::put('update-profile', [App\Http\Controllers\API\UserAPIController::class, 'updateProfile']);
 
-    Route::post('update-password', [App\Http\Controllers\API\AuthAPIController::class, 'updatePassword'])->name('update_password');
+    Route::post('change-password', [App\Http\Controllers\API\AuthAPIController::class, 'changePassword'])->name('change_password');
+    Route::post('logout', [App\Http\Controllers\API\AuthAPIController::class, 'logout'])->name('logout');
     Route::delete('delete-account', [App\Http\Controllers\API\AuthAPIController::class, 'deleteAccount']);
 
     Route::resource('faqs', App\Http\Controllers\API\FaqAPIController::class);
@@ -39,9 +40,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::put('update-language', [App\Http\Controllers\API\UserDetailAPIController::class, 'updateLanguage']);
     Route::resource('wellness_tips', App\Http\Controllers\API\WellnessTipAPIController::class);
     Route::resource('settings', App\Http\Controllers\API\SettingAPIController::class);
-
-    Route::post('change-password', [App\Http\Controllers\API\AuthAPIController::class, 'changePassword'])->name('change_password');
-    Route::post('logout', [App\Http\Controllers\API\AuthAPIController::class, 'logout'])->name('logout');
 
     Route::resource('favourites', App\Http\Controllers\API\FavouriteAPIController::class);
     Route::post('favorite', [App\Http\Controllers\API\FavouriteAPIController::class, 'markAsFavorite']);

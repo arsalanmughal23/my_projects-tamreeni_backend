@@ -19,8 +19,7 @@ class UserDeviceRepository extends BaseRepository
     protected $fieldSearchable = [
         'user_id',
         'device_type',
-        'device_token',
-        'push_notification'
+        'device_token'
     ];
 
     /**

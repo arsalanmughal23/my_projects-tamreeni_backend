@@ -15,7 +15,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property integer $user_id
  * @property string $device_type
  * @property string $device_token
- * @property boolean $push_notification
  */
 class UserDevice extends Model
 {
@@ -36,8 +35,7 @@ class UserDevice extends Model
     public $fillable = [
         'user_id',
         'device_type',
-        'device_token',
-        'push_notification'
+        'device_token'
     ];
 
     /**
@@ -49,8 +47,7 @@ class UserDevice extends Model
         'id' => 'integer',
         'user_id' => 'integer',
         'device_type' => 'string',
-        'device_token' => 'string',
-        'push_notification' => 'boolean'
+        'device_token' => 'string'
     ];
 
     /**
@@ -62,7 +59,6 @@ class UserDevice extends Model
         'user_id' => 'required',
         'device_type' => 'required|string|max:255',
         'device_token' => 'required|string|max:255',
-        'push_notification' => 'required|boolean',
         'deleted_at' => 'nullable',
         'created_at' => 'nullable',
         'updated_at' => 'nullable'

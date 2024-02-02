@@ -15,10 +15,3 @@
     {!! Form::label('device_token', 'Device Token:') !!}
     <p>{{ $userDevice->device_token }}</p>
 </div>
-
-<!-- Push Notification Field -->
-<div class="col-sm-12">
-    {!! Form::label('push_notification', 'Push Notification:') !!}
-    <p>{{ $userDevice->push_notification }}</p>
-</div>
-

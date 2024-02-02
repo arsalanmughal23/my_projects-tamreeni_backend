@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $dob
  * @property string $image
  * @property boolean $is_social_login
+ * @property boolean $push_notification
  * @property string $gender
  * @property string $language
  * @property number $height_in_m
@@ -56,6 +57,7 @@ class UserDetail extends Model
         'dob',
         'image',
         'is_social_login',
+        'push_notification',
         'gender',
 
         'language',
@@ -87,6 +89,7 @@ class UserDetail extends Model
         'dob' => 'date',
         'image' => 'string',
         'is_social_login' => 'boolean',
+        'push_notification' => 'boolean',
         'gender' => 'string',
         
         'height_in_m' => 'float',
@@ -108,6 +111,7 @@ class UserDetail extends Model
         'dob' => 'nullable',
         'image' => 'nullable|string|max:255',
         'is_social_login' => 'required|boolean',
+        'push_notification' => 'required|boolean',
         'gender' => 'nullable|string',
         'language' => 'nullable|string',
         'current_weight_in_kg' => 'nullable|numeric',

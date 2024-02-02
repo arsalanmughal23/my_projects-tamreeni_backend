@@ -48,18 +48,6 @@
         "inView": true
     },
     {
-        "name": "push_notification",
-        "dbType": "boolean",
-        "htmlType": "checkbox,1",
-        "validations": "required|boolean|boolean|boolean",
-        "searchable": true,
-        "fillable": true,
-        "primary": false,
-        "inForm": true,
-        "inIndex": true,
-        "inView": true
-    },
-    {
         "name": "deleted_at",
         "dbType": "datetime:nullable",
         "htmlType": "date",

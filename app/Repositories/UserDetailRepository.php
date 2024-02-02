@@ -25,6 +25,7 @@ class UserDetailRepository extends BaseRepository
         'dob',
         'image',
         'is_social_login',
+        'push_notification',
         'gender',
         'language',
         'current_weight_in_kg',

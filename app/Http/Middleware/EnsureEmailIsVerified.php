@@ -22,10 +22,21 @@ class EnsureEmailIsVerified
             ($request->user() instanceof MustVerifyEmail &&
             ! $request->user()->hasVerifiedEmail())) {
             return $request->expectsJson()
-                    ? response()->json(['status' => false, 'message' => 'Your email address is not verified.'], 403)
+                    ? self::getUnVerifiedEmailApiResponse()
                     : Redirect::guest(URL::route($redirectToRoute ?: 'verification.notice'));
         }
 
         return $next($request);
     }
+
+    public static function getUnVerifiedEmailApiResponse()
+    {
+        $responseData = [
+            'success' => false, 
+            'message' => 'Your email address is not verified.', 
+            'is_email_verified' => false
+        ];
+        return response()->json($responseData, 403);
+    }
+
 }

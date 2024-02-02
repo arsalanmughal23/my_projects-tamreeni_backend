@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Constants\EmailServiceTemplateNames;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Middleware\EnsureEmailIsVerified;
 use App\Http\Requests\API\ForgetPasswordAPIRequest;
 use App\Http\Requests\API\LoginAPIRequest;
 use App\Http\Requests\API\RegistrationAPIRequest;
@@ -51,7 +52,7 @@ class AuthAPIController extends AppBaseController
 
         $user = auth()->user();
         if(!$user->hasVerifiedEmail())
-            return $this->sendError('Your email address is not verified.', 403);
+            return EnsureEmailIsVerified::getUnVerifiedEmailApiResponse();
 
         $searchUserDevice = $request->only('device_token');
         $userDevice = $request->only('device_type', 'device_token');
@@ -132,7 +133,7 @@ class AuthAPIController extends AppBaseController
             }
             
             if(!$user->hasVerifiedEmail())
-                return $this->sendError('Your email address is not verified.', 403);
+                return EnsureEmailIsVerified::getUnVerifiedEmailApiResponse();
 
             $searchUserDevice = $request->only('device_token');
             $userDevice = $request->only('device_type', 'device_token');

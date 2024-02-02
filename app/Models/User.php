@@ -104,6 +104,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'current_weight_unit_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_CURRENT_WEIGHT_UNIT,
         'target_weight_unit_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_TARGET_WEIGHT_UNIT,
         'diet_type_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_DIET_TYPE,
+        'push_notification' => 'sometimes|boolean'
     ];
 
     public function setPasswordAttribute($value)

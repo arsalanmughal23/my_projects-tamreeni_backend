@@ -78,12 +78,7 @@ class UserDetailDataTable extends DataTable
             'language',
             'current_weight_in_kg',
             'target_weight_in_kg',
-            'height_in_m',
-            'goal',
-            'diet_type',
-            'current_weight_unit',
-            'target_weight_unit',
-            'height_unit'
+            'height_in_m'
         ];
     }
 

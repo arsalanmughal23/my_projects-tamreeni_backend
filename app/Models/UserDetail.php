@@ -22,15 +22,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property boolean $is_social_login
  * @property boolean $push_notification
  * @property string $gender
- * @property string $language
- * @property number $height_in_m
- * @property number $current_weight_in_kg
- * @property number $target_weight_in_kg
- * @property string $goal
- * @property string $height_unit
- * @property string $current_weight_unit
- * @property string $target_weight_unit
- * @property string $diet_type
  */
 class UserDetail extends Model
 {
@@ -89,42 +80,8 @@ class UserDetail extends Model
         'dob' => 'date',
         'image' => 'string',
         'is_social_login' => 'boolean',
-        'push_notification' => 'boolean',
         'gender' => 'string',
-        
-        'height_in_m' => 'float',
-        'current_weight_in_kg' => 'float',
-        'target_weight_in_kg' => 'float',
-    ];
-
-    /**
-     * Validation rules
-     *
-     * @var array
-     */
-    public static $rules = [
-        'user_id' => 'required',
-        'first_name' => 'nullable|string|max:255',
-        'last_name' => 'nullable|string|max:255',
-        'address' => 'nullable|string|max:255',
-        'phone_number' => 'nullable|string|max:255',
-        'dob' => 'nullable',
-        'image' => 'nullable|string|max:255',
-        'is_social_login' => 'required|boolean',
-        'push_notification' => 'required|boolean',
-        'gender' => 'nullable|string',
-        'language' => 'nullable|string',
-        'current_weight_in_kg' => 'nullable|numeric',
-        'target_weight_in_kg' => 'nullable|numeric',
-        'height_in_m' => 'nullable|numeric',
-        'goal' => 'nullable|string|max:255',
-        'diet_type' => 'nullable|string|max:255',
-        'current_weight_unit' => 'nullable|string|max:255',
-        'target_weight_unit' => 'nullable|string|max:255',
-        'height_unit' => 'nullable|string|max:255',
-        'deleted_at' => 'nullable',
-        'created_at' => 'nullable',
-        'updated_at' => 'nullable'
+        'push_notification' => 'boolean',
     ];
 
     /**

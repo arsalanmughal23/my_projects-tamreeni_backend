@@ -21,27 +21,27 @@ class ConstantSeeder extends Seeder
             'Build Muscle',
             'Get Fit',
         ]);
-        // Values for the 'size_unit' group
+        // Values for the 'height_unit' group
         $this->seedGroup(Constant::GROUP_HEIGHT_UNIT, [
             'Cm',
             'M',
         ]);
-        // Values for the 'weight_units' group
+        // Values for the 'current_weight_unit' group
         $this->seedGroup(Constant::GROUP_CURRENT_WEIGHT_UNIT, [
             'Kg',
             'Lbs',
         ]);
-        // Values for the 'weight_units' group
+        // Values for the 'target_weight_unit' group
         $this->seedGroup(Constant::GROUP_TARGET_WEIGHT_UNIT, [
             'Kg',
             'Lbs',
         ]);
-        // Values for the 'diet_types' group
+        // Values for the 'diet_type' group
         $this->seedGroup(Constant::GROUP_DIET_TYPE, [
             'Traditional',
             'Keto',
         ]);
-        // Values for the 'pages' group
+        // Values for the 'delete_account_type' group
         $this->seedGroup(Constant::GROUP_DELETE_ACCOUNT_TYPE, [
             'Privacy Concerns',
             'Inactivity',
@@ -55,19 +55,19 @@ class ConstantSeeder extends Seeder
             'Male',
             'Female',
         ]);
-        // Values for the 'languages' group
-        $this->seedGroup('languages', [
+        // Values for the 'language' group
+        $this->seedGroup('language', [
             'En',
             'Ar',
         ]);
-        // Values for the 'meal_types' group
-        $this->seedGroup('meal_types', [
+        // Values for the 'meal_type' group
+        $this->seedGroup('meal_type', [
             'Breakfast',
             'Lunch',
             'Dinner',
         ]);
-        // Values for the 'pages' group
-        $this->seedGroup('pages', [
+        // Values for the 'page' group
+        $this->seedGroup('page', [
             'About us',
             'Terms and Conditions',
             'Privacy Policy',

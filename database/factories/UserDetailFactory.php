@@ -22,27 +22,27 @@ class UserDetailFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => $this->faker->word,
-        'first_name' => $this->faker->word,
-        'last_name' => $this->faker->word,
-        'address' => $this->faker->word,
-        'phone_number' => $this->faker->word,
-        'dob' => $this->faker->word,
-        'image' => $this->faker->word,
-        'is_social_login' => $this->faker->word,
-        'gender' => $this->faker->word,
-        'language' => $this->faker->word,
-        'current_weight_in_kg' => $this->faker->randomDigitNotNull,
-        'target_weight_in_kg' => $this->faker->randomDigitNotNull,
-        'height_in_m' => $this->faker->randomDigitNotNull,
-        'goal' => $this->faker->word,
-        'diet_type' => $this->faker->word,
-        'current_weight_unit' => $this->faker->word,
-        'target_weight_unit' => $this->faker->word,
-        'height_unit' => $this->faker->word,
-        'deleted_at' => $this->faker->date('Y-m-d H:i:s'),
-        'created_at' => $this->faker->date('Y-m-d H:i:s'),
-        'updated_at' => $this->faker->date('Y-m-d H:i:s')
+            'user_id' => 1,
+            'first_name' => $this->faker->word,
+            'last_name' => $this->faker->word,
+            'address' => $this->faker->word,
+            'phone_number' => $this->faker->word,
+            'dob' => $this->faker->date,
+            'image' => $this->faker->imageUrl,
+            'is_social_login' => $this->faker->boolean,
+            'gender' => $this->faker->randomElement(['male', 'female']),
+            'language' => $this->faker->randomElement(['en', 'ar']),
+            'current_weight_in_kg' => $this->faker->randomDigitNotNull,
+            'target_weight_in_kg' => $this->faker->randomDigitNotNull,
+            'height_in_m' => $this->faker->randomDigitNotNull,
+            'goal_id' => $this->faker->numberBetween(1, 4),
+            'height_unit_id' => $this->faker->numberBetween(5, 6),
+            'current_weight_unit_id' => $this->faker->numberBetween(7, 8),
+            'target_weight_unit_id' => $this->faker->numberBetween(9, 10),
+            'diet_type_id' => $this->faker->numberBetween(11, 12),
+            // 'deleted_at' => $this->faker->date('Y-m-d H:i:s'),
+            'created_at' => $this->faker->date('Y-m-d H:i:s'),
+            'updated_at' => $this->faker->date('Y-m-d H:i:s')
         ];
     }
 }

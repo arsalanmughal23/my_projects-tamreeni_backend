@@ -91,7 +91,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'address' => 'sometimes|string|max:250',
         'phone_number' => 'sometimes|string|max:250',
         'dob' => 'sometimes|date|date_format:"Y-m-d"',
-        'image' => 'sometimes|string',
+        'image' => 'sometimes|url',
         'gender' => 'sometimes|string|in:male,female',
         'language' => 'sometimes|string|in:en,ar',
 

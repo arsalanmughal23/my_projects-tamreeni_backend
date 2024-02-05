@@ -97,3 +97,15 @@ Route::resource('meal_categories', App\Http\Controllers\MealCategoryController::
 
 
 Route::resource('meals', App\Http\Controllers\MealController::class);
+
+
+Route::resource('body_parts', App\Http\Controllers\BodyPartController::class);
+
+
+Route::resource('exercise_equipments', App\Http\Controllers\ExerciseEquipmentController::class);
+
+
+Route::resource('events', App\Http\Controllers\EventController::class);
+
+
+Route::resource('user_events', App\Http\Controllers\UserEventController::class);

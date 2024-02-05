@@ -150,7 +150,7 @@ public function index(Request $request)
         $user = auth()->user();
         $instanceId = $request->input('instance_id');
         $instanceType = $request->input('instance_type');
-
+        
         // Check if the meal is already marked as a favorite
         $existingFavorite = Favourite::where('user_id', $user->id)
             ->where('instance_id', $instanceId)

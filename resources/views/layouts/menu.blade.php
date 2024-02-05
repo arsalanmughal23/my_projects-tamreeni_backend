@@ -88,3 +88,43 @@
 @endcan
 
 
+@canany(['body_parts.index', 'body_parts.create', 'body_parts.show', 'body_parts.edit', 'body_parts.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('body_parts.index') }}"
+        class="nav-link {{ Request::is('body_parts*') ? 'active' : '' }}">
+            <p>Body Parts</p>
+        </a>
+    </li>
+@endcan
+
+
+@canany(['exercise_equipments.index', 'exercise_equipments.create', 'exercise_equipments.show', 'exercise_equipments.edit', 'exercise_equipments.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('exercise_equipments.index') }}"
+        class="nav-link {{ Request::is('exercise_equipments*') ? 'active' : '' }}">
+            <p>Exercise Equipments</p>
+        </a>
+    </li>
+@endcan
+
+
+@canany(['events.index', 'events.create', 'events.show', 'events.edit', 'events.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('events.index') }}"
+        class="nav-link {{ Request::is('events*') ? 'active' : '' }}">
+            <p>Events</p>
+        </a>
+    </li>
+@endcan
+
+
+@canany(['user_events.index', 'user_events.create', 'user_events.show', 'user_events.edit', 'user_events.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('user_events.index') }}"
+        class="nav-link {{ Request::is('user_events*') ? 'active' : '' }}">
+            <p>User Events</p>
+        </a>
+    </li>
+@endcan
+
+

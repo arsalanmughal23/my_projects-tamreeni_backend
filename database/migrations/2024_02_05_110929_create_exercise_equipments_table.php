@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class VerifyEmailTable extends Migration
+class CreateExerciseEquipmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class VerifyEmailTable extends Migration
      */
     public function up()
     {
-        Schema::create('verify_emails', function (Blueprint $table) {
-            $table->id();
-            $table->string('user_id')->nullable();
-            $table->string('code');
+        Schema::create('exercise_equipments', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('icon')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -28,7 +29,6 @@ class VerifyEmailTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('verify_emails');
-
+        Schema::dropIfExists('exercise_equipments');
     }
 }

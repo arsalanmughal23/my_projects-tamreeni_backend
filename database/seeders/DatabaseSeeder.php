@@ -21,6 +21,9 @@ class DatabaseSeeder extends Seeder
             WellnessTipsSeeder::class,
             MealCategoriesSeeder::class,
             MealsSeeder::class,
+            ExerciseEquipmentsSeeder::class,
+            BodyPartsSeeder::class,
+            EventsTableSeeder::class,
         ]);
         // \App\Models\User::factory(10)->create();
     }

@@ -117,4 +117,19 @@ class Exercise extends Model
     {
         return $this->hasMany(\App\Models\ExerciseEquipmentPivot::class, 'exercise_id');
     }
+    protected static function booted()
+    {
+        static::retrieved(function ($exercise) {
+            $userId = auth()->user()->id;
+            $exercise->append('favourite');
+        });
+    }
+    public function getFavouriteAttribute()
+    {
+        $userId = auth()->user()->id;
+        return \App\Models\Favourite::where('instance_id', $this->id)
+            ->where('instance_type', 'exercise')
+            ->where('user_id', $userId)
+            ->exists();
+    }
 }

@@ -57,6 +57,7 @@ class ExerciseEquipmentPivot extends Model
         'exercise_id' => 'required|integer',
         'exercise_equipment_id' => 'required|integer',
         'created_at' => 'nullable',
+        'deleted_at' => 'nullable',
         'updated_at' => 'nullable'
     ];
 

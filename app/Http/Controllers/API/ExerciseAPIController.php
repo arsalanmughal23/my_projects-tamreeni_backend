@@ -74,7 +74,7 @@ class ExerciseAPIController extends AppBaseController
     public function show($id)
     {
         /** @var Exercise $exercise */
-        $exercise = $this->exerciseRepository->find($id);
+        $exercise = $this->exerciseRepository->exerciseDetails($id);
 
         if (empty($exercise)) {
             return $this->sendError('Exercise not found');

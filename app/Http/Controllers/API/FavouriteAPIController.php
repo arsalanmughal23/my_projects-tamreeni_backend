@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Requests\API\CreateFavouriteAPIRequest;
+use App\Http\Requests\API\UserFavouritesAPIRequest;
 use App\Http\Requests\API\UpdateFavouriteAPIRequest;
 use App\Models\Favourite;
 use App\Models\Meal;
@@ -37,14 +38,18 @@ class FavouriteAPIController extends AppBaseController
      */
 
 
-public function index(Request $request)
+public function index(UserFavouritesAPIRequest $request)
 {
     $perPage = $request->input('per_page', Config::get('constants.PER_PAGE', 10));
 
     // Get the authenticated user
     $user = auth()->user();
-
-    $favouritesQuery = $this->favouriteRepository->favQuery($user->id);
+    $type = $request->get('type');
+    if ($type == 'meal') {
+        $favouritesQuery = $this->favouriteRepository->favMealQuery($user->id);
+    } elseif ($type == 'exercise') {
+        $favouritesQuery = $this->favouriteRepository->favExerciseQuery($user->id);
+    }
 
     $favourites = $favouritesQuery->paginate($perPage);
     if ($favourites->isEmpty()) {
@@ -150,7 +155,8 @@ public function index(Request $request)
         $user = auth()->user();
         $instanceId = $request->input('instance_id');
         $instanceType = $request->input('instance_type');
-        
+
+        if ($instanceType == 'meal' || $instanceType == 'exercise') {
         // Check if the meal is already marked as a favorite
         $existingFavorite = Favourite::where('user_id', $user->id)
             ->where('instance_id', $instanceId)
@@ -172,5 +178,9 @@ public function index(Request $request)
         ]);
 
         return $this->sendResponse(new \stdClass(), 'Added to favorites');
+        } else {
+            return $this->sendError('Only Meal & Exercise can be added to favorites', 422);
+        }
+        
     }
 }

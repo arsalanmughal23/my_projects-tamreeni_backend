@@ -370,13 +370,13 @@ class AuthAPIController extends AppBaseController
         dispatch($sendEmailJob);
     }
 
-    public static function sendMessageEmail($user, $subject, $message)
+    public function sendMessageEmail($user, $subject, $message)
     {
         try {
             $data = ['message' => $message];
             $sendEmailJob = new SendEmail($user->email, $subject, $data, EmailServiceTemplateNames::MESSAGE_TEMPLATE);
             dispatch($sendEmailJob);
-
+            
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 500);
         }

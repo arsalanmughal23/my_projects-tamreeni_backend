@@ -46,4 +46,9 @@ class ExerciseRepository extends BaseRepository
     {
         return Exercise::class;
     }
+
+    public function exerciseDetails($id)
+    {
+        return Exercise::where('id', $id)->with( 'bodyPart', 'exerciseEquipmentPivots.exerciseEquipment')->first();
+    }
 }

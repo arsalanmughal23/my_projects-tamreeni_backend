@@ -128,3 +128,23 @@
 @endcan
 
 
+@canany(['exercises.index', 'exercises.create', 'exercises.show', 'exercises.edit', 'exercises.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('exercises.index') }}"
+        class="nav-link {{ Request::is('exercises*') ? 'active' : '' }}">
+            <p>Exercises</p>
+        </a>
+    </li>
+@endcan
+
+
+@canany(['exercise_equipment_pivots.index', 'exercise_equipment_pivots.create', 'exercise_equipment_pivots.show', 'exercise_equipment_pivots.edit', 'exercise_equipment_pivots.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('exercise_equipment_pivots.index') }}"
+        class="nav-link {{ Request::is('exercise_equipment_pivots*') ? 'active' : '' }}">
+            <p>Exercise Equipment Pivots</p>
+        </a>
+    </li>
+@endcan
+
+

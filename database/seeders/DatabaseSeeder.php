@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
             ExerciseEquipmentsSeeder::class,
             BodyPartsSeeder::class,
             EventsTableSeeder::class,
+            ExerciseSeeder::class,
+            ExerciseEquipmentsPivotSeeder::class,
         ]);
         // \App\Models\User::factory(10)->create();
     }

@@ -70,3 +70,9 @@ Route::resource('exercise_equipments', App\Http\Controllers\API\ExerciseEquipmen
 
 
 
+
+
+Route::resource('exercises', App\Http\Controllers\API\ExerciseAPIController::class);
+
+
+Route::resource('exercise_equipment_pivots', App\Http\Controllers\API\ExerciseEquipmentPivotAPIController::class);

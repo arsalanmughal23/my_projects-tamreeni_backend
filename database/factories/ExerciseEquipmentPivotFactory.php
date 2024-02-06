@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\UserDevice;
+use App\Models\ExerciseEquipmentPivot;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class UserDeviceFactory extends Factory
+class ExerciseEquipmentPivotFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = UserDevice::class;
+    protected $model = ExerciseEquipmentPivot::class;
 
     /**
      * Define the model's default state.
@@ -22,10 +22,8 @@ class UserDeviceFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => $this->faker->word,
-        'device_type' => $this->faker->word,
-        'device_token' => $this->faker->word,
-        'deleted_at' => $this->faker->date('Y-m-d H:i:s'),
+            'exercise_id' => $this->faker->randomDigitNotNull,
+        'exercise_equipment_id' => $this->faker->randomDigitNotNull,
         'created_at' => $this->faker->date('Y-m-d H:i:s'),
         'updated_at' => $this->faker->date('Y-m-d H:i:s')
         ];

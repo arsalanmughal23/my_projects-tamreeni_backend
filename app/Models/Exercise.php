@@ -120,16 +120,20 @@ class Exercise extends Model
     protected static function booted()
     {
         static::retrieved(function ($exercise) {
-            $userId = auth()->user()->id;
-            $exercise->append('favourite');
+            $userId = auth()->user()->id ?? null;
+            if ($userId) {
+                $exercise->append('favourite');
+            }
         });
     }
     public function getFavouriteAttribute()
     {
-        $userId = auth()->user()->id;
-        return \App\Models\Favourite::where('instance_id', $this->id)
+        $userId = auth()->user()->id ?? null;
+        if ($userId) {
+            return \App\Models\Favourite::where('instance_id', $this->id)
             ->where('instance_type', 'exercise')
             ->where('user_id', $userId)
             ->exists();
+        }
     }
 }

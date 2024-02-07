@@ -1,0 +1,55 @@
+image:
+  name: 307866862898.dkr.ecr.us-east-1.amazonaws.com/code-review:latest
+  aws:
+    access-key: $AWS_ACCESS_KEY_ID
+    secret-key: $AWS_SECRET_ACCESS_KEY
+
+pipelines:
+  custom:
+    codereview:
+      - step:
+          name: Code Review
+          size: 2x
+          script:
+            - cd $BITBUCKET_CLONE_DIR && cp -r /app/. ./
+            - export CRGPT_SOURCE_BRANCH=refs/remotes/origin/$TargetBranch
+            - export CRGPT_TARGET_BRANCH=refs/remotes/origin/$SourceBranch
+            - export CRGPT_REPO_SLUG=https://bitbucket.org/devops-tekrevol/$BITBUCKET_REPO_SLUG
+            - export CRGPT_WORKSPACE=$BITBUCKET_WORKSPACE
+            - export CRGPT_BITBUCKET_TOKEN=$CRGPT_BITBUCKET_TOKEN
+            - export CRGPT_ACCESS_TOKEN=$CRGPT_ACCESS_TOKEN
+            - export ASSIGNEE_EMAIL=$ASSIGNEE_EMAIL
+            - export SENDEREMAIL=$SENDEREMAIL
+            - export SENDERPASSWORD=$SENDERPASSWORD
+            - export JIRA_SPRINT_NAME="$CUSTOM_SLUG $(date +'%Y-%m-%d')"
+            - export JIRA_SPRINT_START_DATE=$(date +"%Y-%m-%d")
+            - export JIRA_SPRINT_END_DATE=$(date -d@"$(( $(date +%s) + 864000 ))" "+%Y-%m-%d")
+            - export GOAL_SPRINT='Code Review'
+            - export FILE_PATH=$BITBUCKET_CLONE_DIR/output.txt
+            - export SSH_PRIVATE_KEY=$SSH_PRIVATE_KEY
+            - env
+            - git fetch origin "+refs/heads/*:refs/remotes/origin/*"
+            - sh ./crgpt.sh
+          artifacts:
+            - output.txt
+
+      - step:
+          name: Merge $TargetBranch into $SourceBranch
+          script:
+            - git branch
+            - git fetch origin "+refs/heads/*:refs/remotes/origin/*"
+            - git fetch --all
+            - git reset --hard origin/$TargetBranch
+            - git add .
+            - git push origin $SourceBranch --force
+  branches:
+    devops:
+      - step:
+          name: Connect to DataMart instance
+          image: ubuntu:latest
+          script:
+            - cat <<< "$PEM_KEY" | base64 --decode > tek-staging.pem
+            - chmod 400 tek-staging.pem
+            - apt-get update
+            - apt-get -y install openssh-client
+            - ssh -v -o StrictHostKeyChecking=no -i tek-staging.pem administrator@$MACHINE_IP "cd /home/administrator/Tamreeni/tamreeni-backend && git fetch origin && git reset --hard origin/devops && echo "$PASSWORD" | sudo -S cp -R /home/administrator/Tamreeni/tamreeni-backend/* /var/www/html/tamreeni-backend/ "

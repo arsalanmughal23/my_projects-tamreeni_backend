@@ -28,3 +28,8 @@
     <p>{{ $users->remember_token }}</p>
 </div>
 
+<!-- Push Notification Field -->
+<div class="col-sm-12">
+    {!! Form::label('push_notification', 'Push Notification:') !!}
+    <p>{{ $users->details?->push_notification ? 'ON' : 'OFF' }}</p>
+</div>

@@ -35,6 +35,15 @@ class ConstantAPIController extends AppBaseController
 
     public function index(Request $request)
     {
+        if ($request->get('group')) {
+            $group = $request->get('group');
+            $constants = $this->constantRepository->getConstantsByGroup($group);
+    
+            if ($constants->isEmpty()) {
+                return $this->sendError('Constant not found', 200);
+            }
+        return $this->sendResponse($constants->toArray(), 'Constant retrieved successfully');
+    }
         $constants = $this->constantRepository->all(
             $request->except(['skip', 'limit']),
             $request->get('skip'),

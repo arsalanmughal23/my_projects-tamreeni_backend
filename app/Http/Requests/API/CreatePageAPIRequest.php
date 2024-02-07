@@ -3,9 +3,9 @@
 namespace App\Http\Requests\API;
 
 use App\Models\Page;
-use InfyOm\Generator\Request\APIRequest;
+use App\Http\Requests\API\BaseAPIRequest;
 
-class CreatePageAPIRequest extends APIRequest
+class CreatePageAPIRequest extends BaseAPIRequestuestuest
 {
     /**
      * Determine if the user is authorized to make this request.

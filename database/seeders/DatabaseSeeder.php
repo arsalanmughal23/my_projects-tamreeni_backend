@@ -18,6 +18,14 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             MenuSeeder::class,
             ConstantSeeder::class,
+            WellnessTipsSeeder::class,
+            MealCategoriesSeeder::class,
+            MealsSeeder::class,
+            ExerciseEquipmentsSeeder::class,
+            BodyPartsSeeder::class,
+            EventsTableSeeder::class,
+            ExerciseSeeder::class,
+            ExerciseEquipmentsPivotSeeder::class,
         ]);
         // \App\Models\User::factory(10)->create();
     }

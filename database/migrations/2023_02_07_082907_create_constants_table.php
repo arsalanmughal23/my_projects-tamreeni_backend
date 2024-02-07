@@ -14,12 +14,12 @@ class CreateConstantsTable extends Migration
     public function up()
     {
         Schema::create('constants', function (Blueprint $table) {
-            $table->id();
-            $table->integer('instance_type');
-            $table->string('text');
-            $table->integer('value');
+            $table->increments('id');
+            $table->string('name');
+            $table->string('group');
+            $table->string('key');
+            $table->string('unique_key')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\Permissions;
+use App\Models\Permission;
 
 class CreatePermissionsRequest extends FormRequest
 {
@@ -24,6 +24,6 @@ class CreatePermissionsRequest extends FormRequest
      */
     public function rules()
     {
-        return Permissions::rules();
+        return Permission::rules();
     }
 }

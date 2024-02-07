@@ -65,9 +65,10 @@ class ConstantDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'instance_type',
-            'text',
-            'value'
+            'name',
+            'group',
+            'key',
+            'unique_key'
         ];
     }
 

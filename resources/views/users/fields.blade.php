@@ -46,7 +46,16 @@
     {!! Form::text('remember_token', null, ['class' => 'form-control','maxlength' => 100,'maxlength' => 100]) !!}
 </div>
 
-@role('Super-Admin')
+<!-- Push Notification Field -->
+<div class="form-group col-sm-6">
+    <div class="form-check">
+        {!! Form::hidden('push_notification', 0, ['class' => 'form-check-input']) !!}
+        {!! Form::checkbox('push_notification', '1', null, ['class' => 'form-check-input']) !!}
+        {!! Form::label('push_notification', 'Push Notification', ['class' => 'form-check-label']) !!}
+    </div>
+</div>
+
+@role(\App\Models\Role::SUPER_ADMIN)
     <div class="col-sm-12">
         {!! Form::label('roles', 'Roles:') !!}
         <div class="form-group">

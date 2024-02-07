@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Queue;
+
 if (! function_exists('getConstantValue')) {
     function getConstantValue($value)
     {
@@ -7,6 +9,93 @@ if (! function_exists('getConstantValue')) {
     }
 }
 
+
+if (! function_exists('JWTDecodeInfo')) {
+    function JWTDecodeInfo($token)
+    {
+        if(!$token)
+            throw new Error('Token is required', 422);
+
+        $tokenParts = explode(".", $token);
+        
+        if(!isset($tokenParts[1]))
+            throw new Error('Unauthentication: Invalid Token', 403);
+
+        $tokenPayload = base64_decode($tokenParts[1]);
+        $jwtPayload = json_decode($tokenPayload);
+        
+
+        if(!$jwtPayload)
+            throw new Error('Unauthentication: Invalid Token', 403);
+
+        return $jwtPayload;
+    }
+}
+
+if (! function_exists('JWTDecodeUserInfo')) {
+    function JWTDecodeUserInfo($token)
+    {
+        $jwtPayload = JWTDecodeInfo($token);
+
+        if(!$jwtPayload)
+            throw new Error('Unauthentication: Invalid Token', 403);
+
+        $expireAt = \Carbon\Carbon::createFromTimestamp($jwtPayload->exp ?? null);
+        $userInfo['email'] = $jwtPayload->email ?? null;
+        if(isset($jwtPayload->email_verified)) $userInfo['email_verified'] = $jwtPayload->email_verified;
+        if(isset($jwtPayload->exp)) $userInfo['expire_at'] = $expireAt;
+        
+        // if($expireAt->isPast())
+        //     throw new Error('Unauthentication: Token is expire', 403);
+            
+        $response = [
+            'status' => 200,
+            'success' => true,
+            'message' => 'JWT Decoded',
+            'data' => $userInfo
+        ];
+
+        return $response;
+    }
+}
+
+
+if (! function_exists('sendEmail')) {
+    function sendEmail($to, $subject, $data, $templateName)
+    {        
+        $messageBody = [
+            "msg" => "test-mail",
+            "data" => [
+                "to" => $to,
+                "subject" => env('APP_NAME') . " | " . $subject,
+                "data" => $data,
+                "projectName" => config('queue.connections.sqs.email_service_project_name'),
+                "templateName" => $templateName,
+                "from" => "developers@tekrevol.com"
+            ]
+        ];
+
+        $sqs = Queue::connection('sqs'); // Get the SQS connection
+
+        $queueUrl = 'https://sqs.us-west-2.amazonaws.com/307866862898/MAIL-STAGING'; // Replace with your actual SQS queue URL
+
+        $messageBody = json_encode($messageBody);
+
+        $sqsClient = $sqs->getSqs(); // Get the underlying AWS SDK SQS client
+
+        $result = $sqsClient->sendMessage([
+            'QueueUrl' => $queueUrl,
+            'MessageBody' => $messageBody,
+        ]);
+
+        // Process the result if needed
+        if ($result->hasKey('MessageId')) {
+            return "Message sent with ID: " . $result->get('MessageId');
+        } else {
+            return "Failed to send message";
+        }
+    }
+}
 
 if (! function_exists('getPermissionModelName')) {
     function getPermissionModelName($value)

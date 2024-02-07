@@ -36,10 +36,10 @@
         "inView": true
     },
     {
-        "name": "value",
-        "dbType": "integer,false",
-        "htmlType": null,
-        "validations": "required|integer|integer|integer",
+        "name": "unique_key",
+        "dbType": "string,255",
+        "htmlType": "text",
+        "validations": "required|string|max:255",
         "searchable": true,
         "fillable": true,
         "primary": false,

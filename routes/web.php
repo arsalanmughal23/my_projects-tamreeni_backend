@@ -81,9 +81,37 @@ Route::resource('settings', App\Http\Controllers\SettingController::class);
 Route::resource('constants', App\Http\Controllers\ConstantController::class);
 
 
-Route::resource('stacks', App\Http\Controllers\StackController::class);
+Route::resource('user_details', App\Http\Controllers\UserDetailController::class);
 
 
-Route::resource('employees', App\Http\Controllers\EmployeeController::class);
+Route::resource('faqs', App\Http\Controllers\FaqController::class);
 
-Route::resource('projects', App\Http\Controllers\ProjectController::class);
+
+Route::resource('wellness_tips', App\Http\Controllers\WellnessTipController::class);
+
+
+Route::resource('favourites', App\Http\Controllers\FavouriteController::class);
+
+
+Route::resource('meal_categories', App\Http\Controllers\MealCategoryController::class);
+
+
+Route::resource('meals', App\Http\Controllers\MealController::class);
+
+
+Route::resource('body_parts', App\Http\Controllers\BodyPartController::class);
+
+
+Route::resource('exercise_equipments', App\Http\Controllers\ExerciseEquipmentController::class);
+
+
+Route::resource('events', App\Http\Controllers\EventController::class);
+
+
+Route::resource('user_events', App\Http\Controllers\UserEventController::class);
+
+
+Route::resource('exercises', App\Http\Controllers\ExerciseController::class);
+
+
+Route::resource('exercise_equipment_pivots', App\Http\Controllers\ExerciseEquipmentPivotController::class);

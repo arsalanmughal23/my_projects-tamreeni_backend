@@ -12,35 +12,38 @@ use App\Repositories\RolesRepository;
 use App\Http\Controllers\AppBaseController;
 use Spatie\Permission\Models\Role as Role;
 use App\Models\User as User;
+use App\Repositories\UserDetailRepository;
 use Response;
 
 class UsersController extends AppBaseController
 {
-    /** @var UsersRepository $usersRepository*/
-    private $usersRepository;
+    /** @var UsersRepository $userRepository*/
+    private $userRepository;
+    private $userDetailRepository;
     private $rolesRepository;
 
-    public function __construct(UsersRepository $usersRepo, RolesRepository $rolesRepo)
+    public function __construct(UsersRepository $userRepo, UserDetailRepository $userDetailRepo, RolesRepository $rolesRepo)
     {
-        $this->usersRepository = $usersRepo;
+        $this->userRepository = $userRepo;
+        $this->userDetailRepository = $userDetailRepo;
         $this->rolesRepository = $rolesRepo;
 
     }
 
     /**
-     * Display a listing of the Users.
+     * Display a listing of the User.
      *
-     * @param UsersDataTable $usersDataTable
+     * @param UsersDataTable $userDataTable
      *
      * @return Response
      */
-    public function index(UsersDataTable $usersDataTable)
+    public function index(UsersDataTable $userDataTable)
     {
-        return $usersDataTable->render('users.index');
+        return $userDataTable->render('users.index');
     }
 
     /**
-     * Show the form for creating a new Users.
+     * Show the form for creating a new User.
      *
      * @return Response
      */
@@ -51,7 +54,7 @@ class UsersController extends AppBaseController
     }
 
     /**
-     * Store a newly created Users in storage.
+     * Store a newly created User in storage.
      *
      * @param CreateUsersRequest $request
      *
@@ -61,26 +64,20 @@ class UsersController extends AppBaseController
     {
         $input = $request->all();
 
-        $users = $this->usersRepository->create($input);
+        $user = $this->userRepository->create($input);
+        $userDetail = ['user_id' => $user->id];
+        $this->userDetailRepository->create($userDetail);
 
-        $roles = $this->rolesRepository->all();
+        $roleIds = array_keys(request()->role);
+        $user->syncRoles($roleIds);
 
-        foreach($roles as $role) {
-            if (isset(request()->role[$role->id])) {
-                $users->assignRole($role->id);
-            }
-            else {
-                $users->removeRole($role->id);
-            }
-        }
-
-        Flash::success('Users saved successfully.');
+        Flash::success('User saved successfully.');
 
         return redirect(route('users.index'));
     }
 
     /**
-     * Display the specified Users.
+     * Display the specified User.
      *
      * @param int $id
      *
@@ -88,19 +85,19 @@ class UsersController extends AppBaseController
      */
     public function show($id)
     {
-        $users = $this->usersRepository->find($id);
+        $user = $this->userRepository->find($id);
 
-        if (empty($users)) {
-            Flash::error('Users not found');
+        if (empty($user)) {
+            Flash::error('User not found');
 
             return redirect(route('users.index'));
         }
 
-        return view('users.show')->with('users', $users);
+        return view('users.show')->with('users', $user);
     }
 
     /**
-     * Show the form for editing the specified Users.
+     * Show the form for editing the specified User.
      *
      * @param int $id
      *
@@ -108,19 +105,19 @@ class UsersController extends AppBaseController
      */
     public function edit($id)
     {
-        $users = $this->usersRepository->find($id);
+        $user = $this->userRepository->find($id);
         $roles = $this->rolesRepository->all();
 
-        if (empty($users)) {
-            Flash::error('Users not found');
+        if (empty($user)) {
+            Flash::error('User not found');
             return redirect(route('users.index'));
         }
 
-        return view('users.edit')->with(['users' => $users,'roles' => $roles, ]);
+        return view('users.edit')->with(['users' => $user,'roles' => $roles, ]);
     }
 
     /**
-     * Update the specified Users in storage.
+     * Update the specified User in storage.
      *
      * @param int $id
      * @param UpdateUsersRequest $request
@@ -129,34 +126,26 @@ class UsersController extends AppBaseController
      */
     public function update($id, UpdateUsersRequest $request)
     {
-        $users = $this->usersRepository->find($id);
+        $user = $this->userRepository->find($id);
 
-        if (empty($users)) {
-            Flash::error('Users not found');
+        if (empty($user)) {
+            Flash::error('User not found');
 
             return redirect(route('users.index'));
         }
 
-        $users = $this->usersRepository->update($request->all(), $id);
+        $user = $this->userRepository->update($request->all(), $id);
 
-        $roles = $this->rolesRepository->all();
+        $roleIds = array_keys(request()->role);
+        $user->syncRoles($roleIds);
 
-        foreach($roles as $role) {
-            if (isset(request()->role[$role->id])) {
-                $users->assignRole($role->id);
-            }
-            else {
-                $users->removeRole($role->id);
-            }
-        }
-
-        Flash::success('Users updated successfully.');
+        Flash::success('User updated successfully.');
 
         return redirect(route('users.index'));
     }
 
     /**
-     * Remove the specified Users from storage.
+     * Remove the specified User from storage.
      *
      * @param int $id
      *
@@ -164,17 +153,17 @@ class UsersController extends AppBaseController
      */
     public function destroy($id)
     {
-        $users = $this->usersRepository->find($id);
+        $user = $this->userRepository->find($id);
 
-        if (empty($users)) {
-            Flash::error('Users not found');
+        if (empty($user)) {
+            Flash::error('User not found');
 
             return redirect(route('users.index'));
         }
 
-        $this->usersRepository->delete($id);
+        $this->userRepository->delete($id);
 
-        Flash::success('Users deleted successfully.');
+        Flash::success('User deleted successfully.');
 
         return redirect(route('users.index'));
     }
@@ -189,16 +178,11 @@ class UsersController extends AppBaseController
 
     public function updateRoles($id)
     {
-        $user = User::findOrFail($id);;
-        $roles = Role::all();
-        foreach($roles as $role) {
-            if (isset(request()->role[$role->id])) {
-                $user->assignRole($role);
-            }
-            else {
-                $user->removeRole($role);
-            }
-        }
+        $user = User::findOrFail($id);
+
+        $roleIds = array_keys(request()->role);
+        $user->syncRoles($roleIds);
+
         Flash::success('Roles updated successfully.');
         return redirect(route('users.index'));
     }

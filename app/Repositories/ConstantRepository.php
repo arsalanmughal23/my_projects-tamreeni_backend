@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class ConstantRepository
  * @package App\Repositories
- * @version February 7, 2023, 10:10 am UTC
+ * @version January 29, 2024, 2:22 pm UTC
 */
 
 class ConstantRepository extends BaseRepository
@@ -17,9 +17,10 @@ class ConstantRepository extends BaseRepository
      * @var array
      */
     protected $fieldSearchable = [
-        'instance_type',
-        'text',
-        'value'
+        'name',
+        'group',
+        'key',
+        'unique_key'
     ];
 
     /**
@@ -40,8 +41,8 @@ class ConstantRepository extends BaseRepository
         return Constant::class;
     }
 
-    public function getInstanceType($instanceType)
+    public function getConstantsByGroup($group)
     {
-        return $this->model->where('instance_type', $instanceType)->get();
+        return Constant::where('group', $group)->get();
     }
 }

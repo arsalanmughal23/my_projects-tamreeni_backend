@@ -83,6 +83,17 @@ class PageAPIController extends AppBaseController
         return $this->sendResponse($page->toArray(), 'Page retrieved successfully');
     }
 
+    public function pageContent(Request $request)
+    {
+        $slug = $request->get('slug');
+        $page = $this->pageRepository->pageByslug($slug);
+
+        if (empty($page)) {
+            return $this->sendError('Page not found', 200);
+        }
+
+        return $this->sendResponse($page->toArray(), 'Page retrieved successfully');
+    }
     /**
      * Update the specified Page in storage.
      * PUT/PATCH /pages/{id}

@@ -40,4 +40,9 @@ class PageRepository extends BaseRepository
     {
         return Page::class;
     }
+
+    public function pageByslug($slug)
+    {
+        return Page::where('slug', $slug)->first();
+    }
 }

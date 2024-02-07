@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests\API;
 
-use App\Models\Register;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Models\User;
+use App\Http\Requests\API\BaseAPIRequest;
 
-class RegistrationAPIRequest extends FormRequest
+class RegistrationAPIRequest extends BaseAPIRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,6 +24,6 @@ class RegistrationAPIRequest extends FormRequest
      */
     public function rules()
     {
-        return Register::$rules;
+        return User::$api_rules;
     }
 }

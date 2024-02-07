@@ -1,0 +1,1827 @@
+{
+	"info": {
+		"_postman_id": "546df066-6ef7-4d34-b09f-55d6100a27e8",
+		"name": "Tamreeni Copy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25285587"
+	},
+	"item": [
+		{
+			"name": "Auth-APIs",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Successful login\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.success).to.be.true;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Token exists\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.data.token).to.exist;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message is correct\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.equal(\"Logged In Successfully\");\r",
+									"});\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"if(jsonData.data)\r",
+									"{\r",
+									"    postman.setEnvironmentVariable(\"Authorization\", jsonData.data.token.access_token);\r",
+									"    postman.setEnvironmentVariable(\"user_id\", jsonData.data.user.id);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "john.doe@yopmail.com",
+									"description": "required|email|exists:users,email",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"description": "required",
+									"type": "default"
+								},
+								{
+									"key": "device_token",
+									"value": "fqc9GiAKRY2jFQtKInaKFl:APA91bE5LyTi0frZ-9ADaHq6y0Ou4o4O_dHE3twxGKCPrPrOMimis9YouhMTHyxa7M5XNFEGgUmHJHcQl1INgFKLUjnewCrELY4xgnPRqH5WlPx7VwsIuhL4E1tVjjhCPuOeJ20msjnd",
+									"description": "required",
+									"type": "text"
+								},
+								{
+									"key": "device_type",
+									"value": "android",
+									"description": "required|string|in:ios,android,web",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful response\", function () {\r",
+									"    pm.response.to.have.jsonBody(\"success\", true);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Data object exists\", function () {\r",
+									"    pm.response.to.have.jsonBody(\"data\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"User object exists in data\", function () {\r",
+									"    pm.response.to.have.jsonBody(\"data.user\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message is 'User saved successfully.'\", function () {\r",
+									"    pm.response.to.have.jsonBody(\"message\", \"User saved successfully.\");\r",
+									"});\r",
+									"\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"if(jsonData.data)\r",
+									"{\r",
+									"    postman.setEnvironmentVariable(\"Authorization\", jsonData.data.token);\r",
+									"    postman.setEnvironmentVariable(\"user_id\", jsonData.data.user.id);\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "arsalan1234@yopmail.com",
+									"description": "required|email|max:250|unique:users,email",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "Arman@123",
+									"description": "min:8|required|same:password_confirmation|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%?&])[A-Za-z\\d@$!%?&]+$/",
+									"type": "default"
+								},
+								{
+									"key": "password_confirmation",
+									"value": "Arman@123",
+									"description": "min:8|required_with:password",
+									"type": "default"
+								},
+								{
+									"key": "device_token",
+									"value": "fgp0x29TdENToa0yS-poDC:APA91bEnL3pxd0fOuP8_kpoGyp-W9XFtmG8-BKONvZTAEhrGcuGekuhc4ir-3GApXPh9ojdqeFsNowK3_cX04jVfWBBsRpIKJWnm2KgwVPovz_bScEPxmG1ohQdgtGV8aktkl5Ej2ar3",
+									"description": "required",
+									"type": "default"
+								},
+								{
+									"key": "device_type",
+									"value": "ios",
+									"description": "required|string|in:ios,android,web",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forget Password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful response\", function () {\r",
+									"    pm.response.to.have.jsonBody(\"success\", true);\r",
+									"    pm.response.to.have.jsonBody(\"data\", []);\r",
+									"    pm.response.to.have.jsonBody(\"message\", \"Password Verification Code Send To Your Email Successfully\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "arsalan1234@yopmail.com",
+									"description": "required|email|exists:users",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/forget-password",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"forget-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "code",
+									"value": "5860",
+									"description": "required|string",
+									"type": "default"
+								},
+								{
+									"key": "email",
+									"value": "arsalan1234@yopmail.com",
+									"description": "required|email|exists:users,email",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "Arman@1234",
+									"description": "min:8|required|same:password_confirmation|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%?&])[A-Za-z\\d@$!%?&]+$/",
+									"type": "default"
+								},
+								{
+									"key": "password_confirmation",
+									"value": "Arman@1234",
+									"description": "min:8|required_with:password",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/reset-password",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Resend Otp",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "arsalan1234@yopmail.com",
+									"description": "required|email|exists:users,email",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "password",
+									"description": "required|in:email,password",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/resend-otp",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"resend-otp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Otp",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "otp",
+									"value": "4589",
+									"description": "required|string",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "arsalan1234@yopmail.com",
+									"description": "required|email|exists:users,email",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "email",
+									"description": "required|in:email,password",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/verify-otp",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"verify-otp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Social Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Successful login\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.success).to.be.true;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Token exists\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.data.token.access_token).to.exist;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Message is correct\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.equal(\"Logged In Successfully\");\r",
+									"});\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"if(jsonData.data)\r",
+									"{\r",
+									"    postman.setEnvironmentVariable(\"Authorization\", jsonData.data.token.access_token);\r",
+									"    postman.setEnvironmentVariable(\"user_id\", jsonData.data.user.id);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Arsalan Mughal Dev Payload\",                           // sometimes|string|max:250\r\n    \"first_name\": \"Arsalan\",                                        // sometimes|string|max:250\r\n    \"last_name\": \"Mughal\",                                          // sometimes|string|max:250\r\n    \"email\":\"arsalan1234@yopmail.com\",                              // email|required_if:platform,google|max:250\r\n    \"image\":\"http://localhost/sleep-meditation/public/user.png\",    // sometimes|url\r\n    \"platform\":\"google\",                                            // required|in:google,apple\r\n    \"client_id\":\"jkajdsfkljasdklxy\",                                // required|max:250\r\n    \"device_type\":\"android\",                                        // required|in:ios,android,web\r\n    \"device_token\":\"api_fjakdlfjasklfjkasdlf1df\",                   // required\r\n    \"expires_at\": \"2024-02-20 00:00:00\",                            //'sometimes|date|date_format:\"Y-m-d H:i:s\"'\r\n    // token                                                        // required\r\n    \"token\":\"eyJraWQiOiJmaDZCczhDIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoiY29tLmFwcC5zbGVlcE1lZGl0YXRpb24iLCJleHAiOjE2OTQwMTcxNTYsImlhdCI6MTY5MzkzMDc1Niwic3ViIjoiMDAwOTc0LjFhNzczOTBmNDJlOTQ4ZDU5MjRjZDBmNTY1OWU4YTJjLjE2MDIiLCJub25jZSI6IjdhZTc2ZjYyOGQyZDYwODg5OTllZjdkMThlYjNlNGQzYzViYjg4ZmQ2NDlhOGEwMjI4ZTlhMzI5MzIyZTQ0NWMiLCJjX2hhc2giOiIxX3UtSDQ5akYxMDNRalpRLVdJYlNnIiwiZW1haWwiOiJ3YWl6LmFsaUB0ZWtyZXZvbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6InRydWUiLCJhdXRoX3RpbWUiOjE2OTM5MzA3NTYsIm5vbmNlX3N1cHBvcnRlZCI6dHJ1ZX0.gbh59mM658_lmx-EcyPRYLxYDYn12Ah0QQPZpJ4RGEtlpXpqfrjBbvfR4gOztRZc9yQZCjOQlisaFLhdkwkbqhF9GSuSPR8Qpb-y9MNbhs2pItcjx3qTUjGZUcWwDaM0DOnUkzCtbgWL6_XU8B6qYHhKxVwrQbZd1tfVzoy6mcH9HCv5ml2r7Czj3tsgEf3ddKl-dFfdK7-BG6dbh48daQREF0LwcJ4qmBjSnGKsyASPiL9r9c6gEkdgJrdHn9AN-mkWnskYssYFVvzQxClq47RDGYb1-pbBqNRpkGQQFYRCwgtCr_sUSo_IxhvScTTiqnXFVDZ-pEKdNd00DYP1LQ\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/social-login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"social-login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"delete_account_type_id\": 13    // required|int|exists:constants,id,group,'.Constant::GROUP_DELETE_ACCOUNT_TYPE\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/delete-account",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"delete-account"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User APIs",
+			"item": [
+				{
+					"name": "My-Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/my-profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"my-profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update-Profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful response\", function () {\r",
+									"    pm.response.to.have.jsonBody(\"success\", true);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "faiz ali",
+									"description": "sometimes|string|max:250",
+									"type": "text"
+								},
+								{
+									"key": "first_name",
+									"value": "faiz",
+									"description": "sometimes|string|max:250",
+									"type": "text"
+								},
+								{
+									"key": "last_name",
+									"value": "ali",
+									"description": "sometimes|string|max:250",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "",
+									"description": "sometimes|string|max:250",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "phone_number",
+									"value": "1422273443",
+									"description": "sometimes|string|max:250",
+									"type": "text"
+								},
+								{
+									"key": "dob",
+									"value": "2024-01-31",
+									"description": "sometimes|date|date_format:\"Y-m-d\"",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"value": "https://hot-seats-backend.s3.us-east-1.amazonaws.com/jQ31ICHc1qOA",
+									"description": "sometimes|url",
+									"type": "text"
+								},
+								{
+									"key": "gender",
+									"value": "male",
+									"description": "sometimes|string|in:male,female",
+									"type": "text"
+								},
+								{
+									"key": "language",
+									"value": "en",
+									"description": "sometimes|string|in:en,ar",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "height_in_m",
+									"value": "5.6",
+									"description": "sometimes|numeric",
+									"type": "text"
+								},
+								{
+									"key": "current_weight_in_kg",
+									"value": "60.63",
+									"description": "sometimes|numeric",
+									"type": "text"
+								},
+								{
+									"key": "target_weight_in_kg",
+									"value": "50",
+									"description": "sometimes|numeric",
+									"type": "text"
+								},
+								{
+									"key": "goal_id",
+									"value": "4",
+									"description": "sometimes|int|exists:constants,id,group,'.Constant::GROUP_GOAL",
+									"type": "text"
+								},
+								{
+									"key": "height_unit_id",
+									"value": "6",
+									"description": "sometimes|int|exists:constants,id,group,'.Constant::GROUP_HEIGHT_UNIT",
+									"type": "text"
+								},
+								{
+									"key": "current_weight_unit_id",
+									"value": "7",
+									"description": "sometimes|int|exists:constants,id,group,'.Constant::GROUP_CURRENT_WEIGHT_UNIT",
+									"type": "text"
+								},
+								{
+									"key": "target_weight_unit_id",
+									"value": "9",
+									"description": "sometimes|int|exists:constants,id,group,'.Constant::GROUP_TARGET_WEIGHT_UNIT",
+									"type": "text"
+								},
+								{
+									"key": "diet_type_id",
+									"value": "11",
+									"description": "sometimes|int|exists:constants,id,group,'.Constant::GROUP_DIET_TYPE",
+									"type": "text"
+								},
+								{
+									"key": "push_notification",
+									"value": "0",
+									"description": "sometimes|boolean",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/update-profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"update-profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "current_password",
+									"value": "12345678",
+									"description": "required",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "Moon@123",
+									"description": "min:8|required|same:password_confirmation|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%?&])[A-Za-z\\d@$!%?&]+$/",
+									"type": "default"
+								},
+								{
+									"key": "password_confirmation",
+									"value": "Moon@123",
+									"description": "min:8|required_with:password",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/change-password",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"change-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Language Update API",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful response\", function () {\r",
+									"    pm.response.to.have.jsonBody(\"success\", true);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "language",
+									"value": "en",
+									"description": "required|in:en,ar",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/update-language",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"update-language"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Constants",
+			"item": [
+				{
+					"name": "Get Constant API",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/constants?group=gender",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"constants"
+							],
+							"query": [
+								{
+									"key": "group",
+									"value": "gender"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Meal Categories",
+			"item": [
+				{
+					"name": "Get Meal Categories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/meal_categories",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"meal_categories"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Meals",
+			"item": [
+				{
+					"name": "Mark/UnMark Meal Favourite",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful response\", function () {\r",
+									"    pm.response.to.have.jsonBody(\"success\", true);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "instance_type",
+									"value": "meal",
+									"type": "text"
+								},
+								{
+									"key": "instance_id",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/favorite",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"favorite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Favourites",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/favourites?type=meal",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"favourites"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "meal"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Meal Details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/meals/2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"meals",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Wellness Tips APIs",
+			"item": [
+				{
+					"name": "All Wellness Tips",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/wellness_tips",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"wellness_tips"
+							],
+							"query": [
+								{
+									"key": "per_page",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Single Wellness Tips",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/wellness_tips/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"wellness_tips",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Page API's",
+			"item": [
+				{
+					"name": "Create Page",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "privacy policy",
+									"type": "text"
+								},
+								{
+									"key": "content",
+									"value": "1. Introduction\nWelcome to our website. These terms and conditions outline the rules and regulations for the use of our website.\n\nBy accessing this website, we assume you accept these terms and conditions in full. Do not continue to use our website if you do not accept all of the terms and conditions stated on this page.\n\nThe following terminology applies to these Terms and Conditions, Privacy Statement and Disclaimer Notice and any or all Agreements: \"Client\", \"You\" and \"Your\" refers to you, the person accessing this website and accepting the Company's terms and conditions. \"The Company\", \"Ourselves\", \"We\", \"Our\" and \"Us\", refers to our Company. \"Party\", \"Parties\", or \"Us\", refers to both the Client and ourselves, or either the Client or ourselves. All terms refer to the offer, acceptance, and consideration of payment necessary to undertake the process of our assistance to the Client in the most appropriate manner, whether by formal meetings of a fixed duration, or any other means, for the express purpose of meeting the Client's needs in respect of the provision of the Company's stated services/products, in accordance with and subject to, prevailing law of . Any use of the above terminology or other words in the singular, plural, capitalization and/or he/she or they, are taken as interchangeable and therefore as referring to same.\n\n2. Use License\nPermission is granted to temporarily download one copy of the materials (information or software) on our website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license, you may not:\n\nmodify or copy the materials;\nuse the materials for any commercial purpose, or for any public display (commercial or non-commercial);\nattempt to decompile or reverse engineer any software contained on our website;\nremove any copyright or other proprietary notations from the materials; or\ntransfer the materials to another person or \"mirror\" the materials on any other server.\nLast updated: 9/14/2023\n\nIf you have any questions or concerns about these terms and conditions, please contact us on hotseats@yopmail.com .",
+									"type": "text"
+								},
+								{
+									"key": "active",
+									"value": "1",
+									"description": "true=1, false=0",
+									"type": "text"
+								},
+								{
+									"key": "slug",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pages",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Page By Slug",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/page-content?slug=privacy-policy",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"page-content"
+							],
+							"query": [
+								{
+									"key": "slug",
+									"value": "privacy-policy"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "FAQs APIs",
+			"item": [
+				{
+					"name": "FAQ",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "question",
+									"value": "What is tamreeni platform about?",
+									"type": "text"
+								},
+								{
+									"key": "answer",
+									"value": "It is a platform that connects you with variety of businesses that unique services like reservations, game tickets, restaurant queues and micro-experiences, and also provides you with the opportunity to earn money",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/faqs",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"faqs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All FAQs",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/faqs",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"faqs"
+							],
+							"query": [
+								{
+									"key": "per_page",
+									"value": "10",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Single FAQ",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/faqs/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"faqs",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update FAQ",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "question",
+									"value": "what is tamreeni about",
+									"type": "text"
+								},
+								{
+									"key": "answer",
+									"value": "it is a fitness app",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/faqs/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"faqs",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete FAQ",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/faqs/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"faqs",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Events",
+			"item": [
+				{
+					"name": "All Events",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/events",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"events"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "2024-02-5",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Event Details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/events/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"events",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Join Event",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_id",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "event_id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user_events",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user_events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mark Event as Interested",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_id",
+									"value": "{{user_id}}",
+									"type": "text"
+								},
+								{
+									"key": "event_id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/mark-interested",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"mark-interested"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Exercises",
+			"item": [
+				{
+					"name": "Mark/UnMark Exercise Favourite",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful response\", function () {\r",
+									"    pm.response.to.have.jsonBody(\"success\", true);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "instance_type",
+									"value": "exercise",
+									"type": "text"
+								},
+								{
+									"key": "instance_id",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/favorite",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"favorite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Favourites",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/favourites?type=exercise",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"favourites"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "exercise"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Exercise Details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/exercises/2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"exercises",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Exercise Equipments",
+			"item": [
+				{
+					"name": "Get Exercise Equipments",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/exercise_equipments",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"exercise_equipments"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Body Parts",
+			"item": [
+				{
+					"name": "Get Body Parts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/body_parts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"body_parts"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Search",
+			"item": [
+				{
+					"name": "Search",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/search?name=meal",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"search"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "meal"
+								},
+								{
+									"key": "category_id",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "min_calories",
+									"value": "200",
+									"disabled": true
+								},
+								{
+									"key": "max_calories",
+									"value": "500",
+									"disabled": true
+								},
+								{
+									"key": "body_part_ids[]",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "body_part_ids[]",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "exercise_equipment_ids[]",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "exercise_equipment_ids[]",
+									"value": "3",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

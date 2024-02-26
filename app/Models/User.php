@@ -82,6 +82,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password_confirmation' => 'min:8|required_with:password',
         'device_token'          => 'required',
         'device_type'           => 'required|string|in:ios,android,web',
+        'phone_number'          => 'nullable|string|max:250|unique:user_details,phone_number,NULL,id,deleted_at,NULL',
     ];
 
     public static $api_update_rules = [

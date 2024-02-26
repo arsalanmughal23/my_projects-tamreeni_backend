@@ -184,7 +184,8 @@ class AuthAPIController extends AppBaseController
             $userRole = Role::whereName(Role::API_USER)->first();
             $user->syncRoles($userRole);
 
-            $userDetail = ['user_id' => $user->id];
+            $userDetail = $request->only('phone_number');
+            $userDetail['user_id'] = $user->id;
             $this->userDetailRepository->create($userDetail);
 
             $searchUserDevice = $request->only('device_token');

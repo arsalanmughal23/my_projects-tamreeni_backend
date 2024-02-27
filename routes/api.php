@@ -43,9 +43,17 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
     Route::resource('favourites', App\Http\Controllers\API\FavouriteAPIController::class);
     Route::post('favorite', [App\Http\Controllers\API\FavouriteAPIController::class, 'markAsFavorite']);
-    Route::get('search', [App\Http\Controllers\API\MealAPIController::class, 'searchMeals']);
+    Route::post('mark-interested', [App\Http\Controllers\API\EventAPIController::class, 'markInterested']);
+    Route::get('search', [App\Http\Controllers\API\MealAPIController::class, 'search']);
     Route::resource('meal_categories', App\Http\Controllers\API\MealCategoryAPIController::class);
     Route::resource('meals', App\Http\Controllers\API\MealAPIController::class);
+    Route::resource('events', App\Http\Controllers\API\EventAPIController::class);
+    Route::resource('user_events', App\Http\Controllers\API\UserEventAPIController::class);
+    Route::resource('exercises', App\Http\Controllers\API\ExerciseAPIController::class);
+    Route::resource('body_parts', App\Http\Controllers\API\BodyPartAPIController::class);
+    Route::resource('exercise_equipments', App\Http\Controllers\API\ExerciseEquipmentAPIController::class);
+    Route::resource('exercise_equipment_pivots', App\Http\Controllers\API\ExerciseEquipmentPivotAPIController::class);
+
 });
 
 Route::resource('menus', App\Http\Controllers\API\MenuAPIController::class);
@@ -56,3 +64,7 @@ Route::resource('pages', App\Http\Controllers\API\PageAPIController::class);
 
 Route::resource('user_details', App\Http\Controllers\API\UserDetailAPIController::class);
 Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, 'pageContent'])->name('page-content');
+
+
+
+

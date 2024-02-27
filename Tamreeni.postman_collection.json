@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "0cff55e3-927b-49db-b810-87378196b9f1",
-		"name": "Tamreeni",
+		"_postman_id": "546df066-6ef7-4d34-b09f-55d6100a27e8",
+		"name": "Tamreeni Copy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "26330339"
+		"_exporter_id": "25285587"
 	},
 	"item": [
 		{
@@ -27,7 +27,7 @@
 									"\r",
 									"pm.test(\"Token exists\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.data.token.access_token).to.exist;\r",
+									"    pm.expect(jsonData.data.token).to.exist;\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Message is correct\", function () {\r",
@@ -38,7 +38,7 @@
 									"if(jsonData.data)\r",
 									"{\r",
 									"    postman.setEnvironmentVariable(\"Authorization\", jsonData.data.token.access_token);\r",
-									"    // postman.setEnvironmentVariable(\"user_id\", jsonData.data.user.id);\r",
+									"    postman.setEnvironmentVariable(\"user_id\", jsonData.data.user.id);\r",
 									"}"
 								],
 								"type": "text/javascript"
@@ -59,13 +59,13 @@
 							"formdata": [
 								{
 									"key": "email",
-									"value": "arsalan1234@yopmail.com",
+									"value": "john.doe@yopmail.com",
 									"description": "required|email|exists:users,email",
 									"type": "default"
 								},
 								{
 									"key": "password",
-									"value": "Arman@123",
+									"value": "123456",
 									"description": "required",
 									"type": "default"
 								},
@@ -897,94 +897,6 @@
 			"name": "Meals",
 			"item": [
 				{
-					"name": "Get Favourites",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{Authorization}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/favourites",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"favourites"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Search",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{Authorization}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": []
-						},
-						"url": {
-							"raw": "{{baseUrl}}/search",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"search"
-							],
-							"query": [
-								{
-									"key": "name",
-									"value": "meal",
-									"disabled": true
-								},
-								{
-									"key": "category_id",
-									"value": "2",
-									"disabled": true
-								},
-								{
-									"key": "min_calories",
-									"value": "200",
-									"disabled": true
-								},
-								{
-									"key": "max_calories",
-									"value": "500",
-									"disabled": true
-								},
-								{
-									"key": "per_page",
-									"value": "1",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Mark/UnMark Meal Favourite",
 					"event": [
 						{
@@ -1042,6 +954,67 @@
 							],
 							"path": [
 								"favorite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Favourites",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/favourites?type=meal",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"favourites"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "meal"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Meal Details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/meals/2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"meals",
+								"2"
 							]
 						}
 					},
@@ -1414,6 +1387,435 @@
 							"path": [
 								"faqs",
 								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Events",
+			"item": [
+				{
+					"name": "All Events",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/events",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"events"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "2024-02-5",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Event Details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/events/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"events",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Join Event",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_id",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "event_id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user_events",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user_events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mark Event as Interested",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_id",
+									"value": "{{user_id}}",
+									"type": "text"
+								},
+								{
+									"key": "event_id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/mark-interested",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"mark-interested"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Exercises",
+			"item": [
+				{
+					"name": "Mark/UnMark Exercise Favourite",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful response\", function () {\r",
+									"    pm.response.to.have.jsonBody(\"success\", true);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "instance_type",
+									"value": "exercise",
+									"type": "text"
+								},
+								{
+									"key": "instance_id",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/favorite",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"favorite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Favourites",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/favourites?type=exercise",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"favourites"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "exercise"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Exercise Details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/exercises/2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"exercises",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Exercise Equipments",
+			"item": [
+				{
+					"name": "Get Exercise Equipments",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/exercise_equipments",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"exercise_equipments"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Body Parts",
+			"item": [
+				{
+					"name": "Get Body Parts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/body_parts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"body_parts"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Search",
+			"item": [
+				{
+					"name": "Search",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Authorization}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/search?name=meal",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"search"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "meal"
+								},
+								{
+									"key": "category_id",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "min_calories",
+									"value": "200",
+									"disabled": true
+								},
+								{
+									"key": "max_calories",
+									"value": "500",
+									"disabled": true
+								},
+								{
+									"key": "body_part_ids[]",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "body_part_ids[]",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "exercise_equipment_ids[]",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "exercise_equipment_ids[]",
+									"value": "3",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "1",
+									"disabled": true
+								}
 							]
 						}
 					},

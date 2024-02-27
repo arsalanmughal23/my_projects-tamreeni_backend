@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Requests\API\CreateMealAPIRequest;
 use App\Http\Requests\API\UpdateMealAPIRequest;
 use App\Models\Meal;
+use App\Models\Exercise;
 use App\Repositories\MealRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
@@ -136,32 +137,55 @@ class MealAPIController extends AppBaseController
         return $this->sendSuccess('Meal deleted successfully');
     }
 
-    public function searchMeals(Request $request)
+    public function search(Request $request)
     {
         $perPage = $request->input('per_page', Config::get('constants.PER_PAGE', 10));
-        $query = Meal::query();
-
+        $exerciseQuery = Exercise::query();
+        $mealsQuery = Meal::query();
+    
         // Search by name
         if ($request->has('name')) {
-            $query->where('name', 'like', '%' . $request->input('name') . '%');
+            $mealsQuery->where('name', 'like', '%' . $request->input('name') . '%');
+            $exerciseQuery->where('name', 'like', '%' . $request->input('name') . '%');
         }
-
+    
         // Search by category
         if ($request->has('category_id')) {
-            $query->where('meal_category_id', $request->input('category_id'));
+            $mealsQuery->where('meal_category_id', $request->input('category_id'));
         }
-
+    
         // Search by calories range
         if ($request->has('min_calories')) {
-            $query->where('calories', '>=', $request->input('min_calories'));
+            $mealsQuery->where('calories', '>=', $request->input('min_calories'));
         }
-
+    
         if ($request->has('max_calories')) {
-            $query->where('calories', '<=', $request->input('max_calories'));
+            $mealsQuery->where('calories', '<=', $request->input('max_calories'));
         }
 
-        $meals = $query->paginate($perPage);
-
-        return $this->sendResponse($meals->toArray(), 'Meals retrieved successfully');
+    // Check if body_part_ids array is given
+    if ($request->has('body_part_ids')) {
+        $bodyPartIds = $request->input('body_part_ids');
+        $exerciseQuery->whereHas('bodyPart', function ($query) use ($bodyPartIds) {
+            $query->whereIn('id', $bodyPartIds);
+        });
     }
+
+        // Check if exercise_equipment_ids array is given
+        if ($request->has('exercise_equipment_ids')) {
+            $exerciseEquipmentIds = $request->input('exercise_equipment_ids');
+            $exerciseQuery->whereHas('exerciseEquipmentPivots', function ($query) use ($exerciseEquipmentIds) {
+                $query->whereIn('exercise_equipment_id', $exerciseEquipmentIds);
+            });
+        }
+    
+        $meals = $mealsQuery->paginate($perPage);
+        $exercises = $exerciseQuery->paginate($perPage);
+    
+        return $this->sendResponse([
+            'meals' => $meals->toArray(),
+            'exercises' => $exercises->toArray()
+        ], 'Meals and exercises retrieved successfully');
+    }
+    
 }

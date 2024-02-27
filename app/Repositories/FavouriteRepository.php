@@ -41,13 +41,13 @@ class FavouriteRepository extends BaseRepository
         return Favourite::class;
     }
 
-    public function favQuery($user_id)
+    public function favMealQuery($user_id)
     {
-        return Favourite::where('user_id', $user_id)
-        ->leftJoin('meals', function ($join) {
-            $join->on('favourites.instance_id', '=', 'meals.id')
-                ->where('favourites.instance_type', '=', 'meal');
-        })
-        ->select('favourites.*', 'meals.*');
+        return Favourite::favouriteMeals($user_id);
+    }
+
+    public function favExerciseQuery($user_id)
+    {
+        return Favourite::favouriteExercises($user_id);
     }
 }

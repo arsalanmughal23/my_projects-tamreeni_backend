@@ -44,11 +44,13 @@ class UserAPIController extends AppBaseController
         try {
             /** @var User $user */
             $user = $request->user();
+            $phoneNumber = $request->get('phone_number', null);
+
             if (!$userDetails = $user->details)
                 throw new Error('User Detail not found');
 
-            if ($userDetails->phone_number) {
-                $isPhoneAlreadyExists = UserDetail::where($request->only('phone_number'))
+            if ($phoneNumber) {
+                $isPhoneAlreadyExists = UserDetail::where('phone_number', $phoneNumber)
                     ->where('user_id', '!=', $user->id)
                     ->exists();
 

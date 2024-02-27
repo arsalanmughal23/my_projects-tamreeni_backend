@@ -50,9 +50,9 @@ class CreateUsersTable extends Migration
             $table->string('workout_duration_per_day')->nullable()->comment('workout_duration_per_day');
             $table->string('equipment_type')->nullable()->comment('equipment_type');
             $table->date('reach_goal_target_date')->nullable()->comment('reach_goal_target_date');
-            $table->string('body_parts')->nullable()->comment('body_parts');
+            $table->string('body_parts')->default(json_encode([]))->comment('body_parts');
             $table->string('diet_type')->nullable()->comment('diet_type'); // CONSTANT: traditional, keto
-            $table->string('food_preferences')->nullable()->comment('food_preferences');
+            $table->string('food_preferences')->default(json_encode([]))->comment('food_preferences');
             $table->string('level')->nullable()->comment('level');
 
             $table->float('height_in_m')->nullable()->default(0);

@@ -45,22 +45,33 @@ class UserDetail extends Model
         'last_name',
         'address',
         'phone_number',
-        'dob',
         'image',
         'is_social_login',
         'push_notification',
-        'gender',
-
+        
         'language',
-        'height_in_m',
-        'current_weight_in_kg',
-        'target_weight_in_kg',
+        
+        'goal',
+        'gender',
+        'dob',
 
-        'goal_id',
-        'height_unit_id',
-        'current_weight_unit_id',
-        'target_weight_unit_id',
-        'diet_type_id',
+        'height_in_m',
+        'height_unit',
+        'current_weight_in_kg',
+        'current_weight_unit',
+        'target_weight_in_kg',
+        'target_weight_unit',
+
+        'workout_days_in_a_week',
+        'workout_duration_per_day',
+        'equipment_type',
+        'reach_goal_target_date',
+
+        'body_parts',
+        'diet_type',
+        'food_preferences',
+
+        'level',
 
         'delete_account_type_id'
     ];
@@ -78,10 +89,13 @@ class UserDetail extends Model
         'address' => 'string',
         'phone_number' => 'string',
         'dob' => 'date',
+        'reach_goal_target_date' => 'date',
         'image' => 'string',
         'is_social_login' => 'boolean',
         'gender' => 'string',
         'push_notification' => 'boolean',
+        'body_parts' => 'json',
+        'food_preferences' => 'json'
     ];
 
     /**
@@ -95,18 +109,5 @@ class UserDetail extends Model
     public function deleteAccountType()
     {
         return $this->hasOne(Constant::class, 'id', 'delete_account_type_id');
-    }
-
-    public function toArray()
-    {
-        $variables = $this->only('goal_id', 'diet_type_id', 'current_weight_unit_id', 'target_weight_unit_id', 'height_unit_id');
-
-        // remove null values
-        $variables = array_values(array_diff(array_values($variables), [null]));
-
-        $array = parent::toArray();
-        $array['variables'] = Constant::whereIn('id', array_values($variables))->pluck('name', 'group');
-
-        return $array;
     }
 }

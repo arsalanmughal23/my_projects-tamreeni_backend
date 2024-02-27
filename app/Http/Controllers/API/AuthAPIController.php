@@ -259,12 +259,19 @@ class AuthAPIController extends AppBaseController
                 return $this->sendResponse([], 'Your OTP expired.');
             }
 
+            $response = [];
             if($otpCode instanceof VerifyEmail) {
                 $user->markEmailAsVerified();
                 $otpCode->delete();
+
+                $token = $user->createToken('access_token');
+                $response = [
+                    'token' => self::getTokenResponse($token),
+                    'user' => $user,
+                ];
             }
 
-            return $this->sendResponse([], 'Your OTP is verified successfully.');
+            return $this->sendResponse($response, 'Your OTP is verified successfully.');
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 500);
         }

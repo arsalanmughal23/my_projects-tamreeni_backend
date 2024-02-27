@@ -51,8 +51,14 @@ class QuestionAPIController extends AppBaseController
                 throw new Error('User detail not found');
 
             $userDetails->update($request->validated());
+            $BMI = 21.4;
+            $responseData = [
+                // 'user' => $user->fresh(),
+                'bmi' => $BMI,
+                'detail' => 'A BMI of '.$BMI.' falls within the `normal weight` category, which typically ranges between 18.5 to 24.5. It suggests that a person is at a healthy weight in proportion to their height.'
+            ];
 
-            return $this->sendResponse($user->fresh(), 'Answers are saved successfully');
+            return $this->sendResponse($responseData, 'Answers are saved successfully');
 
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 500);

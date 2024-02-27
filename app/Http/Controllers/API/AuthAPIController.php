@@ -51,8 +51,13 @@ class AuthAPIController extends AppBaseController
         }
 
         $user = auth()->user();
+        if (!$user->details) 
+            return $this->sendError('User details is missing.', 404);
+        if ($user->details->is_social_login) 
+            return $this->sendError('This email is signed as a social acount.', 403);
+
         if(!$user->hasVerifiedEmail())
-            return EnsureEmailIsVerified::getUnVerifiedEmailApiResponse();
+            return EnsureEmailIsVerified::getUnVerifiedEmailApiResponse($user);
 
         $searchUserDevice = $request->only('device_token');
         $userDevice = $request->only('device_type', 'device_token');
@@ -133,7 +138,7 @@ class AuthAPIController extends AppBaseController
             }
             
             if(!$user->hasVerifiedEmail())
-                return EnsureEmailIsVerified::getUnVerifiedEmailApiResponse();
+                return EnsureEmailIsVerified::getUnVerifiedEmailApiResponse($user);
 
             $searchUserDevice = $request->only('device_token');
             $userDevice = $request->only('device_type', 'device_token');
@@ -178,8 +183,8 @@ class AuthAPIController extends AppBaseController
             $user = $this->userRepository->create($input);
 
             $code = rand(1111, 9999);
-            self::saveVerifyEmailOTP($user->id, $code);
-            self::sendOTPEmail($user, 'Email Verification Code', $code);
+            saveVerifyEmailOTP($user->id, $code);
+            sendOTPEmail($user, 'Email Verification Code', $code);
 
             $userRole = Role::whereName(Role::API_USER)->first();
             $user->syncRoles($userRole);
@@ -211,14 +216,19 @@ class AuthAPIController extends AppBaseController
             if(!$user)
                 return $this->sendError('User not found.', 404);
 
+            if (!$user->details) 
+                return $this->sendError('User details is missing.', 404);
+            if ($user->details->is_social_login) 
+                return $this->sendError('This email is signed as a social acount.', 403);
+
             $code = rand(1111, 9999);
             match($request->type) {
-                'email' => self::saveVerifyEmailOTP($user->id, $code),
+                'email' => saveVerifyEmailOTP($user->id, $code),
                 'password' => self::savePasswordResetOTP($user->email, $code)
             };
 
             $subject = ucfirst($request->type).' Verification Code';
-            self::sendOTPEmail($user, $subject, $code);
+            sendOTPEmail($user, $subject, $code);
 
             return $this->sendResponse([], 'Your OTP send to your email successfully.');
         } catch (\Exception $e) {
@@ -270,8 +280,13 @@ class AuthAPIController extends AppBaseController
             if(!$user)
                 return $this->sendError('User not found.', 404);
 
+            if (!$user->details) 
+                return $this->sendError('User details is missing.', 404);
+            if ($user->details->is_social_login) 
+                return $this->sendError('This email is signed as a social acount.', 403);
+
             self::savePasswordResetOTP($user->email, $code);
-            self::sendOTPEmail($user, 'Password Verification Code', $code);
+            sendOTPEmail($user, 'Password Verification Code', $code);
 
             return $this->sendResponse([], 'Password Verification Code send to your email successfully');
 
@@ -295,6 +310,11 @@ class AuthAPIController extends AppBaseController
             $user = User::where('email', $request->email)->first();
             if(!$user)
                 return $this->sendError('User not found.', 404);
+
+            if (!$user->details) 
+                return $this->sendError('User details is missing.', 404);
+            if ($user->details->is_social_login) 
+                return $this->sendError('This email is signed as a social acount.', 403);
 
             $user->update(['password' => $request->password]);
             $resetPassword->delete();
@@ -356,20 +376,20 @@ class AuthAPIController extends AppBaseController
         return PasswordReset::updateOrCreate(['email' => $email], ['token' => $code]);
     }
 
-    public static function saveVerifyEmailOTP($user_id, $code)
-    {
-        return VerifyEmail::updateOrCreate(['user_id' => $user_id], ['code' => $code]);
-    }
+    // public static function saveVerifyEmailOTP($user_id, $code)
+    // {
+    //     return VerifyEmail::updateOrCreate(['user_id' => $user_id], ['code' => $code]);
+    // }
 
-    public static function sendOTPEmail($user, $subject, $code)
-    {
-        $data = [
-            'name' => $user->details->first_name ?? 'User',
-            'otp' => $code
-        ];
-        $sendEmailJob = new SendEmail($user->email, $subject, $data, EmailServiceTemplateNames::OTP_TEMPLATE);
-        dispatch($sendEmailJob);
-    }
+    // public static function sendOTPEmail($user, $subject, $code)
+    // {
+    //     $data = [
+    //         'name' => $user->details->first_name ?? 'User',
+    //         'otp' => $code
+    //     ];
+    //     $sendEmailJob = new SendEmail($user->email, $subject, $data, EmailServiceTemplateNames::OTP_TEMPLATE);
+    //     dispatch($sendEmailJob);
+    // }
 
     public static function sendMessageEmail($user, $subject, $message)
     {
@@ -387,7 +407,14 @@ class AuthAPIController extends AppBaseController
     {
         try {
             $user = auth()->user();
-    
+            
+            if(!$user)
+                return $this->sendError('User not found.', 404);
+            if (!$user->details) 
+                return $this->sendError('User details is missing.', 404);
+            if ($user->details->is_social_login) 
+                return $this->sendError('This email is signed as a social acount.', 403);
+
             if (!Hash::check($request->current_password, $user->password))
                 return $this->sendError("Oops, the current password you entered is incorrect", 422);
     

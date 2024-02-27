@@ -1,5 +1,8 @@
 <?php
 
+use App\Constants\EmailServiceTemplateNames;
+use App\Jobs\SendEmail;
+use App\Models\VerifyEmail;
 use Illuminate\Support\Facades\Queue;
 
 if (! function_exists('getConstantValue')) {
@@ -59,6 +62,24 @@ if (! function_exists('JWTDecodeUserInfo')) {
     }
 }
 
+if (! function_exists('sendOTPEmail')) {
+    function sendOTPEmail($user, $subject, $code)
+    {
+        $data = [
+            'name' => $user->details->first_name ?? 'User',
+            'otp' => $code
+        ];
+        $sendEmailJob = new SendEmail($user->email, $subject, $data, EmailServiceTemplateNames::OTP_TEMPLATE);
+        dispatch($sendEmailJob);
+    }
+}
+
+if (! function_exists('saveVerifyEmailOTP')) {
+    function saveVerifyEmailOTP($user_id, $code)
+    {
+        return VerifyEmail::updateOrCreate(['user_id' => $user_id], ['code' => $code]);
+    }
+}
 
 if (! function_exists('sendEmail')) {
     function sendEmail($to, $subject, $data, $templateName)

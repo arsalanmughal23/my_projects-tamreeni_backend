@@ -54,6 +54,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::resource('exercise_equipments', App\Http\Controllers\API\ExerciseEquipmentAPIController::class);
     Route::resource('exercise_equipment_pivots', App\Http\Controllers\API\ExerciseEquipmentPivotAPIController::class);
 
+    Route::resource('questions', App\Http\Controllers\API\QuestionAPIController::class);
 });
 
 Route::resource('menus', App\Http\Controllers\API\MenuAPIController::class);
@@ -62,7 +63,6 @@ Route::get('get-aws-bucket-token', [App\Http\Controllers\API\AuthAPIController::
 Route::resource('constants', App\Http\Controllers\API\ConstantAPIController::class);
 Route::resource('pages', App\Http\Controllers\API\PageAPIController::class);
 
-Route::resource('user_details', App\Http\Controllers\API\UserDetailAPIController::class);
 Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, 'pageContent'])->name('page-content');
 
 

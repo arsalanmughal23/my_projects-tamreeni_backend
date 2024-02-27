@@ -83,4 +83,29 @@ class Meal extends Model
     {
         return $this->belongsTo(\App\Models\MealCategory::class, 'meal_category_id');
     }
+
+    
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\morphToMany
+     **/
+    public function favourites()
+    {
+        return $this->morphToMany(\App\Models\Favourite::class, 'favouritable', 'instance_type', 'instance_id');
+    }
+
+    protected static function booted()
+    {
+        static::retrieved(function ($exercise) {
+            $userId = auth()->user()->id;
+            $exercise->append('favourite');
+        });
+    }
+    public function getFavouriteAttribute()
+    {
+        $userId = auth()->user()->id;
+        return \App\Models\Favourite::where('instance_id', $this->id)
+            ->where('instance_type', 'meal')
+            ->where('user_id', $userId)
+            ->exists();
+    }
 }

@@ -28,6 +28,7 @@ class VerifyEmailTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('verify_emails');
+
     }
 }

@@ -24,7 +24,7 @@ class UserDeviceFactory extends Factory
         return [
             'user_id' => $this->faker->word,
         'device_type' => $this->faker->word,
-        'device_token' => $this->faker->word
+        'device_token' => $this->faker->word,
         'deleted_at' => $this->faker->date('Y-m-d H:i:s'),
         'created_at' => $this->faker->date('Y-m-d H:i:s'),
         'updated_at' => $this->faker->date('Y-m-d H:i:s')

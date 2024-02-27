@@ -72,11 +72,23 @@ class Favourite extends Model
         return $this->belongsTo(\App\Models\User::class, 'user_id');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\morphTo
-     **/
-    public function instance()
+    public function scopeFavouriteExercises($query, $userId)
     {
-        return $this->morphTo('instance');
+        return $query->join('exercises', function ($join) {
+            $join->on('exercises.id', '=', 'favourites.instance_id')
+                ->where('favourites.instance_type', 'exercise');
+        })
+        ->where('favourites.user_id', $userId)
+        ->select('exercises.*');
+    }
+
+    public function scopeFavouriteMeals($query, $userId)
+    {
+        return $query->join('meals', function ($join) {
+            $join->on('meals.id', '=', 'favourites.instance_id')
+                ->where('favourites.instance_type', 'meal');
+        })
+        ->where('favourites.user_id', $userId)
+        ->select('meals.*');
     }
 }

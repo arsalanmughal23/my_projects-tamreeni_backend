@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\API\UpdateUserAPIRequest;
+use App\Models\UserDetail;
 use App\Repositories\UsersRepository;
 use Error;
 use Response;
@@ -43,16 +44,27 @@ class UserAPIController extends AppBaseController
         try {
             /** @var User $user */
             $user = $request->user();
-            if(!$userDetails = $user->details)
+            if (!$userDetails = $user->details)
                 throw new Error('User Detail not found');
 
-            if($request->name)
+            if ($userDetails->phone_number) {
+                $isPhoneAlreadyExists = UserDetail::where($request->only('phone_number'))
+                    ->where('user_id', '!=', $user->id)
+                    ->exists();
+
+                if($isPhoneAlreadyExists)
+                    throw new Error('Phone number is already exists');
+            }
+
+            if ($request->name)
                 $user->update(['name' => $request->name]);
-    
+
             $userDetails->update($request->validated());
 
             return $this->sendResponse($user->fresh(), 'User profile is updated');
 
+        } catch (\Error $e) {
+            return $this->sendError($e->getMessage());
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 500);
         }

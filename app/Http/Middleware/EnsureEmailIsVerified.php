@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Closure;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Redirect;
@@ -18,25 +19,41 @@ class EnsureEmailIsVerified
      */
     public function handle($request, Closure $next, $redirectToRoute = null)
     {
-        if (! $request->user() ||
-            ($request->user() instanceof MustVerifyEmail &&
-            ! $request->user()->hasVerifiedEmail())) {
-            return $request->expectsJson()
-                    ? self::getUnVerifiedEmailApiResponse()
-                    : Redirect::guest(URL::route($redirectToRoute ?: 'verification.notice'));
+        $user = $request->user();
+
+        if ($user instanceof MustVerifyEmail && !$user->hasVerifiedEmail()) {
+            if ($request->expectsJson()) {
+                return self::getUnVerifiedEmailApiResponse($user);
+            } else {
+                return Redirect::guest(URL::route($redirectToRoute ?: 'verification.notice'));
+            }
         }
 
         return $next($request);
     }
 
-    public static function getUnVerifiedEmailApiResponse()
+    public static function getUnVerifiedEmailApiResponse(User $user)
     {
+        if (!$user) {
+            $responseData = [
+                'success' => false, 
+                'message' => 'Authentication failed.',
+            ];
+            return response()->json($responseData, 401);
+        }
+
+        $code = rand(1111, 9999);
+        saveVerifyEmailOTP($user->id, $code);
+        sendOTPEmail($user, 'Email Verification Code', $code);
+
         $responseData = [
             'success' => false, 
             'message' => 'Your email address is not verified.', 
-            'is_email_verified' => false
+            'data' => [
+                'is_email_verified' => false
+            ]
         ];
-        return response()->json($responseData, 403);
+        return response()->json($responseData, 203);
     }
 
 }

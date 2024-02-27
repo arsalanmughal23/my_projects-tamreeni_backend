@@ -25,7 +25,7 @@ class DeleteAccountAPIRequest extends BaseAPIRequest
     public function rules()
     {
         return [
-            'delete_account_type_id' => 'required|int|exists:constants,id,group,'.Constant::GROUP_DELETE_ACCOUNT_TYPE
+            'delete_account_type_id' => 'required|int|exists:constants,id,group,'.Constant::CONST_GROUP_DELETE_ACCOUNT_TYPE
         ];
     }
 }

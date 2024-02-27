@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             EventsTableSeeder::class,
             ExerciseSeeder::class,
             ExerciseEquipmentsPivotSeeder::class,
+            QuestionAndOptionSeeder::class
         ]);
         // \App\Models\User::factory(10)->create();
     }

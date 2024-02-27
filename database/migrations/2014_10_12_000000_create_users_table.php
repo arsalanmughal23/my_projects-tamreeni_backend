@@ -44,15 +44,23 @@ class CreateUsersTable extends Migration
             $table->enum('gender', ['male', 'female'])->nullable()->comment('male, female'); // CONSTANT: male, female
             $table->enum('language', ['en', 'ar'])->nullable()->comment('en, ar'); // CONSTANT: en, ar
 
-            $table->float('height_in_m')->nullable()->default(0);
-            $table->float('current_weight_in_kg')->nullable()->default(0);
-            $table->float('target_weight_in_kg')->nullable()->default(0);
+            $table->string('goal')->nullable()->comment('goal'); // CONSTANT: lose_weight, gain_weight, build_muscle, get_fit
 
-            $table->unsignedBigInteger('goal_id')->nullable()->comment('goal'); // CONSTANT: lose_weight, gain_weight, build_muscle, get_fit
-            $table->unsignedBigInteger('height_unit_id')->nullable()->comment('height_unit'); // CONSTANT: cm, m
-            $table->unsignedBigInteger('current_weight_unit_id')->nullable()->comment('weight_unit'); // CONSTANT: kg, lbs
-            $table->unsignedBigInteger('target_weight_unit_id')->nullable()->comment('weight_unit'); // CONSTANT: kg, lbs
-            $table->unsignedBigInteger('diet_type_id')->nullable()->comment('diet_type'); // CONSTANT: traditional, keto
+            $table->string('workout_days_in_a_week')->nullable()->comment('workout_days_in_a_week');
+            $table->string('workout_duration_per_day')->nullable()->comment('workout_duration_per_day');
+            $table->string('equipment_type')->nullable()->comment('equipment_type');
+            $table->date('reach_goal_target_date')->nullable()->comment('reach_goal_target_date');
+            $table->string('body_parts')->default(json_encode([]))->comment('body_parts');
+            $table->string('diet_type')->nullable()->comment('diet_type'); // CONSTANT: traditional, keto
+            $table->string('food_preferences')->default(json_encode([]))->comment('food_preferences');
+            $table->string('level')->nullable()->comment('level');
+
+            $table->float('height_in_m')->nullable()->default(0);
+            $table->string('height_unit')->nullable()->comment('height_unit'); // CONSTANT: cm, m
+            $table->float('current_weight_in_kg')->nullable()->default(0);
+            $table->string('current_weight_unit')->nullable()->comment('weight_unit'); // CONSTANT: kg, lbs
+            $table->float('target_weight_in_kg')->nullable()->default(0);
+            $table->string('target_weight_unit')->nullable()->comment('weight_unit'); // CONSTANT: kg, lbs
 
             $table->unsignedBigInteger('delete_account_type_id')->nullable();
             $table->softDeletes();

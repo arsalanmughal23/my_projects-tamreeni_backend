@@ -91,20 +91,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'last_name' => 'sometimes|string|max:250',
         'address' => 'sometimes|string|max:250',
         'phone_number' => 'sometimes|string|max:250',
-        'dob' => 'sometimes|date|date_format:"Y-m-d"',
         'image' => 'sometimes|url',
-        'gender' => 'sometimes|string|in:male,female',
-        'language' => 'sometimes|string|in:en,ar',
+        // 'language' => 'sometimes|string|exists:constants,key,group,'.Constant::CONST_LANGUAGE,
 
-        'height_in_m' => 'sometimes|numeric',
-        'current_weight_in_kg' => 'sometimes|numeric',
-        'target_weight_in_kg' => 'sometimes|numeric',
-
-        'goal_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_GOAL,
-        'height_unit_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_HEIGHT_UNIT,
-        'current_weight_unit_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_CURRENT_WEIGHT_UNIT,
-        'target_weight_unit_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_TARGET_WEIGHT_UNIT,
-        'diet_type_id' => 'sometimes|int|exists:constants,id,group,'.Constant::GROUP_DIET_TYPE,
         'push_notification' => 'sometimes|boolean'
     ];
 

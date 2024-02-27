@@ -24,13 +24,20 @@ class Constant extends Model
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
-    const GROUP_DELETE_ACCOUNT_TYPE = 'delete_account_type';
-    const GROUP_GOAL = 'goal';
-    const GROUP_DIET_TYPE = 'diet_type';
-    const GROUP_CURRENT_WEIGHT_UNIT = 'current_weight_unit';
-    const GROUP_TARGET_WEIGHT_UNIT = 'target_weight_unit';
-    const GROUP_HEIGHT_UNIT = 'height_unit';
 
+    const CONST_GROUP_DELETE_ACCOUNT_TYPE = 'delete_account_type';
+
+    const CONST_SIZE_UNIT = 'size_unit';
+        const CONST_SIZE_OPTS = ['cm', 'm'];
+
+    const CONST_WEIGHT_UNIT = 'weight_unit';
+        const CONST_WEIGHT_OPTS = ['kg', 'lbs'];
+    
+    const CONST_MEAL_TYPE = 'meal_type';
+        const CONST_MT_OPTS = ['breakfast','lunch','dinner'];
+
+    const CONST_LANGUAGE = 'language';
+        const CONST_LANG_OPTS = ['en', 'ar'];
 
     protected $dates = ['deleted_at'];
 
@@ -77,11 +84,21 @@ class Constant extends Model
      * @param  string  $unique_key
      * @return void
      */
-    public function setNameAttribute($name)
+    // public function setNameAttribute($name)
+    // {
+    //     $this->attributes['name'] = $name;
+    //     $key = str_replace(' ', '_', strtolower($name));
+    //     $this->attributes['key'] = $key;
+    //     $this->attributes['unique_key'] = $this->attributes['group'] . '__' . $key;
+
+    //     return $this->attributes;
+    // }
+    
+    public function setKeyAttribute($key)
     {
-        $this->attributes['name'] = $name;
-        $key = str_replace(' ', '_', strtolower($name));
         $this->attributes['key'] = $key;
+        $name = ucwords(str_replace('_', ' ', $key));
+        $this->attributes['name'] = $name;
         $this->attributes['unique_key'] = $this->attributes['group'] . '__' . $key;
 
         return $this->attributes;

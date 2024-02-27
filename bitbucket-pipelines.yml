@@ -45,11 +45,11 @@ pipelines:
   branches:
     devops:
       - step:
-          name: Connect to DataMart instance
+          name: Connect to EC2
           image: ubuntu:latest
           script:
             - cat <<< "$PEM_KEY" | base64 --decode > tek-staging.pem
             - chmod 400 tek-staging.pem
             - apt-get update
             - apt-get -y install openssh-client
-            - ssh -v -o StrictHostKeyChecking=no -i tek-staging.pem administrator@$MACHINE_IP "cd /home/administrator/Tamreeni/tamreeni-backend && git fetch origin && git reset --hard origin/devops && echo "$PASSWORD" | sudo -S cp -R /home/administrator/Tamreeni/tamreeni-backend/* /var/www/html/tamreeni-backend/ "
+            - ssh -v -o StrictHostKeyChecking=no -i tek-staging.pem ubuntu@$MACHINE_IP "cd /home/ubuntu/tamreeni-backend && git fetch origin && git reset --hard origin/devops && sudo cp -R /home/ubuntu/tamreeni-backend/* /var/www/html/tamreeni-backend/ "

@@ -42,6 +42,22 @@ class QuestionAPIController extends AppBaseController
 
         return $this->sendResponse($question->toArray(), 'Questions retrieved successfully');
     }
+    public function submitAnswers(SubmitAnswersAPIRequest $request)
+    {
+        try {
+            /** @var User $user */
+            $user = $request->user();
+            if(!$userDetails = $user->details)
+                throw new Error('User detail not found');
+
+            $userDetails->update($request->validated());
+
+            return $this->sendResponse($user->fresh(), 'Answers are saved successfully');
+
+        } catch (\Exception $e) {
+            return $this->sendError($e->getMessage(), 500);
+        }
+    }
 
     /**
      * Store a newly created Question in storage.

@@ -54,7 +54,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::resource('exercise_equipments', App\Http\Controllers\API\ExerciseEquipmentAPIController::class);
     Route::resource('exercise_equipment_pivots', App\Http\Controllers\API\ExerciseEquipmentPivotAPIController::class);
 
-    Route::resource('questions', App\Http\Controllers\API\QuestionAPIController::class);
+    Route::resource('questions', App\Http\Controllers\API\QuestionAPIController::class)->only('index');
+    Route::post('submit_answers', [App\Http\Controllers\API\QuestionAPIController::class, 'submitAnswers']);
+
 });
 
 Route::resource('menus', App\Http\Controllers\API\MenuAPIController::class);

@@ -163,6 +163,7 @@ class QuestionAndOptionSeeder extends Seeder
                     $newOption['question_id'] = $createdQuestion?->id ?? null;
                     $newOption['question_variable_name'] = $createdQuestion?->question_variable_name ?? null;
                     $newOption['option_variable_name'] = $option;
+                    $newOption['image'] = Option::OPTS_IMAGE[$option] ?? null;
 
                     $createdOption = Option::create($newOption);
                 });

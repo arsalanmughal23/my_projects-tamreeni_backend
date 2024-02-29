@@ -17,6 +17,7 @@ class CreateOptionsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('question_id');
             $table->string('title');
+            $table->text('image')->nullable();
             $table->string('question_variable_name')->comment('goal'); // goal, diet_type
             $table->string('option_variable_name')->comment('lose_weight, gain_weight, build_muscle, get_fit'); // lose_weight, gain_weight, build_muscle, get_fit
             $table->timestamps();

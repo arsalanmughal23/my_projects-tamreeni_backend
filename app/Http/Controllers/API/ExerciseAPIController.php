@@ -35,11 +35,23 @@ class ExerciseAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $exercises = $this->exerciseRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
+        $exercises = $this->exerciseRepository->search(
+            $request->get('keyword'),
+            ['name', 'description']
         );
+
+        $bodyPartIds = $request->get('body_part_ids');
+        if(is_array($bodyPartIds) && count($bodyPartIds)){
+            $bodyPartIds = array_map('intval', $bodyPartIds);
+            $exercises = $exercises->whereIn('body_part_id', $bodyPartIds);
+        }
+
+        $perPage = $request->get('per_page', config('constants.PER_PAGE'));
+        if ($request->get('is_paginate')) {
+            $exercises = $exercises->paginate($perPage);
+        } else {
+            $exercises = $exercises->get();
+        }
 
         return $this->sendResponse($exercises->toArray(), 'Exercises retrieved successfully');
     }

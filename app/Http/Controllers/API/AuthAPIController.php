@@ -256,7 +256,7 @@ class AuthAPIController extends AppBaseController
 
             if(self::checkOTPExpiry($otpCode->created_at)) {
                 $otpCode->delete();
-                return $this->sendResponse([], 'Your OTP expired.');
+                return $this->sendError('Your OTP expired.', 410);
             }
 
             $response = [];

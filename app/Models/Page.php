@@ -68,9 +68,10 @@ class Page extends Model
         'updated_at' => 'nullable'
     ];
 
-    public function setSlugAttribute()
+    public function setTitleAttribute($title)
     {
-        $this->attributes['slug'] =  Str::slug($this->attributes['title']);
+        $this->attributes['title'] = $title;
+        $this->attributes['slug'] =  Str::slug($title);
     }
 
     // public function getContentAttribute()

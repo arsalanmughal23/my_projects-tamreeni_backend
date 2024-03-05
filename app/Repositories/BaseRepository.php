@@ -123,6 +123,33 @@ abstract class BaseRepository
         return $query->get($columns);
     }
 
+    public function search($keyword = null, $keywordColumns = [], $search = [])
+    {
+        $query = $this->model->newQuery();
+
+        if(count($search)){
+            $query->where($search);
+        }
+
+        if (count($keywordColumns)) {
+            foreach($keywordColumns as $key => $columnName) {
+                if (in_array($columnName, $this->getFieldsSearchable())) {
+
+                    $query->where(function($q) use($key, $columnName, $keyword) {
+                        if ($key == 0) {
+                            $q->where($columnName, 'like', '%'.$keyword.'%');
+                        } else {
+                            $q->orWhere($columnName, 'like', '%'.$keyword.'%');
+                        }
+                        return $q;
+                    });
+                }
+            }
+        }
+
+        return $query;
+    }
+
     /**
      * Create model record
      *

@@ -38,13 +38,33 @@ class MealAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $meals = $this->mealRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
+        $meals = $this->mealRepository->search(
+            $request->get('keyword'),
+            ['name', 'description'],
+            $request->only(['diet_type']),
         );
 
-        return $this->sendResponse($meals->toArray(), 'Meals retrieved successfully');
+        $mealCategoryIds = $request->get('meal_category_ids');
+        if(is_array($mealCategoryIds) && count($mealCategoryIds)){
+            $mealCategoryIds = array_map('intval', $mealCategoryIds);
+            $meals = $meals->whereIn('meal_category_id', $mealCategoryIds);
+        }
+
+        $minCalorie = floatval($request->get('min_calories'));
+        $maxCalorie = floatval($request->get('max_calories'));
+        if($minCalorie)
+            $meals = $meals->where('calories', '>=', $minCalorie);
+        if($maxCalorie)
+            $meals = $meals->where('calories', '<=', $maxCalorie);
+
+        $perPage = $request->get('per_page', config('constants.PER_PAGE'));
+        if ($request->get('is_paginate')) {
+            $meals = $meals->paginate($perPage);
+        } else {
+            $meals = $meals->get();
+        }
+
+        return $this->sendResponse($meals, 'Meals retrieved successfully');
     }
 
     /**

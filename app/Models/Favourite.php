@@ -13,13 +13,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property \App\Models\User $user
  * @property integer $user_id
- * @property integer $instance_id
- * @property string $instance_type
+ * @property integer $favouritable_id
+ * @property string $favouritable_type
  */
 class Favourite extends Model
 {
-    use SoftDeletes;
-
     use HasFactory;
 
     public $table = 'favourites';
@@ -27,15 +25,14 @@ class Favourite extends Model
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
-
-    protected $dates = ['deleted_at'];
-
+    const MORPH_TYPE_MEAL = 'meal';
+    const MORPH_TYPE_EXERCISE = 'exercise';
 
 
     public $fillable = [
         'user_id',
-        'instance_id',
-        'instance_type'
+        'favouritable_id',
+        'favouritable_type'
     ];
 
     /**
@@ -46,8 +43,8 @@ class Favourite extends Model
     protected $casts = [
         'id' => 'integer',
         'user_id' => 'integer',
-        'instance_id' => 'integer',
-        'instance_type' => 'string'
+        'favouritable_id' => 'integer',
+        'favouritable_type' => 'string'
     ];
 
     /**
@@ -56,10 +53,9 @@ class Favourite extends Model
      * @var array
      */
     public static $rules = [
-        'user_id' => 'required',
-        'instance_id' => 'required|integer',
-        'instance_type' => 'required|string|max:255',
-        'deleted_at' => 'nullable',
+        // 'user_id' => 'required',
+        'favouritable_id' => 'required|integer',
+        'favouritable_type' => 'required|string|in:meal,exercise',
         'created_at' => 'nullable',
         'updated_at' => 'nullable'
     ];
@@ -72,23 +68,23 @@ class Favourite extends Model
         return $this->belongsTo(\App\Models\User::class, 'user_id');
     }
 
-    public function scopeFavouriteExercises($query, $userId)
-    {
-        return $query->join('exercises', function ($join) {
-            $join->on('exercises.id', '=', 'favourites.instance_id')
-                ->where('favourites.instance_type', 'exercise');
-        })
-        ->where('favourites.user_id', $userId)
-        ->select('exercises.*');
-    }
+    // public function scopeFavouriteExercises($query, $userId)
+    // {
+    //     return $query->join('exercises', function ($join) {
+    //         $join->on('exercises.id', '=', 'favourites.favouritable_id')
+    //             ->where('favourites.favouritable_type', 'exercise');
+    //     })
+    //     ->where('favourites.user_id', $userId)
+    //     ->select('exercises.*');
+    // }
 
-    public function scopeFavouriteMeals($query, $userId)
-    {
-        return $query->join('meals', function ($join) {
-            $join->on('meals.id', '=', 'favourites.instance_id')
-                ->where('favourites.instance_type', 'meal');
-        })
-        ->where('favourites.user_id', $userId)
-        ->select('meals.*');
-    }
+    // public function scopeFavouriteMeals($query, $userId)
+    // {
+    //     return $query->join('meals', function ($join) {
+    //         $join->on('meals.id', '=', 'favourites.favouritable_id')
+    //             ->where('favourites.favouritable_type', 'meal');
+    //     })
+    //     ->where('favourites.user_id', $userId)
+    //     ->select('meals.*');
+    // }
 }

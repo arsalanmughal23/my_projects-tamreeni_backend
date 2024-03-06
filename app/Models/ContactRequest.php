@@ -69,9 +69,6 @@ class ContactRequest extends Model
         'phone_number' => 'nullable|string|max:255',
         'subject' => 'required|string|max:255',
         'message' => 'required|string',
-        'deleted_at' => 'nullable',
-        'created_at' => 'nullable',
-        'updated_at' => 'nullable'
     ];
 
     

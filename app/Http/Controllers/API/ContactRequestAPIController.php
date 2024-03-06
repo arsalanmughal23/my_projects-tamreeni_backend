@@ -55,8 +55,8 @@ class ContactRequestAPIController extends AppBaseController
 
     public function store(CreateContactRequestAPIRequest $request)
     {
-        $input = $request->all();
-
+        $input = $request->validated();
+        $input['user_id'] = auth()->id();
         $contactRequest = $this->contactRequestRepository->create($input);
 
         return $this->sendResponse($contactRequest->toArray(), 'Contact Request saved successfully');
@@ -95,7 +95,7 @@ class ContactRequestAPIController extends AppBaseController
 
     public function update($id, UpdateContactRequestAPIRequest $request)
     {
-        $input = $request->all();
+        $input = $request->validated();
 
         /** @var ContactRequest $contactRequest */
         $contactRequest = $this->contactRequestRepository->find($id);
@@ -103,6 +103,9 @@ class ContactRequestAPIController extends AppBaseController
         if (empty($contactRequest)) {
             return $this->sendError('Contact Request not found');
         }
+
+        if($contactRequest->user_id != auth()->id())
+            return $this->sendError('This Record is not associated with you', 403);
 
         $contactRequest = $this->contactRequestRepository->update($input, $id);
 

@@ -56,7 +56,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
     Route::resource('questions', App\Http\Controllers\API\QuestionAPIController::class)->only('index');
     Route::post('submit_answers', [App\Http\Controllers\API\QuestionAPIController::class, 'submitAnswers']);
-
+    
+    Route::resource('contact_requests', App\Http\Controllers\API\ContactRequestAPIController::class);
 });
 
 Route::resource('menus', App\Http\Controllers\API\MenuAPIController::class);
@@ -66,6 +67,3 @@ Route::resource('constants', App\Http\Controllers\API\ConstantAPIController::cla
 Route::resource('pages', App\Http\Controllers\API\PageAPIController::class);
 
 Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, 'pageContent'])->name('page-content');
-
-
-Route::resource('contact_requests', App\Http\Controllers\API\ContactRequestAPIController::class);

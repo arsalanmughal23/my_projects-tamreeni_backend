@@ -115,3 +115,6 @@ Route::resource('exercises', App\Http\Controllers\ExerciseController::class);
 
 
 Route::resource('exercise_equipment_pivots', App\Http\Controllers\ExerciseEquipmentPivotController::class);
+
+
+Route::resource('contact_requests', App\Http\Controllers\ContactRequestController::class);

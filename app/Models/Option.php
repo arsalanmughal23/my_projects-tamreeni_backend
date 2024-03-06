@@ -10,19 +10,19 @@ class Option extends Model
     use HasFactory;
 
     const OPTS_IMAGE = [
-        self::Q2_OPT1__MALE => 'https://placehold.co/400',
-        self::Q2_OPT2__FEMALE => 'https://placehold.co/400',
-        self::Q9_OPT1__HOME => 'https://placehold.co/400',
-        self::Q9_OPT2__GYM => 'https://placehold.co/400',
-        self::Q15_OPT1__TRADITIONAL => 'https://placehold.co/400',
-        self::Q15_OPT2__KETO => 'https://placehold.co/400',
+        self::Q2_OPT1__MALE => 'https://tamreeni-backend.s3.amazonaws.com/male-3x.png',
+        self::Q2_OPT2__FEMALE => 'https://tamreeni-backend.s3.amazonaws.com/female.png',
+        self::Q9_OPT1__HOME => 'https://tamreeni-backend.s3.amazonaws.com/workoutHome-3x.png',
+        self::Q9_OPT2__GYM => 'https://tamreeni-backend.s3.amazonaws.com/workoutGym-3x.png',
+        self::Q15_OPT1__TRADITIONAL => 'https://tamreeni-backend.s3.amazonaws.com/Traditional-3x.png',
+        self::Q15_OPT2__KETO => 'https://tamreeni-backend.s3.amazonaws.com/Keto-3x.png',
 
-        self::Q16_OPT1__EGG => 'https://placehold.co/400',
-        self::Q16_OPT2__FISH => 'https://placehold.co/400',
-        self::Q16_OPT3__SHRIMP => 'https://placehold.co/400',
-        self::Q16_OPT4__DAIRY => 'https://placehold.co/400',
-        self::Q16_OPT5__VEGIES => 'https://placehold.co/400',
-        self::Q16_OPT6__SEA_FOOD => 'https://placehold.co/400'
+        self::Q16_OPT1__EGG => 'https://tamreeni-backend.s3.amazonaws.com/egg-3x.png',
+        self::Q16_OPT2__FISH => 'https://tamreeni-backend.s3.amazonaws.com/fish-3x.png',
+        self::Q16_OPT3__SHRIMP => 'https://tamreeni-backend.s3.amazonaws.com/shrimp-3x.png',
+        self::Q16_OPT4__DAIRY => 'https://tamreeni-backend.s3.amazonaws.com/dairy-3x.png',
+        self::Q16_OPT5__VEGIES => 'https://tamreeni-backend.s3.amazonaws.com/veggies-3x.png',
+        self::Q16_OPT6__SEA_FOOD => 'https://tamreeni-backend.s3.amazonaws.com/seaFood-3x.png'
     ];
 
     const Q1_OPT1__LOSE_WEIGHT = 'lose_weight';

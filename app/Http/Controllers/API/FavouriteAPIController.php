@@ -10,6 +10,7 @@ use App\Models\Meal;
 use App\Repositories\FavouriteRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use App\Models\Exercise;
 use Response;
 use Config;
 use DB;
@@ -150,37 +151,39 @@ public function index(UserFavouritesAPIRequest $request)
         return $this->sendSuccess('Favourite deleted successfully');
     }
 
-    public function markAsFavorite(Request $request)
+    public function markAsFavorite(CreateFavouriteAPIRequest $request)
     {
         $user = auth()->user();
-        $instanceId = $request->input('instance_id');
-        $instanceType = $request->input('instance_type');
+        $favouritableId = $request->input('favouritable_id');
+        $favouritableType = $request->input('favouritable_type');
 
-        if ($instanceType == 'meal' || $instanceType == 'exercise') {
+        $favouritableObj = match($favouritableType){
+            Favourite::MORPH_TYPE_MEAL => Meal::find($favouritableId),
+            Favourite::MORPH_TYPE_EXERCISE => Exercise::find($favouritableId),
+        };
+
+        if(!$favouritableObj)
+            return $this->sendError('Record not found');
+
         // Check if the meal is already marked as a favorite
         $existingFavorite = Favourite::where('user_id', $user->id)
-            ->where('instance_id', $instanceId)
-            ->where('instance_type', $instanceType)
+            ->where('favouritable_id', $favouritableId)
+            ->where('favouritable_type', $favouritableType)
             ->first();
 
         if ($existingFavorite) {
             // Meal is already marked as favorite, unmark it
             $existingFavorite->delete();
-
-        return $this->sendResponse(new \stdClass(), 'Removed from favorites');
+            return $this->sendResponse(new \stdClass(), 'Removed from favorites');
         }
 
         // Meal is not marked as favorite, mark it
         Favourite::create([
             'user_id' => $user->id,
-            'instance_id' => $instanceId,
-            'instance_type' => $instanceType,
+            'favouritable_id' => $favouritableId,
+            'favouritable_type' => $favouritableType,
         ]);
 
         return $this->sendResponse(new \stdClass(), 'Added to favorites');
-        } else {
-            return $this->sendError('Only Meal & Exercise can be added to favorites', 422);
-        }
-        
     }
 }

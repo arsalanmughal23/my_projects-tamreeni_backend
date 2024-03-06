@@ -148,3 +148,13 @@
 @endcan
 
 
+@canany(['contact_requests.index', 'contact_requests.create', 'contact_requests.show', 'contact_requests.edit', 'contact_requests.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('contact_requests.index') }}"
+        class="nav-link {{ Request::is('contact_requests*') ? 'active' : '' }}">
+            <p>Contact Requests</p>
+        </a>
+    </li>
+@endcan
+
+

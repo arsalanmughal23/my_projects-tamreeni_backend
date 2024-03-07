@@ -41,13 +41,4 @@ class FavouriteRepository extends BaseRepository
         return Favourite::class;
     }
 
-    public function favMealQuery($user_id)
-    {
-        return Favourite::favouriteMeals($user_id);
-    }
-
-    public function favExerciseQuery($user_id)
-    {
-        return Favourite::favouriteExercises($user_id);
-    }
 }

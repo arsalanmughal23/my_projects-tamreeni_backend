@@ -54,6 +54,8 @@ class Exercise extends Model
         'description'
     ];
 
+    public $appends = ['is_favourite'];
+
     /**
      * The attributes that should be casted to native types.
      *
@@ -117,23 +119,20 @@ class Exercise extends Model
     {
         return $this->hasMany(\App\Models\ExerciseEquipmentPivot::class, 'exercise_id');
     }
-    protected static function booted()
+
+    public function favourites()
     {
-        static::retrieved(function ($exercise) {
-            $userId = auth()->user()->id ?? null;
-            if ($userId) {
-                $exercise->append('favourite');
-            }
-        });
+        return $this->morphMany(Favourite::class, 'favouritable');
     }
-    public function getFavouriteAttribute()
+
+    public function getIsFavouriteAttribute()
     {
         $userId = auth()->user()->id ?? null;
+        $isFavourite = false;
+
         if ($userId) {
-            return \App\Models\Favourite::where('instance_id', $this->id)
-            ->where('instance_type', 'exercise')
-            ->where('user_id', $userId)
-            ->exists();
+            $isFavourite = $this->favourites()->where('user_id', $userId)->exists();
         }
+        return $isFavourite;
     }
 }

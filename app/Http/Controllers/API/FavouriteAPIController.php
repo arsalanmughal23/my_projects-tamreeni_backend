@@ -39,25 +39,28 @@ class FavouriteAPIController extends AppBaseController
      */
 
 
-public function index(UserFavouritesAPIRequest $request)
+public function index(Request $request)
 {
-    $perPage = $request->input('per_page', Config::get('constants.PER_PAGE', 10));
-
-    // Get the authenticated user
     $user = auth()->user();
     $type = $request->get('type');
-    if ($type == 'meal') {
-        $favouritesQuery = $this->favouriteRepository->favMealQuery($user->id);
-    } elseif ($type == 'exercise') {
-        $favouritesQuery = $this->favouriteRepository->favExerciseQuery($user->id);
+    $favouritableModel = match($type){
+        Favourite::MORPH_TYPE_MEAL => Meal::class,
+        Favourite::MORPH_TYPE_EXERCISE => Exercise::class,
+        default => null
+    };
+
+    $favouritesQuery = Favourite::with('favouritable')->where('user_id', $user->id);
+    if($favouritableModel)
+        $favouritesQuery = $favouritesQuery->where('favouritable_type', $favouritableModel);
+
+    $perPage = $request->get('per_page', config('constants.PER_PAGE'));
+    if ($request->get('is_paginate')) {
+        $favouritesQuery = $favouritesQuery->paginate($perPage);
+    } else {
+        $favouritesQuery = $favouritesQuery->get();
     }
 
-    $favourites = $favouritesQuery->paginate($perPage);
-    if ($favourites->isEmpty()) {
-        return $this->sendError('Favourites not found', 200);
-    }
-
-    return $this->sendResponse($favourites->toArray(), 'Favourites retrieved successfully');
+    return $this->sendResponse($favouritesQuery->toArray(), 'Favourites retrieved successfully');
 }
 
 
@@ -164,6 +167,8 @@ public function index(UserFavouritesAPIRequest $request)
 
         if(!$favouritableObj)
             return $this->sendError('Record not found');
+
+        $favouritableType = get_class($favouritableObj);
 
         // Check if the meal is already marked as a favorite
         $existingFavorite = Favourite::where('user_id', $user->id)

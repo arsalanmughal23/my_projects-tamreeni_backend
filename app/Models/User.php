@@ -125,4 +125,8 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(UserSocialAccount::class);
     }
+    
+    public function favourites() {
+        return $this->hasMany(Favourite::class, 'user_id');
+    }
 }

@@ -46,6 +46,12 @@ class ExerciseAPIController extends AppBaseController
             $exercises = $exercises->whereIn('body_part_id', $bodyPartIds);
         }
 
+        if($request->get('is_favourite')){
+            $exercises = $exercises->whereHas('favourites', function($q){
+                return $q->where('user_id', auth()->id());
+            });
+        }
+
         $perPage = $request->get('per_page', config('constants.PER_PAGE'));
         if ($request->get('is_paginate')) {
             $exercises = $exercises->paginate($perPage);

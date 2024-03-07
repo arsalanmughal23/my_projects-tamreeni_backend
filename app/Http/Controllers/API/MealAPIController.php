@@ -57,6 +57,12 @@ class MealAPIController extends AppBaseController
         if($maxCalorie)
             $meals = $meals->where('calories', '<=', $maxCalorie);
 
+        if($request->get('is_favourite')){
+            $meals = $meals->whereHas('favourites', function($q){
+                return $q->where('user_id', auth()->id());
+            });
+        }
+
         $perPage = $request->get('per_page', config('constants.PER_PAGE'));
         if ($request->get('is_paginate')) {
             $meals = $meals->paginate($perPage);

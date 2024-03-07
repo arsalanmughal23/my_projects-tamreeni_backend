@@ -27,6 +27,7 @@ class Favourite extends Model
 
     const MORPH_TYPE_MEAL = 'meal';
     const MORPH_TYPE_EXERCISE = 'exercise';
+    const MORPH_TYPES = self::MORPH_TYPE_MEAL.','.self::MORPH_TYPE_EXERCISE;
 
 
     public $fillable = [
@@ -55,7 +56,7 @@ class Favourite extends Model
     public static $rules = [
         // 'user_id' => 'required',
         'favouritable_id' => 'required|integer',
-        'favouritable_type' => 'required|string|in:meal,exercise',
+        'favouritable_type' => 'required|string|in:'.self::MORPH_TYPES,
         'created_at' => 'nullable',
         'updated_at' => 'nullable'
     ];
@@ -68,23 +69,8 @@ class Favourite extends Model
         return $this->belongsTo(\App\Models\User::class, 'user_id');
     }
 
-    // public function scopeFavouriteExercises($query, $userId)
-    // {
-    //     return $query->join('exercises', function ($join) {
-    //         $join->on('exercises.id', '=', 'favourites.favouritable_id')
-    //             ->where('favourites.favouritable_type', 'exercise');
-    //     })
-    //     ->where('favourites.user_id', $userId)
-    //     ->select('exercises.*');
-    // }
-
-    // public function scopeFavouriteMeals($query, $userId)
-    // {
-    //     return $query->join('meals', function ($join) {
-    //         $join->on('meals.id', '=', 'favourites.favouritable_id')
-    //             ->where('favourites.favouritable_type', 'meal');
-    //     })
-    //     ->where('favourites.user_id', $userId)
-    //     ->select('meals.*');
-    // }
+    public function favouritable()
+    {
+        return $this->morphTo();
+    }
 }

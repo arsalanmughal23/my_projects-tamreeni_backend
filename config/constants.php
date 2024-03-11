@@ -1,7 +1,7 @@
 <?php
 return [
     'expiry_in_seconds' => [
-        'otp' => 5 * 60,
+        'otp' => 10 * 60,
         'api_token' => 24 * 60 * 60
     ],
     'validation' => [

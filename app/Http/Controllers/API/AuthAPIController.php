@@ -152,7 +152,7 @@ class AuthAPIController extends AppBaseController
             
             //update social login user image
             $userDetails = [];
-            $input['image'] ? $userDetails['image'] = $input['image'] : null;
+            isset($input['image']) ? $userDetails['image'] = $input['image'] : null;
             $firstName ? $userDetails['first_name'] = $firstName : null;
             $lastName ? $userDetails['last_name'] = $lastName : null;
 

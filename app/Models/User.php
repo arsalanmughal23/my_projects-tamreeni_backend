@@ -83,6 +83,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'device_token'          => 'required',
         'device_type'           => 'required|string|in:ios,android,web',
         'phone_number'          => 'nullable|string|max:250|unique:user_details,phone_number,NULL,id,deleted_at,NULL',
+        'phone_number_country_code' => 'sometimes|string'
     ];
 
     public static $api_update_rules = [
@@ -91,6 +92,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'last_name' => 'sometimes|string|max:250',
         'address' => 'sometimes|string|max:250',
         'phone_number' => 'sometimes|string|max:250',
+        'phone_number_country_code' => 'sometimes|string',
         'image' => 'sometimes|url',
         // 'language' => 'sometimes|string|exists:constants,key,group,'.Constant::CONST_LANGUAGE,
 

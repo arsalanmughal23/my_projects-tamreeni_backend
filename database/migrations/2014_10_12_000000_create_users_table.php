@@ -35,6 +35,7 @@ class CreateUsersTable extends Migration
             $table->string('last_name')->nullable();
             $table->string('address')->nullable();
             $table->string('phone_number')->nullable();
+            $table->string('phone_number_country_code')->nullable();
             $table->date('dob')->nullable();
             $table->text('image')->nullable();
 

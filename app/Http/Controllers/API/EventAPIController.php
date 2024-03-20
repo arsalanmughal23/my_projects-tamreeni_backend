@@ -50,9 +50,9 @@ class EventAPIController extends AppBaseController
 
         // Paginate the results
         if ($request->get('paginate')) {
-            $eventsList = $eventsQuery->paginate($perPage);
+            $eventsList = $eventsQuery->orderBy('created_at', 'desc')->paginate($perPage);
         } else {
-            $eventsList = $eventsQuery->get();
+            $eventsList = $eventsQuery->orderBy('created_at', 'desc')->get();
         }
 
         return $this->sendResponse(EventResource::collection($eventsList), 'Events retrieved successfully');
@@ -169,8 +169,8 @@ class EventAPIController extends AppBaseController
 
         // Check if the meal is already marked as a favorite
         $existingFavorite = Favourite::where('user_id', $user_id)
-            ->where('instance_id', $instanceId)
-            ->where('instance_type', 'event')
+            ->where('favouritable_id', $instanceId)
+            ->where('favouritable_type', 'event')
             ->first();
 
         if ($existingFavorite) {
@@ -182,9 +182,9 @@ class EventAPIController extends AppBaseController
 
         // Meal is not marked as favorite, mark it
         Favourite::create([
-            'user_id'       => $user_id,
-            'instance_id'   => $instanceId,
-            'instance_type' => 'event',
+            'user_id'           => $user_id,
+            'favouritable_id'   => $instanceId,
+            'favouritable_type' => 'event',
         ]);
 
         return $this->sendResponse(new \stdClass(), 'Marked as Interested');

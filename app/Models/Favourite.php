@@ -27,7 +27,8 @@ class Favourite extends Model
 
     const MORPH_TYPE_MEAL = 'meal';
     const MORPH_TYPE_EXERCISE = 'exercise';
-    const MORPH_TYPES = self::MORPH_TYPE_MEAL.','.self::MORPH_TYPE_EXERCISE;
+    const MORPH_TYPE_EVENT = 'event';
+    const MORPH_TYPES = self::MORPH_TYPE_MEAL.','.self::MORPH_TYPE_EXERCISE.','.self::MORPH_TYPE_EVENT;
 
 
     public $fillable = [

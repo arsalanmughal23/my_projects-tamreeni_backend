@@ -61,6 +61,8 @@ class Event extends Model
         'equipment_id'
     ];
 
+    protected $appends = ['is_interested'];
+
     /**
      * The attributes that should be casted to native types.
      *
@@ -105,7 +107,7 @@ class Event extends Model
      **/
     public function bodyPart()
     {
-        return $this->belongsTo(\App\Models\BodyPart::class, 'body_part_id');
+        return $this->belongsTo(BodyPart::class, 'body_part_id');
     }
 
     /**
@@ -113,7 +115,7 @@ class Event extends Model
      **/
     public function equipment()
     {
-        return $this->belongsTo(\App\Models\ExerciseEquipment::class, 'equipment_id');
+        return $this->belongsTo(ExerciseEquipment::class, 'equipment_id');
     }
 
     /**
@@ -121,7 +123,7 @@ class Event extends Model
      **/
     public function user()
     {
-        return $this->belongsTo(\App\Models\User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
@@ -129,6 +131,20 @@ class Event extends Model
      **/
     public function user_events()
     {
-        return $this->hasMany(\App\Models\UserEvent::class);
+        return $this->hasMany(UserEvent::class);
+    }
+
+    public function interested()
+    {
+        if (auth()->user()) {
+            return $this->hasOne(Favourite::class, 'favouritable_id')->where('favouritable_type', 'event')->where('user_id', auth()->user()->id);
+        } else {
+            return $this->hasOne(Favourite::class, 'favouritable_id');
+        }
+    }
+
+    public function getIsInterestedAttribute()
+    {
+        return !empty($this->interested);
     }
 }

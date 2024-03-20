@@ -10,28 +10,29 @@ class EventResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'title' => $this->getTranslation('title', app()->getLocale()),
-            'date' => $this->date,
-            'start_time' => $this->start_time,
-            'end_time' => $this->end_time,
-            'duration' => $this->duration,
-            'description' => $this->getTranslation('description', app()->getLocale()),
-            'image' => $this->image,
-            'body_part_id' => $this->body_part_id,
-            'body_part' => $this->bodyPart,
-            'equipment_id' => $this->equipment_id,
-            'equipment' => $this->equipment,
-            'user_id' => $this->user_id,
-            'user' => $this->user,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'id'            => $this->id,
+            'title'         => $this->getTranslation('title', app()->getLocale()),
+            'date'          => $this->date,
+            'start_time'    => $this->start_time,
+            'end_time'      => $this->end_time,
+            'duration'      => $this->duration,
+            'description'   => $this->getTranslation('description', app()->getLocale()),
+            'image'         => $this->image,
+            'body_part_id'  => $this->body_part_id,
+            'body_part'     => $this->bodyPart,
+            'equipment_id'  => $this->equipment_id,
+            'equipment'     => $this->equipment,
+            'user_id'       => $this->user_id,
+            'user'          => $this->user,
+            'is_interested' => $this->is_interested,
+            'created_at'    => $this->created_at,
+            'updated_at'    => $this->updated_at,
         ];
     }
 
@@ -39,21 +40,21 @@ class EventResource extends JsonResource
     {
         if ($resource instanceof LengthAwarePaginator) {
             return [
-                'data' => parent::collection($resource),
+                'data'  => parent::collection($resource),
                 'links' => [
                     'first' => $resource->url(1),
-                    'last' => $resource->url($resource->lastPage()),
-                    'prev' => $resource->previousPageUrl(),
-                    'next' => $resource->nextPageUrl(),
+                    'last'  => $resource->url($resource->lastPage()),
+                    'prev'  => $resource->previousPageUrl(),
+                    'next'  => $resource->nextPageUrl(),
                 ],
-                'meta' => [
+                'meta'  => [
                     'current_page' => $resource->currentPage(),
-                    'from' => $resource->firstItem(),
-                    'last_page' => $resource->lastPage(),
-                    'path' => $resource->path(),
-                    'per_page' => $resource->perPage(),
-                    'to' => $resource->lastItem(),
-                    'total' => $resource->total(),
+                    'from'         => $resource->firstItem(),
+                    'last_page'    => $resource->lastPage(),
+                    'path'         => $resource->path(),
+                    'per_page'     => $resource->perPage(),
+                    'to'           => $resource->lastItem(),
+                    'total'        => $resource->total(),
                 ],
             ];
         }

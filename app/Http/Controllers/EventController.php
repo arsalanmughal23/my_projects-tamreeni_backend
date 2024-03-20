@@ -54,6 +54,7 @@ class EventController extends AppBaseController
     {
         $input = $request->all();
 
+        $input['user_id'] = $request->user->id;
         $event = $this->eventRepository->create($input);
 
         Flash::success('Event saved successfully.');

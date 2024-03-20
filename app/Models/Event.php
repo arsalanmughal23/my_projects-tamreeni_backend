@@ -5,6 +5,7 @@ namespace App\Models;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * Class Event
@@ -31,17 +32,20 @@ class Event extends Model
 
     use HasFactory;
 
+    use HasTranslations;
+
     public $table = 'events';
-    
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
+
+    const CREATED_AT     = 'created_at';
+    const UPDATED_AT     = 'updated_at';
     const UPCOMING_EVENT = 10;
-    const ONGOING_EVENT = 20;
+    const ONGOING_EVENT  = 20;
+    const COMPLETE_EVENT = 30;
 
 
     protected $dates = ['deleted_at'];
 
-
+    public $translatable = ['title', 'description'];
 
     public $fillable = [
         'title',
@@ -63,15 +67,15 @@ class Event extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
-        'title' => 'string',
-        'date' => 'date',
-        'duration' => 'integer',
-        'description' => 'string',
-        'image' => 'string',
-        'user_id' => 'integer',
+        'id'           => 'integer',
+        'title'        => 'string',
+        'date'         => 'date',
+        'duration'     => 'integer',
+        'description'  => 'string',
+        'image'        => 'string',
+        'user_id'      => 'integer',
         'body_part_id' => 'integer',
-        'status' => 'integer',
+        'status'       => 'integer',
         'equipment_id' => 'integer'
     ];
 
@@ -81,20 +85,19 @@ class Event extends Model
      * @var array
      */
     public static $rules = [
-        'title' => 'required|string|max:255',
-        'date' => 'required',
-        'start_time' => 'required',
-        'end_time' => 'required',
-        'duration' => 'nullable|integer',
-        'description' => 'nullable|string',
-        'image' => 'nullable|string',
-        'user_id' => 'nullable',
-        'body_part_id' => 'nullable|integer',
-        'equipment_id' => 'nullable|integer',
-        'status' => 'nullable|integer',
-        'created_at' => 'nullable',
-        'updated_at' => 'nullable',
-        'deleted_at' => 'nullable'
+        'title'          => 'required|array',
+        'title.en'       => 'required|string',
+        'title.ar'       => 'required|string',
+        'date'           => 'required|date',
+        'start_time'     => 'required',
+        'end_time'       => 'required',
+        'duration'       => 'nullable|integer',
+        'description'    => 'required|array',
+        'description.en' => 'required|string',
+        'description.ar' => 'required|string',
+        'image'          => 'nullable|string',
+        'body_part_id'   => 'nullable|integer',
+        'equipment_id'   => 'nullable|integer',
     ];
 
     /**

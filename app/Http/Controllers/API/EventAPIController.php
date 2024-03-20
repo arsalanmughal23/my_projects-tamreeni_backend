@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Requests\API\CreateEventAPIRequest;
 use App\Http\Requests\API\UpdateEventAPIRequest;
+use App\Http\Resources\EventResource;
 use App\Models\Event;
 use App\Models\Favourite;
 use App\Repositories\EventRepository;
@@ -17,7 +18,6 @@ use DB;
  * Class EventController
  * @package App\Http\Controllers\API
  */
-
 class EventAPIController extends AppBaseController
 {
     /** @var  EventRepository */
@@ -38,18 +38,24 @@ class EventAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        //$perPage = $request->input('per_page', Config::get('constants.PER_PAGE', 10));
-        //$eventsQuery = $this->eventRepository->events();
-    
-        // Paginate the results
-        //$events = $eventsQuery->paginate($perPage);
-        
-        $events = $this->eventRepository->allEvents($request->get('date'));
-        if ($events->isEmpty()) {
-            return $this->sendError('Events not found', 200);
+        $perPage     = $request->input('per_page', Config::get('constants.PER_PAGE', 10));
+        $eventsQuery = $this->eventRepository->events();
+
+        $eventsList = null;
+
+
+        if ($request->get('date')) {
+            $eventsList = $this->eventRepository->allEvents($request->get('date'));
         }
 
-        return $this->sendResponse($events->toArray(), 'Events retrieved successfully');
+        // Paginate the results
+        if ($request->get('paginate')) {
+            $eventsList = $eventsQuery->paginate($perPage);
+        } else {
+            $eventsList = $eventsQuery->get();
+        }
+
+        return $this->sendResponse(EventResource::collection($eventsList), 'Events retrieved successfully');
     }
 
     /**
@@ -65,9 +71,17 @@ class EventAPIController extends AppBaseController
     {
         $input = $request->all();
 
-        $event = $this->eventRepository->create($input);
+        $startTimestamp = $request->input('start_time');
+        $endTimestamp   = $request->input('end_time');
 
-        return $this->sendResponse($event->toArray(), 'Event saved successfully');
+        if ($startTimestamp >= $endTimestamp) {
+            return $this->sendError('Start time must be less than end time.');
+        }
+
+        $input['user_id'] = $request->user()->id;
+        $event            = $this->eventRepository->create($input);
+
+        return $this->sendResponse(new EventResource($event), 'Event saved successfully');
     }
 
     /**
@@ -88,7 +102,7 @@ class EventAPIController extends AppBaseController
             return $this->sendError('Event not found');
         }
 
-        return $this->sendResponse($event->toArray(), 'Event retrieved successfully');
+        return $this->sendResponse(new EventResource($event), 'Event retrieved successfully');
     }
 
     /**
@@ -151,8 +165,8 @@ class EventAPIController extends AppBaseController
             return $this->sendError('User Id is required', 422);
         }
         $instanceId = $request->input('event_id');
-        $user_id = $request->input('user_id');
-        
+        $user_id    = $request->input('user_id');
+
         // Check if the meal is already marked as a favorite
         $existingFavorite = Favourite::where('user_id', $user_id)
             ->where('instance_id', $instanceId)
@@ -163,13 +177,13 @@ class EventAPIController extends AppBaseController
             // Meal is already marked as favorite, unmark it
             $existingFavorite->delete();
 
-        return $this->sendResponse(new \stdClass(), 'UnMarked');
+            return $this->sendResponse(new \stdClass(), 'UnMarked');
         }
 
         // Meal is not marked as favorite, mark it
         Favourite::create([
-            'user_id' => $user_id,
-            'instance_id' => $instanceId,
+            'user_id'       => $user_id,
+            'instance_id'   => $instanceId,
             'instance_type' => 'event',
         ]);
 

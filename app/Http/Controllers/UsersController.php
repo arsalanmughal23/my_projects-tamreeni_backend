@@ -17,16 +17,16 @@ use Response;
 
 class UsersController extends AppBaseController
 {
-    /** @var UsersRepository $userRepository*/
+    /** @var UsersRepository $userRepository */
     private $userRepository;
     private $userDetailRepository;
     private $rolesRepository;
 
     public function __construct(UsersRepository $userRepo, UserDetailRepository $userDetailRepo, RolesRepository $rolesRepo)
     {
-        $this->userRepository = $userRepo;
+        $this->userRepository       = $userRepo;
         $this->userDetailRepository = $userDetailRepo;
-        $this->rolesRepository = $rolesRepo;
+        $this->rolesRepository      = $rolesRepo;
 
     }
 
@@ -64,12 +64,14 @@ class UsersController extends AppBaseController
     {
         $input = $request->all();
 
-        $user = $this->userRepository->create($input);
+        $user       = $this->userRepository->create($input);
         $userDetail = ['user_id' => $user->id];
         $this->userDetailRepository->create($userDetail);
 
-        $roleIds = array_keys(request()->role);
-        $user->syncRoles($roleIds);
+        $roleIds  = array_keys(request()->role);
+        $userRole = Role::whereIn('id', $roleIds)->get();
+
+        $user->syncRoles($userRole);
 
         Flash::success('User saved successfully.');
 
@@ -105,7 +107,7 @@ class UsersController extends AppBaseController
      */
     public function edit($id)
     {
-        $user = $this->userRepository->find($id);
+        $user  = $this->userRepository->find($id);
         $roles = $this->rolesRepository->all();
 
         if (empty($user)) {
@@ -113,7 +115,7 @@ class UsersController extends AppBaseController
             return redirect(route('users.index'));
         }
 
-        return view('users.edit')->with(['users' => $user,'roles' => $roles, ]);
+        return view('users.edit')->with(['users' => $user, 'roles' => $roles,]);
     }
 
     /**
@@ -170,10 +172,10 @@ class UsersController extends AppBaseController
 
     public function assignRoles($id)
     {
-        $user = User::findOrFail($id);
+        $user  = User::findOrFail($id);
         $roles = Role::all();
         return view('users.assignroles')
-            ->with('user', $user)->with('roles',$roles);
+            ->with('user', $user)->with('roles', $roles);
     }
 
     public function updateRoles($id)

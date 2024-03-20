@@ -31,7 +31,10 @@ class Role extends SpatieRole
 
     const SUPER_ADMIN = 'Super-Admin';
     const ADMIN = 'Admin';
-    const API_USER = 'Api-User';
+    const API_USER = 'User';
+    const COACH = 'Coach';
+    const DIETITIAN = 'Dietitian';
+    const THERAPIST = 'Therapist';
 
     protected $dates = ['deleted_at'];
 

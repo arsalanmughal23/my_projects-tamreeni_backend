@@ -27,7 +27,7 @@ Route::post('social-login', [App\Http\Controllers\API\AuthAPIController::class, 
 
 // Route::post('verify-password-reset-code', [App\Http\Controllers\API\AuthAPIController::class, 'verifyPasswordResetCode'])->name('verify_password_reset_code');
 
-Route::middleware(['auth:sanctum', 'verified'])->group(function() {
+Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () {
     Route::get('my-profile', [App\Http\Controllers\API\UserAPIController::class, 'myProfile']);
     Route::put('update-profile', [App\Http\Controllers\API\UserAPIController::class, 'updateProfile']);
 
@@ -56,7 +56,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
 
     Route::resource('questions', App\Http\Controllers\API\QuestionAPIController::class)->only('index');
     Route::post('submit_answers', [App\Http\Controllers\API\QuestionAPIController::class, 'submitAnswers']);
-    
+
     Route::resource('contact_requests', App\Http\Controllers\API\ContactRequestAPIController::class);
 });
 

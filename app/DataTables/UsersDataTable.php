@@ -5,6 +5,7 @@ namespace App\DataTables;
 use App\Models\User;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
+use Illuminate\Support\Facades\Auth;
 
 class UsersDataTable extends DataTable
 {
@@ -16,6 +17,7 @@ class UsersDataTable extends DataTable
      */
     public function dataTable($query)
     {
+        $query     = $query->orderBy('created_at', 'desc');
         $dataTable = new EloquentDataTable($query);
 
         // $dataTable->addColumn('user_details', function ($user) {
@@ -33,7 +35,8 @@ class UsersDataTable extends DataTable
      */
     public function query(User $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->whereNotIn('id', [1, Auth::user()->id]);
+
         // return $model->with('user_details')->select('users.*')->newQuery();
     }
 
@@ -49,10 +52,10 @@ class UsersDataTable extends DataTable
             ->minifiedAjax()
             ->addAction(['width' => '120px', 'printable' => false])
             ->parameters([
-                'dom' => 'Bfrtip',
+                'dom'       => 'Bfrtip',
                 'stateSave' => true,
-                'order' => [[0, 'desc']],
-                'buttons' => [
+                'order'     => [[0, 'desc']],
+                'buttons'   => [
                     ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner',
                     ],
                     ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner',
@@ -75,11 +78,11 @@ class UsersDataTable extends DataTable
     {
         return [
             [
-                'data' => 'name',
+                'data'  => 'name',
                 'title' => 'Name',
             ],
             [
-                'data' => 'email',
+                'data'  => 'email',
                 'title' => 'Email',
             ],
 

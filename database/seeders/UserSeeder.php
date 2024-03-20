@@ -27,17 +27,26 @@ class UserSeeder extends Seeder
             [
                 'name'          => Role::SUPER_ADMIN,
                 'guard_name'         => 'web',
-                // 'description'   => "Super Admin has all permissions"
             ],
             [
                 'name'          => Role::ADMIN,
                 'guard_name'         => 'web',
-                // 'description'   => "Assign this role to all the users who are administrators."
             ],
             [
                 'name'          => Role::API_USER,
                 'guard_name'         => 'api',
-                // 'description'   => "User users will be able to access mobile-app features"
+            ],
+            [
+                'name'          => Role::COACH,
+                'guard_name'         => 'api',
+            ],
+            [
+                'name'          => Role::DIETITIAN,
+                'guard_name'         => 'api',
+            ],
+            [
+                'name'          => Role::THERAPIST,
+                'guard_name'         => 'api',
             ]
         ]);
 

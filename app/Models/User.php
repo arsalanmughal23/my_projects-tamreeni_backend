@@ -131,4 +131,8 @@ class User extends Authenticatable implements MustVerifyEmail
     public function favourites() {
         return $this->hasMany(Favourite::class, 'user_id');
     }
+
+    public function slots() {
+        return $this->hasMany(Slot::class, 'user_id');
+    }
 }

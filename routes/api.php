@@ -28,6 +28,7 @@ Route::post('social-login', [App\Http\Controllers\API\AuthAPIController::class, 
 // Route::post('verify-password-reset-code', [App\Http\Controllers\API\AuthAPIController::class, 'verifyPasswordResetCode'])->name('verify_password_reset_code');
 
 Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () {
+    Route::resource('user-list', App\Http\Controllers\API\UserAPIController::class);
     Route::get('my-profile', [App\Http\Controllers\API\UserAPIController::class, 'myProfile']);
     Route::put('update-profile', [App\Http\Controllers\API\UserAPIController::class, 'updateProfile']);
 
@@ -48,6 +49,8 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
     Route::resource('meal_categories', App\Http\Controllers\API\MealCategoryAPIController::class);
     Route::resource('meals', App\Http\Controllers\API\MealAPIController::class);
     Route::resource('events', App\Http\Controllers\API\EventAPIController::class);
+    Route::resource('slots', App\Http\Controllers\API\SlotAPIController::class);
+    Route::get('user-slots', [App\Http\Controllers\API\SlotAPIController::class, 'userSlots']);
     Route::resource('user_events', App\Http\Controllers\API\UserEventAPIController::class);
     Route::resource('exercises', App\Http\Controllers\API\ExerciseAPIController::class);
     Route::resource('body_parts', App\Http\Controllers\API\BodyPartAPIController::class);
@@ -58,6 +61,14 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
     Route::post('submit_answers', [App\Http\Controllers\API\QuestionAPIController::class, 'submitAnswers']);
 
     Route::resource('contact_requests', App\Http\Controllers\API\ContactRequestAPIController::class);
+
+    Route::resource('appointments', App\Http\Controllers\API\AppointmentAPIController::class);
+
+    Route::resource('packages', App\Http\Controllers\API\PackageAPIController::class);
+
+    Route::resource('transactions', App\Http\Controllers\API\TransactionAPIController::class);
+
+
 });
 
 Route::resource('menus', App\Http\Controllers\API\MenuAPIController::class);
@@ -67,3 +78,7 @@ Route::resource('constants', App\Http\Controllers\API\ConstantAPIController::cla
 Route::resource('pages', App\Http\Controllers\API\PageAPIController::class);
 
 Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, 'pageContent'])->name('page-content');
+
+
+
+

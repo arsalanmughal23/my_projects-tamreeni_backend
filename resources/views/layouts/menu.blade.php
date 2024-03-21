@@ -158,3 +158,43 @@
 @endcan
 
 
+@canany(['slots.index', 'slots.create', 'slots.show', 'slots.edit', 'slots.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('slots.index') }}"
+        class="nav-link {{ Request::is('slots*') ? 'active' : '' }}">
+            <p>Slots</p>
+        </a>
+    </li>
+@endcan
+
+
+@canany(['appointments.index', 'appointments.create', 'appointments.show', 'appointments.edit', 'appointments.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('appointments.index') }}"
+        class="nav-link {{ Request::is('appointments*') ? 'active' : '' }}">
+            <p>Appointments</p>
+        </a>
+    </li>
+@endcan
+
+
+@canany(['packages.index', 'packages.create', 'packages.show', 'packages.edit', 'packages.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('packages.index') }}"
+        class="nav-link {{ Request::is('packages*') ? 'active' : '' }}">
+            <p>Packages</p>
+        </a>
+    </li>
+@endcan
+
+
+@canany(['transactions.index', 'transactions.create', 'transactions.show', 'transactions.edit', 'transactions.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('transactions.index') }}"
+        class="nav-link {{ Request::is('transactions*') ? 'active' : '' }}">
+            <p>Transactions</p>
+        </a>
+    </li>
+@endcan
+
+

@@ -10,12 +10,12 @@ use App\Models\UserDetail;
 use App\Repositories\UsersRepository;
 use Error;
 use Response;
+use Config;
 
 /**
  * Class UserController
  * @package App\Http\Controllers\API
  */
-
 class UserAPIController extends AppBaseController
 {
     /** @var  UserRepository */
@@ -38,12 +38,12 @@ class UserAPIController extends AppBaseController
             return $this->sendError($e->getMessage(), 500);
         }
     }
-    
+
     public function updateProfile(UpdateUserAPIRequest $request)
     {
         try {
             /** @var User $user */
-            $user = $request->user();
+            $user        = $request->user();
             $phoneNumber = $request->get('phone_number', null);
 
             if (!$userDetails = $user->details)
@@ -54,7 +54,7 @@ class UserAPIController extends AppBaseController
                     ->where('user_id', '!=', $user->id)
                     ->exists();
 
-                if($isPhoneAlreadyExists)
+                if ($isPhoneAlreadyExists)
                     throw new Error('Phone number is already exists');
             }
 
@@ -82,11 +82,21 @@ class UserAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $user = $this->userRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+//        $user = $this->userRepository->all(
+//            $request->except(['skip', 'limit']),
+//            $request->get('skip'),
+//            $request->get('limit')
+//        );
+
+        $perPage = $request->input('per_page', Config::get('constants.PER_PAGE', 10));
+        $user    = $this->userRepository->getUsers($request->only('role', 'search', 'order', 'order_by'));
+
+        // Paginate the results
+        if ($request->get('paginate')) {
+            $user = $user->orderBy('created_at', 'desc')->paginate($perPage);
+        } else {
+            $user = $user->get();
+        }
 
         return $this->sendResponse($user->toArray(), 'Users retrieved successfully');
     }

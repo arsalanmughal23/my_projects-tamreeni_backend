@@ -123,7 +123,7 @@ class EventAPIController extends AppBaseController
 
         $event = $this->eventRepository->update($input, $id);
 
-        return $this->sendResponse($event->toArray(), 'Event updated successfully');
+        return $this->sendResponse(new EventResource($event), 'Event updated successfully');
     }
 
     /**

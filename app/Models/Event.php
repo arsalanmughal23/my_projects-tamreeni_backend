@@ -134,17 +134,19 @@ class Event extends Model
         return $this->hasMany(UserEvent::class);
     }
 
-    public function interested()
+    public function favourites()
     {
-        if (auth()->user()) {
-            return $this->hasOne(Favourite::class, 'favouritable_id')->where('favouritable_type', 'event')->where('user_id', auth()->user()->id);
-        } else {
-            return $this->hasOne(Favourite::class, 'favouritable_id');
-        }
+        return $this->morphMany(Favourite::class, 'favouritable');
     }
 
     public function getIsInterestedAttribute()
     {
-        return !empty($this->interested);
+        $userId = auth()->user()->id ?? null;
+        $isFavourite = false;
+
+        if ($userId) {
+            $isFavourite = $this->favourites()->where('user_id', $userId)->exists();
+        }
+        return $isFavourite;
     }
 }

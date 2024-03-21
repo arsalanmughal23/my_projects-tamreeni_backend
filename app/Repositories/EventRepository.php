@@ -49,13 +49,19 @@ class EventRepository extends BaseRepository
         return Event::class;
     }
 
-    public function events($all_day_event = null)
+    public function events($parameters = [])
     {
         $query = Event::query();
 
         // If a specific date is provided, filter events by that date
-        if ($all_day_event) {
-            $query->whereDate('date', $all_day_event);
+        if (isset($parameters['all_day_event'])) {
+            $query->whereDate('date', $parameters['all_day_event']);
+        }
+//        dd($parameters['date']);
+        if (isset($parameters['date'])) {
+            $startOfWeek = Carbon::parse($parameters['date'])->startOfWeek()->format('Y-m-d');
+            $endOfWeek   = Carbon::parse($parameters['date'])->endOfWeek()->format('Y-m-d');
+            $query->whereBetween('date', [$startOfWeek, $endOfWeek])->orderBy('created_at', 'asc');
         }
 
         return $query;

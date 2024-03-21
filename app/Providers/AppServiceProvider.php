@@ -27,6 +27,8 @@ class AppServiceProvider extends ServiceProvider
     {
         App::setLocale('en');
         Schema::defaultStringLength(191);
-        $this->app['request']->server->set('HTTPS', true);
+        if (env('APP_ENV') === 'production') {
+            $this->app['request']->server->set('HTTPS', true);
+        }
     }
 }

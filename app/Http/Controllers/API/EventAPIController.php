@@ -39,7 +39,7 @@ class EventAPIController extends AppBaseController
     public function index(Request $request)
     {
         $perPage     = $request->input('per_page', Config::get('constants.PER_PAGE', 10));
-        $eventsQuery = $this->eventRepository->events();
+        $eventsQuery = $this->eventRepository->events($request->only(['all_day_event']));
 
         $eventsList = null;
 
@@ -167,10 +167,20 @@ class EventAPIController extends AppBaseController
         $instanceId = $request->input('event_id');
         $user_id    = $request->input('user_id');
 
+        $favouritableObj = match(Favourite::MORPH_TYPE_EVENT){
+        Favourite::MORPH_TYPE_EVENT => Event::find($instanceId),
+        };
+
+        if (!$favouritableObj)
+            return $this->sendError('Record not found');
+
+
+        $favouritableType = get_class($favouritableObj);
+
         // Check if the meal is already marked as a favorite
         $existingFavorite = Favourite::where('user_id', $user_id)
             ->where('favouritable_id', $instanceId)
-            ->where('favouritable_type', 'event')
+            ->where('favouritable_type', $favouritableType)
             ->first();
 
         if ($existingFavorite) {
@@ -184,7 +194,7 @@ class EventAPIController extends AppBaseController
         Favourite::create([
             'user_id'           => $user_id,
             'favouritable_id'   => $instanceId,
-            'favouritable_type' => 'event',
+            'favouritable_type' => $favouritableType,
         ]);
 
         return $this->sendResponse(new \stdClass(), 'Marked as Interested');

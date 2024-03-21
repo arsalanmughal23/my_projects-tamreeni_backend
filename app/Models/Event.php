@@ -71,7 +71,7 @@ class Event extends Model
     protected $casts = [
         'id'           => 'integer',
         'title'        => 'string',
-        'date'         => 'date',
+        'date'         => 'string',
         'duration'     => 'integer',
         'description'  => 'string',
         'image'        => 'string',

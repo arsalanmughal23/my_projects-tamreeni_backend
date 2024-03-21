@@ -39,7 +39,7 @@ class EventAPIController extends AppBaseController
     public function index(Request $request)
     {
         $perPage     = $request->input('per_page', Config::get('constants.PER_PAGE', 10));
-        $eventsQuery = $this->eventRepository->events();
+        $eventsQuery = $this->eventRepository->events($request->only(['all_day_event']));
 
         $eventsList = null;
 

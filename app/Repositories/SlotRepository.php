@@ -65,13 +65,6 @@ class SlotRepository extends BaseRepository
                 });
             })
             ->exists();
-
-//        return Slot::where('user_id', $user_id)
-//            ->where('start_time', $start_time)
-//            ->where('end_time', $end_time)
-//            ->where('day', $day)
-//            ->where('type', $type)
-//            ->exists();
     }
 
     public function userSlots($user_id, $day)

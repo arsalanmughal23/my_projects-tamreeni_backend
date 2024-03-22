@@ -130,3 +130,6 @@ Route::resource('packages', App\Http\Controllers\PackageController::class);
 
 
 Route::resource('transactions', App\Http\Controllers\TransactionController::class);
+
+
+Route::resource('user_subscriptions', App\Http\Controllers\UserSubscriptionController::class);

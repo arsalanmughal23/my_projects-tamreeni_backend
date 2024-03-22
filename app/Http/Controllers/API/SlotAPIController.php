@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Requests\API\CreateSlotAPIRequest;
 use App\Http\Requests\API\UpdateSlotAPIRequest;
 use App\Models\Slot;
+use App\Repositories\AppointmentRepository;
 use App\Repositories\SlotRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -21,10 +22,12 @@ class SlotAPIController extends AppBaseController
 {
     /** @var  SlotRepository */
     private $slotRepository;
+    private $appointmentRepository;
 
-    public function __construct(SlotRepository $slotRepo)
+    public function __construct(SlotRepository $slotRepo, AppointmentRepository $appointmentRepo)
     {
-        $this->slotRepository = $slotRepo;
+        $this->slotRepository        = $slotRepo;
+        $this->appointmentRepository = $appointmentRepo;
     }
 
     /**
@@ -188,10 +191,14 @@ class SlotAPIController extends AppBaseController
 
             // Sort slot times within each type
             foreach ($typeSlots as $key => $slot) {
-                $sortedSlotTimes[$key]['id']         = $slot->id;
-                $sortedSlotTimes[$key]['start_time'] = $slot->start_time;
-                $sortedSlotTimes[$key]['end_time']   = $slot->end_time;
-                $sortedSlotTimes[$key]['day']        = $slot->day;
+                $checkAppointment = $this->appointmentRepository
+                    ->checkSlotAvailable($request->input('user_id'), $slot->id);
+                if (!$checkAppointment) {
+                    $sortedSlotTimes[$key]['id']         = $slot->id;
+                    $sortedSlotTimes[$key]['start_time'] = $slot->start_time;
+                    $sortedSlotTimes[$key]['end_time']   = $slot->end_time;
+                    $sortedSlotTimes[$key]['day']        = $slot->day;
+                }
             }
 
             // Store sorted slot times under each type

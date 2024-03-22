@@ -19,7 +19,6 @@ class CreateAppointmentsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('slot_id')->nullable();
             $table->unsignedBigInteger('package_id')->nullable();
-            $table->unsignedBigInteger('transaction_id')->nullable();
             $table->string('date');
             $table->string('start_time');
             $table->string('end_time');

@@ -25,7 +25,6 @@ class AppointmentResource extends JsonResource
             'slot'            => $this->slot,
             'package_id'      => $this->package_id,
             'package'         => $this->package,
-            'transaction_id'  => $this->transaction_id,
             'date'            => $this->date,
             'start_time'      => $this->start_time,
             'end_time'        => $this->end_time,

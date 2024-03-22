@@ -81,6 +81,6 @@ class Package extends Model
      **/
     public function transactions()
     {
-        return $this->hasMany(\App\Models\Transaction::class, 'package_id');
+        return $this->hasMany(Transaction::class, 'package_id');
     }
 }

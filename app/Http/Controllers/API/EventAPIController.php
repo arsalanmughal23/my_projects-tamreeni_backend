@@ -39,20 +39,15 @@ class EventAPIController extends AppBaseController
     public function index(Request $request)
     {
         $perPage     = $request->input('per_page', Config::get('constants.PER_PAGE', 10));
-        $eventsQuery = $this->eventRepository->events($request->only(['all_day_event']));
+        $eventsQuery = $this->eventRepository->events($request->only('all_day_event', 'date'));
 
         $eventsList = null;
-
-
-        if ($request->get('date')) {
-            $eventsList = $this->eventRepository->allEvents($request->get('date'));
-        }
 
         // Paginate the results
         if ($request->get('paginate')) {
             $eventsList = $eventsQuery->orderBy('created_at', 'desc')->paginate($perPage);
         } else {
-            $eventsList = $eventsQuery->orderBy('created_at', 'desc')->get();
+            $eventsList = $eventsQuery->get();
         }
 
         return $this->sendResponse(EventResource::collection($eventsList), 'Events retrieved successfully');
@@ -128,7 +123,7 @@ class EventAPIController extends AppBaseController
 
         $event = $this->eventRepository->update($input, $id);
 
-        return $this->sendResponse($event->toArray(), 'Event updated successfully');
+        return $this->sendResponse(new EventResource($event), 'Event updated successfully');
     }
 
     /**

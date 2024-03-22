@@ -118,3 +118,15 @@ Route::resource('exercise_equipment_pivots', App\Http\Controllers\ExerciseEquipm
 
 
 Route::resource('contact_requests', App\Http\Controllers\ContactRequestController::class);
+
+
+Route::resource('slots', App\Http\Controllers\SlotController::class);
+
+
+Route::resource('appointments', App\Http\Controllers\AppointmentController::class);
+
+
+Route::resource('packages', App\Http\Controllers\PackageController::class);
+
+
+Route::resource('transactions', App\Http\Controllers\TransactionController::class);

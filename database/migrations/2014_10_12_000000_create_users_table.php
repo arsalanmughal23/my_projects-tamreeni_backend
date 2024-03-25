@@ -15,6 +15,7 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->string('stripe_customer_id')->nullable();
             $table->string('name')->nullable();
             $table->string('email');
             $table->string('password');

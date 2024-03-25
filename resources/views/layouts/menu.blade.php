@@ -198,3 +198,13 @@
 @endcan
 
 
+@canany(['user_subscriptions.index', 'user_subscriptions.create', 'user_subscriptions.show', 'user_subscriptions.edit', 'user_subscriptions.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('user_subscriptions.index') }}"
+        class="nav-link {{ Request::is('user_subscriptions*') ? 'active' : '' }}">
+            <p>User Subscriptions</p>
+        </a>
+    </li>
+@endcan
+
+

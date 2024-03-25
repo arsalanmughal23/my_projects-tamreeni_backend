@@ -35,13 +35,16 @@ class Transaction extends Model
 
     protected $dates = ['deleted_at'];
 
-
+    const STATUS_COMPLETE = 1;
+    const STATUS_CANCEL = 0;
 
     public $fillable = [
         'user_id',
         'package_id',
         'transaction_id',
         'data',
+        'description',
+        'method',
         'currency',
         'amount',
         'status'
@@ -58,9 +61,11 @@ class Transaction extends Model
         'package_id' => 'integer',
         'transaction_id' => 'string',
         'data' => 'string',
+        'description' => 'string',
+        'method'=> 'string',
         'currency' => 'string',
         'amount' => 'float',
-        'status' => 'string'
+        'status' => 'integer'
     ];
 
     /**
@@ -75,10 +80,8 @@ class Transaction extends Model
         'data' => 'required|string',
         'currency' => 'required|string|max:191',
         'amount' => 'required|numeric',
-        'status' => 'required|string|max:255',
-        'created_at' => 'nullable',
-        'updated_at' => 'nullable',
-        'deleted_at' => 'nullable'
+        'description' => 'required',
+        'method'=> 'required',
     ];
 
     /**
@@ -86,7 +89,7 @@ class Transaction extends Model
      **/
     public function package()
     {
-        return $this->belongsTo(\App\Models\Package::class, 'package_id');
+        return $this->belongsTo(Package::class, 'package_id');
     }
 
     /**
@@ -94,6 +97,6 @@ class Transaction extends Model
      **/
     public function user()
     {
-        return $this->belongsTo(\App\Models\User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

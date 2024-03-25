@@ -68,6 +68,10 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
 
     Route::resource('transactions', App\Http\Controllers\API\TransactionAPIController::class);
 
+    Route::get('user-current-package', [App\Http\Controllers\API\UserSubscriptionAPIController::class, 'userCurrentPackage']);
+    Route::resource('user_subscriptions', App\Http\Controllers\API\UserSubscriptionAPIController::class);
+
+    Route::post('payments/create-customer', [App\Http\Controllers\API\PaymentController::class, 'createCustomer']);
 
 });
 
@@ -78,7 +82,3 @@ Route::resource('constants', App\Http\Controllers\API\ConstantAPIController::cla
 Route::resource('pages', App\Http\Controllers\API\PageAPIController::class);
 
 Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, 'pageContent'])->name('page-content');
-
-
-
-

@@ -35,6 +35,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public $fillable = [
         'name',
+        'stripe_customer_id',
         'email',
         'password',
         'remember_token'
@@ -134,5 +135,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function slots() {
         return $this->hasMany(Slot::class, 'user_id');
+    }
+
+    public function transactions() {
+        return $this->hasMany(Transaction::class, 'user_id');
     }
 }

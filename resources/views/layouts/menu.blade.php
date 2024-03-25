@@ -208,3 +208,13 @@
 @endcan
 
 
+@canany(['meal_types.index', 'meal_types.create', 'meal_types.show', 'meal_types.edit', 'meal_types.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('meal_types.index') }}"
+        class="nav-link {{ Request::is('meal_types*') ? 'active' : '' }}">
+            <p>Meal Types</p>
+        </a>
+    </li>
+@endcan
+
+

@@ -73,6 +73,8 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
 
     Route::post('payments/create-customer', [App\Http\Controllers\API\PaymentController::class, 'createCustomer']);
 
+    Route::resource('meal_types', App\Http\Controllers\API\MealTypeAPIController::class);
+
 });
 
 Route::resource('menus', App\Http\Controllers\API\MenuAPIController::class);

@@ -71,6 +71,7 @@ class AppointmentAPIController extends AppBaseController
     public function store(CreateAppointmentAPIRequest $request)
     {
         $input                = $request->all();
+        $user                 = $request->user();
         $type                 = intval($input['type']);
         $profession_type      = intval($input['profession_type']);
         $currency             = "SAR";
@@ -84,21 +85,25 @@ class AppointmentAPIController extends AppBaseController
         // Create transaction if it's a session appointment
         if ($type === Appointment::TYPE_SESSION) {
             $input['amount'] = $this->calculateSessionFee($profession_type);
-            $this->createTransaction($input['amount'], $request->user()->id, $currency, "Appointment Payment", null, null);
+            $description     = "1-1 Session - Appointment Payment";
+
+            $this->createTransaction($input['amount'], $user, $currency, $description, null, $input['payment_method_id']);
         }
 
         // Create transaction if it's a package appointment
         if ($type === Appointment::TYPE_PACKAGE) {
             $currentPackage = $this->userSubscriptionRepository
-                ->checkUserCurrentPackage($request->user()->id, $input['package_id']);
+                ->checkUserCurrentPackage($user->id, $input['package_id']);
             if ($currentPackage) {
                 $input['package_id'] = $currentPackage->package_id;
-                $this->updateUserSubscription($request->user()->id, $input['package_id']);
+                $this->updateUserSubscription($user->id, $input['package_id']);
             } else {
                 $package         = Package::find($input['package_id'])->first();
                 $input['amount'] = $package->amount;
-                $transactionId   = $this->createTransaction($input['amount'], $request->user()->id, $currency, "Package Purchase", $input['package_id'], null);
-                $this->addUserSubscription($request->user()->id, $input['package_id'], $transactionId, $package->sessions);
+                $description     = $package->description . ' ' . ' Package Purchase';
+
+                $transactionId = $this->createTransaction($input['amount'], $user, $currency, $description, $input['package_id'], $input['payment_method_id']);
+                $this->addUserSubscription($user->id, $input['package_id'], $transactionId, $package->sessions);
             }
         }
 
@@ -199,21 +204,26 @@ class AppointmentAPIController extends AppBaseController
     }
 
     // Function to create transaction
-    private function createTransaction($amount, $user_id, $currency, $description, $package_id = null, $transaction_id = null)
+    private function createTransaction($amount, $user, $currency, $description, $package_id = null, $payment_method_id)
     {
-        $transaction = [
-            'amount'         => $amount,
-            'description'    => $description,
-            'package_id'     => $package_id,
-            'transaction_id' => $transaction_id,
-            'user_id'        => $user_id,
-            'currency'       => $currency,
-            'status'         => Transaction::STATUS_COMPLETE,
-        ];
 
-        $createdTransaction = $this->transactionRepository->create($transaction);
+        $transaction_id = $this->chargePayment($amount, $description, $user->stripe_customer_id, $payment_method_id);
+        if ($transaction_id) {
 
-        return $createdTransaction->id;
+            $transaction = [
+                'amount'         => $amount,
+                'description'    => $description,
+                'package_id'     => $package_id,
+                'transaction_id' => $transaction_id,
+                'user_id'        => $user->id,
+                'currency'       => $currency,
+                'status'         => Transaction::STATUS_COMPLETE,
+            ];
+
+            $createdTransaction = $this->transactionRepository->create($transaction);
+
+            return $createdTransaction->id;
+        }
     }
 
     private function addUserSubscription($user_id, $package_id, $transaction_id, $sessions)
@@ -240,6 +250,16 @@ class AppointmentAPIController extends AppBaseController
             }
             $userSubscription->save();
         }
+    }
+
+    private function chargePayment($price, $description, $stripe_customer_id, $payment_method_id)
+    {
+        $amount            = round($price * 100);
+        $paymentController = new PaymentController();
+        $chargeRequest     = ['amount' => $amount, 'description' => $description, 'customer_id' => $stripe_customer_id, 'payment_method_id' => $payment_method_id];
+
+        $stripeCharge = $paymentController::charge($chargeRequest);
+        return $stripeCharge['data']['id'];
     }
 
 }

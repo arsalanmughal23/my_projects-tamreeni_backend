@@ -133,3 +133,6 @@ Route::resource('transactions', App\Http\Controllers\TransactionController::clas
 
 
 Route::resource('user_subscriptions', App\Http\Controllers\UserSubscriptionController::class);
+
+
+Route::resource('meal_types', App\Http\Controllers\MealTypeController::class);

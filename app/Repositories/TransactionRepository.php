@@ -9,8 +9,7 @@ use App\Repositories\BaseRepository;
  * Class TransactionRepository
  * @package App\Repositories
  * @version March 21, 2024, 5:52 pm UTC
-*/
-
+ */
 class TransactionRepository extends BaseRepository
 {
     /**
@@ -42,5 +41,16 @@ class TransactionRepository extends BaseRepository
     public function model()
     {
         return Transaction::class;
+    }
+
+    public function getTransactions($params = [])
+    {
+        $query = Transaction::query();
+
+        if (isset($params['user_id'])) {
+            $query->where('user_id', $params['user_id']);
+        }
+
+        return $query;
     }
 }

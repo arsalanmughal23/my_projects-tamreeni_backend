@@ -112,16 +112,16 @@ class PaymentController extends Controller
         }
     }
 
-    public static function charge(Request $request)
+    public static function charge($dataReqst)
     {
-        $paymentIntent = self::post($request, 'payment.intent');
+        $paymentIntentReqst = new Request(['amount' => $dataReqst['amount'], 'description' => $dataReqst['description'], 'customer_id' => $dataReqst['customer_id']]);
+        $paymentIntent      = self::post($paymentIntentReqst, 'payment.intent');
+        if ($paymentIntent['status']) {
+            $chargeRequest = new Request(['payment_intent_id' => $paymentIntent['data']['id'], 'payment_method_id' => $dataReqst['payment_method_id']]);
+            $charge        = self::post($chargeRequest, 'payment.charge');
 
-        $charge = self::post([
-            'payment_intent_id' => $paymentIntent['data']['id'],
-            'payment_method_id' => $request->input('payment_method_id')
-        ], 'payment.charge');
-
-        return $charge;
+            return $charge;
+        }
     }
 
     public function createCustomer(Request $request)

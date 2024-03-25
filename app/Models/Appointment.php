@@ -86,14 +86,15 @@ class Appointment extends Model
      * @var array
      */
     public static $rules = [
-        'user_id'         => 'required',
-        'slot_id'         => 'nullable',
-        'package_id'      => 'nullable',
-        'date'            => 'required|string|max:191',
-        'start_time'      => 'required|string',
-        'end_time'        => 'required|string',
-        'type'            => 'required|integer',
-        'profession_type' => 'required|integer',
+        'user_id'           => 'required',
+        'payment_method_id' => 'required',
+        'slot_id'           => 'nullable',
+        'package_id'        => 'nullable',
+        'date'              => 'required|string|max:191',
+        'start_time'        => 'required|string',
+        'end_time'          => 'required|string',
+        'type'              => 'required|integer',
+        'profession_type'   => 'required|integer',
     ];
 
     /**

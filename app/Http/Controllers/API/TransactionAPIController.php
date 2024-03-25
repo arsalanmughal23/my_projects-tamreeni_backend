@@ -9,12 +9,12 @@ use App\Repositories\TransactionRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use Config;
 
 /**
  * Class TransactionController
  * @package App\Http\Controllers\API
  */
-
 class TransactionAPIController extends AppBaseController
 {
     /** @var  TransactionRepository */
@@ -35,11 +35,14 @@ class TransactionAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $transactions = $this->transactionRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+        $perPage      = $request->input('per_page', Config::get('constants.PER_PAGE', 10));
+        $transactions = $this->transactionRepository->getTransactions($request->only('user_id'));
+
+        if ($request->get('paginate')) {
+            $transactions = $transactions->orderBy('created_at', 'desc')->paginate($perPage);
+        } else {
+            $transactions = $transactions->get();
+        }
 
         return $this->sendResponse($transactions->toArray(), 'Transactions retrieved successfully');
     }

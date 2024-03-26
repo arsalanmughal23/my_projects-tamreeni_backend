@@ -17,14 +17,14 @@ class CreateExercisesTable extends Migration
             $table->increments('id');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->integer('body_part_id')->unsigned();
-            $table->string('name');
+            $table->text('name');
+            $table->text('description')->nullable();
             $table->float('duration_in_m')->nullable();
             $table->integer('sets')->nullable();
             $table->integer('reps')->nullable();
             $table->float('burn_calories')->nullable();
             $table->text('image')->nullable();
             $table->text('video')->nullable();
-            $table->text('description')->nullable();
             $table->timestamps();
             $table->softDeletes();
             

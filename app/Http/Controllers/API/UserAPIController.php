@@ -82,12 +82,6 @@ class UserAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-//        $user = $this->userRepository->all(
-//            $request->except(['skip', 'limit']),
-//            $request->get('skip'),
-//            $request->get('limit')
-//        );
-
         $perPage = $request->input('per_page', Config::get('constants.PER_PAGE', 10));
         $user    = $this->userRepository->getUsers($request->only('role', 'search', 'order', 'order_by'));
 

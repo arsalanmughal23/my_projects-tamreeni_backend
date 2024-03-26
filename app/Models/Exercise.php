@@ -5,6 +5,7 @@ namespace App\Models;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * Class Exercise
@@ -31,15 +32,16 @@ class Exercise extends Model
 
     use HasFactory;
 
+    use HasTranslations;
+
     public $table = 'exercises';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
-
     protected $dates = ['deleted_at'];
 
-
+    public $translatable = ['name', 'description'];
 
     public $fillable = [
         'user_id',
@@ -62,17 +64,17 @@ class Exercise extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
-        'user_id' => 'integer',
-        'body_part_id' => 'integer',
-        'name' => 'string',
+        'id'            => 'integer',
+        'user_id'       => 'integer',
+        'body_part_id'  => 'integer',
+        'name'          => 'string',
         'duration_in_m' => 'float',
-        'sets' => 'integer',
-        'reps' => 'integer',
+        'sets'          => 'integer',
+        'reps'          => 'integer',
         'burn_calories' => 'float',
-        'image' => 'string',
-        'video' => 'string',
-        'description' => 'string'
+        'image'         => 'string',
+        'video'         => 'string',
+        'description'   => 'string'
     ];
 
     /**
@@ -81,19 +83,20 @@ class Exercise extends Model
      * @var array
      */
     public static $rules = [
-        'user_id' => 'nullable',
-        'body_part_id' => 'required|integer',
-        'name' => 'required|string|max:255',
-        'duration_in_m' => 'nullable|numeric',
-        'sets' => 'nullable|integer',
-        'reps' => 'nullable|integer',
-        'burn_calories' => 'nullable|numeric',
-        'image' => 'nullable|string',
-        'video' => 'nullable|string',
-        'description' => 'nullable|string',
-        'created_at' => 'nullable',
-        'updated_at' => 'nullable',
-        'deleted_at' => 'nullable'
+        'user_id'        => 'nullable',
+        'body_part_id'   => 'required|integer',
+        'name'           => 'required|array',
+        'name.en'        => 'required|string|max:20',
+        'name.ar'        => 'required|string|max:20',
+        'description'    => 'nullable|array',
+        'description.en' => 'nullable|string|max:200',
+        'description.ar' => 'nullable|string|max:200',
+        'duration_in_m'  => 'nullable|numeric',
+        'sets'           => 'nullable|integer',
+        'reps'           => 'nullable|integer',
+        'burn_calories'  => 'nullable|numeric',
+        'image'          => 'nullable|string',
+        'video'          => 'nullable|string',
     ];
 
     /**
@@ -101,7 +104,7 @@ class Exercise extends Model
      **/
     public function bodyPart()
     {
-        return $this->belongsTo(\App\Models\BodyPart::class, 'body_part_id');
+        return $this->belongsTo(BodyPart::class, 'body_part_id');
     }
 
     /**
@@ -109,7 +112,7 @@ class Exercise extends Model
      **/
     public function user()
     {
-        return $this->belongsTo(\App\Models\User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
@@ -117,7 +120,7 @@ class Exercise extends Model
      **/
     public function exerciseEquipmentPivots()
     {
-        return $this->hasMany(\App\Models\ExerciseEquipmentPivot::class, 'exercise_id');
+        return $this->hasMany(ExerciseEquipmentPivot::class, 'exercise_id');
     }
 
     public function favourites()
@@ -127,7 +130,7 @@ class Exercise extends Model
 
     public function getIsFavouriteAttribute()
     {
-        $userId = auth()->user()->id ?? null;
+        $userId      = auth()->user()->id ?? null;
         $isFavourite = false;
 
         if ($userId) {

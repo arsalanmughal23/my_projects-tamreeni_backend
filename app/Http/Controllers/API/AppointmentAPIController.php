@@ -70,24 +70,29 @@ class AppointmentAPIController extends AppBaseController
 
     public function store(CreateAppointmentAPIRequest $request)
     {
-        $input                = $request->all();
-        $user                 = $request->user();
-        $type                 = intval($input['type']);
-        $profession_type      = intval($input['profession_type']);
-        $currency             = "SAR";
-        $checkUserAppointment = $this->appointmentRepository
-            ->checkUserAppointment($request->user()->id, $input['user_id'], $input['date']);
-
-        if ($checkUserAppointment) {
-            return $this->sendError('Already book appointment');
-        }
-
+        $input           = $request->all();
+        $user            = $request->user();
+        $type            = intval($input['type']);
+        $profession_type = intval($input['profession_type']);
+        $currency        = "SAR";
+        $appointment = null;
         // Create transaction if it's a session appointment
         if ($type === Appointment::TYPE_SESSION) {
+
+            $checkUserAppointment = $this->appointmentRepository
+                ->checkUserAppointment($request->user()->id, $input['user_id'], $input['date']);
+
+            if ($checkUserAppointment) {
+                return $this->sendError('Already book appointment');
+            }
+
             $input['amount'] = $this->calculateSessionFee($profession_type);
             $description     = "1-1 Session - Appointment Payment";
 
             $this->createTransaction($input['amount'], $user, $currency, $description, null, $input['payment_method_id']);
+            $input['customer_id'] = $request->user()->id;
+            $appointment          = $this->appointmentRepository->create($input);
+
         }
 
         // Create transaction if it's a package appointment
@@ -103,12 +108,24 @@ class AppointmentAPIController extends AppBaseController
                 $description     = $package->description . ' ' . ' Package Purchase';
 
                 $transactionId = $this->createTransaction($input['amount'], $user, $currency, $description, $input['package_id'], $input['payment_method_id']);
-                $this->addUserSubscription($user->id, $input['package_id'], $transactionId, $package->sessions);
+                $this->addUserSubscription($user->id, $input['package_id'], $transactionId, $package->sessions, 0);
+
+                $appointments = $input['appointments'];
+                foreach ($appointments as $key => $appointment) {
+
+                    $this->updateUserSubscription($user->id, $input['package_id']);
+
+                    $appointment['user_id']         = $input['user_id'];
+                    $appointment['customer_id']     = $user->id;
+                    $appointment['package_id']      = $input['package_id'];
+                    $appointment['transaction_id']  = $transactionId;
+                    $appointment['type']            = $type;
+                    $appointment['profession_type'] = $profession_type;
+                    $appointment['amount']          = $input['amount'];
+                    $appointment = $this->appointmentRepository->create($appointment);
+                }
             }
         }
-
-        $input['customer_id'] = $request->user()->id;
-        $appointment          = $this->appointmentRepository->create($input);
 
         return $this->sendResponse(new AppointmentResource($appointment), 'Appointment saved successfully');
     }
@@ -226,14 +243,14 @@ class AppointmentAPIController extends AppBaseController
         }
     }
 
-    private function addUserSubscription($user_id, $package_id, $transaction_id, $sessions)
+    private function addUserSubscription($user_id, $package_id, $transaction_id, $sessions, $take_session)
     {
         $userSubscription = [
             'user_id'           => $user_id,
             'package_id'        => $package_id,
             'transaction_id'    => $transaction_id,
             'sessions'          => $sessions,
-            'complete_sessions' => 1,
+            'complete_sessions' => $take_session,
             'status'            => UserSubscription::ACTIVE
         ];
 
@@ -244,7 +261,7 @@ class AppointmentAPIController extends AppBaseController
     {
         $userSubscription = $this->userSubscriptionRepository->checkUserCurrentPackage($user_id, $package_id);
         if ($userSubscription) {
-            $userSubscription->complete_sessions++;
+            $userSubscription->complete_sessions += 1;
             if ($userSubscription->complete_sessions >= $userSubscription->sessions) {
                 $userSubscription->status = 0;
             }

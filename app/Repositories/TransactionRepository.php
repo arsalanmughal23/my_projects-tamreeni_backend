@@ -43,13 +43,11 @@ class TransactionRepository extends BaseRepository
         return Transaction::class;
     }
 
-    public function getTransactions($params = [])
+    public function getUserTransactions($user_id)
     {
         $query = Transaction::query();
 
-        if (isset($params['user_id'])) {
-            $query->where('user_id', $params['user_id']);
-        }
+        $query->where('user_id', $user_id);
 
         return $query;
     }

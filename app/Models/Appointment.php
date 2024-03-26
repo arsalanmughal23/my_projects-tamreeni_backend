@@ -45,11 +45,34 @@ class Appointment extends Model
     protected $dates = ['deleted_at'];
 
 
+    /**
+     * Validation rules
+     *
+     * @var array
+     */
+    public static $rules = [
+        'user_id'                   => 'required',
+        'payment_method_id'         => 'required',
+        'slot_id'                   => 'required_if:type,10',
+        'package_id'                => 'required_if:type,20',
+        'date'                      => 'string|required_if:type,10',
+        'start_time'                => 'string|required_if:type,10',
+        'end_time'                  => 'string|required_if:type,10',
+        'type'                      => 'required|integer|in:10,20',
+        'profession_type'           => 'required|integer|in:10,20,30',
+        'appointments'              => 'required_if:type,20|array', // appointments array required when type is 20
+        'appointments.*.slot_id'    => 'required|required_if:appointments.*.type,20',
+        'appointments.*.date'       => 'required|string|max:191|required_if:appointments.*.type,20',
+        'appointments.*.start_time' => 'required|string|required_if:appointments.*.type,20',
+        'appointments.*.end_time'   => 'required|string|required_if:appointments.*.type,20',
+    ];
+
     public $fillable = [
         'customer_id',
         'user_id',
         'slot_id',
         'package_id',
+        'transaction_id',
         'date',
         'start_time',
         'end_time',
@@ -70,6 +93,7 @@ class Appointment extends Model
         'user_id'         => 'integer',
         'slot_id'         => 'integer',
         'package_id'      => 'integer',
+        'transaction_id'  => 'integer',
         'date'            => 'string',
         'start_time'      => 'string',
         'end_time'        => 'string',
@@ -78,23 +102,6 @@ class Appointment extends Model
         'type'            => 'integer',
         'status'          => 'integer',
         'profession_type' => 'integer'
-    ];
-
-    /**
-     * Validation rules
-     *
-     * @var array
-     */
-    public static $rules = [
-        'user_id'           => 'required',
-        'payment_method_id' => 'required',
-        'slot_id'           => 'nullable',
-        'package_id'        => 'nullable',
-        'date'              => 'required|string|max:191',
-        'start_time'        => 'required|string',
-        'end_time'          => 'required|string',
-        'type'              => 'required|integer',
-        'profession_type'   => 'required|integer',
     ];
 
     /**

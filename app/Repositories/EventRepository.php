@@ -63,6 +63,15 @@ class EventRepository extends BaseRepository
             $query->whereBetween('date', [$startOfWeek, $endOfWeek])->orderBy('created_at', 'asc');
         }
 
+        if (isset($parameters['user_ids'])) {
+            $userIds = explode(',', $parameters['user_ids']);
+            $query->whereIn('user_id', $userIds);
+        }
+
+        if(isset($parameters['order']) && isset($parameters['order_by'])){
+            $query->orderBy($parameters['order'], $parameters['order_by']);
+        }
+
         return $query;
     }
 

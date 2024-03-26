@@ -49,6 +49,34 @@ class ExerciseRepository extends BaseRepository
 
     public function exerciseDetails($id)
     {
-        return Exercise::where('id', $id)->with( 'bodyPart', 'exerciseEquipmentPivots.exerciseEquipment')->first();
+        return Exercise::where('id', $id)->with('bodyPart', 'exerciseEquipmentPivots.exerciseEquipment')->first();
+    }
+
+    public function getExercises($params = []){
+        $query = Exercise::query();
+
+        if (isset($params['keyword'])) {
+            $keyword = $params['keyword'];
+            $query->where(function ($q) use ($keyword) {
+                $q->where('name', 'like', '%' . $keyword . '%')
+                    ->orWhere('description', 'like', '%' . $keyword . '%');
+            });
+        }
+        if(isset($params['body_part_ids'])){
+            $bodyPartIds = array_map('intval', $params['body_part_ids']);
+            $query->whereIn('body_part_id', $bodyPartIds);
+        }
+
+        if(isset($params['is_favourite'])){
+            $query->whereHas('favourites', function($q){
+                return $q->where('user_id', auth()->id());
+            });
+        }
+
+        if(isset($params['order']) && isset($params['order_by'])){
+            $query->orderBy($params['order'], $params['order_by']);
+        }
+
+        return $query;
     }
 }

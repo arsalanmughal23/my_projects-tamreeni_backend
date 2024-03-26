@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Requests\API\CreateExerciseAPIRequest;
 use App\Http\Requests\API\UpdateExerciseAPIRequest;
+use App\Http\Resources\ExerciseResource;
 use App\Models\Exercise;
 use App\Repositories\ExerciseRepository;
 use Illuminate\Http\Request;
@@ -14,7 +15,6 @@ use Response;
  * Class ExerciseController
  * @package App\Http\Controllers\API
  */
-
 class ExerciseAPIController extends AppBaseController
 {
     /** @var  ExerciseRepository */
@@ -35,31 +35,16 @@ class ExerciseAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $exercises = $this->exerciseRepository->search(
-            $request->get('keyword'),
-            ['name', 'description']
-        );
+        $perPage   = $request->get('per_page', config('constants.PER_PAGE'));
+        $exercises = $this->exerciseRepository->getExercises($request->only('keyword', 'body_part_ids', 'is_favourite', 'order', 'order_by'));
 
-        $bodyPartIds = $request->get('body_part_ids');
-        if(is_array($bodyPartIds) && count($bodyPartIds)){
-            $bodyPartIds = array_map('intval', $bodyPartIds);
-            $exercises = $exercises->whereIn('body_part_id', $bodyPartIds);
-        }
-
-        if($request->get('is_favourite')){
-            $exercises = $exercises->whereHas('favourites', function($q){
-                return $q->where('user_id', auth()->id());
-            });
-        }
-
-        $perPage = $request->get('per_page', config('constants.PER_PAGE'));
-        if ($request->get('is_paginate')) {
-            $exercises = $exercises->paginate($perPage);
+        if ($request->get('paginate')) {
+            $exercises = $exercises->orderBy('created_at', 'desc')->paginate($perPage);
         } else {
             $exercises = $exercises->get();
         }
 
-        return $this->sendResponse($exercises->toArray(), 'Exercises retrieved successfully');
+        return $this->sendResponse(ExerciseResource::collection($exercises), 'Exercises retrieved successfully');
     }
 
     /**
@@ -77,7 +62,7 @@ class ExerciseAPIController extends AppBaseController
 
         $exercise = $this->exerciseRepository->create($input);
 
-        return $this->sendResponse($exercise->toArray(), 'Exercise saved successfully');
+        return $this->sendResponse(new ExerciseResource($exercise), 'Exercise saved successfully');
     }
 
     /**
@@ -98,7 +83,7 @@ class ExerciseAPIController extends AppBaseController
             return $this->sendError('Exercise not found');
         }
 
-        return $this->sendResponse($exercise->toArray(), 'Exercise retrieved successfully');
+        return $this->sendResponse(new ExerciseResource($exercise), 'Exercise retrieved successfully');
     }
 
     /**
@@ -124,7 +109,7 @@ class ExerciseAPIController extends AppBaseController
 
         $exercise = $this->exerciseRepository->update($input, $id);
 
-        return $this->sendResponse($exercise->toArray(), 'Exercise updated successfully');
+        return $this->sendResponse(new ExerciseResource($exercise), 'Exercise updated successfully');
     }
 
     /**

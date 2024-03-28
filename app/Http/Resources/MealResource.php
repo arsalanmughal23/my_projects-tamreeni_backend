@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class ExerciseResource extends JsonResource
+class MealResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,23 +16,17 @@ class ExerciseResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'                  => $this->id,
-            'name'                => $this->getTranslation('name', app()->getLocale()),
-            'description'         => $this->getTranslation('description', app()->getLocale()),
-            'user_id'             => $this->user_id,
-            'user'                => $this->user,
-            'body_part_id'        => $this->body_part_id,
-            'body_part'           => $this->bodyPart,
-            'is_favourite'        => $this->is_favourite,
-            'duration_in_m'       => $this->duration_in_m,
-            'sets'                => $this->sets,
-            'reps'                => $this->reps,
-            'burn_calories'       => $this->burn_calories,
-            'image'               => $this->image,
-            'video'               => $this->video,
-            'exercise_equipments' => $this->equipment,
-            'created_at'          => $this->created_at,
-            'updated_at'          => $this->updated_at,
+            'id'               => $this->id,
+            'name'             => $this->getTranslation('name', app()->getLocale()),
+            'description'      => $this->getTranslation('description', app()->getLocale()),
+            'diet_type'        => $this->diet_type,
+            'meal_category_id' => $this->meal_category_id,
+            'meal_category'    => $this->mealCategory,
+            'image'            => $this->image,
+            'calories'         => $this->calories,
+            'is_favourite'     => $this->is_favourite,
+            'created_at'       => $this->created_at,
+            'updated_at'       => $this->updated_at,
         ];
     }
 

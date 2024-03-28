@@ -5,6 +5,7 @@ namespace App\Models;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * Class Meal
@@ -25,15 +26,17 @@ class Meal extends Model
 
     use HasFactory;
 
+    use HasTranslations;
+
     public $table = 'meals';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
 
     protected $dates = ['deleted_at'];
 
-
+    public $translatable = ['name', 'description'];
 
     public $fillable = [
         'diet_type',
@@ -52,13 +55,13 @@ class Meal extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
-        'diet_type' => 'string',
+        'id'               => 'integer',
+        'diet_type'        => 'string',
         'meal_category_id' => 'integer',
-        'name' => 'string',
-        'image' => 'string',
-        'calories' => 'float',
-        'description' => 'string'
+        'name'             => 'string',
+        'image'            => 'string',
+        'calories'         => 'float',
+        'description'      => 'string'
     ];
 
     /**
@@ -67,15 +70,16 @@ class Meal extends Model
      * @var array
      */
     public static $rules = [
-        'diet_type' => 'nullable|string',
+        'diet_type'        => 'nullable|string|in:traditional,keto',
         'meal_category_id' => 'required|integer',
-        'name' => 'required|string|max:255',
-        'image' => 'nullable|string|max:255',
-        'calories' => 'nullable|numeric',
-        'description' => 'nullable|string',
-        'deleted_at' => 'nullable',
-        'created_at' => 'nullable',
-        'updated_at' => 'nullable'
+        'name'             => 'required|array',
+        'name.en'          => 'required|string|max:100',
+        'name.ar'          => 'required|string|max:100',
+        'image'            => 'nullable|string',
+        'calories'         => 'nullable|numeric',
+        'description'      => 'nullable|array',
+        'description.en'   => 'nullable|string|max:200',
+        'description.ar'   => 'nullable|string|max:200',
     ];
 
     /**
@@ -83,7 +87,7 @@ class Meal extends Model
      **/
     public function mealCategory()
     {
-        return $this->belongsTo(\App\Models\MealCategory::class, 'meal_category_id');
+        return $this->belongsTo(MealCategory::class, 'meal_category_id');
     }
 
     public function favourites()
@@ -93,7 +97,7 @@ class Meal extends Model
 
     public function getIsFavouriteAttribute()
     {
-        $userId = auth()->user()->id ?? null;
+        $userId      = auth()->user()->id ?? null;
         $isFavourite = false;
 
         if ($userId) {

@@ -9,8 +9,7 @@ use App\Repositories\BaseRepository;
  * Class ExerciseRepository
  * @package App\Repositories
  * @version February 6, 2024, 9:30 am UTC
-*/
-
+ */
 class ExerciseRepository extends BaseRepository
 {
     /**
@@ -49,11 +48,12 @@ class ExerciseRepository extends BaseRepository
 
     public function exerciseDetails($id)
     {
-        return Exercise::where('id', $id)->with('bodyPart', 'exerciseEquipmentPivots.exerciseEquipment')->first();
+        return Exercise::where('id', $id)->with('bodyPart', 'equipment')->first();
     }
 
-    public function getExercises($params = []){
-        $query = Exercise::query();
+    public function getExercises($params = [])
+    {
+        $query = Exercise::query()->with('bodyPart', 'equipment');
 
         if (isset($params['keyword'])) {
             $keyword = $params['keyword'];
@@ -62,18 +62,25 @@ class ExerciseRepository extends BaseRepository
                     ->orWhere('description', 'like', '%' . $keyword . '%');
             });
         }
-        if(isset($params['body_part_ids'])){
-            $bodyPartIds = array_map('intval', $params['body_part_ids']);
+        if (isset($params['body_part_ids'])) {
+            $bodyPartIds = explode(',', $params['body_part_ids']);
             $query->whereIn('body_part_id', $bodyPartIds);
         }
 
-        if(isset($params['is_favourite'])){
-            $query->whereHas('favourites', function($q){
+        if (isset($params['is_favourite'])) {
+            $query->whereHas('favourites', function ($q) {
                 return $q->where('user_id', auth()->id());
             });
         }
 
-        if(isset($params['order']) && isset($params['order_by'])){
+        if (isset($params['exercise_equipment_ids'])) {
+            $exerciseEquipmentIds = explode(',', $params['exercise_equipment_ids']);
+            $query->whereHas('equipment', function ($q) use ($exerciseEquipmentIds) {
+                $q->whereIn('exercise_equipment_id', $exerciseEquipmentIds);
+            });
+        }
+
+        if (isset($params['order']) && isset($params['order_by'])) {
             $query->orderBy($params['order'], $params['order_by']);
         }
 

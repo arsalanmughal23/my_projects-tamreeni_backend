@@ -17,7 +17,7 @@ class CreateMealsTable extends Migration
             $table->increments('id');
             $table->enum('diet_type', ['traditional', 'keto'])->nullable();
             $table->integer('meal_category_id')->unsigned();
-            $table->string('name');
+            $table->text('name');
             $table->string('image')->nullable();
             $table->float('calories')->nullable();
             $table->text('description')->nullable();

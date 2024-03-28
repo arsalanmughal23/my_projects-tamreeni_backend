@@ -36,7 +36,7 @@ class ExerciseAPIController extends AppBaseController
     public function index(Request $request)
     {
         $perPage   = $request->get('per_page', config('constants.PER_PAGE'));
-        $exercises = $this->exerciseRepository->getExercises($request->only('keyword', 'body_part_ids', 'is_favourite', 'order', 'order_by'));
+        $exercises = $this->exerciseRepository->getExercises($request->only('keyword', 'body_part_ids', 'is_favourite', 'order', 'order_by', 'exercise_equipment_ids'));
 
         if ($request->get('paginate')) {
             $exercises = $exercises->orderBy('created_at', 'desc')->paginate($perPage);
@@ -61,6 +61,11 @@ class ExerciseAPIController extends AppBaseController
         $input = $request->all();
 
         $exercise = $this->exerciseRepository->create($input);
+
+        if (isset($input['equipment_ids'])) {
+            $equipmentIds = $input['equipment_ids'];
+            $exercise->equipment()->attach($equipmentIds);
+        }
 
         return $this->sendResponse(new ExerciseResource($exercise), 'Exercise saved successfully');
     }
@@ -108,6 +113,11 @@ class ExerciseAPIController extends AppBaseController
         }
 
         $exercise = $this->exerciseRepository->update($input, $id);
+
+        if (isset($input['equipment_ids'])) {
+            $equipmentIds = $input['equipment_ids'];
+            $exercise->equipment()->sync($equipmentIds);
+        }
 
         return $this->sendResponse(new ExerciseResource($exercise), 'Exercise updated successfully');
     }

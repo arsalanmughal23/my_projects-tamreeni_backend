@@ -193,12 +193,14 @@ class SlotAPIController extends AppBaseController
             foreach ($typeSlots as $key => $slot) {
                 $checkAppointment = $this->appointmentRepository
                     ->checkSlotAvailable($request->input('user_id'), $slot->id);
-                if (!$checkAppointment) {
-                    $sortedSlotTimes[$key]['id']         = $slot->id;
-                    $sortedSlotTimes[$key]['start_time'] = $slot->start_time;
-                    $sortedSlotTimes[$key]['end_time']   = $slot->end_time;
-                    $sortedSlotTimes[$key]['day']        = $slot->day;
-                }
+                $isAvailable      = $checkAppointment ? false : true;
+//                if (!$checkAppointment) {
+                $sortedSlotTimes[$key]['id']           = $slot->id;
+                $sortedSlotTimes[$key]['start_time']   = $slot->start_time;
+                $sortedSlotTimes[$key]['end_time']     = $slot->end_time;
+                $sortedSlotTimes[$key]['day']          = $slot->day;
+                $sortedSlotTimes[$key]['is_available'] = $isAvailable;
+//                }
             }
 
             // Store sorted slot times under each type

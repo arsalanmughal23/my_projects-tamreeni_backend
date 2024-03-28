@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Requests\API\CreateMealAPIRequest;
 use App\Http\Requests\API\UpdateMealAPIRequest;
+use App\Http\Resources\MealResource;
 use App\Models\Meal;
 use App\Models\Exercise;
 use App\Repositories\MealRepository;
@@ -38,30 +39,7 @@ class MealAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $meals = $this->mealRepository->search(
-            $request->get('keyword'),
-            ['name', 'description'],
-            $request->only(['diet_type']),
-        );
-
-        $mealCategoryIds = $request->get('meal_category_ids');
-        if(is_array($mealCategoryIds) && count($mealCategoryIds)){
-            $mealCategoryIds = array_map('intval', $mealCategoryIds);
-            $meals = $meals->whereIn('meal_category_id', $mealCategoryIds);
-        }
-
-        $minCalorie = floatval($request->get('min_calories'));
-        $maxCalorie = floatval($request->get('max_calories'));
-        if($minCalorie)
-            $meals = $meals->where('calories', '>=', $minCalorie);
-        if($maxCalorie)
-            $meals = $meals->where('calories', '<=', $maxCalorie);
-
-        if($request->get('is_favourite')){
-            $meals = $meals->whereHas('favourites', function($q){
-                return $q->where('user_id', auth()->id());
-            });
-        }
+        $meals = $this->mealRepository->getMeals($request->only('diet_type', 'meal_category_ids', 'is_favourite','keyword', 'min_calories', 'max_calories'));
 
         $perPage = $request->get('per_page', config('constants.PER_PAGE'));
         if ($request->get('is_paginate')) {
@@ -70,7 +48,7 @@ class MealAPIController extends AppBaseController
             $meals = $meals->get();
         }
 
-        return $this->sendResponse($meals, 'Meals retrieved successfully');
+        return $this->sendResponse(MealResource::collection($meals), 'Meals retrieved successfully');
     }
 
     /**
@@ -88,7 +66,7 @@ class MealAPIController extends AppBaseController
 
         $meal = $this->mealRepository->create($input);
 
-        return $this->sendResponse($meal->toArray(), 'Meal saved successfully');
+        return $this->sendResponse(new MealResource($meal), 'Meal saved successfully');
     }
 
     /**
@@ -109,7 +87,7 @@ class MealAPIController extends AppBaseController
             return $this->sendError('Meal not found');
         }
 
-        return $this->sendResponse($meal->toArray(), 'Meal retrieved successfully');
+        return $this->sendResponse(new MealResource($meal), 'Meal retrieved successfully');
     }
 
     /**
@@ -135,7 +113,7 @@ class MealAPIController extends AppBaseController
 
         $meal = $this->mealRepository->update($input, $id);
 
-        return $this->sendResponse($meal->toArray(), 'Meal updated successfully');
+        return $this->sendResponse(new MealResource($meal), 'Meal updated successfully');
     }
 
     /**

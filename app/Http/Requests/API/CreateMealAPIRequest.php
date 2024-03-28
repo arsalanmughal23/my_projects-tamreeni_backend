@@ -5,7 +5,7 @@ namespace App\Http\Requests\API;
 use App\Models\Meal;
 use InfyOm\Generator\Request\APIRequest;
 
-class CreateMealAPIRequest extends APIRequest
+class CreateMealAPIRequest extends BaseAPIRequest
 {
     /**
      * Determine if the user is authorized to make this request.

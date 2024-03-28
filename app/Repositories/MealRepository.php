@@ -42,4 +42,45 @@ class MealRepository extends BaseRepository
     {
         return Meal::class;
     }
+
+    public function getMeals($params = []){
+
+        $query = Meal::query();
+
+        if(isset($params['diet_type'])){
+            $query->where('diet_type', $params['diet_type']);
+        }
+
+        if(isset($params['meal_category_ids'])){
+            $mealCategoryIds = array_map('intval', $params['meal_category_ids']);
+            $query->whereIn('meal_category_ids', $mealCategoryIds);
+        }
+
+        if(isset($params['is_favourite'])){
+            $query->whereHas('favourites', function($q){
+                return $q->where('user_id', auth()->id());
+            });
+        }
+
+        if (isset($params['keyword'])) {
+            $keyword = $params['keyword'];
+            $query->where(function ($q) use ($keyword) {
+                $q->where('name', 'like', '%' . $keyword . '%')
+                    ->orWhere('description', 'like', '%' . $keyword . '%');
+            });
+        }
+
+        if(isset($params['min_calories'])){
+            $minCalorie = floatval($params['min_calories']);
+            $query->where('calories', '>=', $minCalorie);
+        }
+
+        if(isset($params['max_calories'])){
+            $maxCalorie = floatval($params['max_calories']);
+            $query->where('calories', '<=', $maxCalorie);
+        }
+
+
+        return $query;
+    }
 }

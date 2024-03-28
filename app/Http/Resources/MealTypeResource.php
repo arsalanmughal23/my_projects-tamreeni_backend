@@ -16,8 +16,9 @@ class MealTypeResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'   => $this->id,
-            'name' => $this->getTranslation('name', app()->getLocale()),
+            'id'         => $this->id,
+            'name'       => $this->getTranslation('name', app()->getLocale()),
+            "created_at" => $this->created_at
         ];
     }
 

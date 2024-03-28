@@ -118,9 +118,14 @@ class Exercise extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      **/
-    public function exerciseEquipmentPivots()
+//    public function exerciseEquipmentPivots()
+//    {
+//        return $this->hasMany(ExerciseEquipmentPivot::class, 'exercise_id');
+//    }
+
+    public function equipment()
     {
-        return $this->hasMany(ExerciseEquipmentPivot::class, 'exercise_id');
+        return $this->belongsToMany(ExerciseEquipment::class, 'exercise_equipment_pivots', 'exercise_id', 'exercise_equipment_id');
     }
 
     public function favourites()

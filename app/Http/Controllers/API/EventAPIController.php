@@ -71,8 +71,9 @@ class EventAPIController extends AppBaseController
             return $this->sendError('Start time must be less than end time.');
         }
 
-        $input['user_id'] = $request->user()->id;
-        $event            = $this->eventRepository->create($input);
+        $input['user_id']          = $request->user()->id;
+        $input['record_video_url'] = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+        $event                     = $this->eventRepository->create($input);
 
         return $this->sendResponse(new EventResource($event), 'Event saved successfully');
     }

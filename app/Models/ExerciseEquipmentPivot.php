@@ -23,13 +23,12 @@ class ExerciseEquipmentPivot extends Model
     use HasFactory;
 
     public $table = 'exercise_equipment_pivots';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
 
     protected $dates = ['deleted_at'];
-
 
 
     public $fillable = [
@@ -43,8 +42,8 @@ class ExerciseEquipmentPivot extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
-        'exercise_id' => 'integer',
+        'id'                    => 'integer',
+        'exercise_id'           => 'integer',
         'exercise_equipment_id' => 'integer'
     ];
 
@@ -54,11 +53,11 @@ class ExerciseEquipmentPivot extends Model
      * @var array
      */
     public static $rules = [
-        'exercise_id' => 'required|integer',
+        'exercise_id'           => 'required|integer',
         'exercise_equipment_id' => 'required|integer',
-        'created_at' => 'nullable',
-        'deleted_at' => 'nullable',
-        'updated_at' => 'nullable'
+        'created_at'            => 'nullable',
+        'deleted_at'            => 'nullable',
+        'updated_at'            => 'nullable'
     ];
 
     /**
@@ -66,7 +65,7 @@ class ExerciseEquipmentPivot extends Model
      **/
     public function exerciseEquipment()
     {
-        return $this->belongsTo(\App\Models\ExerciseEquipment::class, 'exercise_equipment_id');
+        return $this->belongsTo(ExerciseEquipment::class, 'exercise_equipment_id');
     }
 
     /**
@@ -74,6 +73,6 @@ class ExerciseEquipmentPivot extends Model
      **/
     public function exercise()
     {
-        return $this->belongsTo(\App\Models\Exercise::class, 'exercise_id');
+        return $this->belongsTo(Exercise::class, 'exercise_id');
     }
 }

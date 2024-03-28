@@ -22,6 +22,7 @@ class CreateEventsTable extends Migration
             $table->integer('duration')->nullable();
             $table->text('description')->nullable();
             $table->text('image')->nullable();
+            $table->text('record_video_url')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->integer('body_part_id')->unsigned()->nullable();
             $table->integer('equipment_id')->unsigned()->nullable();

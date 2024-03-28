@@ -55,6 +55,7 @@ class Event extends Model
         'duration',
         'description',
         'image',
+        'record_video_url',
         'user_id',
         'body_part_id',
         'status',
@@ -69,16 +70,17 @@ class Event extends Model
      * @var array
      */
     protected $casts = [
-        'id'           => 'integer',
-        'title'        => 'string',
-        'date'         => 'string',
-        'duration'     => 'integer',
-        'description'  => 'string',
-        'image'        => 'string',
-        'user_id'      => 'integer',
-        'body_part_id' => 'integer',
-        'status'       => 'integer',
-        'equipment_id' => 'integer'
+        'id'               => 'integer',
+        'title'            => 'string',
+        'date'             => 'string',
+        'duration'         => 'integer',
+        'description'      => 'string',
+        'image'            => 'string',
+        'record_video_url' => 'string',
+        'user_id'          => 'integer',
+        'body_part_id'     => 'integer',
+        'status'           => 'integer',
+        'equipment_id'     => 'integer'
     ];
 
     /**
@@ -141,7 +143,7 @@ class Event extends Model
 
     public function getIsInterestedAttribute()
     {
-        $userId = auth()->user()->id ?? null;
+        $userId      = auth()->user()->id ?? null;
         $isFavourite = false;
 
         if ($userId) {

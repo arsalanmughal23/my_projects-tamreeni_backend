@@ -1,7 +1,7 @@
 <?php
 $databaseName = \DB::connection()->getDatabaseName();
-$tables = DB::select('SHOW TABLES');
-$db = 'Tables_in_' . $databaseName;
+$tables       = DB::select('SHOW TABLES');
+$db           = 'Tables_in_' . $databaseName;
 ?>
 @extends('layouts.app')
 
@@ -39,290 +39,7 @@ $db = 'Tables_in_' . $databaseName;
     </style>
 @endpush
 @section('content')
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-12">
-                    <h1>Crud Generator with Table</h1>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <div class="content px-3">
-        <div class="card">
-            <div class="card-body row ">
-                <div id="info" style="display: none"></div>
-                <div class="box box-primary col-lg-12">
-                    <div class="box-body">
-                        <form id="form">
-                            <input type="hidden" name="_token" id="token" value="{!! csrf_token() !!}" />
-                            <div class="col-md-12">
-                                <div class="form-group col-md-6">
-                                    <label for="txtModelName">Model Name<span class="required">*</span></label>
-                                    <input type="text" class="form-control" required id="txtModelName"
-                                        placeholder="Enter name">
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="menu_icon">Icon<span class="required">*</span></label>
-                                    <select class="form-control" id="txtIconName" name="icon" style="width: 100%;"
-                                        required>
-                                        @foreach (getIcons() as $item)
-                                            <option data-icon="fa-{{ $item }}" value="{{ $item }}">
-                                                {{ ucwords($item) }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group col-md-6">
-                                <label for="drdCommandType">Command Type<span class="required">*</span></label>
-                                <select id="drdCommandType" class="form-control" style="width: 100%">
-                                    <option value="infyom:api_scaffold" selected>API Scaffold Generator</option>
-                                    <option value="infyom:api">API Generator</option>
-                                    <option value="infyom:scaffold">Scaffold Generator</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="txtCustomTblName">Custom Table Name<span class="required">*</span></label>
-                                <input type="text" class="form-control" id="txtCustomTblName"
-                                    placeholder="Enter table name" required>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <label for="txtModelName">Options<span class="required">*</span></label>
-
-                                <div class="form-inline form-group" style="border-color: transparent">
-                                    <div class="checkbox chk-align">
-                                        <label>
-                                            <input type="checkbox" class="flat-red" id="chkDelete" ><span
-                                                class="chk-label-margin"> Soft Delete </span>
-                                        </label>
-                                    </div>
-                                    <div class="checkbox chk-align">
-                                        <label>
-                                            <input type="checkbox" class="flat-red" id="chkSave" checked disabled> <span
-                                                class="chk-label-margin">Save Schema</span>
-                                        </label>
-                                    </div>
-                                    <div class="checkbox chk-align hide" id="chSwag">
-                                        <label>
-                                            <input type="checkbox" class="flat-red" id="chkSwagger" checked disabled> <span
-                                                class="chk-label-margin">Swagger</span>
-                                        </label>
-                                    </div>
-                                    <div class="checkbox chk-align" id="chTest">
-                                        <label>
-                                            <input type="checkbox" class="flat-red" id="chkTestCases" checked disabled><span
-                                                class="chk-label-margin">Test Cases</span>
-                                        </label>
-                                    </div>
-                                    <div class="checkbox chk-align" id="chDataTable">
-                                        <label>
-                                            <input type="checkbox" class="flat-red" id="chkDataTable" ><span
-                                                class="chk-label-margin">Datatables</span>
-                                        </label>
-                                    </div>
-                                    <div class="checkbox chk-align" id="chMigration">
-                                        <label>
-                                            <input type="checkbox" class="flat-red" id="chkMigration" checked disabled> <span
-                                                class="chk-label-margin">Migration</span>
-                                        </label>
-                                    </div>
-                                    <div class="checkbox chk-align" id="chForceMigrate">
-                                        <label>
-                                            <input type="checkbox" class="flat-red" id="chkForceMigrate"> <span
-                                                class="chk-label-margin">Force Migrate</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group col-md-3">
-                                <label for="txtPrefix">Prefix</label>
-                                <input type="text" class="form-control" id="txtPrefix" placeholder="Enter prefix">
-                            </div>
-
-                            <div class="form-group col-md-3">
-                                <label for="txtPaginate">Paginate</label>
-                                <input type="number" class="form-control" value="10" id="txtPaginate"
-                                    placeholder="">
-                            </div>
-
-                            <div class="form-group col-md-12" style="margin-top: 17px">
-                                <div class="form-control" style="border-color: transparent;padding-left: 0px">
-                                    <label style="font-size: 18px">Fields</label>
-                                </div>
-                            </div>
-
-                            <div class="table-responsive col-md-12">
-                                <table class="table table-striped table-bordered" id="table">
-                                    <thead class="no-border">
-                                        <tr>
-                                            <th>Field Name</th>
-                                            <th>DB Type</th>
-                                            <th>Validations</th>
-                                            <th>Html Type</th>
-                                            <th style="width: 68px">Primary</th>
-                                            <th style="width: 86px">Is Foreign</th>
-                                            <th style="width: 87px">Searchable</th>
-                                            <th style="width: 63px">Fillable</th>
-                                            <th style="width: 75px">In Form</th>
-                                            <th style="width: 77px">In Index</th>
-                                            <th style="width: 67px">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="container" class="no-border-x no-border-y ui-sortable">
-
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div class="form-inline col-md-12" style="padding-top: 10px">
-                                <div class="form-group chk-align" style="border-color: transparent;">
-                                    <button type="button" class="btn btn-success btn-flat btn-green" id="btnAdd"> Add
-                                        Field
-                                    </button>
-                                </div>
-                                <div class="form-group chk-align" style="border-color: transparent;">
-                                    <button type="button" class="btn btn-success btn-flat btn-green" id="btnPrimary">
-                                        Add
-                                        Primary
-                                    </button>
-                                </div>
-                                <div class="form-group chk-align" style="border-color: transparent;">
-                                    <button type="button" class="btn btn-success btn-flat btn-green" id="btnTimeStamps">
-                                        Add
-                                        Timestamps
-                                    </button>
-                                </div>
-                                <div class="form-group" style="border-color: transparent;">
-                                    <button type="button" class="btn btn-success btn-flat btn-green"
-                                        id="btnRelationShip"> Add
-                                        RelationShip
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="table-responsive col-md-12" id="relationShip"
-                                style="margin-top:35px;display: none">
-                                <table class="table table-striped table-bordered" id="table">
-                                    <thead class="no-border">
-                                        <tr>
-                                            <th>Relation Type</th>
-                                            <th>Foreign Model<span class="required">*</span></th>
-                                            <th>Foreign Key</th>
-                                            <th>Local Key</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="rsContainer" class="no-border-x no-border-y ui-sortable">
-
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="form-inline col-md-3">
-
-                            </div>
-
-                            <div class="form-inline col-md-12" style="padding:15px 15px;text-align: right">
-                                <div class="form-group" style="border-color: transparent;padding-left: 10px">
-                                    <button type="submit" class="btn btn-flat btn-primary btn-blue"
-                                        id="btnGenerate">Generate
-                                    </button>
-                                </div>
-                                <div class="form-group" style="border-color: transparent;padding-left: 10px">
-                                    <button type="button" class="btn btn-default btn-flat" id="btnReset"
-                                        data-toggle="modal" data-target="#confirm-delete"> Reset
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog"
-                                aria-labelledby="myModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-
-                                        <div class="modal-header">
-                                            <h4 class="modal-title" id="myModalLabel">Confirm Reset</h4>
-
-                                            <button type="button" class="close" data-dismiss="modal"
-                                                aria-hidden="true">&times;</button>
-                                        </div>
-
-                                        <div class="modal-body">
-                                            <p style="font-size: 16px">This will reset all of your fields. Do you want to
-                                                proceed?</p>
-
-                                            <p class="debug-url"></p>
-                                        </div>
-
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-flat btn-default"
-                                                data-dismiss="modal">No
-                                            </button>
-                                            <a id="btnModelReset" class="btn btn-flat btn-danger btn-ok"
-                                                data-dismiss="modal">Yes</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </form>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-12">
-                    <h1>Rollback Crud</h1>
-                </div>
-            </div>
-        </div>
-    </section>
-    <div class="content px-3">
-        <div class="card">
-            <div class="card-body row">
-                <div id="rollbackInfo" style="display: none"></div>
-                <div class="box box-primary col-lg-12">
-                    <div class="box-body">
-                        <form id="rollbackForm">
-                            <input type="hidden" name="_token" id="rbToken" value="{!! csrf_token() !!}" />
-
-                            <div class="form-group col-md-4">
-                                <label for="txtRBModelName">Model Name<span class="required">*</span></label>
-                                <input type="text" class="form-control" required id="txtRBModelName"
-                                    placeholder="Enter name">
-                            </div>
-                            <div class="form-group col-md-4 ">
-                                <label for="drdRBCommandType">Command Type</label>
-                                <select id="drdRBCommandType" class="form-control" style="width: 100%">
-                                    <option value="api_scaffold" selected>API Scaffold Generator</option>
-                                    <option value="api">API Generator</option>
-                                    <option value="scaffold">Scaffold Generator</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-4 hide">
-                                <label for="txtRBPrefix">Prefix</label>
-                                <input type="text" class="form-control" id="txtRBPrefix" placeholder="Enter prefix">
-                            </div>
-                            <div class="form-inline col-md-12" style="padding:15px 15px;text-align: right">
-                                <div class="form-group" style="border-color: transparent;padding-left: 10px">
-                                    <button type="submit" class="btn btn-flat btn-primary btn-blue"
-                                        id="btnRollback">Rollback
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <section class="content-header">
         <div class="container-fluid">
@@ -339,7 +56,7 @@ $db = 'Tables_in_' . $databaseName;
                 <div class="box box-primary col-lg-12">
                     <div class="box-body">
                         <form method="POST" action="{{ route('dbtables.generate_crud_from_table') }}">
-                            <input type="hidden" name="_token" id="rbToken" value="{!! csrf_token() !!}" />
+                            <input type="hidden" name="_token" id="rbToken" value="{!! csrf_token() !!}"/>
 
                             <div class="form-group col-md-4">
                                 <label>Tables</label>
@@ -363,13 +80,13 @@ $db = 'Tables_in_' . $databaseName;
                             <div class="form-group col-md-12">
                                 <label>
                                     <input type="checkbox" class="flat-red" id="customModel"><span
-                                        class="chk-label-margin"> Custom Model Name </span>
+                                            class="chk-label-margin"> Custom Model Name </span>
                                 </label>
                             </div>
                             <div class="form-group col-md-4 show_model hide">
                                 <label>Model Name</label>
                                 <input type="text" name="model_name" class="form-control"
-                                    placeholder="Enter Model Name">
+                                       placeholder="Enter Model Name">
                             </div>
                             <div class="form-inline col-md-12" style="padding:15px 15px;text-align: right">
                                 <div class="form-group" style="border-color: transparent;padding-left: 10px">
@@ -443,7 +160,7 @@ $db = 'Tables_in_' . $databaseName;
     <script src="https://cdnjs.cloudflare.com/ajax/libs/iCheck/1.0.2/icheck.min.js"></script>
 
     <script>
-        $("#customModel").on("ifChanged", function() {
+        $("#customModel").on("ifChanged", function () {
             if ($(this).prop('checked') == true) {
                 $('.show_model').removeClass('hide');
             } else {
@@ -452,14 +169,14 @@ $db = 'Tables_in_' . $databaseName;
         });
 
         var fieldIdArr = [];
-        $(function() {
+        $(function () {
             $('input').iCheck({
                 checkboxClass: 'icheckbox_square-blue',
                 radioClass: 'iradio_square-blue',
                 increaseArea: '20%' // optional
             });
 
-            $("#drdCommandType").on("change", function() {
+            $("#drdCommandType").on("change", function () {
                 if ($(this).val() == "infyom:scaffold") {
                     $('#chSwag').hide();
                     $('#chTest').hide();
@@ -469,7 +186,7 @@ $db = 'Tables_in_' . $databaseName;
                 }
             });
 
-            $("#chkForceMigrate").on("ifChanged", function() {
+            $("#chkForceMigrate").on("ifChanged", function () {
                 if ($(this).prop('checked') == true) {
                     $('#chkMigration').iCheck("check", true);
                     $('#chkMigration').iCheck("disable", true);
@@ -478,20 +195,20 @@ $db = 'Tables_in_' . $databaseName;
                 }
             });
 
-            $(document).ready(function() {
+            $(document).ready(function () {
                 var htmlStr = '<tr class="item" style="display: table-row;"></tr>';
                 var commonComponent = $(htmlStr).filter("tr").load('{{ route('io_field_template') }}');
                 var relationStr = '<tr class="relationItem" style="display: table-row;"></tr>';
                 var relationComponent = $(relationStr).filter("tr").load(
                     '{{ route('io_relation_field_template') }}');
 
-                $("#btnAdd").on("click", function() {
+                $("#btnAdd").on("click", function () {
                     var item = $(commonComponent).clone();
                     initializeCheckbox(item);
                     $("#container").append(item);
                 });
 
-                $("#btnTimeStamps").on("click", function() {
+                $("#btnTimeStamps").on("click", function () {
                     var item_created_at = $(commonComponent).clone();
                     $(item_created_at).find('.txtFieldName').val("created_at");
                     renderTimeStampData(item_created_at);
@@ -506,14 +223,14 @@ $db = 'Tables_in_' . $databaseName;
                     $("#container").append(item_updated_at);
                 });
 
-                $("#btnPrimary").on("click", function() {
+                $("#btnPrimary").on("click", function () {
                     var item = $(commonComponent).clone();
                     renderPrimaryData(item);
                     initializeCheckbox(item);
                     $("#container").append(item);
                 });
 
-                $("#btnRelationShip").on("click", function() {
+                $("#btnRelationShip").on("click", function () {
                     $("#relationShip").show();
                     var item = $(relationComponent).clone();
 
@@ -523,7 +240,7 @@ $db = 'Tables_in_' . $databaseName;
 
                     var relationType = $(item).find('.drdRelationType');
 
-                    $(relationType).select2().on('change', function() {
+                    $(relationType).select2().on('change', function () {
                         if ($(relationType).val() == "mtm")
                             $(item).find('.foreignTable').show();
                         else
@@ -533,17 +250,17 @@ $db = 'Tables_in_' . $databaseName;
                     $("#rsContainer").append(item);
                 });
 
-                $("#btnModelReset").on("click", function() {
+                $("#btnModelReset").on("click", function () {
                     $("#container").html("");
                     $('input:text').val("");
                     $('input:checkbox').iCheck('uncheck');
 
                 });
 
-                $("#form").on("submit", function() {
+                $("#form").on("submit", function () {
                     var fieldArr = [];
                     var relationFieldArr = [];
-                    $('.item').each(function() {
+                    $('.item').each(function () {
 
                         var htmlType = $(this).find('.drdHtmlType');
                         var htmlValue = "";
@@ -570,7 +287,7 @@ $db = 'Tables_in_' . $databaseName;
                         });
                     });
 
-                    $('.relationItem').each(function() {
+                    $('.relationItem').each(function () {
                         relationFieldArr.push({
                             relationType: $(this).find('.drdRelationType').val(),
                             foreignModel: $(this).find('.txtForeignModel').val(),
@@ -609,7 +326,7 @@ $db = 'Tables_in_' . $databaseName;
                         dataType: 'json',
                         contentType: 'application/json',
                         data: JSON.stringify(data),
-                        success: function(result) {
+                        success: function (result) {
 
                             $.ajax({
                                 url: '{{ route('dbtables.create_menus') }}',
@@ -618,25 +335,25 @@ $db = 'Tables_in_' . $databaseName;
                                     db_tables: $('#txtCustomTblName').val(),
                                     menu_icon: $('#txtIconName').val()
                                 },
-                                success: function(html) {
+                                success: function (html) {
                                     console.log(html);
                                 }
                             });
 
                             $.ajax({
                                 url: "{{ url('run_artisan_command/optimize') }}",
-                                success: function(html) {
+                                success: function (html) {
                                     $.ajax({
                                         url: "{{ url('create_permissions') }}/" +
                                             $('#txtModelName')
-                                        .val(),
-                                        success: function(html) {
+                                                .val(),
+                                        success: function (html) {
                                             $("#info").html("");
                                             $("#info").append(
                                                 '<div class="alert alert-success"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>' +
                                                 result +
                                                 '</strong></div>'
-                                                );
+                                            );
                                             $("#info").show();
                                             var $container = $(
                                                 "html,body");
@@ -644,28 +361,28 @@ $db = 'Tables_in_' . $databaseName;
                                                 '#info');
                                             $container.animate({
                                                     scrollTop: $scrollTo
-                                                        .offset()
-                                                        .top -
+                                                            .offset()
+                                                            .top -
                                                         $container
-                                                        .offset()
-                                                        .top,
+                                                            .offset()
+                                                            .top,
                                                     scrollLeft: 0
                                                 },
                                                 300);
                                             setTimeout(
-                                            function() {
-                                                $('#info')
-                                                    .fadeOut(
-                                                        'fast'
+                                                function () {
+                                                    $('#info')
+                                                        .fadeOut(
+                                                            'fast'
                                                         );
-                                            }, 3000);
+                                                }, 3000);
                                             location.reload();
                                         }
                                     });
                                 }
                             });
                         },
-                        error: function(result) {
+                        error: function (result) {
                             var result = JSON.parse(JSON.stringify(result));
                             var errorMessage = '';
                             if (result.hasOwnProperty('responseJSON') && result
@@ -683,7 +400,7 @@ $db = 'Tables_in_' . $databaseName;
                             $container.animate({
                                 scrollTop: $scrollTo.offset().top
                             }, 300);
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 $('#info').fadeOut('fast');
                             }, 3000);
                         }
@@ -692,7 +409,7 @@ $db = 'Tables_in_' . $databaseName;
                     return false;
                 });
 
-                $('#rollbackForm').on("submit", function(e) {
+                $('#rollbackForm').on("submit", function (e) {
                     e.preventDefault();
 
                     var data = {
@@ -708,7 +425,7 @@ $db = 'Tables_in_' . $databaseName;
                         dataType: 'json',
                         contentType: 'application/json',
                         data: JSON.stringify(data),
-                        success: function(result) {
+                        success: function (result) {
                             var result = JSON.parse(JSON.stringify(result));
 
                             $("#rollbackInfo").html("");
@@ -724,7 +441,7 @@ $db = 'Tables_in_' . $databaseName;
                                     .offset().top,
                                 scrollLeft: 0
                             }, 300);
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 $('#rollbackInfo').fadeOut('fast');
                             }, 3000);
                             $.ajax({
@@ -732,7 +449,7 @@ $db = 'Tables_in_' . $databaseName;
                                 data: {
                                     model: $('#txtRBModelName').val()
                                 },
-                                success: function(html) {
+                                success: function (html) {
                                     $("#results").append(html);
 
                                     $.ajax({
@@ -740,21 +457,18 @@ $db = 'Tables_in_' . $databaseName;
                                         data: {
                                             model_name: $(
                                                 '#txtRBModelName'
-                                                ).val(),
+                                            ).val(),
                                         },
-                                        success: function(html) {
+                                        success: function (html) {
                                             location.reload();
                                         }
                                     });
 
 
-
-
-
                                 }
                             });
                         },
-                        error: function(result) {
+                        error: function (result) {
                             var result = JSON.parse(JSON.stringify(result));
                             var errorMessage = '';
                             if (result.hasOwnProperty('responseJSON') && result
@@ -767,7 +481,7 @@ $db = 'Tables_in_' . $databaseName;
                                 '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Fail! </strong>' +
                                 errorMessage + '</div>');
                             $("#rollbackInfo").show();
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 $('#rollbackInfo').fadeOut('fast');
                             }, 3000);
                         }
@@ -775,22 +489,22 @@ $db = 'Tables_in_' . $databaseName;
                 });
 
 
-                $('#schemaFile').change(function() {
+                $('#schemaFile').change(function () {
                     var ext = $(this).val().split('.').pop().toLowerCase();
                     if (ext != 'json') {
                         $("#schemaInfo").html("");
                         $("#schemaInfo").append(
                             '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Schema file must be json</strong></div>'
-                            );
+                        );
                         $("#schemaInfo").show();
                         $(this).replaceWith($(this).val('').clone(true));
-                        setTimeout(function() {
+                        setTimeout(function () {
                             $('div.alert').fadeOut('fast');
                         }, 3000);
                     }
                 });
 
-                $('#schemaForm').on("submit", function(e) {
+                $('#schemaForm').on("submit", function (e) {
                     e.preventDefault();
 
                     $.ajax({
@@ -799,7 +513,7 @@ $db = 'Tables_in_' . $databaseName;
                         data: new FormData($(this)[0]),
                         processData: false,
                         contentType: false,
-                        success: function(result) {
+                        success: function (result) {
                             var result = JSON.parse(JSON.stringify(result));
 
                             $("#schemaInfo").html("");
@@ -814,12 +528,12 @@ $db = 'Tables_in_' . $databaseName;
                                     .offset().top,
                                 scrollLeft: 0
                             }, 300);
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 $('#schemaInfo').fadeOut('fast');
                             }, 3000);
                             location.reload();
                         },
-                        error: function(result) {
+                        error: function (result) {
                             var result = JSON.parse(JSON.stringify(result));
                             var errorMessage = '';
                             if (result.hasOwnProperty('responseJSON') && result
@@ -832,7 +546,7 @@ $db = 'Tables_in_' . $databaseName;
                                 '<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Fail! </strong>' +
                                 errorMessage + '</div>');
                             $("#schemaInfo").show();
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 $('#schemaInfo').fadeOut('fast');
                             }, 3000);
                         }
@@ -874,13 +588,13 @@ $db = 'Tables_in_' . $databaseName;
                     width: '100%'
                 });
 
-                $(el).find(".chkPrimary").on("ifClicked", function() {
-                    $('.chkPrimary').each(function() {
+                $(el).find(".chkPrimary").on("ifClicked", function () {
+                    $('.chkPrimary').each(function () {
                         $(this).iCheck('uncheck');
                     });
                 });
 
-                $(el).find(".chkForeign").on("ifChanged", function() {
+                $(el).find(".chkForeign").on("ifChanged", function () {
                     if ($(this).prop('checked') == true) {
                         $(el).find('.foreignTable').show();
                     } else {
@@ -888,7 +602,7 @@ $db = 'Tables_in_' . $databaseName;
                     }
                 });
 
-                $(el).find(".chkPrimary").on("ifChanged", function() {
+                $(el).find(".chkPrimary").on("ifChanged", function () {
                     if ($(this).prop('checked') == true) {
                         $(el).find(".chkSearchable").iCheck('uncheck');
                         $(el).find(".chkFillable").iCheck('uncheck');
@@ -898,7 +612,7 @@ $db = 'Tables_in_' . $databaseName;
 
                 var htmlType = $(el).find('.drdHtmlType');
 
-                $(htmlType).select2().on('change', function() {
+                $(htmlType).select2().on('change', function () {
                     if ($(htmlType).val() == "select" || $(htmlType).val() == "radio")
                         $(el).find('.htmlValue').show();
                     else

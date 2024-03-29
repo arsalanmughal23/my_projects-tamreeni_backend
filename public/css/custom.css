@@ -1,0 +1,9 @@
+#dataTableBuilder_filter {
+    position: relative;
+    float: right;
+}
+
+#dataTableBuilder_info {
+    position: relative;
+    float: left;
+}

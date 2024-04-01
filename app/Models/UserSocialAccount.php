@@ -26,13 +26,12 @@ class UserSocialAccount extends Model
     use HasFactory;
 
     public $table = 'user_social_accounts';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
 
     protected $dates = ['deleted_at'];
-
 
 
     public $fillable = [
@@ -50,13 +49,13 @@ class UserSocialAccount extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
-        'user_id' => 'integer',
-        'platform' => 'string',
-        'client_id' => 'string',
-        'token' => 'string',
+        'id'         => 'integer',
+        'user_id'    => 'integer',
+        'platform'   => 'string',
+        'client_id'  => 'string',
+        'token'      => 'string',
         'expires_at' => 'datetime',
-        'status' => 'boolean'
+        'status'     => 'boolean'
     ];
 
     /**
@@ -65,16 +64,16 @@ class UserSocialAccount extends Model
      * @var array
      */
     public static $rules = [
-        'name'          => 'sometimes|string|max:250',
-        'first_name'    => 'sometimes|string|max:250',
-        'last_name'     => 'sometimes|string|max:250',
-        'email'         => 'email|required_if:platform,google|max:250',
-        'image'         => 'sometimes|url',
-        'platform'      => 'required|in:google,apple',
-        'client_id'     => 'required|max:250',
-        'token'         => 'required',
-        'device_type'   => 'required|in:ios,android,web',
-        'device_token'  => 'required',
+        'name'         => 'sometimes|string|max:250',
+        'first_name'   => 'sometimes|string|max:250',
+        'last_name'    => 'sometimes|string|max:250',
+        'email'        => 'email|required_if:platform,google|max:250',
+        'image'        => 'sometimes|url',
+        'platform'     => 'required|in:google,apple,facebook',
+        'client_id'    => 'required|max:250',
+        'token'        => 'required',
+        'device_type'  => 'required|in:ios,android,web',
+        'device_token' => 'required',
         'expires_at'   => 'sometimes|date|date_format:"Y-m-d H:i:s"',
     ];
 

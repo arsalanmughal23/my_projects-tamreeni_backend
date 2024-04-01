@@ -9,8 +9,7 @@ use App\Repositories\BaseRepository;
  * Class UserSocialAccountRepository
  * @package App\Repositories
  * @version January 27, 2024, 1:02 am UTC
-*/
-
+ */
 class UserSocialAccountRepository extends BaseRepository
 {
     /**
@@ -42,9 +41,5 @@ class UserSocialAccountRepository extends BaseRepository
     {
         return UserSocialAccount::class;
     }
-    
-    public function updateOrCreate($search, $data)
-    {
-        return $this->model->updateOrCreate($search, $data);
-    }
+
 }

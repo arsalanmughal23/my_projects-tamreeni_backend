@@ -34,12 +34,7 @@ class SettingAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $settings = $this->settingRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
-        $settings = $settings[0];
+        $settings = $this->settingRepository->first();
         return $this->sendResponse($settings->toArray(), 'Settings retrieved successfully');
     }
 

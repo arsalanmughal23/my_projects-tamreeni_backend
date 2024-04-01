@@ -2,25 +2,25 @@
 
 namespace App\Repositories;
 
-use App\Models\UserSocialAccount;
+use App\Models\WorkoutDay;
 use App\Repositories\BaseRepository;
 
 /**
- * Class UserSocialAccountRepository
+ * Class WorkoutDayRepository
  * @package App\Repositories
- * @version January 27, 2024, 1:02 am UTC
- */
-class UserSocialAccountRepository extends BaseRepository
+ * @version April 1, 2024, 8:01 am UTC
+*/
+
+class WorkoutDayRepository extends BaseRepository
 {
     /**
      * @var array
      */
     protected $fieldSearchable = [
         'user_id',
-        'platform',
-        'client_id',
-        'token',
-        'expires_at',
+        'name',
+        'description',
+        'duration',
         'status'
     ];
 
@@ -39,7 +39,6 @@ class UserSocialAccountRepository extends BaseRepository
      **/
     public function model()
     {
-        return UserSocialAccount::class;
+        return WorkoutDay::class;
     }
-
 }

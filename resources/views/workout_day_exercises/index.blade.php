@@ -5,12 +5,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Packages</h1>
+                    <h1>Workout Day Exercises</h1>
                 </div>
-                @can('packages.create')
+                @can('workout_day_exercises.create')
                     <div class="col-sm-6">
                         <a class="btn btn-primary float-right"
-                        href="{{ route('packages.create') }}">
+                        href="{{ route('workout_day_exercises.create') }}">
                             Add New
                         </a>
                     </div>
@@ -27,11 +27,11 @@
 
         <div class="card">
             <div class="card-body p-0">
-                @include('packages.table')
+                @include('workout_day_exercises.table')
 
                 <div class="card-footer clearfix">
                     <div class="float-right">
-
+                        
                     </div>
                 </div>
             </div>

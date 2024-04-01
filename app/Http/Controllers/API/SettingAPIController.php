@@ -14,7 +14,6 @@ use Response;
  * Class SettingController
  * @package App\Http\Controllers\API
  */
-
 class SettingAPIController extends AppBaseController
 {
     /** @var  SettingRepository */
@@ -35,12 +34,7 @@ class SettingAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $settings = $this->settingRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
-
+        $settings = $this->settingRepository->first();
         return $this->sendResponse($settings->toArray(), 'Settings retrieved successfully');
     }
 

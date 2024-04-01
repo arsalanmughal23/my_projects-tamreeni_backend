@@ -136,3 +136,9 @@ Route::resource('user_subscriptions', App\Http\Controllers\UserSubscriptionContr
 
 
 Route::resource('meal_types', App\Http\Controllers\MealTypeController::class);
+
+
+Route::resource('workout_days', App\Http\Controllers\WorkoutDayController::class);
+
+
+Route::resource('workout_day_exercises', App\Http\Controllers\WorkoutDayExerciseController::class);

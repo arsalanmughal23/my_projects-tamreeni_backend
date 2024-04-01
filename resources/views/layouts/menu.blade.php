@@ -218,3 +218,23 @@
 @endcan
 
 
+@canany(['workout_days.index', 'workout_days.create', 'workout_days.show', 'workout_days.edit', 'workout_days.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('workout_days.index') }}"
+        class="nav-link {{ Request::is('workout_days*') ? 'active' : '' }}">
+            <p>Workout Days</p>
+        </a>
+    </li>
+@endcan
+
+
+@canany(['workout_day_exercises.index', 'workout_day_exercises.create', 'workout_day_exercises.show', 'workout_day_exercises.edit', 'workout_day_exercises.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('workout_day_exercises.index') }}"
+        class="nav-link {{ Request::is('workout_day_exercises*') ? 'active' : '' }}">
+            <p>Workout Day Exercises</p>
+        </a>
+    </li>
+@endcan
+
+

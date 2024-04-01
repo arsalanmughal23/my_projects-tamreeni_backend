@@ -9,8 +9,7 @@ use App\Repositories\BaseRepository;
  * Class UserDeviceRepository
  * @package App\Repositories
  * @version January 26, 2024, 11:25 pm UTC
-*/
-
+ */
 class UserDeviceRepository extends BaseRepository
 {
     /**
@@ -38,10 +37,5 @@ class UserDeviceRepository extends BaseRepository
     public function model()
     {
         return UserDevice::class;
-    }
-
-    public function updateOrCreate($search, $data)
-    {
-        return $this->model->updateOrCreate($search, $data);
     }
 }

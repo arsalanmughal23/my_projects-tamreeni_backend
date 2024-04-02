@@ -30,7 +30,7 @@ class WorkoutPlan extends Model
     const UPDATED_AT = 'updated_at';
 
     const STATUS_TODO        = 10;
-    const STATUS_IN_PROGRESS = 10;
+    const STATUS_IN_PROGRESS = 20;
     const STATUS_COMPLETED   = 30;
 
     protected $dates = ['deleted_at'];

@@ -59,41 +59,40 @@ class WorkoutDayRepository extends BaseRepository
                 $randomDates = array_merge($randomDates, pickRandomIndices($weekDates, $numberOfDaysPerWeek));
             }
         }
+        $workoutPlan = WorkoutPlan::create([
+            'user_id'    => \Auth::id(),
+            'name'       => 'Workout Plan',
+            'start_date' => $randomDates[0],
+            'end_date'   => $randomDates[count($randomDates) - 1],
+            'status'     => WorkoutPlan::STATUS_TODO
 
+        ]);
         switch ($user->goal) {
             case Option::Q1_OPT1__LOSE_WEIGHT:
-                $this->generateWaitLosePlan($randomDates, $user);
+                $this->generateWaitLosePlan($workoutPlan->id, $randomDates, $user);
                 break;
             case Option::Q1_OPT2__GAIN_WEIGHT:
-                $this->generateWaitGainPlan($randomDates, $user);
+                $this->generateWaitGainPlan($workoutPlan->id, $randomDates, $user);
                 break;
             case Option::Q1_OPT3__BUILD_MUSCLE:
-                $this->generateBuildMusclesPlan($randomDates, $user);
+                $this->generateBuildMusclesPlan($workoutPlan->id, $randomDates, $user);
                 break;
             case Option::Q1_OPT4__GET_FIT:
-                $this->generateGetFitPlan($randomDates, $user);
+                $this->generateGetFitPlan($workoutPlan->id, $randomDates, $user);
                 break;
         }
+        return $workoutPlan;
     }
 
-    public function generateWaitLosePlan($randomDates, $user)
+    public function generateWaitLosePlan($workoutPlanId, $randomDates, $user)
     {
         //TODO: get exercises as per define criteria
         $exercises              = Exercise::all();
         $durationOfAllExercises = array_sum($exercises->pluck('duration_in_m')->toArray());
-        /* create workout plan */
-        $workoutPlan = WorkoutPlan::create([
-            'user_id'    => \Auth::id(),
-            'name'       => 'Workout Plan',
-            'start_date' => $randomDates[0],
-            'end_date'   => $randomDates[count($randomDates) - 1],
-            'status'     => WorkoutPlan::STATUS_TODO
-
-        ]);
         /* create workout day and workout day exercises  */
         foreach ($randomDates as $key => $randomDate) {
             $workoutDay = WorkoutDay::create([
-                'workout_plan_id' => $workoutPlan->id,
+                'workout_plan_id' => $workoutPlanId,
                 'name'            => 'Day 0' . $key + 1,
                 'description'     => WorkoutDay::DESCRIPTION,
                 'date'            => $randomDate,
@@ -112,27 +111,17 @@ class WorkoutDayRepository extends BaseRepository
                 ]);
             }
         }
-        return [];
     }
 
-    public function generateWaitGainPlan($randomDates, $user)
+    public function generateWaitGainPlan($workoutPlanId, $randomDates, $user)
     {
         //TODO: get exercises as per define criteria
         $exercises              = Exercise::all();
         $durationOfAllExercises = array_sum($exercises->pluck('duration_in_m')->toArray());
-        /* create workout plan */
-        $workoutPlan = WorkoutPlan::create([
-            'user_id'    => \Auth::id(),
-            'name'       => 'Workout Plan',
-            'start_date' => $randomDates[0],
-            'end_date'   => $randomDates[count($randomDates) - 1],
-            'status'     => WorkoutPlan::STATUS_TODO
-
-        ]);
         /* create workout day and workout day exercises  */
         foreach ($randomDates as $key => $randomDate) {
             $workoutDay = WorkoutDay::create([
-                'workout_plan_id' => $workoutPlan->id,
+                'workout_plan_id' => $workoutPlanId,
                 'name'            => 'Day 0' . $key + 1,
                 'description'     => WorkoutDay::DESCRIPTION,
                 'date'            => $randomDate,
@@ -151,27 +140,17 @@ class WorkoutDayRepository extends BaseRepository
                 ]);
             }
         }
-        return [];
     }
 
-    public function generateBuildMusclesPlan($randomDates, $user)
+    public function generateBuildMusclesPlan($workoutPlanId, $randomDates, $user)
     {
         //TODO: get exercises as per define criteria
         $exercises              = Exercise::all();
         $durationOfAllExercises = array_sum($exercises->pluck('duration_in_m')->toArray());
-        /* create workout plan */
-        $workoutPlan = WorkoutPlan::create([
-            'user_id'    => \Auth::id(),
-            'name'       => 'Workout Plan',
-            'start_date' => $randomDates[0],
-            'end_date'   => $randomDates[count($randomDates) - 1],
-            'status'     => WorkoutPlan::STATUS_TODO
-
-        ]);
         /* create workout day and workout day exercises  */
         foreach ($randomDates as $key => $randomDate) {
             $workoutDay = WorkoutDay::create([
-                'workout_plan_id' => $workoutPlan->id,
+                'workout_plan_id' => $workoutPlanId,
                 'name'            => 'Day 0' . $key + 1,
                 'description'     => WorkoutDay::DESCRIPTION,
                 'date'            => $randomDate,
@@ -190,27 +169,17 @@ class WorkoutDayRepository extends BaseRepository
                 ]);
             }
         }
-        return [];
     }
 
-    public function generateGetFitPlan($randomDates, $user)
+    public function generateGetFitPlan($workoutPlanId, $randomDates, $user)
     {
         //TODO: get exercises as per define criteria
         $exercises              = Exercise::all();
         $durationOfAllExercises = array_sum($exercises->pluck('duration_in_m')->toArray());
-        /* create workout plan */
-        $workoutPlan = WorkoutPlan::create([
-            'user_id'    => \Auth::id(),
-            'name'       => 'Workout Plan',
-            'start_date' => $randomDates[0],
-            'end_date'   => $randomDates[count($randomDates) - 1],
-            'status'     => WorkoutPlan::STATUS_TODO
-
-        ]);
         /* create workout day and workout day exercises  */
         foreach ($randomDates as $key => $randomDate) {
             $workoutDay = WorkoutDay::create([
-                'workout_plan_id' => $workoutPlan->id,
+                'workout_plan_id' => $workoutPlanId,
                 'name'            => 'Day 0' . $key + 1,
                 'description'     => WorkoutDay::DESCRIPTION,
                 'date'            => $randomDate,
@@ -229,6 +198,5 @@ class WorkoutDayRepository extends BaseRepository
                 ]);
             }
         }
-        return [];
     }
 }

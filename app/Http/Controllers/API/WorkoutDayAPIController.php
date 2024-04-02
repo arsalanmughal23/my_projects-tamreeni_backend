@@ -144,9 +144,9 @@ class WorkoutDayAPIController extends AppBaseController
             if (!$user->goal) {
                 return $this->sendError('Goal not set');
             }
-            $plan = $this->workoutDayRepository->generateWorkoutPlan($user);
+            $workoutPlan = $this->workoutDayRepository->generateWorkoutPlan($user);
             DB::commit();
-            return $this->sendResponse($plan, 'Workout Plan generated successfully');
+            return $this->sendResponse($workoutPlan->toArray(), 'Workout Plan generated successfully');
         } catch (\Exception $exception) {
             DB::rollback();
             $this->sendError($exception->getMessage());

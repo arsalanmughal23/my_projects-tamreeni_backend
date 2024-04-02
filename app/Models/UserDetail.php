@@ -30,14 +30,14 @@ class UserDetail extends Model
     use HasFactory;
 
     public $table = 'user_details';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
 
     protected $dates = ['deleted_at'];
 
-    public $appends = ['display_goal','display_food_preferences','display_body_parts'];
+    public $appends = ['display_goal', 'display_food_preferences', 'display_body_parts', 'current_workout_plan_id'];
 
 
     public $fillable = [
@@ -50,9 +50,9 @@ class UserDetail extends Model
         'image',
         'is_social_login',
         'push_notification',
-        
+
         'language',
-        
+
         'goal',
         'gender',
         'dob',
@@ -84,47 +84,50 @@ class UserDetail extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
-        'user_id' => 'integer',
-        'first_name' => 'string',
-        'last_name' => 'string',
-        'address' => 'string',
-        'phone_number' => 'string',
+        'id'                        => 'integer',
+        'user_id'                   => 'integer',
+        'first_name'                => 'string',
+        'last_name'                 => 'string',
+        'address'                   => 'string',
+        'phone_number'              => 'string',
         'phone_number_country_code' => 'string',
-        'dob' => 'date',
-        'reach_goal_target_date' => 'date',
-        'image' => 'string',
-        'is_social_login' => 'boolean',
-        'gender' => 'string',
-        'push_notification' => 'boolean',
-        'body_parts' => 'json',
-        'food_preferences' => 'json'
+        'dob'                       => 'date',
+        'reach_goal_target_date'    => 'date',
+        'image'                     => 'string',
+        'is_social_login'           => 'boolean',
+        'gender'                    => 'string',
+        'push_notification'         => 'boolean',
+        'body_parts'                => 'json',
+        'food_preferences'          => 'json'
     ];
 
-    public function getDisplayGoalAttribute() {
+    public function getDisplayGoalAttribute()
+    {
         return $this->goal ? ucwords(str_replace('_', ' ', $this->goal)) : null;
     }
-    
-    public function getDisplayFoodPreferencesAttribute() {
-        $foodPreferences = $this->food_preferences ?? [];
-        $displayFoodPreferences = [];
-        if($foodPreferences && is_array($foodPreferences)){
 
-            foreach($foodPreferences as $foodPreference){
-                if($foodPreference)
+    public function getDisplayFoodPreferencesAttribute()
+    {
+        $foodPreferences        = $this->food_preferences ?? [];
+        $displayFoodPreferences = [];
+        if ($foodPreferences && is_array($foodPreferences)) {
+
+            foreach ($foodPreferences as $foodPreference) {
+                if ($foodPreference)
                     array_push($displayFoodPreferences, ucwords(str_replace('_', ' ', $foodPreference)));
             }
         }
         return $displayFoodPreferences;
     }
-    
-    public function getDisplayBodyPartsAttribute() {
-        $bodyParts = $this->body_parts ?? [];
-        $displaybodyParts = [];
-        if($bodyParts && is_array($bodyParts)){
 
-            foreach($bodyParts as $bodyPart){
-                if($bodyPart)
+    public function getDisplayBodyPartsAttribute()
+    {
+        $bodyParts        = $this->body_parts ?? [];
+        $displaybodyParts = [];
+        if ($bodyParts && is_array($bodyParts)) {
+
+            foreach ($bodyParts as $bodyPart) {
+                if ($bodyPart)
                     array_push($displaybodyParts, ucwords(str_replace('_', ' ', $bodyPart)));
             }
         }
@@ -142,5 +145,16 @@ class UserDetail extends Model
     public function deleteAccountType()
     {
         return $this->hasOne(Constant::class, 'id', 'delete_account_type_id');
+    }
+
+    public function currentWorkoutPlan()
+    {
+        return $this->hasOne(WorkoutPlan::class, 'user_id', 'user_id');
+    }
+
+    public function getCurrentWorkoutPlanIdAttribute()
+    {
+        $currentWorkoutPlan = $this->currentWorkoutPlan()->whereIn('status', [WorkoutPlan::STATUS_TODO, WorkoutPlan::STATUS_IN_PROGRESS])->first();
+        return $currentWorkoutPlan->id ?? null;
     }
 }

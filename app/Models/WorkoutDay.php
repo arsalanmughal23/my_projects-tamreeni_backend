@@ -45,6 +45,7 @@ class WorkoutDay extends Model
         'description',
         'duration',
         'date',
+        'image',
         'status'
     ];
 

@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Criteria\WorkoutDayCriteria;
 use App\Http\Requests\API\CreateWorkoutDayAPIRequest;
 use App\Http\Requests\API\UpdateWorkoutDayAPIRequest;
-use App\Models\Option;
-use App\Models\Question;
 use App\Models\WorkoutDay;
 use App\Repositories\WorkoutDayRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Response;
 
@@ -37,11 +37,20 @@ class WorkoutDayAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $workout_days = $this->workoutDayRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+        $perPage      = $request->input('per_page', Config::get('constants.PER_PAGE', 10));
+        $workout_days = $this->workoutDayRepository->pushCriteria(new WorkoutDayCriteria($request->only([
+            'workout_plan_id',
+        ])));
+
+        if ($request->input('paginate')) {
+            $workout_days = $workout_days->paginate($perPage);
+        } else {
+            if ($request->input('get_dates')) {
+                $workout_days = $workout_days->pluck('date');
+            } else {
+                $workout_days = $workout_days->all();
+            }
+        }
 
         return $this->sendResponse($workout_days->toArray(), 'Workout Days retrieved successfully');
     }
@@ -136,7 +145,7 @@ class WorkoutDayAPIController extends AppBaseController
         return $this->sendSuccess('Workout Day deleted successfully');
     }
 
-    public function getWorkoutPlan(Request $request)
+    public function generateWorkoutPlan()
     {
         try {
             DB::beginTransaction();

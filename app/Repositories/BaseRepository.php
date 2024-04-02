@@ -32,13 +32,6 @@ abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepositor
         return $query;
     }
 
-    public function all($search = [], $skip = null, $limit = null, $columns = ['*'])
-    {
-        $query = $this->allQuery($search, $skip, $limit);
-
-        return $query->get($columns);
-    }
-
     public function search($keyword = null, $keywordColumns = [], $search = [])
     {
         $query = $this->model->newQuery();

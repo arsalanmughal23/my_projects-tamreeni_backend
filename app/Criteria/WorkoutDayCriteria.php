@@ -20,10 +20,13 @@ class WorkoutDayCriteria extends BaseCriteria implements CriteriaInterface
      *
      * @return mixed
      */
-    protected $get_dates = null;
+    protected $workout_plan_id = null;
 
     public function apply($model, RepositoryInterface $repository)
     {
+        if ($this->isset('workout_plan_id')) {
+            $model = $model->where('workout_plan_id', $this->workout_plan_id);
+        }
         return $model;
     }
 }

@@ -97,6 +97,7 @@ class WorkoutDayRepository extends BaseRepository
                 'description'     => WorkoutDay::DESCRIPTION,
                 'date'            => $randomDate,
                 'duration'        => $durationOfAllExercises,
+                'image'           => $exercises[0]->image ?? null,
                 'status'          => WorkoutDay::STATUS_TODO
             ]);
             foreach ($exercises as $index => $exercise) {

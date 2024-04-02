@@ -9,6 +9,15 @@ use Illuminate\Database\Eloquent\Model;
 abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepository
 {
 
+    public function findWithoutFail($id, $columns = ['*'])
+    {
+        try {
+            return $this->find($id, $columns);
+        } catch (Exception $e) {
+            return;
+        }
+    }
+
     public function allQuery($search = [], $skip = null, $limit = null)
     {
         $query = $this->model->newQuery();

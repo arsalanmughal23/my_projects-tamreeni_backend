@@ -26,7 +26,9 @@ class SingleWorkoutDayResource extends JsonResource
             'duration'              => $this->duration,
             'status'                => $this->status,
             'created_at'            => $this->created_at,
-            'workout_day_exercises' => SingleWorkoutDayExerciseResource::collection($this->whenLoaded('workoutDayExercises'))
+            'workout_day_exercises' => SingleWorkoutDayExerciseResource::collection($this->whenLoaded('workoutDayExercises')),
+            'body_parts'            => $this->body_parts,
+            'equipments'            => $this->equipments
         ];
     }
 }

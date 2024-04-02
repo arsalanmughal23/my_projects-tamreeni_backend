@@ -38,6 +38,7 @@ class WorkoutDay extends Model
 
     protected $dates = ['deleted_at'];
 
+    public $appends = ['body_parts', 'equipments'];
 
     public $fillable = [
         'workout_plan_id',
@@ -93,5 +94,20 @@ class WorkoutDay extends Model
     public function workoutDayExercises()
     {
         return $this->hasMany(\App\Models\WorkoutDayExercise::class, 'workout_day_id')->with('exercise');
+    }
+
+    public function getBodyPartsAttribute()
+    {
+        $exercises = $this->workoutDayExercises()->get();
+        return $exercises->pluck('exercise')->pluck('bodyPart')->pluck('name')->toArray();
+    }
+
+    public function getEquipmentsAttribute()
+    {
+        $exercises       = $this->workoutDayExercises()->get()->pluck('exercise')->pluck('id')->toArray();
+        $equipmentsPivot = ExerciseEquipmentPivot::whereIn('exercise_id', $exercises)->with('exerciseEquipment')->pluck('exercise_equipment_id')->unique();
+        $equipments      = ExerciseEquipment::whereIn('id', $equipmentsPivot)->pluck('name')->toArray();
+
+        return $equipments;
     }
 }

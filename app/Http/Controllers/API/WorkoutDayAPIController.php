@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Criteria\WorkoutDayCriteria;
 use App\Http\Requests\API\CreateWorkoutDayAPIRequest;
 use App\Http\Requests\API\UpdateWorkoutDayAPIRequest;
+use App\Http\Resources\SingleWorkoutDayResource;
+use App\Http\Resources\SingleWorkoutDayResponse;
 use App\Models\WorkoutDay;
 use App\Repositories\WorkoutDayRepository;
 use Illuminate\Http\Request;
@@ -85,13 +87,13 @@ class WorkoutDayAPIController extends AppBaseController
     public function show($id)
     {
         /** @var WorkoutDay $workoutDay */
-        $workoutDay = $this->workoutDayRepository->find($id);
+        $workoutDay = $this->workoutDayRepository->with('workoutDayExercises')->find($id);
 
         if (empty($workoutDay)) {
             return $this->sendError('Workout Day not found');
         }
 
-        return $this->sendResponse($workoutDay->toArray(), 'Workout Day retrieved successfully');
+        return $this->sendResponse(new SingleWorkoutDayResource($workoutDay), 'Workout Day retrieved successfully');
     }
 
     /**

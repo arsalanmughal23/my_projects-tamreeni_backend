@@ -92,6 +92,6 @@ class WorkoutDay extends Model
      **/
     public function workoutDayExercises()
     {
-        return $this->hasMany(\App\Models\WorkoutDayExercise::class, 'workout_day_id');
+        return $this->hasMany(\App\Models\WorkoutDayExercise::class, 'workout_day_id')->with('exercise');
     }
 }

@@ -61,4 +61,24 @@ class ExerciseResource extends JsonResource
 
         return parent::collection($resource);
     }
+
+    public static function single($resource)
+    {
+        return [
+            'id'            => $resource->id,
+            'name'          => $resource->getTranslation('name', app()->getLocale()),
+            'description'   => $resource->getTranslation('description', app()->getLocale()),
+            'user_id'       => $resource->user_id,
+            'body_part_id'  => $resource->body_part_id,
+            'body_part'     => $resource->bodyPart,
+            'is_favourite'  => $resource->is_favourite,
+            'duration_in_m' => $resource->duration_in_m,
+            'sets'          => $resource->sets,
+            'reps'          => $resource->reps,
+            'burn_calories' => $resource->burn_calories,
+            'image'         => $resource->image,
+            'video'         => $resource->video,
+            'created_at'    => $resource->created_at,
+        ];
+    }
 }

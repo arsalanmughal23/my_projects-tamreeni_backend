@@ -39,7 +39,6 @@ class WorkoutDayExercise extends Model
     protected $dates = ['deleted_at'];
 
 
-
     public $fillable = [
         'workout_day_id',
         'exercise_id',
@@ -56,14 +55,14 @@ class WorkoutDayExercise extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
+        'id'             => 'integer',
         'workout_day_id' => 'integer',
-        'exercise_id' => 'integer',
-        'duration' => 'integer',
-        'sets' => 'integer',
-        'reps' => 'integer',
-        'burn_calories' => 'float',
-        'status' => 'integer'
+        'exercise_id'    => 'integer',
+        'duration'       => 'integer',
+        'sets'           => 'integer',
+        'reps'           => 'integer',
+        'burn_calories'  => 'float',
+        'status'         => 'integer'
     ];
 
     /**
@@ -73,15 +72,15 @@ class WorkoutDayExercise extends Model
      */
     public static $rules = [
         'workout_day_id' => 'required',
-        'exercise_id' => 'required|integer',
-        'duration' => 'required|integer',
-        'sets' => 'required|integer',
-        'reps' => 'required|integer',
-        'burn_calories' => 'required|numeric',
-        'status' => 'required|integer',
-        'created_at' => 'nullable',
-        'updated_at' => 'nullable',
-        'deleted_at' => 'nullable'
+        'exercise_id'    => 'required|integer',
+        'duration'       => 'required|integer',
+        'sets'           => 'required|integer',
+        'reps'           => 'required|integer',
+        'burn_calories'  => 'required|numeric',
+        'status'         => 'required|integer',
+        'created_at'     => 'nullable',
+        'updated_at'     => 'nullable',
+        'deleted_at'     => 'nullable'
     ];
 
     /**

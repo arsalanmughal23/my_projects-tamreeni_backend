@@ -51,13 +51,13 @@ class WorkoutDayRepository extends BaseRepository
                 $this->generateWaitLosePlan($user);
                 break;
             case Option::Q1_OPT2__GAIN_WEIGHT:
-
+                $this->generateWaitGainPlan($user);
                 break;
             case Option::Q1_OPT3__BUILD_MUSCLE:
-
+                $this->generateBuildMusclesPlan($user);
                 break;
             case Option::Q1_OPT4__GET_FIT:
-
+                $this->generateGetFitPlan($user);
                 break;
         }
     }
@@ -98,6 +98,119 @@ class WorkoutDayRepository extends BaseRepository
             }
         }
         return [];
+    }
 
+    public function generateWaitGainPlan($user)
+    {
+        //TODO: get exercises as per define criteria
+        $exercises              = Exercise::all();
+        $durationOfAllExercises = array_sum($exercises->pluck('duration_in_m')->toArray());
+        $numberOfDaysPerWeek    = Option::$DAYS_PER_WEEK[$user->workout_days_in_a_week] ?? 0;
+        $weekWiseDates          = generateDatesByWeek(date('Y-m-d'), $user->reach_goal_target_date);
+        $randomDates            = [];
+        foreach ($weekWiseDates as $key => $weekDates) {
+            if (count($weekDates) >= $numberOfDaysPerWeek) {
+                $randomDates = array_merge($randomDates, pickRandomIndices($weekDates, $numberOfDaysPerWeek));
+            }
+        }
+        foreach ($randomDates as $key => $randomDate) {
+            $data       = [
+                'user_id'     => \Auth::id(),
+                'name'        => 'Day 0' . $key + 1,
+                'description' => WorkoutDay::DESCRIPTION,
+                'date'        => $randomDate,
+                'duration'    => $durationOfAllExercises,
+                'status'      => WorkoutDay::STATUS_TODO
+            ];
+            $workoutDay = WorkoutDay::create($data);
+            foreach ($exercises as $index => $exercise) {
+                WorkoutDayExercise::create([
+                    'workout_day_id' => $workoutDay->id,
+                    'exercise_id'    => $exercise->id,
+                    'duration'       => $exercise->duration_in_m,
+                    'sets'           => $exercise->sets,
+                    'reps'           => $exercise->reps,
+                    'burn_calories'  => $exercise->burn_calories,
+                    'status'         => WorkoutDayExercise::STATUS_TODO
+                ]);
+            }
+        }
+        return [];
+    }
+
+    public function generateBuildMusclesPlan($user)
+    {
+        //TODO: get exercises as per define criteria
+        $exercises              = Exercise::all();
+        $durationOfAllExercises = array_sum($exercises->pluck('duration_in_m')->toArray());
+        $numberOfDaysPerWeek    = Option::$DAYS_PER_WEEK[$user->workout_days_in_a_week] ?? 0;
+        $weekWiseDates          = generateDatesByWeek(date('Y-m-d'), $user->reach_goal_target_date);
+        $randomDates            = [];
+        foreach ($weekWiseDates as $key => $weekDates) {
+            if (count($weekDates) >= $numberOfDaysPerWeek) {
+                $randomDates = array_merge($randomDates, pickRandomIndices($weekDates, $numberOfDaysPerWeek));
+            }
+        }
+        foreach ($randomDates as $key => $randomDate) {
+            $data       = [
+                'user_id'     => \Auth::id(),
+                'name'        => 'Day 0' . $key + 1,
+                'description' => WorkoutDay::DESCRIPTION,
+                'date'        => $randomDate,
+                'duration'    => $durationOfAllExercises,
+                'status'      => WorkoutDay::STATUS_TODO
+            ];
+            $workoutDay = WorkoutDay::create($data);
+            foreach ($exercises as $index => $exercise) {
+                WorkoutDayExercise::create([
+                    'workout_day_id' => $workoutDay->id,
+                    'exercise_id'    => $exercise->id,
+                    'duration'       => $exercise->duration_in_m,
+                    'sets'           => $exercise->sets,
+                    'reps'           => $exercise->reps,
+                    'burn_calories'  => $exercise->burn_calories,
+                    'status'         => WorkoutDayExercise::STATUS_TODO
+                ]);
+            }
+        }
+        return [];
+    }
+
+    public function generateGetFitPlan($user)
+    {
+        //TODO: get exercises as per define criteria
+        $exercises              = Exercise::all();
+        $durationOfAllExercises = array_sum($exercises->pluck('duration_in_m')->toArray());
+        $numberOfDaysPerWeek    = Option::$DAYS_PER_WEEK[$user->workout_days_in_a_week] ?? 0;
+        $weekWiseDates          = generateDatesByWeek(date('Y-m-d'), $user->reach_goal_target_date);
+        $randomDates            = [];
+        foreach ($weekWiseDates as $key => $weekDates) {
+            if (count($weekDates) >= $numberOfDaysPerWeek) {
+                $randomDates = array_merge($randomDates, pickRandomIndices($weekDates, $numberOfDaysPerWeek));
+            }
+        }
+        foreach ($randomDates as $key => $randomDate) {
+            $data       = [
+                'user_id'     => \Auth::id(),
+                'name'        => 'Day 0' . $key + 1,
+                'description' => WorkoutDay::DESCRIPTION,
+                'date'        => $randomDate,
+                'duration'    => $durationOfAllExercises,
+                'status'      => WorkoutDay::STATUS_TODO
+            ];
+            $workoutDay = WorkoutDay::create($data);
+            foreach ($exercises as $index => $exercise) {
+                WorkoutDayExercise::create([
+                    'workout_day_id' => $workoutDay->id,
+                    'exercise_id'    => $exercise->id,
+                    'duration'       => $exercise->duration_in_m,
+                    'sets'           => $exercise->sets,
+                    'reps'           => $exercise->reps,
+                    'burn_calories'  => $exercise->burn_calories,
+                    'status'         => WorkoutDayExercise::STATUS_TODO
+                ]);
+            }
+        }
+        return [];
     }
 }

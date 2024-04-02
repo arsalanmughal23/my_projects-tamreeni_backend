@@ -40,7 +40,7 @@ class WorkoutDay extends Model
 
 
     public $fillable = [
-        'user_id',
+        'workout_plan_id',
         'name',
         'description',
         'duration',

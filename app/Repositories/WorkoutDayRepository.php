@@ -6,6 +6,7 @@ use App\Models\Exercise;
 use App\Models\Option;
 use App\Models\WorkoutDay;
 use App\Models\WorkoutDayExercise;
+use App\Models\WorkoutPlan;
 use App\Repositories\BaseRepository;
 
 /**
@@ -75,16 +76,25 @@ class WorkoutDayRepository extends BaseRepository
                 $randomDates = array_merge($randomDates, pickRandomIndices($weekDates, $numberOfDaysPerWeek));
             }
         }
+        /* create workout plan */
+        $workoutPlan = WorkoutPlan::create([
+            'user_id'    => \Auth::id(),
+            'name'       => 'Workout Plan',
+            'start_date' => $randomDates[0],
+            'end_date'   => $randomDates[count($randomDates) - 1],
+            'status'     => WorkoutPlan::STATUS_TODO
+
+        ]);
+        /* create workout day and workout day exercises  */
         foreach ($randomDates as $key => $randomDate) {
-            $data       = [
-                'user_id'     => \Auth::id(),
-                'name'        => 'Day 0' . $key + 1,
-                'description' => WorkoutDay::DESCRIPTION,
-                'date'        => $randomDate,
-                'duration'    => $durationOfAllExercises,
-                'status'      => WorkoutDay::STATUS_TODO
-            ];
-            $workoutDay = WorkoutDay::create($data);
+            $workoutDay = WorkoutDay::create([
+                'workout_plan_id' => $workoutPlan->id,
+                'name'            => 'Day 0' . $key + 1,
+                'description'     => WorkoutDay::DESCRIPTION,
+                'date'            => $randomDate,
+                'duration'        => $durationOfAllExercises,
+                'status'          => WorkoutDay::STATUS_TODO
+            ]);
             foreach ($exercises as $index => $exercise) {
                 WorkoutDayExercise::create([
                     'workout_day_id' => $workoutDay->id,

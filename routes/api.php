@@ -92,3 +92,6 @@ Route::resource('pages', App\Http\Controllers\API\PageAPIController::class);
 Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, 'pageContent'])->name('page-content');
 
 
+
+
+Route::resource('workout_plans', App\Http\Controllers\API\WorkoutPlanAPIController::class);

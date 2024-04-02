@@ -238,3 +238,13 @@
 @endcan
 
 
+@canany(['workout_plans.index', 'workout_plans.create', 'workout_plans.show', 'workout_plans.edit', 'workout_plans.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('workout_plans.index') }}"
+        class="nav-link {{ Request::is('workout_plans*') ? 'active' : '' }}">
+            <p>Workout Plans</p>
+        </a>
+    </li>
+@endcan
+
+

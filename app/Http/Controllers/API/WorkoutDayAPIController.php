@@ -148,7 +148,7 @@ class WorkoutDayAPIController extends AppBaseController
             DB::commit();
             return $this->sendResponse($plan, 'Workout Plan generated successfully');
         } catch (\Exception $exception) {
-            //DB::rollback();
+            DB::rollback();
             $this->sendError($exception->getMessage());
         }
     }

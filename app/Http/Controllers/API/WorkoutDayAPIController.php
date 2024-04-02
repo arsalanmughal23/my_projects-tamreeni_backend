@@ -4,17 +4,19 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Requests\API\CreateWorkoutDayAPIRequest;
 use App\Http\Requests\API\UpdateWorkoutDayAPIRequest;
+use App\Models\Option;
+use App\Models\Question;
 use App\Models\WorkoutDay;
 use App\Repositories\WorkoutDayRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use Illuminate\Support\Facades\DB;
 use Response;
 
 /**
  * Class WorkoutDayController
  * @package App\Http\Controllers\API
  */
-
 class WorkoutDayAPIController extends AppBaseController
 {
     /** @var  WorkoutDayRepository */
@@ -132,5 +134,22 @@ class WorkoutDayAPIController extends AppBaseController
         $workoutDay->delete();
 
         return $this->sendSuccess('Workout Day deleted successfully');
+    }
+
+    public function getWorkoutPlan(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $user = \Auth::user()->details;
+            if (!$user->goal) {
+                return $this->sendError('Goal not set');
+            }
+            $plan = $this->workoutDayRepository->generateWorkoutPlan($user);
+            DB::commit();
+            return $this->sendResponse($plan, 'Workout Plan generated successfully');
+        } catch (\Exception $exception) {
+            //DB::rollback();
+            $this->sendError($exception->getMessage());
+        }
     }
 }

@@ -28,10 +28,13 @@ class WorkoutDayExercise extends Model
     use HasFactory;
 
     public $table = 'workout_day_exercises';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
+    const STATUS_TODO        = 10;
+    const STATUS_IN_PROGRESS = 10;
+    const STATUS_COMPLETED   = 30;
 
     protected $dates = ['deleted_at'];
 

@@ -145,3 +145,12 @@ Route::resource('workout_day_exercises', App\Http\Controllers\WorkoutDayExercise
 
 
 Route::resource('workout_plans', App\Http\Controllers\WorkoutPlanController::class);
+
+
+Route::resource('nutrition_plans', App\Http\Controllers\NutritionPlanController::class);
+
+
+Route::resource('nutrition_plan_days', App\Http\Controllers\NutritionPlanDayController::class);
+
+
+Route::resource('nutrition_plan_day_meals', App\Http\Controllers\NutritionPlanDayMealController::class);

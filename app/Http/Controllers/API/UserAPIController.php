@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\User;
+use App\Repositories\NutritionPlanRepository;
 use App\Repositories\WorkoutPlanRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
@@ -23,11 +24,13 @@ class UserAPIController extends AppBaseController
     /** @var  UserRepository */
     private $userRepository;
     private $workoutPlanRepository;
+    private $nutritionPlanRepository;
 
-    public function __construct(UsersRepository $userRepo, WorkoutPlanRepository $workoutPlanRepo)
+    public function __construct(UsersRepository $userRepo, WorkoutPlanRepository $workoutPlanRepo, NutritionPlanRepository $nutritionPlanRepo)
     {
-        $this->userRepository        = $userRepo;
-        $this->workoutPlanRepository = $workoutPlanRepo;
+        $this->userRepository          = $userRepo;
+        $this->workoutPlanRepository   = $workoutPlanRepo;
+        $this->nutritionPlanRepository = $nutritionPlanRepo;
     }
 
     public function myProfile(Request $request)
@@ -197,12 +200,13 @@ class UserAPIController extends AppBaseController
             if (!$user->goal) {
                 return $this->sendError('Goal not set');
             }
-            $workoutPlan = $this->workoutPlanRepository->generateWorkoutPlan($user);
+            $workoutPlan   = $this->workoutPlanRepository->generateWorkoutPlan($user);
+            $nutritionPlan = $this->nutritionPlanRepository->generateWorkoutPlan($user);
             DB::commit();
-            return $this->sendResponse($workoutPlan->toArray(), 'Workout Plan generated successfully');
+            return $this->sendResponse(['workout_plan' => $workoutPlan->toArray(), 'nutrition_plan' => $nutritionPlan->toArray()], 'Workout Plan generated successfully');
         } catch (\Exception $exception) {
             DB::rollback();
-            $this->sendError($exception->getMessage());
+            return $this->sendError($exception->getMessage());
         }
     }
 }

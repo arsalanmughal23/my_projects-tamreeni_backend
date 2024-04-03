@@ -76,11 +76,20 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
     Route::resource('meal_types', App\Http\Controllers\API\MealTypeAPIController::class);
 
     Route::resource('workout-days', App\Http\Controllers\API\WorkoutDayAPIController::class);
+
     Route::resource('workout-day-exercises', App\Http\Controllers\API\WorkoutDayExerciseAPIController::class);
 
+    Route::resource('workout_plans', App\Http\Controllers\API\WorkoutPlanAPIController::class);
+
+
+    Route::resource('nutrition_plans', App\Http\Controllers\API\NutritionPlanAPIController::class);
+
+
+    Route::resource('nutrition_plan_days', App\Http\Controllers\API\NutritionPlanDayAPIController::class);
+
+
+    Route::resource('nutrition_plan_day_meals', App\Http\Controllers\API\NutritionPlanDayMealAPIController::class);
     Route::get('generate-workout-plan', [App\Http\Controllers\API\UserAPIController::class, 'generateWorkoutPlan']);
-
-
 });
 
 Route::resource('menus', App\Http\Controllers\API\MenuAPIController::class);
@@ -92,4 +101,3 @@ Route::resource('pages', App\Http\Controllers\API\PageAPIController::class);
 Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, 'pageContent'])->name('page-content');
 
 
-Route::resource('workout_plans', App\Http\Controllers\API\WorkoutPlanAPIController::class);

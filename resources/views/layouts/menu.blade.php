@@ -248,3 +248,33 @@
 @endcan
 
 
+@canany(['nutrition_plans.index', 'nutrition_plans.create', 'nutrition_plans.show', 'nutrition_plans.edit', 'nutrition_plans.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('nutrition_plans.index') }}"
+        class="nav-link {{ Request::is('nutrition_plans*') ? 'active' : '' }}">
+            <p>Nutrition Plans</p>
+        </a>
+    </li>
+@endcan
+
+
+@canany(['nutrition_plan_days.index', 'nutrition_plan_days.create', 'nutrition_plan_days.show', 'nutrition_plan_days.edit', 'nutrition_plan_days.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('nutrition_plan_days.index') }}"
+        class="nav-link {{ Request::is('nutrition_plan_days*') ? 'active' : '' }}">
+            <p>Nutrition Plan Days</p>
+        </a>
+    </li>
+@endcan
+
+
+@canany(['nutrition_plan_day_meals.index', 'nutrition_plan_day_meals.create', 'nutrition_plan_day_meals.show', 'nutrition_plan_day_meals.edit', 'nutrition_plan_day_meals.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('nutrition_plan_day_meals.index') }}"
+        class="nav-link {{ Request::is('nutrition_plan_day_meals*') ? 'active' : '' }}">
+            <p>Nutrition Plan Day Meals</p>
+        </a>
+    </li>
+@endcan
+
+

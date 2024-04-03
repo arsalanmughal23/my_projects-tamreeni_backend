@@ -19,9 +19,9 @@ class CreateNutritionPlanDayMealTable extends Migration
             $table->foreign('nutrition_plan_day_id')->references('id')->on('nutrition_plan_days')->onDelete('cascade');
             $table->unsignedInteger('meal_id')->nullable();
             $table->foreign('meal_id')->references('id')->on('meals')->onDelete('cascade');
-            $table->integer('meal_category_id')->unsigned();
-            $table->foreign('meal_category_id')->references('id')->on('meal_categories')->onDelete('cascade');
-            $table->string('name')->nullable(false);
+            $table->bigInteger('meal_type_id')->unsigned();
+            $table->foreign('meal_type_id')->references('id')->on('meal_types')->onDelete('cascade');
+            $table->string('name')->nullable();
             $table->enum('diet_type', ['traditional', 'keto'])->nullable();
             $table->double('calories', 8, 2)->default(0)->nullable(false);
             $table->double('carbs', 8, 2)->default(0)->nullable(false);

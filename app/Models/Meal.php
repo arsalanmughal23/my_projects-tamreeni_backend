@@ -41,6 +41,7 @@ class Meal extends Model
     public $fillable = [
         'diet_type',
         'meal_category_id',
+        'meal_type_id',
         'name',
         'image',
         'calories',
@@ -58,6 +59,7 @@ class Meal extends Model
         'id'               => 'integer',
         'diet_type'        => 'string',
         'meal_category_id' => 'integer',
+        'meal_type_id'     => 'integer',
         'name'             => 'string',
         'image'            => 'string',
         'calories'         => 'float',
@@ -72,6 +74,7 @@ class Meal extends Model
     public static $rules = [
         'diet_type'        => 'nullable|string|in:traditional,keto',
         'meal_category_id' => 'required|integer',
+        'meal_type_id'     => 'required|integer',
         'name'             => 'required|array',
         'name.en'          => 'required|string|max:100',
         'name.ar'          => 'required|string|max:100',
@@ -88,6 +91,14 @@ class Meal extends Model
     public function mealCategory()
     {
         return $this->belongsTo(MealCategory::class, 'meal_category_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function mealType()
+    {
+        return $this->belongsTo(MealType::class, 'meal_type_id');
     }
 
     public function favourites()

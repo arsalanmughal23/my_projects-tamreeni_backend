@@ -33,7 +33,7 @@ class WorkoutDay extends Model
     const UPDATED_AT = 'updated_at';
 
     const STATUS_TODO        = 10;
-    const STATUS_IN_PROGRESS = 10;
+    const STATUS_IN_PROGRESS = 20;
     const STATUS_COMPLETED   = 30;
 
     public $translatable = ['name', 'description'];
@@ -75,7 +75,7 @@ class WorkoutDay extends Model
      *
      * @var array
      */
-    public static $rules = [
+    public static $rules        = [
         'user_id'     => 'required',
         'name'        => 'required|string|max:255',
         'description' => 'nullable|string',
@@ -84,6 +84,9 @@ class WorkoutDay extends Model
         'created_at'  => 'nullable',
         'updated_at'  => 'nullable',
         'deleted_at'  => 'nullable'
+    ];
+    public static $update_rules = [
+        'status' => 'required|integer'
     ];
 
     /**

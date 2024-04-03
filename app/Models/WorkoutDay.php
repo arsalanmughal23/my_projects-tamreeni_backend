@@ -5,6 +5,7 @@ namespace App\Models;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * Class WorkoutDay
@@ -24,6 +25,7 @@ class WorkoutDay extends Model
     use SoftDeletes;
 
     use HasFactory;
+    use HasTranslations;
 
     public $table = 'workout_days';
 
@@ -34,7 +36,11 @@ class WorkoutDay extends Model
     const STATUS_IN_PROGRESS = 10;
     const STATUS_COMPLETED   = 30;
 
-    const DESCRIPTION = "To achieve your fitness goals, incorporate the following exercises into your routine: strength training for muscle development, cardiovascular activities for endurance and calorie burning, flexibility exercises for mobility, and core workouts for stability. Consistency and proper form are key for optimal results. Get started today!";
+    public $translatable = ['name', 'description'];
+
+    const DESCRIPTION_EN = "To achieve your fitness goals, incorporate the following exercises into your routine: strength training for muscle development, cardiovascular activities for endurance and calorie burning, flexibility exercises for mobility, and core workouts for stability. Consistency and proper form are key for optimal results. Get started today!";
+
+    const DESCRIPTION_AR = " الخاصة بك، قم بدمج التمارين التالية في روتينك: تدريب القوة لتنمية العضلات، وأنشطة القلب والأوعية الدموية للقدرة على التحمل وحرق السعرات الحرارية، وتمارين المرونة للتنقل، والتمارين الأساسية لتحقيق الاستقرار. الاتساق والشكل المناسب هما المفتاح للحصول على أفضل النتائج. ابدأ اليوم!";
 
     protected $dates = ['deleted_at'];
 
@@ -104,6 +110,7 @@ class WorkoutDay extends Model
 
     public function getEquipmentsAttribute()
     {
+        /* TODO: need to improve this code */
         $exercises       = $this->workoutDayExercises()->get()->pluck('exercise')->pluck('id')->toArray();
         $equipmentsPivot = ExerciseEquipmentPivot::whereIn('exercise_id', $exercises)->with('exerciseEquipment')->pluck('exercise_equipment_id')->unique();
         $equipments      = ExerciseEquipment::whereIn('id', $equipmentsPivot)->pluck('name')->toArray();

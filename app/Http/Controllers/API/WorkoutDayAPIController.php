@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Criteria\WorkoutDayCriteria;
 use App\Http\Requests\API\CreateWorkoutDayAPIRequest;
 use App\Http\Requests\API\UpdateWorkoutDayAPIRequest;
-use App\Http\Resources\SingleWorkoutDayResource;
+use App\Http\Resources\WorkoutDayResource;
 use App\Http\Resources\SingleWorkoutDayResponse;
 use App\Models\WorkoutDay;
 use App\Repositories\WorkoutDayRepository;
@@ -46,15 +46,18 @@ class WorkoutDayAPIController extends AppBaseController
 
         if ($request->input('paginate')) {
             $workout_days = $workout_days->paginate($perPage);
+            $workout_days = WorkoutDayResource::collection($workout_days);
         } else {
             if ($request->input('get_dates')) {
                 $workout_days = $workout_days->pluck('date');
+                $workout_days = $workout_days->toArray();
             } else {
                 $workout_days = $workout_days->all();
+                $workout_days = new WorkoutDayResource($workout_days);
             }
         }
 
-        return $this->sendResponse($workout_days->toArray(), 'Workout Days retrieved successfully');
+        return $this->sendResponse($workout_days, 'Workout Days retrieved successfully');
     }
 
     /**
@@ -93,7 +96,7 @@ class WorkoutDayAPIController extends AppBaseController
             return $this->sendError('Workout Day not found');
         }
 
-        return $this->sendResponse(new SingleWorkoutDayResource($workoutDay), 'Workout Day retrieved successfully');
+        return $this->sendResponse(new WorkoutDayResource($workoutDay), 'Workout Day retrieved successfully');
     }
 
     /**

@@ -93,8 +93,14 @@ class WorkoutDayRepository extends BaseRepository
         foreach ($randomDates as $key => $randomDate) {
             $workoutDay = WorkoutDay::create([
                 'workout_plan_id' => $workoutPlanId,
-                'name'            => 'Day 0' . $key + 1,
-                'description'     => WorkoutDay::DESCRIPTION,
+                'name'            => [
+                    'en' => 'Day 0' . $key + 1,
+                    'ar' => 'اليوم 0' . $key + 1
+                ],
+                'description'     => [
+                    'en' => WorkoutDay::DESCRIPTION_EN,
+                    'ar' => WorkoutDay::DESCRIPTION_AR
+                ],
                 'date'            => $randomDate,
                 'duration'        => $durationOfAllExercises,
                 'image'           => $exercises[0]->image ?? null,
@@ -123,10 +129,17 @@ class WorkoutDayRepository extends BaseRepository
         foreach ($randomDates as $key => $randomDate) {
             $workoutDay = WorkoutDay::create([
                 'workout_plan_id' => $workoutPlanId,
-                'name'            => 'Day 0' . $key + 1,
-                'description'     => WorkoutDay::DESCRIPTION,
+                'name'            => [
+                    'en' => 'Day 0' . $key + 1,
+                    'ar' => 'اليوم 0' . $key + 1
+                ],
+                'description'     => [
+                    'en' => WorkoutDay::DESCRIPTION_EN,
+                    'ar' => WorkoutDay::DESCRIPTION_AR
+                ],
                 'date'            => $randomDate,
                 'duration'        => $durationOfAllExercises,
+                'image'           => $exercises[0]->image ?? null,
                 'status'          => WorkoutDay::STATUS_TODO
             ]);
             foreach ($exercises as $index => $exercise) {
@@ -152,10 +165,17 @@ class WorkoutDayRepository extends BaseRepository
         foreach ($randomDates as $key => $randomDate) {
             $workoutDay = WorkoutDay::create([
                 'workout_plan_id' => $workoutPlanId,
-                'name'            => 'Day 0' . $key + 1,
-                'description'     => WorkoutDay::DESCRIPTION,
+                'name'            => [
+                    'en' => 'Day 0' . $key + 1,
+                    'ar' => 'اليوم 0' . $key + 1
+                ],
+                'description'     => [
+                    'en' => WorkoutDay::DESCRIPTION_EN,
+                    'ar' => WorkoutDay::DESCRIPTION_AR
+                ],
                 'date'            => $randomDate,
                 'duration'        => $durationOfAllExercises,
+                'image'           => $exercises[0]->image ?? null,
                 'status'          => WorkoutDay::STATUS_TODO
             ]);
             foreach ($exercises as $index => $exercise) {
@@ -181,10 +201,17 @@ class WorkoutDayRepository extends BaseRepository
         foreach ($randomDates as $key => $randomDate) {
             $workoutDay = WorkoutDay::create([
                 'workout_plan_id' => $workoutPlanId,
-                'name'            => 'Day 0' . $key + 1,
-                'description'     => WorkoutDay::DESCRIPTION,
+                'name'            => [
+                    'en' => 'Day 0' . $key + 1,
+                    'ar' => 'اليوم 0' . $key + 1
+                ],
+                'description'     => [
+                    'en' => WorkoutDay::DESCRIPTION_EN,
+                    'ar' => WorkoutDay::DESCRIPTION_AR
+                ],
                 'date'            => $randomDate,
                 'duration'        => $durationOfAllExercises,
+                'image'           => $exercises[0]->image ?? null,
                 'status'          => WorkoutDay::STATUS_TODO
             ]);
             foreach ($exercises as $index => $exercise) {

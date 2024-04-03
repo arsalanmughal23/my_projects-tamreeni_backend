@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Criteria\NutritionPlanDayCriteria;
 use App\Http\Requests\API\CreateNutritionPlanDayAPIRequest;
 use App\Http\Requests\API\UpdateNutritionPlanDayAPIRequest;
+use App\Http\Resources\NutritionPlanDayResource;
 use App\Models\NutritionPlanDay;
 use App\Repositories\NutritionPlanDayRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use Illuminate\Support\Facades\Config;
 use Response;
 
 /**
  * Class NutritionPlanDayController
  * @package App\Http\Controllers\API
  */
-
 class NutritionPlanDayAPIController extends AppBaseController
 {
     /** @var  NutritionPlanDayRepository */
@@ -35,13 +37,20 @@ class NutritionPlanDayAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $nutrition_plan_days = $this->nutritionPlanDayRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+        $perPage             = $request->input('per_page', Config::get('constants.PER_PAGE', 10));
+        $nutrition_plan_days = $this->nutritionPlanDayRepository
+            ->pushCriteria(new NutritionPlanDayCriteria($request->only([
+                'nutrition_plan_id'
+            ])));
+        if ($request->input('paginate')) {
+            $nutrition_plan_days = $nutrition_plan_days->paginate($perPage);
+            $nutrition_plan_days = NutritionPlanDayResource::collection($nutrition_plan_days);
+        } else {
+            $nutrition_plan_days = $nutrition_plan_days->all();
+            $nutrition_plan_days = new NutritionPlanDayResource($nutrition_plan_days);
+        }
 
-        return $this->sendResponse($nutrition_plan_days->toArray(), 'Nutrition Plan Days retrieved successfully');
+        return $this->sendResponse($nutrition_plan_days, 'Nutrition Plan Days retrieved successfully');
     }
 
     /**

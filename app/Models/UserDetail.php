@@ -37,7 +37,7 @@ class UserDetail extends Model
 
     protected $dates = ['deleted_at'];
 
-    public $appends = ['display_goal', 'display_food_preferences', 'display_body_parts', 'current_workout_plan_id'];
+    public $appends = ['display_goal', 'display_food_preferences', 'display_body_parts', 'current_workout_plan_id', 'current_nutrition_plan_id'];
 
 
     public $fillable = [
@@ -154,9 +154,20 @@ class UserDetail extends Model
         return $this->hasOne(WorkoutPlan::class, 'user_id', 'user_id');
     }
 
+    public function currentNutritionPlan()
+    {
+        return $this->hasOne(NutritionPlan::class, 'user_id', 'user_id');
+    }
+
     public function getCurrentWorkoutPlanIdAttribute()
     {
         $currentWorkoutPlan = $this->currentWorkoutPlan()->whereIn('status', [WorkoutPlan::STATUS_TODO, WorkoutPlan::STATUS_IN_PROGRESS])->first();
         return $currentWorkoutPlan->id ?? null;
+    }
+
+    public function getCurrentNutritionPlanIdAttribute()
+    {
+        $currentNutritionPlan = $this->currentNutritionPlan()->whereIn('status', [NutritionPlan::STATUS_TODO, WorkoutPlan::STATUS_IN_PROGRESS])->first();
+        return $currentNutritionPlan->id ?? null;
     }
 }

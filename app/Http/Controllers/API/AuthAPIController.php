@@ -85,6 +85,8 @@ class AuthAPIController extends AppBaseController
     public function socialLogin(SocialLoginAPIRequest $request)
     {
         try {
+            $paymentController = new PaymentController();
+
             $user                   = null;
             $input                  = $request->validated();
             $userSocialAccountModel = $this->userSocialAccountRepository->model();
@@ -127,6 +129,11 @@ class AuthAPIController extends AppBaseController
                 $userData             = [];
                 $userData['name']     = $userName ?? "user_" . $input['client_id'];
                 $userData['email']    = $userEmail ?? $input['client_id'] . '_' . $input['platform'] . '@' . config('app.name') . '.com';
+
+                $emailRequest      = new Request(['email' => $userData['email']]);
+                $stripe_customer             = $paymentController::post($emailRequest, 'create.customer');
+                $userData['stripe_customer_id'] = $stripe_customer['data']['id'];
+
                 $userData['password'] = bcrypt(substr(str_shuffle(MD5(microtime())), 0, 12));
                 $user                 = $this->userRepository->create($userData);
                 $user->markEmailAsVerified();

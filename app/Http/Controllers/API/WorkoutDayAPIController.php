@@ -12,7 +12,6 @@ use App\Repositories\WorkoutDayRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
 use Response;
 
 /**
@@ -148,22 +147,5 @@ class WorkoutDayAPIController extends AppBaseController
         $workoutDay->delete();
 
         return $this->sendSuccess('Workout Day deleted successfully');
-    }
-
-    public function generateWorkoutPlan()
-    {
-        try {
-            DB::beginTransaction();
-            $user = \Auth::user()->details;
-            if (!$user->goal) {
-                return $this->sendError('Goal not set');
-            }
-            $workoutPlan = $this->workoutDayRepository->generateWorkoutPlan($user);
-            DB::commit();
-            return $this->sendResponse($workoutPlan->toArray(), 'Workout Plan generated successfully');
-        } catch (\Exception $exception) {
-            DB::rollback();
-            $this->sendError($exception->getMessage());
-        }
     }
 }

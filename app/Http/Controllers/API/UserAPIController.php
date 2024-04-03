@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\User;
+use App\Repositories\WorkoutPlanRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\API\UpdateUserAPIRequest;
 use App\Models\UserDetail;
 use App\Repositories\UsersRepository;
 use Error;
+use Illuminate\Support\Facades\DB;
 use Response;
 use Config;
 
@@ -20,10 +22,12 @@ class UserAPIController extends AppBaseController
 {
     /** @var  UserRepository */
     private $userRepository;
+    private $workoutPlanRepository;
 
-    public function __construct(UsersRepository $userRepo)
+    public function __construct(UsersRepository $userRepo, WorkoutPlanRepository $workoutPlanRepo)
     {
-        $this->userRepository = $userRepo;
+        $this->userRepository        = $userRepo;
+        $this->workoutPlanRepository = $workoutPlanRepo;
     }
 
     public function myProfile(Request $request)
@@ -183,5 +187,22 @@ class UserAPIController extends AppBaseController
         $user->delete();
 
         return $this->sendSuccess('User deleted successfully');
+    }
+
+    public function generateWorkoutPlan()
+    {
+        try {
+            DB::beginTransaction();
+            $user = \Auth::user()->details;
+            if (!$user->goal) {
+                return $this->sendError('Goal not set');
+            }
+            $workoutPlan = $this->workoutPlanRepository->generateWorkoutPlan($user);
+            DB::commit();
+            return $this->sendResponse($workoutPlan->toArray(), 'Workout Plan generated successfully');
+        } catch (\Exception $exception) {
+            DB::rollback();
+            $this->sendError($exception->getMessage());
+        }
     }
 }

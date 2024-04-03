@@ -78,7 +78,7 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
     Route::resource('workout-days', App\Http\Controllers\API\WorkoutDayAPIController::class);
     Route::resource('workout-day-exercises', App\Http\Controllers\API\WorkoutDayExerciseAPIController::class);
 
-    Route::get('generate-workout-plan', [App\Http\Controllers\API\WorkoutDayAPIController::class, 'generateWorkoutPlan']);
+    Route::get('generate-workout-plan', [App\Http\Controllers\API\UserAPIController::class, 'generateWorkoutPlan']);
 
 
 });
@@ -90,8 +90,6 @@ Route::resource('constants', App\Http\Controllers\API\ConstantAPIController::cla
 Route::resource('pages', App\Http\Controllers\API\PageAPIController::class);
 
 Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, 'pageContent'])->name('page-content');
-
-
 
 
 Route::resource('workout_plans', App\Http\Controllers\API\WorkoutPlanAPIController::class);

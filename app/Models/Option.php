@@ -83,6 +83,14 @@ class Option extends Model
     const Q17_OPT2__INTERMEDIATE = 'intermediate';
     const Q17_OPT3__ADVANCED     = 'advanced';
 
+    const Q18_OPT1__YES = 'yes';
+    const Q18_OPT2__NO  = 'no';
+
+    const Q19_OPT1__2000_4000_STEPS = '2000_4000_steps';
+    const Q19_OPT2__5000_7000_STEPS = '5000_7000_steps';
+    const Q19_OPT3__7000_10000      = '7000_10000_steps';
+    const Q19_OPT3__10000_PLUS      = '10000_plus_steps';
+
 
     public function setOptionVariableNameAttribute($optionVariableName)
     {

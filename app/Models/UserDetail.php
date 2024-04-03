@@ -74,6 +74,8 @@ class UserDetail extends Model
         'food_preferences',
 
         'level',
+        'daily_steps_taken',
+        'health_status',
 
         'delete_account_type_id'
     ];

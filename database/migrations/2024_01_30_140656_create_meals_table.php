@@ -15,8 +15,8 @@ class CreateMealsTable extends Migration
     {
         Schema::create('meals', function (Blueprint $table) {
             $table->increments('id');
-            $table->enum('diet_type', ['traditional', 'keto'])->nullable();
-            $table->integer('meal_category_id')->unsigned();
+            $table->string('diet_type')->comment('traditional', 'keto')->nullable();
+            $table->integer('meal_category_id')->comment('breakfast', 'lunch', 'dinner')->unsigned();
             $table->text('name');
             $table->string('image')->nullable();
             $table->float('calories')->nullable();

@@ -18,6 +18,7 @@ class CreateNutritionPlanDayTable extends Migration
             $table->unsignedBigInteger('nutrition_plan_id');
             $table->foreign('nutrition_plan_id')->references('id')->on('nutrition_plans')->onDelete('cascade');
             $table->string('name', 255)->nullable(false);
+            $table->date('date')->nullable(false);
             $table->integer('status')->nullable(false);
             $table->timestamps();
             $table->softDeletes();

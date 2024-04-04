@@ -42,6 +42,7 @@ class NutritionPlanDay extends Model
     public $fillable = [
         'nutrition_plan_id',
         'name',
+        'date',
         'status'
     ];
 
@@ -84,6 +85,6 @@ class NutritionPlanDay extends Model
      **/
     public function nutritionPlanDayMeals()
     {
-        return $this->hasMany(\App\Models\NutritionPlanDayMeal::class, 'nutrition_plan_day_id');
+        return $this->hasMany(\App\Models\NutritionPlanDayMeal::class, 'nutrition_plan_day_id')->with('mealType');
     }
 }

@@ -45,18 +45,17 @@ class WorkoutDayAPIController extends AppBaseController
 
         if ($request->input('paginate')) {
             $workout_days = $workout_days->paginate($perPage);
-            $workout_days = WorkoutDayResource::collection($workout_days);
         } else {
             if ($request->input('get_dates')) {
                 $workout_days = $workout_days->pluck('date');
                 $workout_days = $workout_days->toArray();
+                return $this->sendResponse($workout_days, 'Workout Days retrieved successfully');
             } else {
                 $workout_days = $workout_days->all();
-                $workout_days = new WorkoutDayResource($workout_days);
             }
         }
 
-        return $this->sendResponse($workout_days, 'Workout Days retrieved successfully');
+        return $this->sendResponse(WorkoutDayResource::collection($workout_days), 'Workout Days retrieved successfully');
     }
 
     /**

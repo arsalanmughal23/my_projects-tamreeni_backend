@@ -201,7 +201,7 @@ class UserAPIController extends AppBaseController
                 return $this->sendError('Goal not set');
             }
             $workoutPlan   = $this->workoutPlanRepository->generateWorkoutPlan($user);
-            $nutritionPlan = $this->nutritionPlanRepository->generateWorkoutPlan($user);
+            $nutritionPlan = $this->nutritionPlanRepository->generateNutritionPlan($user);
             DB::commit();
             return $this->sendResponse(['workout_plan' => $workoutPlan->toArray(), 'nutrition_plan' => $nutritionPlan->toArray()], 'Workout Plan generated successfully');
         } catch (\Exception $exception) {

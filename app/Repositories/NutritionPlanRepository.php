@@ -45,7 +45,7 @@ class NutritionPlanRepository extends BaseRepository
         return NutritionPlan::class;
     }
 
-    public function generateWorkoutPlan($user)
+    public function generateNutritionPlan($user)
     {
         /* Mark complete previous nutrition plan */
         NutritionPlan::where('user_id', \Auth::id())->update([
@@ -83,6 +83,7 @@ class NutritionPlanRepository extends BaseRepository
                     'en' => 'Day 0' . $key + 1,
                     'ar' => 'اليوم 0' . $key + 1
                 ],
+                'date'              => $randomDate,
                 'status'            => NutritionPlanDay::STATUS_TODO
             ]);
             foreach ($meals as $index => $meal) {

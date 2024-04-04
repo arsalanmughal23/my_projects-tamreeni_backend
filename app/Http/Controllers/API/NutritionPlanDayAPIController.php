@@ -44,13 +44,11 @@ class NutritionPlanDayAPIController extends AppBaseController
             ])));
         if ($request->input('paginate')) {
             $nutrition_plan_days = $nutrition_plan_days->paginate($perPage);
-            $nutrition_plan_days = NutritionPlanDayResource::collection($nutrition_plan_days);
         } else {
             $nutrition_plan_days = $nutrition_plan_days->all();
-            $nutrition_plan_days = new NutritionPlanDayResource($nutrition_plan_days);
         }
 
-        return $this->sendResponse($nutrition_plan_days, 'Nutrition Plan Days retrieved successfully');
+        return $this->sendResponse(NutritionPlanDayResource::collection($nutrition_plan_days), 'Nutrition Plan Days retrieved successfully');
     }
 
     /**
@@ -83,13 +81,13 @@ class NutritionPlanDayAPIController extends AppBaseController
     public function show($id)
     {
         /** @var NutritionPlanDay $nutritionPlanDay */
-        $nutritionPlanDay = $this->nutritionPlanDayRepository->find($id);
+        $nutritionPlanDay = $this->nutritionPlanDayRepository->with('nutritionPlanDayMeals')->find($id);
 
         if (empty($nutritionPlanDay)) {
             return $this->sendError('Nutrition Plan Day not found');
         }
 
-        return $this->sendResponse($nutritionPlanDay->toArray(), 'Nutrition Plan Day retrieved successfully');
+        return $this->sendResponse(new NutritionPlanDayResource($nutritionPlanDay), 'Nutrition Plan Day retrieved successfully');
     }
 
     /**

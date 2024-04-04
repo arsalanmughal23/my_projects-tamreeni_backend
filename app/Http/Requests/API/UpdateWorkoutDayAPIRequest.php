@@ -24,8 +24,8 @@ class UpdateWorkoutDayAPIRequest extends APIRequest
      */
     public function rules()
     {
-        $rules = WorkoutDay::$rules;
-        
+        $rules = WorkoutDay::$update_rules;
+
         return $rules;
     }
 }

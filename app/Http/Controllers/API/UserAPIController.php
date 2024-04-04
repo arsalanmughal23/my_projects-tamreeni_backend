@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\User;
+use App\Repositories\NutritionPlanRepository;
+use App\Repositories\WorkoutPlanRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\API\UpdateUserAPIRequest;
 use App\Models\UserDetail;
 use App\Repositories\UsersRepository;
 use Error;
+use Illuminate\Support\Facades\DB;
 use Response;
 use Config;
 
@@ -20,10 +23,14 @@ class UserAPIController extends AppBaseController
 {
     /** @var  UserRepository */
     private $userRepository;
+    private $workoutPlanRepository;
+    private $nutritionPlanRepository;
 
-    public function __construct(UsersRepository $userRepo)
+    public function __construct(UsersRepository $userRepo, WorkoutPlanRepository $workoutPlanRepo, NutritionPlanRepository $nutritionPlanRepo)
     {
-        $this->userRepository = $userRepo;
+        $this->userRepository          = $userRepo;
+        $this->workoutPlanRepository   = $workoutPlanRepo;
+        $this->nutritionPlanRepository = $nutritionPlanRepo;
     }
 
     public function myProfile(Request $request)
@@ -183,5 +190,23 @@ class UserAPIController extends AppBaseController
         $user->delete();
 
         return $this->sendSuccess('User deleted successfully');
+    }
+
+    public function generateWorkoutPlan()
+    {
+        try {
+            DB::beginTransaction();
+            $user = \Auth::user()->details;
+            if (!$user->goal) {
+                return $this->sendError('Goal not set');
+            }
+            $workoutPlan   = $this->workoutPlanRepository->generateWorkoutPlan($user);
+            $nutritionPlan = $this->nutritionPlanRepository->generateNutritionPlan($user);
+            DB::commit();
+            return $this->sendResponse(['workout_plan' => $workoutPlan->toArray(), 'nutrition_plan' => $nutritionPlan->toArray()], 'Workout Plan generated successfully');
+        } catch (\Exception $exception) {
+            DB::rollback();
+            return $this->sendError($exception->getMessage());
+        }
     }
 }

@@ -2,19 +2,22 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Criteria\WorkoutDayCriteria;
 use App\Http\Requests\API\CreateWorkoutDayAPIRequest;
 use App\Http\Requests\API\UpdateWorkoutDayAPIRequest;
+use App\Http\Resources\WorkoutDayResource;
+use App\Http\Resources\SingleWorkoutDayResponse;
 use App\Models\WorkoutDay;
 use App\Repositories\WorkoutDayRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use Illuminate\Support\Facades\Config;
 use Response;
 
 /**
  * Class WorkoutDayController
  * @package App\Http\Controllers\API
  */
-
 class WorkoutDayAPIController extends AppBaseController
 {
     /** @var  WorkoutDayRepository */
@@ -35,13 +38,24 @@ class WorkoutDayAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $workout_days = $this->workoutDayRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+        $perPage      = $request->input('per_page', Config::get('constants.PER_PAGE', 10));
+        $workout_days = $this->workoutDayRepository->pushCriteria(new WorkoutDayCriteria($request->only([
+            'workout_plan_id',
+        ])));
 
-        return $this->sendResponse($workout_days->toArray(), 'Workout Days retrieved successfully');
+        if ($request->input('paginate')) {
+            $workout_days = $workout_days->paginate($perPage);
+        } else {
+            if ($request->input('get_dates')) {
+                $workout_days = $workout_days->pluck('date');
+                $workout_days = $workout_days->toArray();
+                return $this->sendResponse($workout_days, 'Workout Days retrieved successfully');
+            } else {
+                $workout_days = $workout_days->all();
+            }
+        }
+
+        return $this->sendResponse(WorkoutDayResource::collection($workout_days), 'Workout Days retrieved successfully');
     }
 
     /**
@@ -74,13 +88,13 @@ class WorkoutDayAPIController extends AppBaseController
     public function show($id)
     {
         /** @var WorkoutDay $workoutDay */
-        $workoutDay = $this->workoutDayRepository->find($id);
+        $workoutDay = $this->workoutDayRepository->with('workoutDayExercises')->find($id);
 
         if (empty($workoutDay)) {
             return $this->sendError('Workout Day not found');
         }
 
-        return $this->sendResponse($workoutDay->toArray(), 'Workout Day retrieved successfully');
+        return $this->sendResponse(new WorkoutDayResource($workoutDay), 'Workout Day retrieved successfully');
     }
 
     /**

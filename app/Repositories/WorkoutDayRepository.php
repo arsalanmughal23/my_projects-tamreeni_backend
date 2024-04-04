@@ -2,15 +2,18 @@
 
 namespace App\Repositories;
 
+use App\Models\Exercise;
+use App\Models\Option;
 use App\Models\WorkoutDay;
+use App\Models\WorkoutDayExercise;
+use App\Models\WorkoutPlan;
 use App\Repositories\BaseRepository;
 
 /**
  * Class WorkoutDayRepository
  * @package App\Repositories
  * @version April 1, 2024, 8:01 am UTC
-*/
-
+ */
 class WorkoutDayRepository extends BaseRepository
 {
     /**

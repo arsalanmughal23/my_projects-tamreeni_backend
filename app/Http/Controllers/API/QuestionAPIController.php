@@ -13,7 +13,6 @@ use Response;
  * Class QuestionController
  * @package App\Http\Controllers\API
  */
-
 class QuestionAPIController extends AppBaseController
 {
     /** @var  QuestionRepository */
@@ -34,28 +33,25 @@ class QuestionAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $question = $this->questionRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+        $question = $this->questionRepository->all();
 
         return $this->sendResponse($question->toArray(), 'Questions retrieved successfully');
     }
+
     public function submitAnswers(SubmitAnswersAPIRequest $request)
     {
         try {
             /** @var User $user */
             $user = $request->user();
-            if(!$userDetails = $user->details)
+            if (!$userDetails = $user->details)
                 throw new Error('User detail not found');
 
             $userDetails->update($request->validated());
-            $BMI = 21.4;
+            $BMI          = 21.4;
             $responseData = [
                 // 'user' => $user->fresh(),
-                'bmi' => $BMI,
-                'detail' => 'A BMI of '.$BMI.' falls within the `normal weight` category, which typically ranges between 18.5 to 24.5. It suggests that a person is at a healthy weight in proportion to their height.'
+                'bmi'    => $BMI,
+                'detail' => 'A BMI of ' . $BMI . ' falls within the `normal weight` category, which typically ranges between 18.5 to 24.5. It suggests that a person is at a healthy weight in proportion to their height.'
             ];
 
             return $this->sendResponse($responseData, 'Answers are saved successfully');

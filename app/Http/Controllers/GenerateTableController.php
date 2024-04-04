@@ -18,8 +18,8 @@ class GenerateTableController extends Controller
      */
     public function generateCrudFromTable(Request $request, Permission $permissions)
     {
-        $table_name = $this->getPluralTableName($request->db_tables);
-        $modal_name = !empty($request->model_name) ? $this->getSingularModalName($request->model_name) : $this->getSingularModalName($table_name);
+        $table_name  = $this->getPluralTableName($request->db_tables);
+        $modal_name  = !empty($request->model_name) ? $this->getSingularModalName($request->model_name) : $this->getSingularModalName($table_name);
         $gen_command = $this->generateCrudCommand($modal_name, $table_name);
         $this->runArtisanCommand($gen_command);
         $this->createPermissions($modal_name);
@@ -27,7 +27,7 @@ class GenerateTableController extends Controller
         $request->merge(['model_name' => $modal_name]);
 
         $this->createMenu($request);
-
+        \Artisan::call('optimize:clear');
         return back();
     }
 
@@ -66,8 +66,8 @@ class GenerateTableController extends Controller
      */
     public function getPluralTableName($var)
     {
-        $var = Str::snake($var);
-        $var = Str::lower($var);
+        $var        = Str::snake($var);
+        $var        = Str::lower($var);
         $table_name = Str::plural($var);
         return strtolower($table_name);
     }
@@ -103,9 +103,9 @@ class GenerateTableController extends Controller
      */
     public function createPermissions($table_name)
     {
-        $table_name = $this->getPluralTableName($table_name);
+        $table_name  = $this->getPluralTableName($table_name);
         $permissions = new Permission;
-        $isExists = $permissions->where('name', 'like', '%' . $table_name . '%')->exists();
+        $isExists    = $permissions->where('name', 'like', '%' . $table_name . '%')->exists();
         if (!$isExists) {
             $data = $permissions->generatePermissions($table_name);
             \DB::table('permissions')->insert($data);
@@ -121,10 +121,10 @@ class GenerateTableController extends Controller
      */
     public function deletePermissions(Request $request)
     {
-        $var = $request->model;
-        $table_name = $this->getPluralTableName($var);
+        $var         = $request->model;
+        $table_name  = $this->getPluralTableName($var);
         $permissions = new Permission;
-        $isDeleted = $permissions->where('name', 'like', '%' . $table_name . '%')->delete();
+        $isDeleted   = $permissions->where('name', 'like', '%' . $table_name . '%')->delete();
         return $isDeleted;
     }
 
@@ -150,16 +150,16 @@ class GenerateTableController extends Controller
      */
     public function createMenu(Request $request)
     {
-        $slug = $this->getPluralTableName($request->db_tables);
-        $name = $this->camelCaseToString($request->model_name);
+        $slug      = $this->getPluralTableName($request->db_tables);
+        $name      = $this->camelCaseToString($request->model_name);
         $menu_icon = $request->menu_icon;
 
         return Menu::updateOrCreate([
             'name' => $name,
             'slug' => $slug,
         ], [
-                'icon' => $menu_icon,
-            ]);
+            'icon' => $menu_icon,
+        ]);
 
     }
 

@@ -28,13 +28,15 @@ class WorkoutDayExercise extends Model
     use HasFactory;
 
     public $table = 'workout_day_exercises';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
+    const STATUS_TODO        = 10;
+    const STATUS_IN_PROGRESS = 20;
+    const STATUS_COMPLETED   = 30;
 
     protected $dates = ['deleted_at'];
-
 
 
     public $fillable = [
@@ -53,14 +55,14 @@ class WorkoutDayExercise extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
+        'id'             => 'integer',
         'workout_day_id' => 'integer',
-        'exercise_id' => 'integer',
-        'duration' => 'integer',
-        'sets' => 'integer',
-        'reps' => 'integer',
-        'burn_calories' => 'float',
-        'status' => 'integer'
+        'exercise_id'    => 'integer',
+        'duration'       => 'integer',
+        'sets'           => 'integer',
+        'reps'           => 'integer',
+        'burn_calories'  => 'float',
+        'status'         => 'integer'
     ];
 
     /**
@@ -70,15 +72,15 @@ class WorkoutDayExercise extends Model
      */
     public static $rules = [
         'workout_day_id' => 'required',
-        'exercise_id' => 'required|integer',
-        'duration' => 'required|integer',
-        'sets' => 'required|integer',
-        'reps' => 'required|integer',
-        'burn_calories' => 'required|numeric',
-        'status' => 'required|integer',
-        'created_at' => 'nullable',
-        'updated_at' => 'nullable',
-        'deleted_at' => 'nullable'
+        'exercise_id'    => 'required|integer',
+        'duration'       => 'required|integer',
+        'sets'           => 'required|integer',
+        'reps'           => 'required|integer',
+        'burn_calories'  => 'required|numeric',
+        'status'         => 'required|integer',
+        'created_at'     => 'nullable',
+        'updated_at'     => 'nullable',
+        'deleted_at'     => 'nullable'
     ];
 
     /**

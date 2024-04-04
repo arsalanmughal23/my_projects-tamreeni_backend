@@ -15,8 +15,8 @@ class CreateWorkoutDays extends Migration
     {
         Schema::create('workout_days', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('workout_plan_id');
+            $table->foreign('workout_plan_id')->references('id')->on('workout_plans')->onDelete('cascade');
             $table->string('name', 255)->nullable(false);
             $table->text('description')->nullable(true);
             $table->integer('duration')->nullable(false);

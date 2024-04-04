@@ -78,10 +78,11 @@ class AppointmentRepository extends BaseRepository
         return $query;
     }
 
-    public function checkSlotAvailable($user_id,$slot_id){
+    public function checkSlotAvailable($user_id,$slot_id,$date){
 
         return Appointment::where('user_id', $user_id)
             ->where('slot_id', $slot_id)
+            ->whereDate('date', $date)
             ->whereIn('status', [Appointment::STATUS_PENDING,Appointment::STATUS_START])
             ->exists();
     }

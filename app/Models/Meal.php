@@ -33,10 +33,14 @@ class Meal extends Model
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
+    const DIET_TYPE_TRADITION_EN = "traditional";
+    const DIET_TYPE_TRADITION_AR = "تقليدي";
+    const DIET_TYPE_KETO_EN      = "keto";
+    const DIET_TYPE_KETO_AR      = "كيتو";
 
     protected $dates = ['deleted_at'];
 
-    public $translatable = ['name', 'description'];
+    public $translatable = ['name', 'description', 'diet_type'];
 
     public $fillable = [
         'diet_type',

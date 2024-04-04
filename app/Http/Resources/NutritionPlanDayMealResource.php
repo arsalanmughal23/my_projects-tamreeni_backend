@@ -19,17 +19,16 @@ class NutritionPlanDayMealResource extends JsonResource
             "nutrition_plan_day_id" => $this->nutrition_plan_day_id,
             "meal_id"               => $this->meal_id,
             "meal_type_id"          => $this->meal_type_id,
-            "name"                  => $this->name,
-            "diet_type"             => $this->diet_type,
+            "name"                  => $this->meal->name,
+            "diet_type"             => $this->meal->diet_type,
             "calories"              => $this->calories,
             "carbs"                 => $this->carbs,
             "fats"                  => $this->fats,
             "protein"               => $this->protein,
-            "image"                 => $this->image,
+            "image"                 => $this->meal->image,
             "status"                => $this->status,
             "created_at"            => $this->created_at,
-            "meal_type"             => new MealTypeResource($this->mealType)
-//            'meal'                  => new MealResource($this->meal)
+            "meal_type"             => $this->mealType->name
         ];
     }
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * Class MealCategory
@@ -20,15 +21,15 @@ class MealCategory extends Model
     use SoftDeletes;
 
     use HasFactory;
-
+    use HasTranslations;
     public $table = 'meal_categories';
-    
+
+    public $translatable = ['name'];
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
 
     protected $dates = ['deleted_at'];
-
 
 
     public $fillable = [
@@ -42,9 +43,9 @@ class MealCategory extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
+        'id'        => 'integer',
         'diet_type' => 'string',
-        'name' => 'string'
+        'name'      => 'string'
     ];
 
     /**
@@ -53,8 +54,8 @@ class MealCategory extends Model
      * @var array
      */
     public static $rules = [
-        'diet_type' => 'nullable|string',
-        'name' => 'required|string|max:255',
+        'diet_type'  => 'nullable|string',
+        'name'       => 'required|string|max:255',
         'deleted_at' => 'nullable',
         'created_at' => 'nullable',
         'updated_at' => 'nullable'

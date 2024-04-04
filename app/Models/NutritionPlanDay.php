@@ -85,6 +85,6 @@ class NutritionPlanDay extends Model
      **/
     public function nutritionPlanDayMeals()
     {
-        return $this->hasMany(\App\Models\NutritionPlanDayMeal::class, 'nutrition_plan_day_id')->with('mealType');
+        return $this->hasMany(\App\Models\NutritionPlanDayMeal::class, 'nutrition_plan_day_id')->with(['mealType', 'meal']);
     }
 }

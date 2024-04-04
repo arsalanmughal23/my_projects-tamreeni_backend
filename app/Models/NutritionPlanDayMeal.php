@@ -5,6 +5,7 @@ namespace App\Models;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * Class NutritionPlanDayMeal
@@ -30,9 +31,9 @@ class NutritionPlanDayMeal extends Model
     use SoftDeletes;
 
     use HasFactory;
-
-    public $table = 'nutrition_plan_day_meals';
-
+    use HasTranslations;
+    public $table        = 'nutrition_plan_day_meals';
+    public $translatable = ['name', 'diet_type'];
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
@@ -49,7 +50,6 @@ class NutritionPlanDayMeal extends Model
         'meal_id',
         'meal_type_id',
         'name',
-        'diet_type',
         'calories',
         'carbs',
         'fats',
@@ -68,7 +68,6 @@ class NutritionPlanDayMeal extends Model
         'meal_id'               => 'integer',
         'meal_type_id'          => 'integer',
         'name'                  => 'string',
-        'diet_type'             => 'string',
         'calories'              => 'float',
         'carbs'                 => 'float',
         'fats'                  => 'float',
@@ -86,7 +85,6 @@ class NutritionPlanDayMeal extends Model
         'meal_id'               => 'nullable|integer',
         'meal_type_id'          => 'required|integer',
         'name'                  => 'required|string|max:191',
-        'diet_type'             => 'nullable|string',
         'calories'              => 'required|numeric',
         'carbs'                 => 'required|numeric',
         'fats'                  => 'required|numeric',
@@ -119,17 +117,5 @@ class NutritionPlanDayMeal extends Model
     public function nutritionPlanDay()
     {
         return $this->belongsTo(\App\Models\NutritionPlanDay::class, 'nutrition_plan_day_id');
-    }
-
-    public function getImageAttribute()
-    {
-        $meal = $this->meal()->first();
-        return $meal->image ?? null;
-    }
-
-    public function getNameAttribute($value)
-    {
-        $meal = $this->meal()->first();
-        return $meal->name ?? null;
     }
 }

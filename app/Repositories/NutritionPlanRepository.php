@@ -91,7 +91,6 @@ class NutritionPlanRepository extends BaseRepository
                     'nutrition_plan_day_id' => $nutritionPlanDay->id,
                     'meal_id'               => $meal->id,
                     'meal_type_id'          => $meal->meal_type_id,
-                    'diet_type'             => $meal->diet_type,
                     'calories'              => $meal->calories,
                     'carbs'                 => $meal->carbs,
                     'fats'                  => $meal->fats,

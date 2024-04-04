@@ -15,9 +15,9 @@ class MealCategoriesSeeder extends Seeder
     public function run()
     {
         $categories = [
-            ['diet_type' => 'traditional', 'name' => 'Vegetarian'],
-            ['diet_type' => 'traditional', 'name' => 'Lactose Free'],
-            ['diet_type' => 'keto', 'name' => 'Gluten Free'],
+            [ 'slug' => 'breakfast', 'title' => 'Breakfast' ],
+            [ 'slug' => 'lunch', 'title' => 'Lunch' ],
+            [ 'slug' => 'dinner', 'title' => 'Dinner' ],
         ];
 
         DB::table('meal_categories')->insert($categories);

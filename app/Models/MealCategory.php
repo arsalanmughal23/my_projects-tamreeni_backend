@@ -12,8 +12,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @version January 30, 2024, 3:04 pm UTC
  *
  * @property \Illuminate\Database\Eloquent\Collection $meals
- * @property string $diet_type
- * @property string $name
+ * @property string $slug
+ * @property string $title
  */
 class MealCategory extends Model
 {
@@ -32,8 +32,8 @@ class MealCategory extends Model
 
 
     public $fillable = [
-        'diet_type',
-        'name'
+        'slug',
+        'title'
     ];
 
     /**
@@ -43,8 +43,8 @@ class MealCategory extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'diet_type' => 'string',
-        'name' => 'string'
+        'slug' => 'string',
+        'title' => 'string'
     ];
 
     /**
@@ -53,8 +53,8 @@ class MealCategory extends Model
      * @var array
      */
     public static $rules = [
-        'diet_type' => 'nullable|string',
-        'name' => 'required|string|max:255',
+        'slug' => 'required|string|max:255',
+        'title' => 'nullable|string',
         'deleted_at' => 'nullable',
         'created_at' => 'nullable',
         'updated_at' => 'nullable'

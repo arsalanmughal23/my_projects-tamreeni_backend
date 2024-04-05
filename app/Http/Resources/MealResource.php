@@ -15,13 +15,22 @@ class MealResource extends JsonResource
      */
     public function toArray($request)
     {
+        $mealCategory = $this->mealCategory;
+
         return [
             'id'               => $this->id,
             'name'             => $this->getTranslation('name', app()->getLocale()),
             'description'      => $this->getTranslation('description', app()->getLocale()),
             'diet_type'        => $this->diet_type,
             'meal_category_id' => $this->meal_category_id,
-            'meal_category'    => $this->mealCategory,
+            'meal_category'    => [
+                'id'            => $mealCategory->id,
+                'diet_type'     => $mealCategory->diet_type,
+                'name'          => $mealCategory->getTranslation('name', app()->getLocale()),
+                'deleted_at'    => $mealCategory->deleted_at,
+                'created_at'    => $mealCategory->created_at,
+                'updated_at'    => $mealCategory->updated_at,
+            ],
             'image'            => $this->image,
             'calories'         => $this->calories,
             'is_favourite'     => $this->is_favourite,

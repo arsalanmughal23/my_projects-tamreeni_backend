@@ -35,11 +35,7 @@ class ExerciseEquipmentAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $exercise_equipments = $this->exerciseEquipmentRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+        $exercise_equipments = $this->exerciseEquipmentRepository->all();
 
         return $this->sendResponse($exercise_equipments->toArray(), 'Exercise Equipments retrieved successfully');
     }

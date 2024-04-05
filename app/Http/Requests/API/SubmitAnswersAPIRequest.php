@@ -50,8 +50,8 @@ class SubmitAnswersAPIRequest extends BaseAPIRequest
             'food_preferences.*'       => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q16_FOOD_PREFERENCES,
 
             'level'             => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q17_LEVEL,
-            'health_status'     => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q18_HEALTH_STATUS,
-            'daily_steps_taken' => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q19_DAILY_STEPS_TAKEN,
+            'health_status'     => 'somtimes|string|exists:options,option_variable_name,question_variable_name,' . Question::Q18_HEALTH_STATUS,
+            'daily_steps_taken' => 'somtimes|string|exists:options,option_variable_name,question_variable_name,' . Question::Q19_DAILY_STEPS_TAKEN,
         ];
         // return [
         //     'goal' => 'required|string|in:'.implode(',', Question::Q1_OPTS),

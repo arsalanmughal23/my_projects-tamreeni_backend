@@ -37,7 +37,7 @@ class UserDetail extends Model
 
     protected $dates = ['deleted_at'];
 
-    public $appends = ['display_goal', 'display_food_preferences', 'display_body_parts', 'current_workout_plan_id', 'current_nutrition_plan_id'];
+    public $appends = ['current_workout_plan_id', 'current_nutrition_plan_id'];
 
 
     public $fillable = [
@@ -103,38 +103,6 @@ class UserDetail extends Model
         'food_preferences'          => 'json'
     ];
 
-    public function getDisplayGoalAttribute()
-    {
-        return $this->goal ? ucwords(str_replace('_', ' ', $this->goal)) : null;
-    }
-
-    public function getDisplayFoodPreferencesAttribute()
-    {
-        $foodPreferences        = $this->food_preferences ?? [];
-        $displayFoodPreferences = [];
-        if ($foodPreferences && is_array($foodPreferences)) {
-
-            foreach ($foodPreferences as $foodPreference) {
-                if ($foodPreference)
-                    array_push($displayFoodPreferences, ucwords(str_replace('_', ' ', $foodPreference)));
-            }
-        }
-        return $displayFoodPreferences;
-    }
-
-    public function getDisplayBodyPartsAttribute()
-    {
-        $bodyParts        = $this->body_parts ?? [];
-        $displaybodyParts = [];
-        if ($bodyParts && is_array($bodyParts)) {
-
-            foreach ($bodyParts as $bodyPart) {
-                if ($bodyPart)
-                    array_push($displaybodyParts, ucwords(str_replace('_', ' ', $bodyPart)));
-            }
-        }
-        return $displaybodyParts;
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -28,7 +28,6 @@ class UserSeeder extends Seeder
             [ 'name' => Role::THERAPIST, 'guard_name' => 'api' ]
         ]);
 
-        // $apiUserRole = Role::whereName(Role::API_USER)->first();
         $coachRole = Role::whereName(Role::COACH)->first();
         $dietitianRole = Role::whereName(Role::DIETITIAN)->first();
         $therapistRole = Role::whereName(Role::THERAPIST)->first();
@@ -39,6 +38,7 @@ class UserSeeder extends Seeder
             'password' => '123456',
         ])->assignRole(Role::SUPER_ADMIN);
 
+            // $apiUserRole = Role::whereName(Role::API_USER)->first();
             // $apiUser = User::create([
             //     'name' => 'App User1',
             //     'email' => 'appuser1@yopmail.com',

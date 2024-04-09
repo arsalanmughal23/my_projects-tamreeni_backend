@@ -57,6 +57,9 @@ class CreateUsersTable extends Migration
             $table->string('food_preferences')->default(json_encode([]))->comment('food_preferences');
             $table->string('level')->nullable()->comment('level');
 
+            $table->string('health_status')->nullable();
+            $table->string('daily_steps_taken')->nullable();
+
             $table->float('height_in_m')->nullable()->default(0);
             $table->string('height_unit')->nullable()->comment('height_unit'); // CONSTANT: cm, m
             $table->float('current_weight_in_kg')->nullable()->default(0);

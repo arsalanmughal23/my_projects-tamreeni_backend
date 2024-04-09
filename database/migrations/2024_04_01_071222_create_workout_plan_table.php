@@ -34,7 +34,7 @@ class CreateWorkoutPlanTable extends Migration
     public function down()
     {
         Schema::table('workout_plans', function (Blueprint $table) {
-            //
+            $table->dropConstrainedForeignId('user_id');
         });
     }
 }

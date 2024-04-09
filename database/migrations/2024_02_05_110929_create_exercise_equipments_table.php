@@ -17,6 +17,7 @@ class CreateExerciseEquipmentsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('icon')->nullable();
+            $table->enum('type', ['All Equipments', 'Machines', 'Free Weights', 'No Equipment At All'])->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

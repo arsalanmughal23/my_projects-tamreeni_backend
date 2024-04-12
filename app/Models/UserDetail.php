@@ -77,6 +77,8 @@ class UserDetail extends Model
         'daily_steps_taken',
         'health_status',
 
+        'calories',
+
         'delete_account_type_id'
     ];
 
@@ -100,7 +102,8 @@ class UserDetail extends Model
         'gender'                    => 'string',
         'push_notification'         => 'boolean',
         'body_parts'                => 'json',
-        'food_preferences'          => 'json'
+        'food_preferences'          => 'json',
+        'calories'                  => 'float',
     ];
 
 

@@ -16,7 +16,7 @@ class CreateMealCategoriesTable extends Migration
         Schema::create('meal_categories', function (Blueprint $table) {
             $table->increments('id');
             $table->string('diet_type')->comment('traditional', 'keto')->nullable(); // Assuming const_diet_types is an enum
-            $table->string('name')->comment('Vegetarian', 'Lactose Free', 'Gluten Free')->nullable(); // food_preferences
+            $table->string('name')->comment('eggs', 'shrimp', 'veggies')->nullable(); // food_preferences
             $table->softDeletes();
             $table->timestamps();
         });

@@ -19,7 +19,7 @@ class CreateMealsTable extends Migration
             $table->unsignedInteger('meal_category_id'); //'breakfast', 'lunch', 'dinner'
             $table->foreign('meal_category_id')->references('id')->on('meal_categories')->onDelete('cascade');
 
-            $table->unsignedBigInteger('meal_type_id')->nullable();
+            $table->unsignedBigInteger('meal_type_id');
             $table->foreign('meal_type_id')->references('id')->on('meal_types')->onDelete('cascade');
 
             $table->text('name');
@@ -43,6 +43,10 @@ class CreateMealsTable extends Migration
      */
     public function down()
     {
+        Schema::table('meals', function (Blueprint $table) {
+            $table->dropConstrainedForeignId('meal_category_id');
+            $table->dropConstrainedForeignId('meal_type_id');
+        });
         Schema::dropIfExists('meals');
     }
 }

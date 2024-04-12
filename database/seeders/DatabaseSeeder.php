@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             ConstantSeeder::class,
             WellnessTipsSeeder::class,
             MealCategoriesSeeder::class,
+            MealTypeSeeder::class,
             MealsSeeder::class,
             ExerciseEquipmentsSeeder::class,
             BodyPartsSeeder::class,

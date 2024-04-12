@@ -80,10 +80,7 @@ class NutritionPlanRepository extends BaseRepository
         foreach ($randomDates as $key => $randomDate) {
             $nutritionPlanDay = NutritionPlanDay::create([
                 'nutrition_plan_id' => $nutritionPlanId,
-                'name'              => [
-                    'en' => 'Day 0' . $key + 1,
-                    'ar' => 'اليوم 0' . $key + 1
-                ],
+                'name'              => $key + 1,
                 'date'              => $randomDate,
                 'status'            => NutritionPlanDay::STATUS_TODO
             ]);

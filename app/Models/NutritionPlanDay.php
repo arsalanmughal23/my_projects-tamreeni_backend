@@ -72,6 +72,20 @@ class NutritionPlanDay extends Model
         'deleted_at'        => 'nullable'
     ];
 
+
+    protected static function booted()
+    {
+        static::created(function ($nutritionPlanDay) {
+            $nutritionPlanDayName = '0' . $nutritionPlanDay->name;
+            $nutritionPlanDay->update([
+                'name' => [
+                    'en' => __('nutrition_plan_day.day_name', ['daynumber' => $nutritionPlanDayName], 'en'),
+                    'ar' => __('nutrition_plan_day.day_name', ['daynumber' => $nutritionPlanDayName], 'ar')
+                ]
+            ]);
+        });
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      **/

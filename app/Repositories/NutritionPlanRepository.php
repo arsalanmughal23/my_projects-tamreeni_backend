@@ -69,13 +69,14 @@ class NutritionPlanRepository extends BaseRepository
 
         ]);
         /* TODO: get meals through algo */
-        $meals = Meal::all();
-        $this->assignNutritionPlanDaysAndMeals($randomDates, $meals, $nutritionPlan->id);
+        $meals = Meal::whereBetween('calories', [10, 1000])->inRandomOrder()->get()->unique('meal_type_id');
+        $nutritionPlan['nutrition_plan_days'] = $this->assignNutritionPlanDaysAndMeals($randomDates, $meals, $nutritionPlan->id);
         return $nutritionPlan;
     }
 
     public function assignNutritionPlanDaysAndMeals($randomDates, $meals, $nutritionPlanId)
     {
+        $nutritionPlanDays = [];
         foreach ($randomDates as $key => $randomDate) {
             $nutritionPlanDay = NutritionPlanDay::create([
                 'nutrition_plan_id' => $nutritionPlanId,
@@ -86,8 +87,10 @@ class NutritionPlanRepository extends BaseRepository
                 'date'              => $randomDate,
                 'status'            => NutritionPlanDay::STATUS_TODO
             ]);
+
+            $nutritionPlanDayMeals = [];
             foreach ($meals as $index => $meal) {
-                NutritionPlanDayMeal::create([
+                $nutritionPlanDayMeal = NutritionPlanDayMeal::create([
                     'nutrition_plan_day_id' => $nutritionPlanDay->id,
                     'meal_id'               => $meal->id,
                     'meal_type_id'          => $meal->meal_type_id,
@@ -97,7 +100,11 @@ class NutritionPlanRepository extends BaseRepository
                     'protein'               => $meal->protein,
                     'status'                => NutritionPlanDayMeal::STATUS_TODO
                 ]);
+                array_push($nutritionPlanDayMeals, $nutritionPlanDayMeal);
             }
+            $nutritionPlanDay['nutrition_plan_day_meals'] = $nutritionPlanDayMeals;
+            array_push($nutritionPlanDays, $nutritionPlanDay);
         }
+        return $nutritionPlanDays;
     }
 }

@@ -43,7 +43,7 @@ class NutritionPlanDayMeal extends Model
 
     protected $dates = ['deleted_at'];
 
-    protected $appends = ['image'];
+    protected $appends = [];
 
     public $fillable = [
         'nutrition_plan_day_id',

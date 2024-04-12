@@ -8,6 +8,7 @@ use App\Models\NutritionPlanDayMeal;
 use App\Repositories\NutritionPlanDayMealRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use App\Models\NutritionPlan;
 use Response;
 
 /**
@@ -132,5 +133,30 @@ class NutritionPlanDayMealAPIController extends AppBaseController
         $nutritionPlanDayMeal->delete();
 
         return $this->sendSuccess('Nutrition Plan Day Meal deleted successfully');
+    }
+
+    public function userMealConsumed($nutritionPlanDayMealId, Request $request) 
+    {
+        $user = $request->user();
+        $userDetails = $user?->details;
+        if(!$userDetails)
+            return $this->sendError('User detail is missing');
+
+        /** @var NutritionPlanDayMeal $nutritionPlanDayMeal */
+        $nutritionPlanDayMeal = $this->nutritionPlanDayMealRepository->findWithoutFail($nutritionPlanDayMealId);
+        $nutritionPlanDayMeal = NutritionPlanDayMeal::with('nutritionPlanDay.nutritionPlan')->find($nutritionPlanDayMealId);
+        $mealNutritionPlan = $nutritionPlanDayMeal?->nutritionPlanDay?->nutritionPlan;
+
+        if (!$nutritionPlanDayMeal || $mealNutritionPlan?->user_id != $user->id)
+            return $this->sendError('Your nutrition plan doesn`t have this meal');
+
+        if ($nutritionPlanDayMeal->status == NutritionPlan::STATUS_COMPLETED)
+            return $this->sendError('This meal is already consumed', 403);
+
+        $nutritionPlanDayMeal = $this->nutritionPlanDayMealRepository->update([ 'status' => NutritionPlanDayMeal::STATUS_COMPLETED ], $nutritionPlanDayMealId);
+        $userDetails->update([
+            'calories' => $userDetails->calories + $nutritionPlanDayMeal->calories
+        ]);
+        return $this->sendResponse($nutritionPlanDayMeal->toArray(), 'Meal consumed successfully');
     }
 }

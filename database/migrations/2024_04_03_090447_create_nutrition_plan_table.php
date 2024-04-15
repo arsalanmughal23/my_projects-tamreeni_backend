@@ -33,8 +33,8 @@ class CreateNutritionPlanTable extends Migration
      */
     public function down()
     {
-        Schema::table('meal_plans', function (Blueprint $table) {
-            //
+        Schema::table('nutrition_plans', function (Blueprint $table) {
+            $table->dropConstrainedForeignId('user_id');
         });
     }
 }

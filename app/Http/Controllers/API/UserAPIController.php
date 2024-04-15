@@ -8,6 +8,8 @@ use App\Repositories\WorkoutPlanRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\API\UpdateUserAPIRequest;
+use App\Http\Resources\NutritionPlanResource;
+use App\Models\NutritionPlan;
 use App\Models\UserDetail;
 use App\Repositories\UsersRepository;
 use Error;
@@ -201,9 +203,13 @@ class UserAPIController extends AppBaseController
                 return $this->sendError('Goal not set');
             }
             $workoutPlan   = $this->workoutPlanRepository->generateWorkoutPlan($user);
+
             $nutritionPlan = $this->nutritionPlanRepository->generateNutritionPlan($user);
+            $nutritionPlan = NutritionPlan::with('nutritionPlanDays.nutritionPlanDayMeals')->find($nutritionPlan->id);
+            $nutritionPlan = NutritionPlanResource::toObject($nutritionPlan);
+
             DB::commit();
-            return $this->sendResponse(['workout_plan' => $workoutPlan->toArray(), 'nutrition_plan' => $nutritionPlan->toArray()], 'Workout Plan generated successfully');
+            return $this->sendResponse(['workout_plan' => $workoutPlan->toArray(), 'nutrition_plan' => $nutritionPlan], 'Workout Plan generated successfully');
         } catch (\Exception $exception) {
             DB::rollback();
             return $this->sendError($exception->getMessage());

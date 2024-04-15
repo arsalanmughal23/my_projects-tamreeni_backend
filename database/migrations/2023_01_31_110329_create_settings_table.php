@@ -22,6 +22,12 @@ class CreateSettingsTable extends Migration
             $table->string('email');
             $table->string('contact_number');
             $table->string('language');
+
+            $table->decimal('service_fee', 8, 2, true);
+            $table->decimal('coach_fee', 8, 2, true);
+            $table->decimal('dietitian_fee', 8, 2, true);
+            $table->decimal('therapist_fee', 8, 2, true);
+
             $table->softDeletes();
             $table->timestamps();
         });

@@ -9,10 +9,10 @@ use Illuminate\Database\Eloquent\Model;
 abstract class BaseRepository extends \Prettus\Repository\Eloquent\BaseRepository
 {
 
-    public function findWithoutFail($id, $columns = ['*'])
+    public function findWithoutFail($id)
     {
         try {
-            return $this->find($id, $columns);
+            return $this->where('id', $id)->first();
         } catch (Exception $e) {
             return;
         }

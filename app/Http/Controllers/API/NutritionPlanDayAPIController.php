@@ -38,7 +38,7 @@ class NutritionPlanDayAPIController extends AppBaseController
     public function index(Request $request)
     {
         $perPage             = $request->input('per_page', Config::get('constants.PER_PAGE', 10));
-        $nutrition_plan_days = $this->nutritionPlanDayRepository
+        $nutrition_plan_days = $this->nutritionPlanDayRepository->with('nutritionPlanDayMeals')
             ->pushCriteria(new NutritionPlanDayCriteria($request->only([
                 'nutrition_plan_id'
             ])));

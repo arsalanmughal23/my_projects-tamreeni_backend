@@ -23,10 +23,10 @@ class MealsSeeder extends Seeder
                 'image'            => 'https://placehold.co/400',
                 'calories'         => 500,
                 'description'      => json_encode(['en' => 'This is a sample traditional meal description.', 'ar' => 'هذا نموذج لوصف الوجبة التقليدية.']),
+                'meal_type_id'     => 1,
                 // 'carbs'            => 10,
                 // 'protein'          => 20,
                 // 'fats'             => 30,
-                // 'meal_type_id'     => 1,
             ],
             [
                 'diet_type'        => json_encode(['en' => Meal::DIET_TYPE_KETO_EN, 'ar' => Meal::DIET_TYPE_KETO_AR]),
@@ -35,10 +35,10 @@ class MealsSeeder extends Seeder
                 'image'            => 'https://placehold.co/400',
                 'calories'         => 300,
                 'description'      => json_encode(['en' => 'This is a sample keto meal description.', 'ar' => 'هذا نموذج لوصف الوجبة التقليدية.']),
+                'meal_type_id'     => 2,
                 // 'carbs'            => 10,
                 // 'protein'          => 20,
                 // 'fats'             => 30,
-                // 'meal_type_id'     => 2,
             ],
             [
                 'diet_type'        => json_encode(['en' => Meal::DIET_TYPE_KETO_EN, 'ar' => Meal::DIET_TYPE_KETO_AR]),
@@ -47,10 +47,10 @@ class MealsSeeder extends Seeder
                 'image'            => 'https://placehold.co/400',
                 'calories'         => 400,
                 'description'      => json_encode(['en' => 'This is a sample keto meal description.', 'ar' => 'هذا نموذج لوصف الوجبة التقليدية.']),
+                'meal_type_id'     => 3,
                 // 'carbs'            => 10,
                 // 'protein'          => 20,
                 // 'fats'             => 30,
-                // 'meal_type_id'     => 3,
             ],
             [
                 'diet_type'        => json_encode(['en' => Meal::DIET_TYPE_TRADITION_EN, 'ar' => Meal::DIET_TYPE_TRADITION_AR]),
@@ -59,10 +59,10 @@ class MealsSeeder extends Seeder
                 'image'            => 'https://placehold.co/400',
                 'calories'         => 200,
                 'description'      => json_encode(['en' => 'This is a sample traditional meal description.', 'ar' => 'هذا نموذج لوصف الوجبة التقليدية.']),
+                'meal_type_id'     => 1,
                 // 'carbs'            => 10,
                 // 'protein'          => 20,
                 // 'fats'             => 30,
-                // 'meal_type_id'     => 1,
             ]
         ];
 

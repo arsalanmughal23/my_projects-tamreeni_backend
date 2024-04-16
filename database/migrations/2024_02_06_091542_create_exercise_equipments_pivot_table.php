@@ -18,6 +18,7 @@ class CreateExerciseEquipmentsPivotTable extends Migration
             $table->integer('exercise_id')->unsigned();
             $table->integer('exercise_equipment_id')->unsigned();
             $table->timestamps();
+            $table->softDeletes();
             
             // Foreign keys
             $table->foreign('exercise_id')->references('id')->on('exercises')->onDelete('cascade');

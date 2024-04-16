@@ -15,9 +15,9 @@ class MealCategoriesSeeder extends Seeder
     public function run()
     {
         $categories = [
-            [ 'slug' => 'breakfast', 'title' => 'Breakfast' ],
-            [ 'slug' => 'lunch', 'title' => 'Lunch' ],
-            [ 'slug' => 'dinner', 'title' => 'Dinner' ],
+            [ 'diet_type' => 'traditional', 'name' => json_encode(['en'=>'eggs', 'ar'=>'بيض']) ],
+            [ 'diet_type' => 'traditional', 'name' => json_encode(['en'=>'shrimp', 'ar'=>'جمبري']) ],
+            [ 'diet_type' => 'keto', 'name' => json_encode(['en'=>'veggies', 'ar'=>'الخضار']) ],
         ];
 
         DB::table('meal_categories')->insert($categories);

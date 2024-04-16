@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddDateToWorkoutDaysTable extends Migration
+class CreateVerifyEmailTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class AddDateToWorkoutDaysTable extends Migration
      */
     public function up()
     {
-        Schema::table('workout_days', function (Blueprint $table) {
-            $table->date('date')->after('description')->nullable(false);
+        Schema::create('verify_emails', function (Blueprint $table) {
+            $table->id();
+            $table->string('user_id')->nullable();
+            $table->string('code');
+            $table->timestamps();
         });
     }
 
@@ -25,8 +28,7 @@ class AddDateToWorkoutDaysTable extends Migration
      */
     public function down()
     {
-        Schema::table('workout_days', function (Blueprint $table) {
-            $table->dropColumn('date');
-        });
+        Schema::dropIfExists('verify_emails');
+
     }
 }

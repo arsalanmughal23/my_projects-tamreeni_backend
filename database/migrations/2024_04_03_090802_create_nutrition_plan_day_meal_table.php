@@ -22,7 +22,6 @@ class CreateNutritionPlanDayMealTable extends Migration
             $table->bigInteger('meal_type_id')->unsigned();
             $table->foreign('meal_type_id')->references('id')->on('meal_types')->onDelete('cascade');
             $table->string('name')->nullable();
-            $table->enum('diet_type', ['traditional', 'keto'])->nullable();
             $table->double('calories', 8, 2)->default(0)->nullable(false);
             $table->double('carbs', 8, 2)->default(0)->nullable(false);
             $table->double('fats', 8, 2)->default(0)->nullable(false);
@@ -41,7 +40,9 @@ class CreateNutritionPlanDayMealTable extends Migration
     public function down()
     {
         Schema::table('nutrition_plan_day_meals', function (Blueprint $table) {
-            //
+            $table->dropConstrainedForeignId('nutrition_plan_day_id');
+            $table->dropConstrainedForeignId('meal_id');
+            $table->dropConstrainedForeignId('meal_type_id');
         });
     }
 }

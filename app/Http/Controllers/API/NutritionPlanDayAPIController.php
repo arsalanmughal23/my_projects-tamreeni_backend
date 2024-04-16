@@ -81,7 +81,7 @@ class NutritionPlanDayAPIController extends AppBaseController
     public function show($id)
     {
         /** @var NutritionPlanDay $nutritionPlanDay */
-        $nutritionPlanDay = $this->nutritionPlanDayRepository->with('nutritionPlanDayMeals')->find($id);
+        $nutritionPlanDay = NutritionPlanDay::with('nutritionPlanDayMeals')->find($id);
 
         if (empty($nutritionPlanDay)) {
             return $this->sendError('Nutrition Plan Day not found');

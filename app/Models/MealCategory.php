@@ -13,8 +13,8 @@ use Spatie\Translatable\HasTranslations;
  * @version January 30, 2024, 3:04 pm UTC
  *
  * @property \Illuminate\Database\Eloquent\Collection $meals
- * @property string $slug
- * @property string $title
+ * @property string $diet_type
+ * @property string $name
  */
 class MealCategory extends Model
 {
@@ -33,8 +33,8 @@ class MealCategory extends Model
 
 
     public $fillable = [
-        'slug',
-        'title'
+        'diet_type',
+        'name'
     ];
 
     /**
@@ -44,8 +44,8 @@ class MealCategory extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'slug' => 'string',
-        'title' => 'string'
+        'diet_type' => 'string',
+        'name' => 'string'
     ];
 
     /**
@@ -54,8 +54,8 @@ class MealCategory extends Model
      * @var array
      */
     public static $rules = [
-        'slug' => 'required|string|max:255',
-        'title' => 'nullable|string',
+        'diet_type' => 'required|string|max:255',
+        'name' => 'nullable|string',
         'deleted_at' => 'nullable',
         'created_at' => 'nullable',
         'updated_at' => 'nullable'

@@ -35,11 +35,7 @@ class BodyPartAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $body_parts = $this->bodyPartRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+        $body_parts = $this->bodyPartRepository->all();
 
         return $this->sendResponse($body_parts->toArray(), 'Body Parts retrieved successfully');
     }

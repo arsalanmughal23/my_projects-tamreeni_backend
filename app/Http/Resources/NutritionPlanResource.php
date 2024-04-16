@@ -2,43 +2,45 @@
 
 namespace App\Http\Resources;
 
+use App\Models\NutritionPlan;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class MealResource extends JsonResource
+class NutritionPlanResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
-    public function toArray($request)
+    
+    public static function toObject(NutritionPlan $data)
     {
-        $mealCategory = $this->mealCategory;
-
         return [
-            'id'               => $this->id,
-            'name'             => $this->getTranslation('name', app()->getLocale()),
-            'description'      => $this->getTranslation('description', app()->getLocale()),
-            'diet_type'        => $this->diet_type,
-            'meal_category_id' => $this->meal_category_id,
-            'meal_category'    => [
-                'id'            => $mealCategory->id,
-                'diet_type'     => $mealCategory->diet_type,
-                'name'          => $mealCategory->getTranslation('name', app()->getLocale()),
-                'deleted_at'    => $mealCategory->deleted_at,
-                'created_at'    => $mealCategory->created_at,
-                'updated_at'    => $mealCategory->updated_at,
-            ],
-            'image'            => $this->image,
-            'calories'         => $this->calories,
-            'is_favourite'     => $this->is_favourite,
-            'created_at'       => $this->created_at,
-            'updated_at'       => $this->updated_at,
+            'id'            => $data->id,
+            'user_id'       => $data->user_id,
+            'name'          => $data->name,
+            'start_date'    => $data->start_date,
+            'end_date'      => $data->end_date,
+            'status'        => $data->status,
+            'nutrition_plan_days' => NutritionPlanDayResource::collection($data->nutritionPlanDays)
         ];
     }
 
+    public function toArray($request)
+    {
+        return [
+            'id'            => $this->id,
+            'user_id'       => $this->user_id,
+            'name'          => $this->name,
+            'start_date'    => $this->start_date,
+            'end_date'      => $this->end_date,
+            'status'        => $this->status,
+            'nutrition_plan_days' => NutritionPlanDayResource::collection($this->whenLoaded('nutritionPlanDays'))
+        ];
+    }
+    
     public static function collection($resource)
     {
         if ($resource instanceof LengthAwarePaginator) {

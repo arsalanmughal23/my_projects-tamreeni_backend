@@ -209,4 +209,18 @@ class UserAPIController extends AppBaseController
             return $this->sendError($exception->getMessage());
         }
     }
+
+    public function getPersonalStatistics(Request $request)
+    {
+        $user = $request->user();
+        $userDetails = $user->details;
+        $calculatedBMI = $userDetails->bmi;
+        $responseData = [
+            'bmi'       => $calculatedBMI,
+            'bmi_description' => __('messages.bmi_description', ['bmi' => $calculatedBMI]),
+            'user_details'      => $userDetails,
+        ];
+
+        return $this->sendResponse($responseData, 'Your personal statistics record');
+    }
 }

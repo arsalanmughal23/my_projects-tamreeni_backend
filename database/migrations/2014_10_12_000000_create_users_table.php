@@ -68,6 +68,7 @@ class CreateUsersTable extends Migration
             $table->string('target_weight_unit')->nullable()->comment('weight_unit'); // CONSTANT: kg, lbs
 
             $table->float('calories')->default(0.00);
+            $table->float('bmi')->default(0.00);
 
             $table->unsignedBigInteger('delete_account_type_id')->nullable();
             $table->softDeletes();

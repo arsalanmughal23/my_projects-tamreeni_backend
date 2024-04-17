@@ -46,12 +46,14 @@ class QuestionAPIController extends AppBaseController
             if (!$userDetails = $user->details)
                 throw new Error('User detail not found');
 
+            $calculatedBMI = $request->current_weight_in_kg / pow($request->height_in_m, 2);
             $userDetails->update($request->validated());
-            $BMI          = 21.4;
+            $userDetails->bmi = $calculatedBMI;
+            $userDetails->save();
+
             $responseData = [
-                // 'user' => $user->fresh(),
-                'bmi'    => $BMI,
-                'detail' => 'A BMI of ' . $BMI . ' falls within the `normal weight` category, which typically ranges between 18.5 to 24.5. It suggests that a person is at a healthy weight in proportion to their height.'
+                'bmi'    => $calculatedBMI,
+                'detail' => 'A BMI of ' . $calculatedBMI . ' falls within the `normal weight` category, which typically ranges between 18.5 to 24.5. It suggests that a person is at a healthy weight in proportion to their height.'
             ];
 
             return $this->sendResponse($responseData, 'Answers are saved successfully');

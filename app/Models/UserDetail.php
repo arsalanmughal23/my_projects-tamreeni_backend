@@ -78,6 +78,7 @@ class UserDetail extends Model
         'health_status',
 
         'calories',
+        'daily_target_calorie',
 
         'delete_account_type_id'
     ];
@@ -104,6 +105,7 @@ class UserDetail extends Model
         'body_parts'                => 'json',
         'food_preferences'          => 'json',
         'calories'                  => 'float',
+        'daily_target_calorie'      => 'float'
     ];
 
 

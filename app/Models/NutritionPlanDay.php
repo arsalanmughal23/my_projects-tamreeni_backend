@@ -35,6 +35,7 @@ class NutritionPlanDay extends Model
     const STATUS_IN_PROGRESS = 20;
     const STATUS_COMPLETED   = 30;
 
+    public $appends = ['day_target_calories', 'day_take_in_calories'];
 
     protected $dates = ['deleted_at'];
 
@@ -100,5 +101,15 @@ class NutritionPlanDay extends Model
     public function nutritionPlanDayMeals()
     {
         return $this->hasMany(\App\Models\NutritionPlanDayMeal::class, 'nutrition_plan_day_id')->with(['mealType', 'meal']);
+    }
+
+    public function getDayTargetCaloriesAttribute() 
+    {
+        return $this->nutritionPlanDayMeals()->sum('calories');
+    }
+    
+    public function getDayTakeInCaloriesAttribute() 
+    {
+        return $this->nutritionPlanDayMeals()->where('status', NutritionPlanDayMeal::STATUS_COMPLETED)->sum('calories');
     }
 }

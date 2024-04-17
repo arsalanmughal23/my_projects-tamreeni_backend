@@ -46,4 +46,9 @@ class NutritionPlanDayMealRepository extends BaseRepository
     {
         return NutritionPlanDayMeal::class;
     }
+
+    public function userAdditionalMealConsumed($data)
+    {
+        return NutritionPlanDayMeal::create($data);
+    }
 }

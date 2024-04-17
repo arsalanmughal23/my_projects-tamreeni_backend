@@ -104,4 +104,15 @@ class NutritionPlanRepository extends BaseRepository
         }
         return $nutritionPlanDays;
     }
+
+    public function getUserActiveNutritionPlanByDate($user_id, $date = null)
+    {
+        !$date && $date = now()->format('Y-m-d');
+        return NutritionPlan::where('user_id', $user_id)
+                    // Need to UnComment when Cron Is Applying
+                    // ->where('status', NutritionPlan::STATUS_IN_PROGRESS)
+                    ->where('start_date', '<=', $date)
+                    ->where('end_date', '>=', $date)
+                    ->first();
+    }
 }

@@ -22,18 +22,12 @@ use Config;
  * @package App\Http\Controllers\API
  */
 class UserAPIController extends AppBaseController
-{
-    /** @var  UserRepository */
-    private $userRepository;
-    private $workoutPlanRepository;
-    private $nutritionPlanRepository;
-
-    public function __construct(UsersRepository $userRepo, WorkoutPlanRepository $workoutPlanRepo, NutritionPlanRepository $nutritionPlanRepo)
-    {
-        $this->userRepository          = $userRepo;
-        $this->workoutPlanRepository   = $workoutPlanRepo;
-        $this->nutritionPlanRepository = $nutritionPlanRepo;
-    }
+{    
+    public function __construct(
+        private UsersRepository $userRepository,
+        private WorkoutPlanRepository $workoutPlanRepository,
+        private NutritionPlanRepository $nutritionPlanRepository,
+    ){}
 
     public function myProfile(Request $request)
     {
@@ -198,13 +192,17 @@ class UserAPIController extends AppBaseController
     {
         try {
             DB::beginTransaction();
-            $user = \Auth::user()->details;
-            if (!$user->goal) {
+            $userDetails = \Auth::user()->details;
+            if (!$userDetails->goal) {
                 return $this->sendError('Goal not set');
             }
-            $workoutPlan   = $this->workoutPlanRepository->generateWorkoutPlan($user);
 
-            $nutritionPlan = $this->nutritionPlanRepository->generateNutritionPlan($user);
+            $userDetails->daily_target_calorie = 40;
+            $userDetails->save();
+
+            $workoutPlan   = $this->workoutPlanRepository->generateWorkoutPlan($userDetails);
+
+            $nutritionPlan = $this->nutritionPlanRepository->generateNutritionPlan($userDetails);
             $nutritionPlan = NutritionPlan::with('nutritionPlanDays.nutritionPlanDayMeals')->find($nutritionPlan->id);
             $nutritionPlan = NutritionPlanResource::toObject($nutritionPlan);
 

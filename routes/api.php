@@ -93,6 +93,8 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
 
     Route::resource('nutrition-plan-day-meals', App\Http\Controllers\API\NutritionPlanDayMealAPIController::class);
     Route::get('generate-workout-plan', [App\Http\Controllers\API\UserAPIController::class, 'generateWorkoutPlan']);
+
+    Route::post('create-payment-intent', [App\Http\Controllers\API\PaymentController::class, 'createPaymentIntent']);
 });
 
 Route::resource('menus', App\Http\Controllers\API\MenuAPIController::class);

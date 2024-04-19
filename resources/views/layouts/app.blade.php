@@ -6,6 +6,8 @@
     <title>{{ config('app.name') }}</title>
     <meta name="csrf-token" content="{{ csrf_token() }}"/>
 
+    <link rel="icon" type="image/png" href="{{asset('public/favicon.ico')}}">
+
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 
     <!-- Font Awesome -->
@@ -65,12 +67,11 @@
     <!-- Main Header -->
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
         <!-- Left navbar links -->
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
-                            class="fas fa-bars"></i></a>
-            </li>
-        </ul>
+        {{--<ul class="navbar-nav">--}}
+        {{--<li class="nav-item">--}}
+        {{--<a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>--}}
+        {{--</li>--}}
+        {{--</ul>--}}
 
         <ul class="navbar-nav ml-auto">
             <li class="nav-item dropdown user-menu">
@@ -120,10 +121,9 @@
     <!-- Main Footer -->
     <footer class="main-footer">
         <div class="float-right d-none d-sm-block">
-            <b>Version</b> 3.1.0
         </div>
         <strong>
-            Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.
+            Copyright &copy; {{date('Y')}} <a href="https://tekrevol.com">TekRevol</a>.
         </strong>
         All rights reserved.
     </footer>

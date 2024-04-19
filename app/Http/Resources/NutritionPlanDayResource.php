@@ -20,6 +20,8 @@ class NutritionPlanDayResource extends JsonResource
             'nutrition_plan_id'        => $this->nutrition_plan_id,
             'name'                     => $this->getTranslation('name', app()->getLocale()),
             'date'                     => $this->date,
+            'day_target_calories'      => $this->day_target_calories,
+            'day_take_in_calories'      => $this->day_take_in_calories,
             'status'                   => $this->status,
             'created_at'               => $this->created_at,
             'nutrition_plan_day_meals' => NutritionPlanDayMealResource::collection($this->whenLoaded('nutritionPlanDayMeals'))

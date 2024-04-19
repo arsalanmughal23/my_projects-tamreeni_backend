@@ -29,7 +29,7 @@ class SubmitAnswersAPIRequest extends BaseAPIRequest
             'gender' => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q2_GENDER,
             'dob'    => 'required|date|date_format:"d-m-Y"|before:today',
 
-            'height_in_m'          => 'required|numeric',
+            'height_in_m'          => 'required|numeric|min:0.1',
             'height_unit'          => 'required|string|exists:constants,key,group,' . Constant::CONST_SIZE_UNIT,
             'current_weight_in_kg' => 'required|numeric',
             'current_weight_unit'  => 'required|string|exists:constants,key,group,' . Constant::CONST_WEIGHT_UNIT,

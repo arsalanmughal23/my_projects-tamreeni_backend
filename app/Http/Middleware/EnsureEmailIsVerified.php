@@ -20,6 +20,9 @@ class EnsureEmailIsVerified
     public function handle($request, Closure $next, $redirectToRoute = null)
     {
         $user = $request->user();
+        $userDetails = $user?->details;
+        if(!$userDetails)
+            return response()->json([ 'success' => false, 'message' => 'User detail is missing.' ], 403);
 
         if ($user instanceof MustVerifyEmail && !$user->hasVerifiedEmail()) {
             if ($request->expectsJson()) {

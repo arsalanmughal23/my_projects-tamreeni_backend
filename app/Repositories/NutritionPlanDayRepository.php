@@ -39,4 +39,14 @@ class NutritionPlanDayRepository extends BaseRepository
     {
         return NutritionPlanDay::class;
     }
+
+    public function getNutritionPlanActiveDayByDate($nutrition_plan_id, $date = null)
+    {
+        !$date && $date = now()->format('Y-m-d');
+        return NutritionPlanDay::where('nutrition_plan_id', $nutrition_plan_id)
+                    // Need to UnComment when Cron Is Applying
+                    // ->where('status', NutritionPlanDay::STATUS_IN_PROGRESS)
+                    ->where('date', $date)
+                    ->first();
+    }
 }

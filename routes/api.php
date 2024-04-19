@@ -59,6 +59,7 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
 
     Route::resource('questions', App\Http\Controllers\API\QuestionAPIController::class)->only('index');
     Route::post('submit_answers', [App\Http\Controllers\API\QuestionAPIController::class, 'submitAnswers']);
+    Route::get('personal_statistics', [App\Http\Controllers\API\UserAPIController::class, 'getPersonalStatistics']);
 
     Route::resource('contact_requests', App\Http\Controllers\API\ContactRequestAPIController::class);
 
@@ -87,6 +88,7 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
 
     Route::resource('nutrition-plan-days', App\Http\Controllers\API\NutritionPlanDayAPIController::class);
     Route::put('user-meal-consumed/{nutritionPlanDayMealId}', [App\Http\Controllers\API\NutritionPlanDayMealAPIController::class, 'userMealConsumed']);
+    Route::post('user-additional-meal-consumed', [App\Http\Controllers\API\NutritionPlanDayMealAPIController::class, 'userAdditionalMealConsumed']);
 
 
     Route::resource('nutrition-plan-day-meals', App\Http\Controllers\API\NutritionPlanDayMealAPIController::class);

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\API\CreatePaymentIntentAPIRequest;
 
-class PaymentController extends Controller
+class PaymentController extends AppBaseController
 {
     public static $endPoints = [
         'create.customer' => 'stripe/customer',
@@ -134,4 +136,47 @@ class PaymentController extends Controller
         }
     }
 
+    public function createPaymentIntent(CreatePaymentIntentAPIRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $user = $request->user();
+            $input = $request->validated();
+
+            if(!$user->stripe_customer_id){
+                $emailRequest       = new Request(['email' => $user->email]);
+                $stripe_customer    = PaymentController::post($emailRequest, 'create.customer');
+                $user->stripe_customer_id = $stripe_customer['data']['id'];
+                $user->save();
+            }
+
+            $stripe = new \Stripe\StripeClient(env('STRIPE_KEY'));
+
+            $ephemeralKey   = $stripe->ephemeralKeys->create([
+                'customer'  => $user->stripe_customer_id,
+            ], [
+                'stripe_version' => '2022-08-01',
+            ]);
+            $paymentIntent                = $stripe->paymentIntents->create([
+                'amount'                    => $input['amount'] * 100,
+                'currency'                  => $input['currency'],
+                'customer'                  => $user->stripe_customer_id,
+                'automatic_payment_methods' => [
+                    'enabled' => 'true',
+                ],
+            ]);
+
+            DB::commit();
+            $data = [
+                'ephemeralKey'  => $ephemeralKey,
+                'paymentIntent' => $paymentIntent
+            ];
+
+            return $this->sendResponse($data, 'Payment Intent & Ephimeral Key created successfully');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return $this->sendError($e->getMessage(), 422);
+        }
+    }
 }

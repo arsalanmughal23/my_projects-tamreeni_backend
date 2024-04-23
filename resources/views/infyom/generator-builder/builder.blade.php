@@ -6,12 +6,16 @@ $db           = 'Tables_in_' . $databaseName;
 @extends('layouts.app')
 
 @push('third_party_stylesheets')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css">
+    {{--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css">--}}
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/iCheck/1.0.2/skins/all.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    {{--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">--}}
 
     <style>
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 15px;
+        }
+
         .chk-align {
             padding-right: 10px;
         }
@@ -60,7 +64,7 @@ $db           = 'Tables_in_' . $databaseName;
 
                             <div class="form-group col-md-4">
                                 <label>Tables</label>
-                                <select name="db_tables" class="form-control" style="width: 100%" required>
+                                <select name="db_tables" class="form-control select2" style="width: 100%" required>
                                     @foreach ($tables as $table)
                                         <option value="{{ $table->{$db} }}">{{ $table->{$db} }}</option>
                                     @endforeach
@@ -68,7 +72,7 @@ $db           = 'Tables_in_' . $databaseName;
                             </div>
                             <div class="form-group col-md-4">
                                 {{ Form::label('menu_icon', 'Icon*') }}
-                                <select class="form-control" name="menu_icon" style="width: 100%;" required>
+                                <select class="form-control select2" name="menu_icon" style="width: 100%;" required>
                                     @foreach (getIcons() as $item)
                                         <option data-icon="fa-{{ $item }}" value="{{ $item }}">
                                             {{ ucwords($item) }}</option>
@@ -88,9 +92,9 @@ $db           = 'Tables_in_' . $databaseName;
                                 <input type="text" name="model_name" class="form-control"
                                        placeholder="Enter Model Name">
                             </div>
-                            <div class="form-inline col-md-12" style="padding:15px 15px;text-align: right">
-                                <div class="form-group" style="border-color: transparent;padding-left: 10px">
-                                    <button type="submit" class="btn btn-flat btn-primary btn-blue">Generate Crud
+                            <div class="form-inline col-md-12" style="padding:10px 10px;text-align: right">
+                                <div class="form-group" style="border-color: transparent;">
+                                    <button type="submit" class="btn btn-flat btn-primary">Generate Crud
                                     </button>
                                 </div>
                             </div>

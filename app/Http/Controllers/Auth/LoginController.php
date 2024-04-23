@@ -45,10 +45,10 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user)
     {
 //        dd($user->hasAnyRole(['Super-Admin', 'Admin']));
-        if ($user->hasAnyRole(['Super-Admin', 'Admin'])) {
+        if ($user->hasAnyRole(['Super-Admin', 'Admin', 'Coach', 'Dietitian', 'Therapist'])) {
             // Redirect the user to a specific route for users with these roles
-//            return redirect()->route('home');
-            return redirect()->intended($this->redirectPath());
+            return redirect()->route('home');
+//            return redirect()->intended($this->redirectPath());
 
         } else {
             $this->logout($request);

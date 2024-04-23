@@ -34,6 +34,30 @@
     <p>{{ $appointment->date }}</p>
 </div>
 
+<!-- Start Time Field -->
+<div class="col-sm-12">
+    {!! Form::label('start_time', 'Start Time:') !!}
+    <p>{{ $appointment->start_time }}</p>
+</div>
+
+<!-- End Time Field -->
+<div class="col-sm-12">
+    {!! Form::label('end_time', 'End Time:') !!}
+    <p>{{ $appointment->end_time }}</p>
+</div>
+
+<!-- Currency Field -->
+<div class="col-sm-12">
+    {!! Form::label('currency', 'Currency:') !!}
+    <p>{{ $appointment->currency }}</p>
+</div>
+
+<!-- Amount Field -->
+<div class="col-sm-12">
+    {!! Form::label('amount', 'Amount:') !!}
+    <p>{{ $appointment->amount }}</p>
+</div>
+
 <!-- Type Field -->
 <div class="col-sm-12">
     {!! Form::label('type', 'Type:') !!}
@@ -44,5 +68,11 @@
 <div class="col-sm-12">
     {!! Form::label('profession_type', 'Profession Type:') !!}
     <p>{{ $appointment->profession_type }}</p>
+</div>
+
+<!-- Status Field -->
+<div class="col-sm-12">
+    {!! Form::label('status', 'Status:') !!}
+    <p>{{ $appointment->status }}</p>
 </div>
 

@@ -71,8 +71,13 @@ class AppointmentDataTable extends DataTable
             'package_id',
             'transaction_id',
             'date',
+            'start_time',
+            'end_time',
+            'currency',
+            'amount',
             'type',
-            'profession_type'
+            'profession_type',
+            'status'
         ];
     }
 

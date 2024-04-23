@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\User;
 use App\Repositories\BaseRepository;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * Class UsersRepository
@@ -74,5 +75,18 @@ class UsersRepository extends BaseRepository
         }
 
         return $query;
+    }
+
+    public function updateRecord($request, $user_id)
+    {
+        $data = $request->all();
+        if ($request->has('password') && $request->get('password', null) === null) {
+            unset($data['password']);
+        } else {
+            $data['password'] = $data['password'];
+        }
+
+        $user = $this->update($data, $user_id);
+        return $user;
     }
 }

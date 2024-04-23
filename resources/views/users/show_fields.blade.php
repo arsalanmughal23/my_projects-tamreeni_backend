@@ -21,3 +21,9 @@
     {!! Form::label('tel', 'Tel:') !!}
     <p>{{ $users->details?->phone_number ? $users->details?->phone_number: 'N/A' }}</p>
 </div>
+
+<!-- Created At Field -->
+<div class="col-sm-12">
+    {!! Form::label('created_at', 'Created At:') !!}
+    <p>{{ $users->created_at }}</p>
+</div>

@@ -4,19 +4,18 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\AppBaseController;
-use App\Http\Requests\API\CreatePaymentIntentAPIRequest;
 use App\Models\User;
 
 class PaymentController extends AppBaseController
 {
     public static $endPoints = [
-        'create.customer' => 'stripe/customer',
-        'create.pricing'  => 'stripe/subscriptions/price',
-        'payment.charge'  => 'stripe/charge',
-        'payment.intent'  => 'stripe/payment-intent',
-        'create.session'  => 'stripe/subscriptions/create-session',
+        'create.customer'   => 'v1/stripe/customer',
+        'create.pricing'    => 'v1/stripe/subscriptions/price',
+        'payment.charge'    => 'v1/stripe/charge',
+        'payment.intent'    => 'v1/stripe/payment-intent',
+        'create.session'    => 'v1/stripe/subscriptions/create-session',
+        'ephemeral.key'     => 'v2/stripe/create-ephemeral-key',
     ];
 
     public static function post(Request $request, $endPoint)
@@ -115,16 +114,29 @@ class PaymentController extends AppBaseController
         }
     }
 
-    public static function charge($dataReqst)
+    public static function makePaymentIntent($amountInSAR, $description, $customer_id)
     {
-        $paymentIntentReqst = new Request(['amount' => $dataReqst['amount'], 'description' => $dataReqst['description'], 'customer_id' => $dataReqst['customer_id']]);
-        $paymentIntent      = self::post($paymentIntentReqst, 'payment.intent');
-        if ($paymentIntent['status']) {
-            $chargeRequest = new Request(['payment_intent_id' => $paymentIntent['data']['id'], 'payment_method_id' => $dataReqst['payment_method_id']]);
-            $charge        = self::post($chargeRequest, 'payment.charge');
+        $CENTS_PER_SAR = config('payment-service.cents_per_sar');
+        $MINIMUM_CHARGEABLE_CENTS = config('payment-service.minimum_chargeable_cents');
+        $amountInCents = intval($amountInSAR * $CENTS_PER_SAR);
 
-            return $charge;
-        }
+        if($amountInCents < $MINIMUM_CHARGEABLE_CENTS)
+            throw new \Error('Amount must be equal or greater than '.$MINIMUM_CHARGEABLE_CENTS.' cents');
+
+        $paymentIntentReqst = new Request(['amount' => $amountInCents, 'description' => $description, 'customer_id' => $customer_id]);
+        return self::post($paymentIntentReqst, 'payment.intent');
+    }
+
+    public static function makeEphemeralKey($stripeCustomerId)
+    {        
+        $ephemeralKeyReqst = new Request(['customer_id' => $stripeCustomerId]);
+        return self::post($ephemeralKeyReqst, 'ephemeral.key');
+    }
+
+    public static function charge($paymentIntentId, $paymentMethodId)
+    {
+        $chargeRequest = new Request(['payment_intent_id' => $paymentIntentId, 'payment_method_id' => $paymentMethodId]);
+        return self::post($chargeRequest, 'payment.charge');
     }
 
     public function createCustomer(Request $request)

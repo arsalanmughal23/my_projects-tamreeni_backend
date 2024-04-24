@@ -9,7 +9,6 @@ use App\Models\Appointment;
 use App\Models\Package;
 use App\Models\Setting;
 use App\Models\Transaction;
-use App\Models\UserSubscription;
 use App\Repositories\AppointmentRepository;
 use App\Repositories\TransactionRepository;
 use App\Repositories\UserSubscriptionRepository;
@@ -296,32 +295,5 @@ class AppointmentAPIController extends AppBaseController
         ]);
         return $transaction;
     }
-
-    private function addUserSubscription($user_id, $package_id, $transaction_id, $sessions, $take_session)
-    {
-        $userSubscription = [
-            'user_id'           => $user_id,
-            'package_id'        => $package_id,
-            'transaction_id'    => $transaction_id,
-            'sessions'          => $sessions,
-            'complete_sessions' => $take_session,
-            'status'            => UserSubscription::ACTIVE
-        ];
-
-        $this->userSubscriptionRepository->create($userSubscription);
-    }
-
-    private function updateUserSubscription($user_id, $package_id)
-    {
-        $userSubscription = $this->userSubscriptionRepository->checkUserCurrentPackage($user_id, $package_id);
-        if ($userSubscription) {
-            $userSubscription->complete_sessions += 1;
-            if ($userSubscription->complete_sessions >= $userSubscription->sessions) {
-                $userSubscription->status = 0;
-            }
-            $userSubscription->save();
-        }
-    }
-
 
 }

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\API\CreatePaymentIntentAPIRequest;
+use App\Models\User;
 
 class PaymentController extends AppBaseController
 {
@@ -136,14 +137,9 @@ class PaymentController extends AppBaseController
         }
     }
 
-    public function createPaymentIntent(CreatePaymentIntentAPIRequest $request)
+    public static function createPaymentIntent(User $user, $amountInSAR, $description)
     {
-        try {
-            DB::beginTransaction();
-
-            $user = $request->user();
-            $input = $request->validated();
-
+        try{
             if(!$user->stripe_customer_id){
                 $emailRequest       = new Request(['email' => $user->email]);
                 $stripe_customer    = PaymentController::post($emailRequest, 'create.customer');
@@ -151,32 +147,38 @@ class PaymentController extends AppBaseController
                 $user->save();
             }
 
-            $stripe = new \Stripe\StripeClient(env('STRIPE_KEY'));
+            $CENTS_PER_SAR = config('payment-service.cents_per_sar');
+            $MINIMUM_CHARGEABLE_CENTS = config('payment-service.minimum_chargeable_cents');
+            $amountInCents = intval($amountInSAR * $CENTS_PER_SAR);
 
-            $ephemeralKey   = $stripe->ephemeralKeys->create([
-                'customer'  => $user->stripe_customer_id,
-            ], [
-                'stripe_version' => '2022-08-01',
-            ]);
-            $paymentIntent                = $stripe->paymentIntents->create([
-                'amount'                    => $input['amount'] * 100,
-                'currency'                  => $input['currency'],
-                'customer'                  => $user->stripe_customer_id,
-                'automatic_payment_methods' => [
-                    'enabled' => 'true',
-                ],
-            ]);
+            if($amountInCents < $MINIMUM_CHARGEABLE_CENTS)
+                throw new \Error('Amount must be equal or greater than '.$MINIMUM_CHARGEABLE_CENTS.' cents');
 
-            DB::commit();
+            $paymentIntent = self::makePaymentIntent($amountInCents, $description, $user->stripe_customer_id);
+
+            if(!$paymentIntent['status'])
+                throw new \Error('Payment intent is not created');
+            
+            $ephemeralKeyReqst = new Request(['customer_id' => $user->stripe_customer_id]);
+            $ephemeralKey      = self::post($ephemeralKeyReqst, 'ephemeral.key');
+            if(!$ephemeralKey['status'])
+                throw new \Error('Ephemeral key is not created');
+
+            $ephemeralKeyData = $ephemeralKey['data'];
+            $paymentIntentData = $paymentIntent['data']['paymentIntent'];
+
             $data = [
-                'ephemeralKey'  => $ephemeralKey,
-                'paymentIntent' => $paymentIntent
+                'ephemeralKey'  => $ephemeralKeyData,
+                'paymentIntent' => $paymentIntentData
             ];
 
-            return $this->sendResponse($data, 'Payment Intent & Ephimeral Key created successfully');
+            return $data;
+
+        } catch (\Error $e) {
+            throw new \Error($e->getMessage());
+
         } catch (\Exception $e) {
-            DB::rollback();
-            return $this->sendError($e->getMessage(), 422);
+            throw new \Exception($e->getMessage());
         }
     }
 }

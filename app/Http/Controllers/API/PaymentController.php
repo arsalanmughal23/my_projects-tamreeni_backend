@@ -149,48 +149,4 @@ class PaymentController extends AppBaseController
         }
     }
 
-    public static function createPaymentIntent(User $user, $amountInSAR, $description)
-    {
-        try{
-            if(!$user->stripe_customer_id){
-                $emailRequest       = new Request(['email' => $user->email]);
-                $stripe_customer    = PaymentController::post($emailRequest, 'create.customer');
-                $user->stripe_customer_id = $stripe_customer['data']['id'];
-                $user->save();
-            }
-
-            $CENTS_PER_SAR = config('payment-service.cents_per_sar');
-            $MINIMUM_CHARGEABLE_CENTS = config('payment-service.minimum_chargeable_cents');
-            $amountInCents = intval($amountInSAR * $CENTS_PER_SAR);
-
-            if($amountInCents < $MINIMUM_CHARGEABLE_CENTS)
-                throw new \Error('Amount must be equal or greater than '.$MINIMUM_CHARGEABLE_CENTS.' cents');
-
-            $paymentIntent = self::makePaymentIntent($amountInCents, $description, $user->stripe_customer_id);
-
-            if(!$paymentIntent['status'])
-                throw new \Error('Payment intent is not created');
-            
-            $ephemeralKeyReqst = new Request(['customer_id' => $user->stripe_customer_id]);
-            $ephemeralKey      = self::post($ephemeralKeyReqst, 'ephemeral.key');
-            if(!$ephemeralKey['status'])
-                throw new \Error('Ephemeral key is not created');
-
-            $ephemeralKeyData = $ephemeralKey['data'];
-            $paymentIntentData = $paymentIntent['data']['paymentIntent'];
-
-            $data = [
-                'ephemeralKey'  => $ephemeralKeyData,
-                'paymentIntent' => $paymentIntentData
-            ];
-
-            return $data;
-
-        } catch (\Error $e) {
-            throw new \Error($e->getMessage());
-
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
-        }
-    }
 }

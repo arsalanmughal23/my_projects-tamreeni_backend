@@ -15,6 +15,7 @@ use App\Repositories\TransactionRepository;
 use App\Repositories\UserSubscriptionRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use App\Repositories\PackageRepository;
 use Response;
 use Config;
 
@@ -24,17 +25,12 @@ use Config;
  */
 class AppointmentAPIController extends AppBaseController
 {
-    /** @var  AppointmentRepository */
-    private $appointmentRepository;
-    private $transactionRepository;
-    private $userSubscriptionRepository;
-
-    public function __construct(AppointmentRepository $appointmentRepo, TransactionRepository $transactionRepo, UserSubscriptionRepository $userSubscriptionRepo)
-    {
-        $this->appointmentRepository      = $appointmentRepo;
-        $this->transactionRepository      = $transactionRepo;
-        $this->userSubscriptionRepository = $userSubscriptionRepo;
-    }
+    public function __construct(
+        private PackageRepository $packageRepository, 
+        private AppointmentRepository $appointmentRepository, 
+        private TransactionRepository $transactionRepository, 
+        private UserSubscriptionRepository $userSubscriptionRepository
+    ){}
 
     /**
      * Display a listing of the Appointment.
@@ -221,26 +217,28 @@ class AppointmentAPIController extends AppBaseController
     }
 
     // Function to create transaction
-    private function createTransaction($amount, $user, $currency, $description, $package_id = null, $payment_method_id)
+    private function createTransaction(Package | Appointment $transactionable, $user, $amountInSAR, $payment_method_id, $description)
     {
+        $paymentIntentResponse = PaymentController::makePaymentIntent($amountInSAR, $description, $user->stripe_customer_id);
+        if (!$paymentIntentResponse['status'])
+            throw new \Error('Payment intent is not created');
+        $paymentIntentId = $paymentIntentResponse['data']['id'];
 
-        $transaction_id = $this->chargePayment($amount, $description, $user->stripe_customer_id, $payment_method_id);
-        if ($transaction_id) {
+        $chargePaymentResponse = PaymentController::charge($paymentIntentId, $payment_method_id);
+        if (!$chargePaymentResponse['status'])
+            throw new \Error('Payment is not charged!');
+        $chargedPaymentId = $chargePaymentResponse['data']['id'];
 
-            $transaction = [
-                'amount'         => $amount,
-                'description'    => $description,
-                'package_id'     => $package_id,
-                'transaction_id' => $transaction_id,
-                'user_id'        => $user->id,
-                'currency'       => $currency,
-                'status'         => Transaction::STATUS_COMPLETE,
-            ];
-
-            $createdTransaction = $this->transactionRepository->create($transaction);
-
-            return $createdTransaction->id;
-        }
+        $transaction = $transactionable->transactions()->create([
+            'payment_intent_id' => $paymentIntentId,
+            'payment_charge_id' => $chargedPaymentId,
+            'amount'            => $amountInSAR,
+            'description'       => $description,
+            'user_id'           => $user->id,
+            'currency'          => getCurrencySymbol(),
+            'status'            => Transaction::STATUS_COMPLETE,
+        ]);
+        return $transaction;
     }
 
     private function addUserSubscription($user_id, $package_id, $transaction_id, $sessions, $take_session)
@@ -269,14 +267,5 @@ class AppointmentAPIController extends AppBaseController
         }
     }
 
-    private function chargePayment($price, $description, $stripe_customer_id, $payment_method_id)
-    {
-        $amount            = round($price * 100);
-        $paymentController = new PaymentController();
-        $chargeRequest     = ['amount' => $amount, 'description' => $description, 'customer_id' => $stripe_customer_id, 'payment_method_id' => $payment_method_id];
-
-        $stripeCharge = $paymentController::charge($chargeRequest);
-        return $stripeCharge['data']['id'];
-    }
 
 }

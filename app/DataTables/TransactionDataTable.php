@@ -18,6 +18,25 @@ class TransactionDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
+        $dataTable->editColumn('user_id', function (Transaction $model) {
+            return ($model->user) ? $model->user ?->name : "N/A";
+        });
+
+        $dataTable->editColumn('package_id', function (Transaction $model) {
+            return ($model->package) ? $model->package ?->name : "1-1 Session";
+        });
+
+//        $dataTable->filterColumn('package_name', function ($query, $keyword) {
+//            $query->whereHas('package', function ($q) use ($keyword) {
+//                $q->where('name', 'like', "%$keyword%");
+//            });
+//        });
+
+        $dataTable->editColumn('created_at', function (Transaction $model) {
+            return $model->created_at->format('Y-m-d H:i:s');
+        });
+
+
         return $dataTable->addColumn('action', 'transactions.datatables_actions');
     }
 
@@ -29,7 +48,7 @@ class TransactionDataTable extends DataTable
      */
     public function query(Transaction $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->with('user');
     }
 
     /**
@@ -65,13 +84,12 @@ class TransactionDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'user_id',
-            'package_id',
-            'transaction_id',
-            'data',
+            'user_id'    => ['title' => 'User', 'searchable' => false],
+            'user.name'  => ['visible' => false, 'searchable' => true],
+            'package_id' => ['title' => 'Package', 'searchable' => false],
             'currency',
             'amount',
-            'status'
+            'created_at',
         ];
     }
 

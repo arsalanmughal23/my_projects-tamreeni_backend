@@ -1,25 +1,25 @@
 <?php
 return [
     'expiry_in_seconds' => [
-        'otp' => 10 * 60,
+        'otp'       => 10 * 60,
         'api_token' => 24 * 60 * 60
     ],
-    'validation' => [
-        'users' => [
-            'name' => [
+    'validation'        => [
+        'users'       => [
+            'name'           => [
                 'size_max' => 255,
             ],
-            'email' => [
+            'email'          => [
                 'size_max' => 255,
             ],
-            'password' => [
+            'password'       => [
                 'size_min' => 6,
             ],
             'remember_token' => [
                 'size_max' => 100,
             ]
         ],
-        'role' => [
+        'role'        => [
             'name' => [
                 'size_max' => 255,
             ],
@@ -31,5 +31,10 @@ return [
         ],
 
     ],
-    'PER_PAGE' => '10',
+    'PER_PAGE'          => '10',
+    's3'                => [
+        'token'         => env('S3TOKEN'),
+        'presignedUrl'  => env('AWS_PRESIGNED_URL'),
+        'accelerateUrl' => env('AWS_ACCELERATED_URL'),
+    ],
 ];

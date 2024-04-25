@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\UsersDataTable;
+use App\Helper\FileHelper;
+use App\Http\Controllers\API\PaymentController;
 use App\Http\Requests;
 use App\Http\Requests\CreateUsersRequest;
 use App\Http\Requests\UpdateUsersRequest;
@@ -10,8 +12,10 @@ use App\Repositories\UsersRepository;
 use Flash;
 use App\Repositories\RolesRepository;
 use App\Http\Controllers\AppBaseController;
+use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role as Role;
 use App\Models\User as User;
+use App\Models\Role as UserRole;
 use App\Repositories\UserDetailRepository;
 use Response;
 
@@ -64,8 +68,20 @@ class UsersController extends AppBaseController
     {
         $input = $request->all();
 
+        if(UserRole::ADMIN_ID != request()->role){
+            $paymentController = new PaymentController();
+            $emailRequest      = new Request(['email' => $input['email']]);
+
+            $stripe_customer             = $paymentController::post($emailRequest, 'create.customer');
+            $input['stripe_customer_id'] = $stripe_customer['data']['id'];
+        }
+
         $user       = $this->userRepository->create($input);
         $userDetail = ['user_id' => $user->id];
+
+        if ($request->hasFile('image')) {
+            $userDetail['image'] = FileHelper::s3Upload($input['image']);
+        }
         $this->userDetailRepository->create($userDetail);
 
 //        $roleIds  = array_keys(request()->role);
@@ -140,14 +156,18 @@ class UsersController extends AppBaseController
 
         $user = $this->userRepository->updateRecord($request, $id);
 
-//        $roleIds = array_keys(request()->role);
-//        $user->syncRoles($roleIds);
+
+        $userDetail = ['user_id' => $user->id];
+
+        if ($request->hasFile('image')) {
+            $userDetail['image'] = FileHelper::s3Upload($request->image);
+        }
+        $this->userDetailRepository->updateRecord($userDetail, $user);
 
         Flash::success('User updated successfully.');
 
         if ($id == auth()->user()->id) {
             return redirect(route('users.edit', auth()->user()->id));
-
         }
 
         return redirect(route('users.index'));

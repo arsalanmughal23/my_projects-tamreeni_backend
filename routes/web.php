@@ -67,6 +67,14 @@ Route::group(['middleware' => ['auth', 'dynamic_permission']], function () {
 
     Route::resource('permissions', App\Http\Controllers\PermissionsController::class);
 
+    Route::resource('meals', App\Http\Controllers\MealController::class);
+
+    Route::resource('meal_types', App\Http\Controllers\MealTypeController::class);
+
+    Route::resource('meal_categories', App\Http\Controllers\MealCategoryController::class);
+
+    Route::resource('transactions', App\Http\Controllers\TransactionController::class);
+
 });
 
 
@@ -88,12 +96,6 @@ Route::resource('wellness_tips', App\Http\Controllers\WellnessTipController::cla
 
 
 Route::resource('favourites', App\Http\Controllers\FavouriteController::class);
-
-
-Route::resource('meal_categories', App\Http\Controllers\MealCategoryController::class);
-
-
-Route::resource('meals', App\Http\Controllers\MealController::class);
 
 
 Route::resource('body_parts', App\Http\Controllers\BodyPartController::class);
@@ -126,13 +128,9 @@ Route::resource('appointments', App\Http\Controllers\AppointmentController::clas
 Route::resource('packages', App\Http\Controllers\PackageController::class);
 
 
-Route::resource('transactions', App\Http\Controllers\TransactionController::class);
 
 
 Route::resource('user_subscriptions', App\Http\Controllers\UserSubscriptionController::class);
-
-
-Route::resource('meal_types', App\Http\Controllers\MealTypeController::class);
 
 
 Route::resource('workout_days', App\Http\Controllers\WorkoutDayController::class);

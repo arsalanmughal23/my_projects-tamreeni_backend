@@ -27,7 +27,6 @@
             <div class="card-body">
                 @include('users.table')
             </div>
-
         </div>
     </div>
 

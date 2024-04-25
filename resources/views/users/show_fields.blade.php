@@ -1,5 +1,15 @@
 <!-- Name Field -->
 <div class="col-sm-12">
+    <p>
+    @if(isset($users))
+        <!-- Image Field -->
+            <img class="user-image img-circle imag-placeholder" src="{{ isset($users?->details)? $users?->details->image : asset('public/image/user.png') }}" width="100" onerror="brokenImageHandler(this);">
+        @endif
+    </p>
+</div>
+
+<!-- Name Field -->
+<div class="col-sm-12">
     {!! Form::label('name', 'Name:') !!}
     <p>{{ $users->name }}</p>
 </div>

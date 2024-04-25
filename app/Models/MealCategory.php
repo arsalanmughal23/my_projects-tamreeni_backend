@@ -43,9 +43,9 @@ class MealCategory extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
+        'id'        => 'integer',
         'diet_type' => 'string',
-        'name' => 'string'
+        'name'      => 'string'
     ];
 
     /**
@@ -54,11 +54,10 @@ class MealCategory extends Model
      * @var array
      */
     public static $rules = [
-        'diet_type' => 'required|string|max:255',
-        'name' => 'nullable|string',
-        'deleted_at' => 'nullable',
-        'created_at' => 'nullable',
-        'updated_at' => 'nullable'
+        'name'      => 'required|array',
+        'name.en'   => 'required|string|max:100',
+        'name.ar'   => 'required|string|max:100',
+        'diet_type' => 'required',
     ];
 
     /**
@@ -66,6 +65,6 @@ class MealCategory extends Model
      **/
     public function meals()
     {
-        return $this->hasMany(\App\Models\Meal::class, 'meal_category_id');
+        return $this->hasMany(Meal::class, 'meal_category_id');
     }
 }

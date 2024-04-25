@@ -50,4 +50,10 @@ class UserDetailRepository extends BaseRepository
     {
         return UserDetail::class;
     }
+
+    public function updateRecord($data, $user)
+    {
+        $detail = $user->details;
+        return $this->update($data, $detail->id);
+    }
 }

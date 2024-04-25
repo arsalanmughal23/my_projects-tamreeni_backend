@@ -24,3 +24,11 @@ services:
       - .:/var/www/html
     depends_on:
       - php
+      
+networks:
+  sleep-meditation:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.24.24.0/24

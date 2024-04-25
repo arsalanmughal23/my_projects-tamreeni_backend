@@ -85,7 +85,6 @@ class AuthAPIController extends AppBaseController
     public function socialLogin(SocialLoginAPIRequest $request)
     {
         try {
-            $paymentController = new PaymentController();
 
             $user                   = null;
             $input                  = $request->validated();
@@ -130,8 +129,8 @@ class AuthAPIController extends AppBaseController
                 $userData['name']     = $userName ?? "user_" . $input['client_id'];
                 $userData['email']    = $userEmail ?? $input['client_id'] . '_' . $input['platform'] . '@' . config('app.name') . '.com';
 
-                $emailRequest      = new Request(['email' => $userData['email']]);
-                $stripe_customer             = $paymentController::post($emailRequest, 'create.customer');
+                $emailRequest       = new Request(['email' => $userData['email']]);
+                $stripe_customer    = PaymentController::post($emailRequest, 'create.customer');
                 $userData['stripe_customer_id'] = $stripe_customer['data']['id'];
 
                 $userData['password'] = bcrypt(substr(str_shuffle(MD5(microtime())), 0, 12));
@@ -197,10 +196,9 @@ class AuthAPIController extends AppBaseController
         try {
 
             $input             = $request->all();
-            $paymentController = new PaymentController();
             $emailRequest      = new Request(['email' => $input['email']]);
 
-            $stripe_customer             = $paymentController::post($emailRequest, 'create.customer');
+            $stripe_customer             = PaymentController::post($emailRequest, 'create.customer');
             $input['stripe_customer_id'] = $stripe_customer['data']['id'];
             $user                        = $this->userRepository->create($input);
 

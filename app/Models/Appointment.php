@@ -23,8 +23,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $date
  * @property string $start_time
  * @property string $end_time
- * @property string $currency
- * @property number $amount
  * @property integer $type
  * @property integer $profession_type
  * @property integer $status
@@ -44,6 +42,27 @@ class Appointment extends Model
     protected $dates = ['deleted_at'];
 
 
+    /**
+     * Validation rules
+     *
+     * @var array
+     */
+    public static $rules = [
+        'user_id'                   => 'required',
+        'payment_method_id'         => 'required',
+        'slot_id'                   => 'required_if:type,10',
+        'package_id'                => 'required_if:type,20|exists:packages,id',
+        'date'                      => 'string|required_if:type,10',
+        'start_time'                => 'string|required_if:type,10',
+        'end_time'                  => 'string|required_if:type,10',
+        'type'                      => 'required|integer|in:10,20',
+        'profession_type'           => 'required|integer|in:10,20,30',
+        'appointments'              => 'required_if:type,20|array', // appointments array required when type is 20
+        'appointments.*.slot_id'    => 'required|required_if:appointments.*.type,20',
+        'appointments.*.date'       => 'required|string|max:191|required_if:appointments.*.type,20',
+        'appointments.*.start_time' => 'required|string|required_if:appointments.*.type,20',
+        'appointments.*.end_time'   => 'required|string|required_if:appointments.*.type,20',
+    ];
 
     public $fillable = [
         'customer_id',
@@ -54,8 +73,6 @@ class Appointment extends Model
         'date',
         'start_time',
         'end_time',
-        'currency',
-        'amount',
         'type',
         'profession_type',
         'status'
@@ -76,8 +93,6 @@ class Appointment extends Model
         'date' => 'string',
         'start_time' => 'string',
         'end_time' => 'string',
-        'currency' => 'string',
-        'amount' => 'float',
         'type' => 'integer',
         'profession_type' => 'integer',
         'status' => 'integer'
@@ -97,8 +112,6 @@ class Appointment extends Model
         'date' => 'required|string|max:191',
         'start_time' => 'required|string|max:255',
         'end_time' => 'required|string|max:255',
-        'currency' => 'required|string|max:191',
-        'amount' => 'required|numeric',
         'type' => 'required|integer',
         'profession_type' => 'required|integer',
         'status' => 'required|integer',
@@ -137,5 +150,10 @@ class Appointment extends Model
     public function user()
     {
         return $this->belongsTo(\App\Models\User::class, 'user_id');
+    }
+
+    public function transactions()
+    {
+        return $this->morphMany(Transaction::class, 'transactionable');
     }
 }

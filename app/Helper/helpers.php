@@ -74,6 +74,31 @@ if (!function_exists('sendOTPEmail')) {
     }
 }
 
+if (!function_exists('sendRegisterUserEmail')) {
+    function sendRegisterUserEmail($user, $subject, $email, $password)
+    {
+        $data         = [
+            'name' => $user->details->first_name ?? 'User',
+            'email'  => $email,
+            'password'  => $password
+        ];
+        $sendEmailJob = new SendEmail($user->email, $subject, $data, EmailServiceTemplateNames::REGISTER_USER_TEMPLATE);
+        dispatch($sendEmailJob);
+    }
+}
+
+if (!function_exists('sendForgotPasswordEmail')) {
+    function sendForgotPasswordEmail($user, $subject, $link)
+    {
+        $data         = [
+            'name'       => $user->details->first_name ?? 'User',
+            'reset_link' => $link
+        ];
+        $sendEmailJob = new SendEmail($user->email, $subject, $data, EmailServiceTemplateNames::FORGOT_PASSWORD_TEMPLATE);
+        dispatch($sendEmailJob);
+    }
+}
+
 if (!function_exists('getCurrencySymbol')) {
     function getCurrencySymbol()
     {

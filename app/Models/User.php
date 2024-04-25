@@ -100,6 +100,14 @@ class User extends Authenticatable implements MustVerifyEmail
         'push_notification' => 'sometimes|boolean'
     ];
 
+    /**
+     * @return string
+     */
+    public function getRolesCsvAttribute()
+    {
+        return implode(",", $this->roles->pluck('name')->all());
+    }
+
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = Hash::make($value);

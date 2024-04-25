@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
@@ -36,5 +39,35 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+
+    protected function authenticated(Request $request, $user)
+    {
+//        dd($user->hasAnyRole(['Super-Admin', 'Admin']));
+        if ($user->hasAnyRole(['Super-Admin', 'Admin', 'Coach', 'Dietitian', 'Therapist'])) {
+            // Redirect the user to a specific route for users with these roles
+            return redirect()->route('home');
+//            return redirect()->intended($this->redirectPath());
+
+        } else {
+            $this->logout($request);
+            throw ValidationException::withMessages([
+                $this->username() => [trans('auth.failed')],
+            ]);
+        }
+
+
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function logout(Request $request)
+    {
+        $this->guard()->logout();
+        $request->session()->invalidate();
+        return redirect('/login');
     }
 }

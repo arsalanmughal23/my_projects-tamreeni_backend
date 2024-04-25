@@ -49,7 +49,7 @@ class UsersController extends AppBaseController
      */
     public function create()
     {
-        $roles = $this->rolesRepository->all();
+        $roles = $this->rolesRepository->whereNotIn('id', [1])->get();
         return view('users.create')->with('roles', $roles);
     }
 
@@ -68,11 +68,13 @@ class UsersController extends AppBaseController
         $userDetail = ['user_id' => $user->id];
         $this->userDetailRepository->create($userDetail);
 
-        $roleIds  = array_keys(request()->role);
-        $userRole = Role::whereIn('id', $roleIds)->get();
+//        $roleIds  = array_keys(request()->role);
+        $userRole = Role::whereIn('id', [request()->role])->get();
 
         $user->syncRoles($userRole);
 
+        sendRegisterUserEmail($user, 'Welcome to Our Platform - Your Account Details', $request->email, $request->password);
+        $user->markEmailAsVerified();
         Flash::success('User saved successfully.');
 
         return redirect(route('users.index'));
@@ -108,7 +110,7 @@ class UsersController extends AppBaseController
     public function edit($id)
     {
         $user  = $this->userRepository->find($id);
-        $roles = $this->rolesRepository->all();
+        $roles = $this->rolesRepository->whereNotIn('id', [1])->get();
 
         if (empty($user)) {
             Flash::error('User not found');
@@ -136,12 +138,17 @@ class UsersController extends AppBaseController
             return redirect(route('users.index'));
         }
 
-        $user = $this->userRepository->update($request->all(), $id);
+        $user = $this->userRepository->updateRecord($request, $id);
 
-        $roleIds = array_keys(request()->role);
-        $user->syncRoles($roleIds);
+//        $roleIds = array_keys(request()->role);
+//        $user->syncRoles($roleIds);
 
         Flash::success('User updated successfully.');
+
+        if ($id == auth()->user()->id) {
+            return redirect(route('users.edit', auth()->user()->id));
+
+        }
 
         return redirect(route('users.index'));
     }

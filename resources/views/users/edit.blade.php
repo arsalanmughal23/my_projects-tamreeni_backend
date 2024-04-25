@@ -5,7 +5,11 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-12">
-                    <h1>Edit User</h1>
+                    @if($users->id == auth()->user()->id)
+                        <h1>Edit Profile</h1>
+                    @else
+                        <h1>Edit User</h1>
+                    @endif
                 </div>
             </div>
         </div>
@@ -15,9 +19,11 @@
 
         @include('adminlte-templates::common.errors')
 
+        @include('flash::message')
+
         <div class="card">
 
-            {!! Form::model($users, ['route' => ['users.update', $users->id], 'method' => 'patch']) !!}
+            {!! Form::model($users, ['route' => ['users.update', $users->id], 'method' => 'patch', 'autocomplete'=> 'off']) !!}
 
             <div class="card-body">
                 <div class="row">
@@ -26,7 +32,7 @@
             </div>
 
             <div class="card-footer">
-                {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+                {!! Form::submit('Save', ['class' => 'btn btn-primary', 'id'=>'submitButton']) !!}
                 <a href="{{ route('users.index') }}" class="btn btn-default">Cancel</a>
             </div>
 

@@ -10,7 +10,7 @@
                 @can('settings.create')
                     <div class="col-sm-6">
                         <a class="btn btn-primary float-right"
-                        href="{{ route('settings.create') }}">
+                           href="{{ route('settings.create') }}">
                             Add New
                         </a>
                     </div>
@@ -26,14 +26,9 @@
         <div class="clearfix"></div>
 
         <div class="card">
-            <div class="card-body p-0">
+            <div class="card-body">
                 @include('settings.table')
 
-                <div class="card-footer clearfix">
-                    <div class="float-right">
-                        
-                    </div>
-                </div>
             </div>
 
         </div>

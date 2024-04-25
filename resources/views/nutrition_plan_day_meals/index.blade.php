@@ -26,7 +26,7 @@
         <div class="clearfix"></div>
 
         <div class="card">
-            <div class="card-body p-0">
+            <div class="card-body">
                 @include('nutrition_plan_day_meals.table')
 
                 <div class="card-footer clearfix">

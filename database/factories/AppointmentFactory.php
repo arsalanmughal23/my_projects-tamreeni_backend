@@ -28,10 +28,16 @@ class AppointmentFactory extends Factory
         'package_id' => $this->faker->word,
         'transaction_id' => $this->faker->word,
         'date' => $this->faker->word,
+        'start_time' => $this->faker->word,
+        'end_time' => $this->faker->word,
+        'currency' => $this->faker->word,
+        'amount' => $this->faker->randomDigitNotNull,
         'type' => $this->faker->randomDigitNotNull,
         'profession_type' => $this->faker->randomDigitNotNull,
+        'status' => $this->faker->randomDigitNotNull,
         'created_at' => $this->faker->date('Y-m-d H:i:s'),
-        'updated_at' => $this->faker->date('Y-m-d H:i:s')
+        'updated_at' => $this->faker->date('Y-m-d H:i:s'),
+        'deleted_at' => $this->faker->date('Y-m-d H:i:s')
         ];
     }
 }

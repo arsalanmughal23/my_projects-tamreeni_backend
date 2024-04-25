@@ -4,32 +4,27 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Requests\API\CreateAppointmentAPIRequest;
 use App\Http\Requests\API\UpdateAppointmentAPIRequest;
-use App\Http\Resources\AppointmentResource;
 use App\Models\Appointment;
 use App\Models\Package;
 use App\Models\Setting;
 use App\Models\Transaction;
 use App\Repositories\AppointmentRepository;
-use App\Repositories\TransactionRepository;
-use App\Repositories\UserSubscriptionRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use App\Repositories\PackageRepository;
 use Response;
-use Config;
 use Illuminate\Support\Facades\DB;
 
 /**
  * Class AppointmentController
  * @package App\Http\Controllers\API
  */
+
 class AppointmentAPIController extends AppBaseController
 {
     public function __construct(
         private PackageRepository $packageRepository, 
-        private AppointmentRepository $appointmentRepository, 
-        private TransactionRepository $transactionRepository, 
-        private UserSubscriptionRepository $userSubscriptionRepository
+        private AppointmentRepository $appointmentRepository,
     ){}
 
     /**
@@ -42,17 +37,13 @@ class AppointmentAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $perPage      = $request->input('per_page', Config::get('constants.PER_PAGE', 10));
-        $appointments = $this->appointmentRepository->getAppointment($request->only('all_day_appointment', 'date', 'status'));
+        $appointments = $this->appointmentRepository->all(
+            $request->except(['skip', 'limit']),
+            $request->get('skip'),
+            $request->get('limit')
+        );
 
-        // Paginate the results
-        if ($request->get('paginate')) {
-            $appointments = $appointments->orderBy('created_at', 'desc')->paginate($perPage);
-        } else {
-            $appointments = $appointments->get();
-        }
-
-        return $this->sendResponse(AppointmentResource::collection($appointments), 'Appointments retrieved successfully');
+        return $this->sendResponse($appointments->toArray(), 'Appointments retrieved successfully');
     }
 
     /**
@@ -199,7 +190,7 @@ class AppointmentAPIController extends AppBaseController
             return $this->sendError('Appointment not found');
         }
 
-        return $this->sendResponse(new AppointmentResource($appointment), 'Appointment retrieved successfully');
+        return $this->sendResponse($appointment->toArray(), 'Appointment retrieved successfully');
     }
 
     /**
@@ -225,7 +216,7 @@ class AppointmentAPIController extends AppBaseController
 
         $appointment = $this->appointmentRepository->update($input, $id);
 
-        return $this->sendResponse(new AppointmentResource($appointment), 'Appointment updated successfully');
+        return $this->sendResponse($appointment->toArray(), 'Appointment updated successfully');
     }
 
     /**

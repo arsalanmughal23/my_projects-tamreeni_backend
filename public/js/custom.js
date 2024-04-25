@@ -250,6 +250,9 @@ $(document).ready(function () {
 
     // $(document).customLoad();
 
+    $('.select2').css('width', '100%');
+
+
     $('.summernote').summernote();
 
     $(document).on('click', '.btn-up-ajax', function () {
@@ -312,6 +315,26 @@ $(document).ready(function () {
 
         }
     });
+
+
+    function checkPasswords() {
+        var password = document.getElementById('password').value;
+        var confirmPassword = document.getElementById('password_confirmation').value;
+
+        // Check if passwords match
+        if (password !== confirmPassword) {
+            // If passwords don't match, show error message
+            document.getElementById('password-error').style.display = 'block';
+            return false;
+        } else {
+            // If passwords match, hide error message
+            document.getElementById('password-error').style.display = 'none';
+            return true;
+        }
+    }
+
+    document.getElementById('password').addEventListener('input', checkPasswords);
+    document.getElementById('password_confirmation').addEventListener('input', checkPasswords);
 
     $("#togglePassword").click(function () {
         $(this).toggleClass("glyphicon-eye-close");

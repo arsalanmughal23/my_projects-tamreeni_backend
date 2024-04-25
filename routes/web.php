@@ -24,6 +24,8 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::group(['middleware' => ['auth', 'dynamic_permission']], function () {
 
+    Route::resource('users', App\Http\Controllers\UsersController::class);
+
     Route::post('/generate-crud-from-table', [App\Http\Controllers\GenerateTableController::class, 'generateCrudFromTable'])->name('dbtables.generate_crud_from_table');
 
     Route::get('/create-menus', [App\Http\Controllers\GenerateTableController::class, 'createMenu'])->name('dbtables.create_menus');
@@ -66,11 +68,6 @@ Route::group(['middleware' => ['auth', 'dynamic_permission']], function () {
     Route::resource('permissions', App\Http\Controllers\PermissionsController::class);
 
 });
-
-Route::resource('users', App\Http\Controllers\UsersController::class);
-
-
-
 
 
 Route::resource('pages', App\Http\Controllers\PageController::class);

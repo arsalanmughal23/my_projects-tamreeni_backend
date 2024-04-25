@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>{{ config('app.name') }} | Password Reset</title>
+    <link rel="icon" type="image/png" href="{{asset('public/favicon.ico')}}">
 
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -29,6 +30,11 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    <link rel="stylesheet" href="{{ asset('public/css/custom.css') }}">
+    @stack('third_party_stylesheets')
+
+    @stack('page_css')
 
 </head>
 <body class="hold-transition login-page">

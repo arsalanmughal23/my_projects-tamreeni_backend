@@ -26,7 +26,7 @@
         <div class="clearfix"></div>
 
         <div class="card">
-            <div class="card-body p-0">
+            <div class="card-body">
                 @include('user_subscriptions.table')
 
                 <div class="card-footer clearfix">

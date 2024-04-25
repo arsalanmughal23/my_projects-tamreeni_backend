@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Role;
 use App\Models\Slot;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\PaymentController;
@@ -19,15 +18,6 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('roles')->insert([
-            [ 'name' => Role::SUPER_ADMIN, 'guard_name' => 'web' ],
-            [ 'name' => Role::ADMIN, 'guard_name' => 'web' ],
-            [ 'name' => Role::API_USER, 'guard_name' => 'api' ],
-            [ 'name' => Role::COACH, 'guard_name' => 'api' ],
-            [ 'name' => Role::DIETITIAN, 'guard_name' => 'api' ],
-            [ 'name' => Role::THERAPIST, 'guard_name' => 'api' ]
-        ]);
-
         $coachRole = Role::whereName(Role::COACH)->first();
         $dietitianRole = Role::whereName(Role::DIETITIAN)->first();
         $therapistRole = Role::whereName(Role::THERAPIST)->first();
@@ -38,6 +28,12 @@ class UserSeeder extends Seeder
             'password' => '123456',
         ])->assignRole(Role::SUPER_ADMIN);
 
+        User::create([
+            'name' => 'admin',
+            'email' => 'admin@boilerplate.com',
+            'password' => '123456',
+        ])->assignRole(Role::ADMIN);
+
             // $apiUserRole = Role::whereName(Role::API_USER)->first();
             // $apiUser = User::create([
             //     'name' => 'App User1',
@@ -46,10 +42,9 @@ class UserSeeder extends Seeder
             //     'password' => 'Demo@123'
             // ])->assignRole($apiUserRole);
             // $apiUser->details()->create();
-            
-            // $paymentController = new PaymentController();
-            // $emailRequest      = new Request(['email' => $apiUser->email]);
-            // $stripe_customer             = $paymentController::post($emailRequest, 'create.customer');
+
+            // $emailRequest       = new Request(['email' => $apiUser->email]);
+            // $stripe_customer    = PaymentController::post($emailRequest, 'create.customer');
             // $input['stripe_customer_id'] = $stripe_customer['data']['id'];
             // $apiUser->update(['stripe_customer_id' => $stripe_customer['data']['id']]);
 

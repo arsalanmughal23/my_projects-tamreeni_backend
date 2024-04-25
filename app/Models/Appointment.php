@@ -54,7 +54,7 @@ class Appointment extends Model
         'user_id'                   => 'required',
         'payment_method_id'         => 'required',
         'slot_id'                   => 'required_if:type,10',
-        'package_id'                => 'required_if:type,20',
+        'package_id'                => 'required_if:type,20|exists:packages,id',
         'date'                      => 'string|required_if:type,10',
         'start_time'                => 'string|required_if:type,10',
         'end_time'                  => 'string|required_if:type,10',
@@ -76,7 +76,6 @@ class Appointment extends Model
         'date',
         'start_time',
         'end_time',
-        'amount',
         'type',
         'status',
         'profession_type'
@@ -97,8 +96,6 @@ class Appointment extends Model
         'date'            => 'string',
         'start_time'      => 'string',
         'end_time'        => 'string',
-        'currency'        => 'string',
-        'amount'          => 'float',
         'type'            => 'integer',
         'status'          => 'integer',
         'profession_type' => 'integer'
@@ -134,5 +131,10 @@ class Appointment extends Model
     public function package()
     {
         return $this->belongsTo(Package::class, 'package_id');
+    }
+
+    public function transactions()
+    {
+        return $this->morphMany(Transaction::class, 'transactionable');
     }
 }

@@ -35,13 +35,14 @@ class Transaction extends Model
 
     protected $dates = ['deleted_at'];
 
-    const STATUS_COMPLETE = 1;
-    const STATUS_CANCEL = 0;
+    const STATUS_HOLD = 10;
+    const STATUS_COMPLETE = 20;
+    const STATUS_CANCEL = 30;
 
     public $fillable = [
         'user_id',
-        'package_id',
-        'transaction_id',
+        'payment_intent_id',
+        'payment_charge_id',
         'data',
         'description',
         'method',
@@ -90,6 +91,11 @@ class Transaction extends Model
     public function package()
     {
         return $this->belongsTo(Package::class, 'package_id');
+    }
+
+    public function transactionable()
+    {
+        return $this->morphTo();
     }
 
     /**

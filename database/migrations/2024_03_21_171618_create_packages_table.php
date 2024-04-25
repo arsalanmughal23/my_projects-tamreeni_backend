@@ -17,7 +17,7 @@ class CreatePackagesTable extends Migration
             $table->id();
             $table->text('name');
             $table->text('description');
-            $table->string('currency', 191)->default("SAR");;
+            $table->string('currency', 191)->default("SAR");
             $table->float('amount');
             $table->integer('sessions');
             $table->integer('status')->comment('1 => active, 2 => inactive');

@@ -9,14 +9,15 @@ use App\Models\Appointment;
 use App\Models\Package;
 use App\Models\Setting;
 use App\Models\Transaction;
-use App\Models\UserSubscription;
 use App\Repositories\AppointmentRepository;
 use App\Repositories\TransactionRepository;
 use App\Repositories\UserSubscriptionRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use App\Repositories\PackageRepository;
 use Response;
 use Config;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class AppointmentController
@@ -24,17 +25,12 @@ use Config;
  */
 class AppointmentAPIController extends AppBaseController
 {
-    /** @var  AppointmentRepository */
-    private $appointmentRepository;
-    private $transactionRepository;
-    private $userSubscriptionRepository;
-
-    public function __construct(AppointmentRepository $appointmentRepo, TransactionRepository $transactionRepo, UserSubscriptionRepository $userSubscriptionRepo)
-    {
-        $this->appointmentRepository      = $appointmentRepo;
-        $this->transactionRepository      = $transactionRepo;
-        $this->userSubscriptionRepository = $userSubscriptionRepo;
-    }
+    public function __construct(
+        private PackageRepository $packageRepository, 
+        private AppointmentRepository $appointmentRepository, 
+        private TransactionRepository $transactionRepository, 
+        private UserSubscriptionRepository $userSubscriptionRepository
+    ){}
 
     /**
      * Display a listing of the Appointment.
@@ -70,64 +66,119 @@ class AppointmentAPIController extends AppBaseController
 
     public function store(CreateAppointmentAPIRequest $request)
     {
-        $input           = $request->all();
-        $user            = $request->user();
-        $type            = intval($input['type']);
-        $profession_type = intval($input['profession_type']);
-        $currency        = "SAR";
-        $appointment = null;
-        // Create transaction if it's a session appointment
-        if ($type === Appointment::TYPE_SESSION) {
+        try{
+            DB::beginTransaction();
+            
+            $user   = $request->user();
+            $input  = $request->validated();
+            $input['package_id']= $input['package_id'] ?? null;
 
-            $checkUserAppointment = $this->appointmentRepository
-                ->checkUserAppointment($request->user()->id, $input['user_id'], $input['date']);
+            $type               = intval($input['type']);
+            $profession_type    = intval($input['profession_type']);
+            $amountInSAR = 0;
+            $paymentIntentRequired = $request->payment_intent_required;
 
-            if ($checkUserAppointment) {
-                return $this->sendError('Already book appointment');
+            $transactionable = null;
+            $createdAppointmentIds = [];
+            switch ($type) {
+                case Appointment::TYPE_SESSION:
+                    // Create transaction if it's a session appointment
+                    $checkUserAppointment = $this->appointmentRepository
+                        ->checkUserAppointment($user->id, $input['user_id'], $input['date']);
+
+                    if ($checkUserAppointment)
+                        return $this->sendError('Already book appointment', 422);
+
+                    $description            = "1-1 Session - Appointment Payment";
+                    $amountInSAR            = $this->calculateSessionFee($profession_type);
+                    $input['customer_id']   = $user->id;
+                    $transactionable        = $this->appointmentRepository->create($input);
+                    $createdAppointmentIds[]= $transactionable->id;
+                break;
+
+                case Appointment::TYPE_PACKAGE:
+                    foreach($input['appointments'] as $appointment){
+                        $appointmentExist = $this->appointmentRepository->checkUserAppointment($user->id, $input['user_id'], $appointment['date']);
+                        if($appointmentExist)
+                            throw new \Error('Your appointment is already booked on '.$appointment['date']);
+                    }
+
+                    $package        = $transactionable = $this->packageRepository->findWithoutFail($input['package_id']);
+                    $amountInSAR    = $package->amount;
+                    $description    = $package->description . ' ' . ' Package Purchase';
+
+                    $appointments = $input['appointments'];
+                    foreach ($appointments as $key => $appointment) {
+                        $appointment['user_id']         = $input['user_id'];
+                        $appointment['customer_id']     = $user->id;
+                        $appointment['package_id']      = $input['package_id'];
+                        $appointment['type']            = $type;
+                        $appointment['profession_type'] = $profession_type;
+                        $createdAppointment = $this->appointmentRepository->create($appointment);
+                        $createdAppointmentIds[] = $createdAppointment->id;
+                    }
+                break;
+
+                default:
+                    throw new \Error('Type is invalid');
+                break;
             }
 
-            $input['amount'] = $this->calculateSessionFee($profession_type);
-            $description     = "1-1 Session - Appointment Payment";
+            $paymentIntent  = null;
+            $ephemeralKey   = null;
+            $transaction    = null;
 
-            $this->createTransaction($input['amount'], $user, $currency, $description, null, $input['payment_method_id']);
-            $input['customer_id'] = $request->user()->id;
-            $appointment          = $this->appointmentRepository->create($input);
+            if($paymentIntentRequired){
+                $paymentIntentResponse = PaymentController::makePaymentIntent($amountInSAR, $description, $user->stripe_customer_id);
 
-        }
+                if(!$paymentIntentResponse['status'])
+                    throw new \Error('Payment intent is not created');
 
-        // Create transaction if it's a package appointment
-        if ($type === Appointment::TYPE_PACKAGE) {
-            $currentPackage = $this->userSubscriptionRepository
-                ->checkUserCurrentPackage($user->id, $input['package_id']);
-            if ($currentPackage) {
-                $input['package_id'] = $currentPackage->package_id;
-                $this->updateUserSubscription($user->id, $input['package_id']);
-            } else {
-                $package         = Package::find($input['package_id'])->first();
-                $input['amount'] = $package->amount;
-                $description     = $package->description . ' ' . ' Package Purchase';
+                $ephemeralKeyResponse = PaymentController::makeEphemeralKey($user->stripe_customer_id);
+                if(!$ephemeralKeyResponse['status'])
+                    throw new \Error('Ephemeral key is not created');
 
-                $transactionId = $this->createTransaction($input['amount'], $user, $currency, $description, $input['package_id'], $input['payment_method_id']);
-                $this->addUserSubscription($user->id, $input['package_id'], $transactionId, $package->sessions, 0);
+                $paymentIntent  = $paymentIntentResponse['data'];
+                $ephemeralKey   = $ephemeralKeyResponse['data'];
 
-                $appointments = $input['appointments'];
-                foreach ($appointments as $key => $appointment) {
+                $transaction = $transactionable->transactions()->create([
+                    'payment_intent_id' => $paymentIntent['id'],
+                    'payment_charge_id' => null,
+                    'amount'         => $amountInSAR,
+                    'description'    => $description,
+                    'user_id'        => $user->id,
+                    'currency'       => getCurrencySymbol(),
+                    'status'         => Transaction::STATUS_HOLD
+                ]);
 
-                    $this->updateUserSubscription($user->id, $input['package_id']);
-
-                    $appointment['user_id']         = $input['user_id'];
-                    $appointment['customer_id']     = $user->id;
-                    $appointment['package_id']      = $input['package_id'];
-                    $appointment['transaction_id']  = $transactionId;
-                    $appointment['type']            = $type;
-                    $appointment['profession_type'] = $profession_type;
-                    $appointment['amount']          = $input['amount'];
-                    $appointment = $this->appointmentRepository->create($appointment);
-                }
+            } else{
+                $transaction = $this->createTransaction($transactionable, $user, $amountInSAR, $input['payment_method_id'], $description);
             }
-        }
 
-        return $this->sendResponse(new AppointmentResource($appointment), 'Appointment saved successfully');
+            $createdAppointments = $this->appointmentRepository->whereIn('id', $createdAppointmentIds)->update([
+                'transaction_id' => $transaction->id
+            ]);
+
+            $createdAppointments = $this->appointmentRepository->whereIn('id', $createdAppointmentIds)->where('transaction_id', $transaction->id)->get();
+
+            DB::commit();
+
+            $data = [
+                'appointments' => AppointmentResource::collection($createdAppointments),
+                'ephemeralKey' => $ephemeralKey,
+                'paymentIntent' => $paymentIntent,
+                'transaction' => $transaction
+            ];
+            return $this->sendResponse($data, 'Appointment saved successfully');
+
+        }catch(\Error $e){
+            DB::rollback();
+            return $this->sendError($e->getMessage(), 403);
+
+        }catch(\Exception $e){
+            DB::rollback();
+            return $this->sendError($e->getMessage(), 422);
+        }
     }
 
     /**
@@ -221,62 +272,28 @@ class AppointmentAPIController extends AppBaseController
     }
 
     // Function to create transaction
-    private function createTransaction($amount, $user, $currency, $description, $package_id = null, $payment_method_id)
+    private function createTransaction(Package | Appointment $transactionable, $user, $amountInSAR, $payment_method_id, $description)
     {
+        $paymentIntentResponse = PaymentController::makePaymentIntent($amountInSAR, $description, $user->stripe_customer_id);
+        if (!$paymentIntentResponse['status'])
+            throw new \Error('Payment intent is not created');
+        $paymentIntentId = $paymentIntentResponse['data']['id'];
 
-        $transaction_id = $this->chargePayment($amount, $description, $user->stripe_customer_id, $payment_method_id);
-        if ($transaction_id) {
+        $chargePaymentResponse = PaymentController::charge($paymentIntentId, $payment_method_id);
+        if (!$chargePaymentResponse['status'])
+            throw new \Error('Payment is not charged!');
+        $chargedPaymentId = $chargePaymentResponse['data']['id'];
 
-            $transaction = [
-                'amount'         => $amount,
-                'description'    => $description,
-                'package_id'     => $package_id,
-                'transaction_id' => $transaction_id,
-                'user_id'        => $user->id,
-                'currency'       => $currency,
-                'status'         => Transaction::STATUS_COMPLETE,
-            ];
-
-            $createdTransaction = $this->transactionRepository->create($transaction);
-
-            return $createdTransaction->id;
-        }
-    }
-
-    private function addUserSubscription($user_id, $package_id, $transaction_id, $sessions, $take_session)
-    {
-        $userSubscription = [
-            'user_id'           => $user_id,
-            'package_id'        => $package_id,
-            'transaction_id'    => $transaction_id,
-            'sessions'          => $sessions,
-            'complete_sessions' => $take_session,
-            'status'            => UserSubscription::ACTIVE
-        ];
-
-        $this->userSubscriptionRepository->create($userSubscription);
-    }
-
-    private function updateUserSubscription($user_id, $package_id)
-    {
-        $userSubscription = $this->userSubscriptionRepository->checkUserCurrentPackage($user_id, $package_id);
-        if ($userSubscription) {
-            $userSubscription->complete_sessions += 1;
-            if ($userSubscription->complete_sessions >= $userSubscription->sessions) {
-                $userSubscription->status = 0;
-            }
-            $userSubscription->save();
-        }
-    }
-
-    private function chargePayment($price, $description, $stripe_customer_id, $payment_method_id)
-    {
-        $amount            = round($price * 100);
-        $paymentController = new PaymentController();
-        $chargeRequest     = ['amount' => $amount, 'description' => $description, 'customer_id' => $stripe_customer_id, 'payment_method_id' => $payment_method_id];
-
-        $stripeCharge = $paymentController::charge($chargeRequest);
-        return $stripeCharge['data']['id'];
+        $transaction = $transactionable->transactions()->create([
+            'payment_intent_id' => $paymentIntentId,
+            'payment_charge_id' => $chargedPaymentId,
+            'amount'            => $amountInSAR,
+            'description'       => $description,
+            'user_id'           => $user->id,
+            'currency'          => getCurrencySymbol(),
+            'status'            => Transaction::STATUS_COMPLETE,
+        ]);
+        return $transaction;
     }
 
 }

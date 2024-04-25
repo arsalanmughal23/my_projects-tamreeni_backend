@@ -16,9 +16,11 @@ class CreateTransactionsTable extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('package_id')->nullable();
-            $table->string('transaction_id', 255);
-            $table->json('data');
+            $table->nullableMorphs('transactionable');
+            $table->string('payment_intent_id')->nullable();
+            $table->string('payment_charge_id')->nullable();
+            $table->text('description')->nullable();
+            $table->json('data')->nullable();
             $table->string('currency', 191)->default("SAR");
             $table->float('amount')->default(0);
             $table->string('status', 255);
@@ -26,7 +28,6 @@ class CreateTransactionsTable extends Migration
             $table->softDeletes();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('package_id')->references('id')->on('packages')->onDelete('cascade');
         });
     }
 

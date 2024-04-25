@@ -24,3 +24,11 @@ services:
       - .:/var/www/html
     depends_on:
       - php
+      
+networks:
+  tamreeni-backend:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.24.24.1/24

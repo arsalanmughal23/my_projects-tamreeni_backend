@@ -11,6 +11,7 @@ use App\Models\Transaction;
 use App\Repositories\AppointmentRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\AppointmentResource;
 use App\Repositories\PackageRepository;
 use Response;
 use Illuminate\Support\Facades\DB;
@@ -37,11 +38,7 @@ class AppointmentAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $appointments = $this->appointmentRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+        $appointments = $this->appointmentRepository->all($request->only('customer_id','user_id'));
 
         return $this->sendResponse($appointments->toArray(), 'Appointments retrieved successfully');
     }
@@ -67,7 +64,7 @@ class AppointmentAPIController extends AppBaseController
             $type               = intval($input['type']);
             $profession_type    = intval($input['profession_type']);
             $amountInSAR = 0;
-            $paymentIntentRequired = $request->payment_intent_required;
+            $paymentIntentRequired = $input['payment_intent_required'] ?? false;
 
             $transactionable = null;
             $createdAppointmentIds = [];

@@ -24,9 +24,10 @@ use Illuminate\Support\Facades\DB;
 class AppointmentAPIController extends AppBaseController
 {
     public function __construct(
-        private PackageRepository $packageRepository, 
+        private PackageRepository $packageRepository,
         private AppointmentRepository $appointmentRepository,
-    ){}
+    ) {
+    }
 
     /**
      * Display a listing of the Appointment.
@@ -38,7 +39,7 @@ class AppointmentAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $appointments = $this->appointmentRepository->all($request->only('customer_id','user_id'));
+        $appointments = $this->appointmentRepository->all($request->only('customer_id', 'user_id'));
 
         return $this->sendResponse($appointments->toArray(), 'Appointments retrieved successfully');
     }
@@ -54,12 +55,12 @@ class AppointmentAPIController extends AppBaseController
 
     public function store(CreateAppointmentAPIRequest $request)
     {
-        try{
+        try {
             DB::beginTransaction();
-            
+
             $user   = $request->user();
             $input  = $request->validated();
-            $input['package_id']= $input['package_id'] ?? null;
+            $input['package_id'] = $input['package_id'] ?? null;
 
             $type               = intval($input['type']);
             $profession_type    = intval($input['profession_type']);
@@ -81,14 +82,14 @@ class AppointmentAPIController extends AppBaseController
                     $amountInSAR            = $this->calculateSessionFee($profession_type);
                     $input['customer_id']   = $user->id;
                     $transactionable        = $this->appointmentRepository->create($input);
-                    $createdAppointmentIds[]= $transactionable->id;
-                break;
+                    $createdAppointmentIds[] = $transactionable->id;
+                    break;
 
                 case Appointment::TYPE_PACKAGE:
-                    foreach($input['appointments'] as $appointment){
+                    foreach ($input['appointments'] as $appointment) {
                         $appointmentExist = $this->appointmentRepository->checkUserAppointment($user->id, $input['user_id'], $appointment['date']);
-                        if($appointmentExist)
-                            throw new \Error('Your appointment is already booked on '.$appointment['date']);
+                        if ($appointmentExist)
+                            throw new \Error('Your appointment is already booked on ' . $appointment['date']);
                     }
 
                     $package        = $transactionable = $this->packageRepository->findWithoutFail($input['package_id']);
@@ -105,25 +106,25 @@ class AppointmentAPIController extends AppBaseController
                         $createdAppointment = $this->appointmentRepository->create($appointment);
                         $createdAppointmentIds[] = $createdAppointment->id;
                     }
-                break;
+                    break;
 
                 default:
                     throw new \Error('Type is invalid');
-                break;
+                    break;
             }
 
             $paymentIntent  = null;
             $ephemeralKey   = null;
             $transaction    = null;
 
-            if($paymentIntentRequired){
+            if ($paymentIntentRequired) {
                 $paymentIntentResponse = PaymentController::makePaymentIntent($amountInSAR, $description, $user->stripe_customer_id);
 
-                if(!$paymentIntentResponse['status'])
+                if (!$paymentIntentResponse['status'])
                     throw new \Error('Payment intent is not created');
 
                 $ephemeralKeyResponse = PaymentController::makeEphemeralKey($user->stripe_customer_id);
-                if(!$ephemeralKeyResponse['status'])
+                if (!$ephemeralKeyResponse['status'])
                     throw new \Error('Ephemeral key is not created');
 
                 $paymentIntent  = $paymentIntentResponse['data'];
@@ -138,14 +139,12 @@ class AppointmentAPIController extends AppBaseController
                     'currency'       => getCurrencySymbol(),
                     'status'         => Transaction::STATUS_HOLD
                 ]);
-
-            } else{
+            } else {
                 $transaction = $this->createTransaction($transactionable, $user, $amountInSAR, $input['payment_method_id'], $description);
             }
 
-            $createdAppointments = $this->appointmentRepository->whereIn('id', $createdAppointmentIds)->update([
-                'transaction_id' => $transaction->id
-            ]);
+            $createdAppointments = $this->appointmentRepository->whereIn('id', $createdAppointmentIds)
+                ->update(['transaction_id' => $transaction->id]);
 
             $createdAppointments = $this->appointmentRepository->whereIn('id', $createdAppointmentIds)->where('transaction_id', $transaction->id)->get();
 
@@ -158,12 +157,10 @@ class AppointmentAPIController extends AppBaseController
                 'transaction' => $transaction
             ];
             return $this->sendResponse($data, 'Appointment saved successfully');
-
-        }catch(\Error $e){
+        } catch (\Error $e) {
             DB::rollback();
             return $this->sendError($e->getMessage(), 403);
-
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             DB::rollback();
             return $this->sendError($e->getMessage(), 422);
         }
@@ -283,5 +280,4 @@ class AppointmentAPIController extends AppBaseController
         ]);
         return $transaction;
     }
-
 }

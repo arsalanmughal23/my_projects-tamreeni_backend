@@ -41,13 +41,9 @@ class NutritionPlanDayMealAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $nutrition_plan_day_meals = $this->nutritionPlanDayMealRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+        $nutrition_plan_day_meals = $this->nutritionPlanDayMealRepository->all($request->only('nutrition_plan_day_id', 'status'));
 
-        return $this->sendResponse($nutrition_plan_day_meals->toArray(), 'Nutrition Plan Day Meals retrieved successfully');
+        return $this->sendResponse(NutritionPlanDayMealResource::collection($nutrition_plan_day_meals), 'Nutrition Plan Day Meals retrieved successfully');
     }
 
     /**
@@ -86,7 +82,7 @@ class NutritionPlanDayMealAPIController extends AppBaseController
             return $this->sendError('Nutrition Plan Day Meal not found');
         }
 
-        return $this->sendResponse($nutritionPlanDayMeal->toArray(), 'Nutrition Plan Day Meal retrieved successfully');
+        return $this->sendResponse(new NutritionPlanDayMealResource($nutritionPlanDayMeal), 'Nutrition Plan Day Meal retrieved successfully');
     }
 
     /**

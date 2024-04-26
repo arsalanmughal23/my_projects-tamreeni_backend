@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Criteria\AppointmentCriteria;
 use App\Http\Requests\API\CreateAppointmentAPIRequest;
 use App\Http\Requests\API\UpdateAppointmentAPIRequest;
 use App\Models\Appointment;
@@ -39,9 +40,10 @@ class AppointmentAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $appointments = $this->appointmentRepository->all($request->only('customer_id', 'user_id'));
+        $params = $request->only('user_id','customer_id','type','profession_type','status','start_date','date','order_by','order');
 
-        return $this->sendResponse($appointments->toArray(), 'Appointments retrieved successfully');
+        $appointments = $this->appointmentRepository->pushCriteria(new AppointmentCriteria($params));
+        return $this->sendResponse($appointments->all(), 'Appointments retrieved successfully');
     }
 
     /**

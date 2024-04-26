@@ -51,4 +51,9 @@ class NutritionPlanDayMealRepository extends BaseRepository
     {
         return NutritionPlanDayMeal::create($data);
     }
+
+    public function all($params = [])
+    {
+        return NutritionPlanDayMeal::where($params)->get();
+    }
 }

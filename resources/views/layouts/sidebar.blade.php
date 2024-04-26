@@ -45,20 +45,18 @@
                     </a>
                 </li>
                 @endrole
-                @role(\App\Models\Role::ADMIN)
+                @canany(['users.index', 'users.create', 'users.show', 'users.edit', 'users.destroy'])
                 <li class="nav-item">
                     <a href="{{ route('users.index') }}" class="nav-link {{ Request::is('users*') ? 'active' : '' }}">
                         <i class="fa fa-users"></i> <span>Users</span>
                     </a>
                 </li>
-                @endrole
-
+                @endcanany
 
                 {{-- @include('layouts.menu') --}}
 
                 @forelse (getMenus() as $menu)
-                    @canany([$menu->slug . '.index', $menu->slug . '.create', $menu->slug . '.show', $menu->slug .
-                        '.edit', $menu->slug . '.destroy'])
+                    @canany([$menu->slug . '.index', $menu->slug . '.create', $menu->slug . '.show', $menu->slug . '.edit', $menu->slug . '.destroy'])
                         <li class="nav-item">
                             <a href="{{ route($menu->slug . '.index') }}"
                                class="nav-link {{ Request::is($menu->slug . '*') ? 'active' : '' }}">

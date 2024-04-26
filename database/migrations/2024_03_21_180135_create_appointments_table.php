@@ -23,8 +23,6 @@ class CreateAppointmentsTable extends Migration
             $table->string('date');
             $table->string('start_time');
             $table->string('end_time');
-            $table->string('currency', 191);
-            $table->float('amount');
             $table->integer('type')->comment("10 => 1-1 session, 20 => package");
             $table->integer('profession_type')->comment("10 => coach, 20 => dietitian, 30 => Therapist");
             $table->integer('status')->default(0)->comment("0 => pending, 1 => start, 2 => end");

@@ -33,22 +33,12 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthAPIController extends AppBaseController
 {
-    private $userRepository;
-    private $userDetailRepository;
-    private $userDeviceRepository;
-    private $userSocialAccountRepository;
-
     public function __construct(
-        UsersRepository $userRepository,
-        UserDetailRepository $userDetailRepository,
-        UserDeviceRepository $userDeviceRepository,
-        UserSocialAccountRepository $userSocialAccountRepository
-    )
-    {
-        $this->userRepository              = $userRepository;
-        $this->userDetailRepository        = $userDetailRepository;
-        $this->userDeviceRepository        = $userDeviceRepository;
-        $this->userSocialAccountRepository = $userSocialAccountRepository;
+        private UsersRepository $userRepository,
+        private UserDetailRepository $userDetailRepository,
+        private UserDeviceRepository $userDeviceRepository,
+        private UserSocialAccountRepository $userSocialAccountRepository
+    ) {
     }
 
     public function login(LoginAPIRequest $request)
@@ -79,13 +69,11 @@ class AuthAPIController extends AppBaseController
             'token' => self::getTokenResponse($token),
             'user'  => $user,
         ], 'Logged In Successfully');
-
     }
 
     public function socialLogin(SocialLoginAPIRequest $request)
     {
         try {
-            $paymentController = new PaymentController();
 
             $user                   = null;
             $input                  = $request->validated();
@@ -130,8 +118,8 @@ class AuthAPIController extends AppBaseController
                 $userData['name']     = $userName ?? "user_" . $input['client_id'];
                 $userData['email']    = $userEmail ?? $input['client_id'] . '_' . $input['platform'] . '@' . config('app.name') . '.com';
 
-                $emailRequest      = new Request(['email' => $userData['email']]);
-                $stripe_customer             = $paymentController::post($emailRequest, 'create.customer');
+                $emailRequest       = new Request(['email' => $userData['email']]);
+                $stripe_customer    = PaymentController::post($emailRequest, 'create.customer');
                 $userData['stripe_customer_id'] = $stripe_customer['data']['id'];
 
                 $userData['password'] = bcrypt(substr(str_shuffle(MD5(microtime())), 0, 12));
@@ -186,7 +174,6 @@ class AuthAPIController extends AppBaseController
             ];
 
             return $this->sendResponse($response, 'You have social-login successfully');
-
         } catch (Error $e) {
             return $this->sendError($e->getMessage());
         }
@@ -197,10 +184,9 @@ class AuthAPIController extends AppBaseController
         try {
 
             $input             = $request->all();
-            $paymentController = new PaymentController();
             $emailRequest      = new Request(['email' => $input['email']]);
 
-            $stripe_customer             = $paymentController::post($emailRequest, 'create.customer');
+            $stripe_customer             = PaymentController::post($emailRequest, 'create.customer');
             $input['stripe_customer_id'] = $stripe_customer['data']['id'];
             $user                        = $this->userRepository->create($input);
 
@@ -223,7 +209,6 @@ class AuthAPIController extends AppBaseController
             return $this->sendResponse([
                 'user' => $user->fresh(),
             ], 'User saved successfully.');
-
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 500);
         }
@@ -244,8 +229,8 @@ class AuthAPIController extends AppBaseController
                 return $this->sendError('This email is signed as a social acount.', 403);
 
             $code = rand(1111, 9999);
-            match($request->type){
-            'email' => saveVerifyEmailOTP($user->id, $code),
+            match ($request->type) {
+                'email' => saveVerifyEmailOTP($user->id, $code),
                 'password' => self::savePasswordResetOTP($user->email, $code)
             };
 
@@ -268,8 +253,8 @@ class AuthAPIController extends AppBaseController
                 return $this->sendError('User not found.', 404);
 
             $otp     = $request->otp;
-            $otpCode = match($request->type){
-            'email' => VerifyEmail::where(['user_id' => $user->id, 'code' => $otp])->first(),
+            $otpCode = match ($request->type) {
+                'email' => VerifyEmail::where(['user_id' => $user->id, 'code' => $otp])->first(),
                 'password' => PasswordReset::where(['email' => $user->email, 'token' => $otp])->first()
             };
 
@@ -318,7 +303,6 @@ class AuthAPIController extends AppBaseController
             sendOTPEmail($user, 'Password Verification Code', $code);
 
             return $this->sendResponse([], 'Password Verification Code send to your email successfully');
-
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 500);
         }
@@ -352,7 +336,6 @@ class AuthAPIController extends AppBaseController
             self::sendMessageEmail($user, 'Password Reset', $message);
 
             return $this->sendResponse(['user' => $user], 'Password Reset Successfully');
-
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 500);
         }
@@ -378,7 +361,6 @@ class AuthAPIController extends AppBaseController
             $user->delete();
 
             return $this->sendResponse([], 'Your account is deleted successfully');
-
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 500);
         }
@@ -426,7 +408,6 @@ class AuthAPIController extends AppBaseController
             $data         = ['message' => $message];
             $sendEmailJob = new SendEmail($user->email, $subject, $data, EmailServiceTemplateNames::MESSAGE_TEMPLATE);
             dispatch($sendEmailJob);
-
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 500);
         }
@@ -453,7 +434,6 @@ class AuthAPIController extends AppBaseController
             $user->update(['password' => $request->password]);
 
             return $this->sendResponse(['user' => $user], 'Password updated Successfully');
-
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 422);
         }
@@ -468,7 +448,6 @@ class AuthAPIController extends AppBaseController
                 $user->tokens()->delete();
 
             return $this->sendResponse(new \stdClass(), 'Logout Successfully');
-
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 422);
         }
@@ -502,4 +481,3 @@ class AuthAPIController extends AppBaseController
         return response()->json(['url' => $url], 201);
     }
 }
-

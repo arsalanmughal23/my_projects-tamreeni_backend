@@ -99,6 +99,13 @@ if (!function_exists('sendForgotPasswordEmail')) {
     }
 }
 
+if (!function_exists('getCurrencySymbol')) {
+    function getCurrencySymbol()
+    {
+        return config('payment-service.currency');
+    }
+}
+
 if (!function_exists('saveVerifyEmailOTP')) {
     function saveVerifyEmailOTP($user_id, $code)
     {

@@ -78,9 +78,9 @@ if (!function_exists('sendRegisterUserEmail')) {
     function sendRegisterUserEmail($user, $subject, $email, $password)
     {
         $data         = [
-            'name' => $user->details->first_name ?? 'User',
-            'email'  => $email,
-            'password'  => $password
+            'name'     => $user->details->first_name ?? 'User',
+            'email'    => $email,
+            'password' => $password
         ];
         $sendEmailJob = new SendEmail($user->email, $subject, $data, EmailServiceTemplateNames::REGISTER_USER_TEMPLATE);
         dispatch($sendEmailJob);
@@ -154,9 +154,11 @@ if (!function_exists('getPermissionModelName')) {
     function getPermissionModelName($value)
     {
         if (isset($value)) {
-            $data = str_replace(".index", '', $value);
-            $data = \Str::singular($data);
-            return \Str::ucfirst($data);
+            $data = explode(".create", $value);
+
+            $data = str_replace('_', ' ', $data[0]);
+
+            return \Str::title($data);
         }
         return true;
     }
@@ -177,8 +179,7 @@ if (!function_exists('getPermissionName')) {
 if (!function_exists('getMenus')) {
     function getMenus()
     {
-        return \App\Models\Menu::orderBy('position', 'ASC')->get();
-
+        return \App\Models\Menu::orderBy('position', 'asc')->get();
     }
 }
 if (!function_exists('generateDatesByWeek')) {

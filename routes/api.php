@@ -104,3 +104,6 @@ Route::resource('pages', App\Http\Controllers\API\PageAPIController::class);
 Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, 'pageContent'])->name('page-content');
 
 
+
+
+Route::resource('options', App\Http\Controllers\API\OptionAPIController::class);

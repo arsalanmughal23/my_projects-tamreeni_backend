@@ -278,3 +278,23 @@
 @endcan
 
 
+@canany(['questions.index', 'questions.create', 'questions.show', 'questions.edit', 'questions.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('questions.index') }}"
+        class="nav-link {{ Request::is('questions*') ? 'active' : '' }}">
+            <p>Questions</p>
+        </a>
+    </li>
+@endcan
+
+
+@canany(['options.index', 'options.create', 'options.show', 'options.edit', 'options.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('options.index') }}"
+        class="nav-link {{ Request::is('options*') ? 'active' : '' }}">
+            <p>Options</p>
+        </a>
+    </li>
+@endcan
+
+

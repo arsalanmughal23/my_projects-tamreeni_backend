@@ -112,7 +112,15 @@ class NotificationAPIController extends AppBaseController
             if (!in_array($request->type, NotificationServiceTemplateNames::All_TEMPLATES))
                 throw new Error('Type is Invalid');
 
-            $user = $request->user();
+            $user_id = $request->get('user_id', null);
+            $user = null;
+            if($user_id)
+                $user = User::find($user_id);
+
+            if($user_id && !$user)
+                throw new Error('User not found');
+
+            $user = $user ?? $request->user();
 
             $notificationResponse   = null;
             $notificationRefModule  = null;

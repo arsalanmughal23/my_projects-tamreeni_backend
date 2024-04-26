@@ -50,9 +50,6 @@ class AppointmentRepository extends BaseRepository
         return Appointment::class;
     }
 
-    public function all($params=[]){
-        return Appointment::where($params)->get();
-    }
 
     public function getAppointment($params = []){
         $query = Appointment::query();

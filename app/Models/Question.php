@@ -21,10 +21,7 @@ use Spatie\Translatable\HasTranslations;
 class Question extends Model
 {
     use SoftDeletes;
-
     use HasFactory;
-    use HasTranslations;
-
     use HasTranslations;
 
     public $table = 'questions';
@@ -34,8 +31,6 @@ class Question extends Model
     const UPDATED_AT = 'updated_at';
 
     protected $dates = ['deleted_at'];
-
-    public $translatable = ['title'];
 
     public $fillable = [
         'title',

@@ -21,20 +21,17 @@ use Spatie\Translatable\HasTranslations;
 class Option extends Model
 {
     use SoftDeletes;
-
     use HasFactory;
-
     use HasTranslations;
-
+    
     public $table = 'options';
+    public $translatable = ['title'];
 
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
 
     protected $dates = ['deleted_at'];
-
-    public $translatable = ['title'];
 
     public $fillable = [
         'question_id',
@@ -156,15 +153,6 @@ class Option extends Model
     const Q19_OPT3__7000_10000      = '7000_10000_steps';
     const Q19_OPT3__10000_PLUS      = '10000_plus_steps';
 
-
-    public function setOptionVariableNameAttribute($optionVariableName)
-    {
-        $this->attributes['option_variable_name'] = $optionVariableName;
-        $name                                     = ucwords(str_replace('_', ' ', $optionVariableName));
-//        $this->attributes['title']                = $name;
-
-        return $this->attributes;
-    }
 
     public function question()
     {

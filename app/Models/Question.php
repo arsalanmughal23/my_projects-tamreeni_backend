@@ -23,10 +23,12 @@ class Question extends Model
     use SoftDeletes;
 
     use HasFactory;
+    use HasTranslations;
 
     use HasTranslations;
 
     public $table = 'questions';
+    public $translatable = ['title'];
 
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';

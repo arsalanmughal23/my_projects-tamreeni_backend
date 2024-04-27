@@ -10,6 +10,16 @@
     {!! Form::email('email', null, ['class' => 'form-control', isset($users)?'readonly':'', !isset($users)?'required':'']) !!}
 </div>
 
+<!-- Image Field -->
+<div class="form-group col-sm-6">
+{!! Form::label('image', 'Image:', ['class'=>'required']) !!}
+{!! Form::file('image', null, ['class' => 'form-control', 'required', 'accept'=>['image/jpeg', 'image/png', '']]) !!}
+
+@if(isset($users))
+    <!-- Image Field -->
+        <img class="user-image img-circle imag-placeholder" src="{{ isset($users?->details)? $users?->details->image : asset('public/image/user.png') }}" width="100" onerror="brokenImageHandler(this);">
+    @endif
+</div>
 
 @role(\App\Models\Role::SUPER_ADMIN)
 @if(!isset($users))
@@ -73,7 +83,7 @@
 @push('page_scripts')
     <script>
 
-        $( document ).ready(function() {
+        $(document).ready(function () {
             $('input').attr('autocomplete', 'off');
         });
 

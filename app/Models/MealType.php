@@ -30,6 +30,11 @@ class MealType extends Model
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
+    const STATUS_ACTIVE_TEXT = 'Active';
+    const STATUS_INACTIVE_TEXT = 'inactive';
+
+    const STATUS_ACTIVE = 1;
+    const STATUS_INACTIVE = 0;
 
     protected $dates = ['deleted_at'];
 
@@ -55,8 +60,10 @@ class MealType extends Model
      * @var array
      */
     public static $rules = [
-        'name'       => 'required|array',
-        'status'     => 'required|integer'
+        'name'             => 'required|array',
+        'name.en'          => 'required|string|max:100',
+        'name.ar'          => 'required|string|max:100',
+//        'status'     => 'required|integer'
     ];
 
 

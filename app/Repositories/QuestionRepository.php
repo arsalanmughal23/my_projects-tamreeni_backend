@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class QuestionRepository
  * @package App\Repositories
- * @version January 10, 2023, 8:51 am UTC
+ * @version April 26, 2024, 4:31 pm UTC
 */
 
 class QuestionRepository extends BaseRepository
@@ -18,8 +18,10 @@ class QuestionRepository extends BaseRepository
      */
     protected $fieldSearchable = [
         'title',
+        'cover_image',
         'answer_mode',
-        'variable_name'
+        'question_variable_name',
+        'question_secondary_variable_name'
     ];
 
     /**

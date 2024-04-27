@@ -18,6 +18,10 @@ class MealCategoryDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
+        $dataTable->editColumn('name', function (MealCategory $model) {
+            return ($model->name) ? $model->name : "";
+        });
+
         return $dataTable->addColumn('action', 'meal_categories.datatables_actions');
     }
 
@@ -65,8 +69,8 @@ class MealCategoryDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'diet_type',
-            'name'
+            'name',
+            'diet_type'
         ];
     }
 

@@ -31,6 +31,12 @@
 <!-- Status Field -->
 <div class="col-sm-12">
     {!! Form::label('status', 'Status:') !!}
-    <p>{{ $package->status }}</p>
+    <p>{{  \App\Helper\Util::getBoolText($package->status) }}</p>
+</div>
+
+<!-- Created At Field -->
+<div class="col-sm-12">
+    {!! Form::label('created_at', 'Created At:') !!}
+    <p>{{ $package->created_at }}</p>
 </div>
 

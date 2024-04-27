@@ -17,16 +17,37 @@ class PermissionSeeder extends Seeder
     {
         $modules = [
             'users',
-            'pages', 'settings', 
-            'slots', 'appointments', 'packages', 
-            'transactions', 'user_subscriptions', 
-            'meal_types', 
-            'workout_plans', 'workout_days', 'workout_day_exercises', 
-            'nutrition_plans', 'nutrition_plan_days', 'nutrition_plan_day_meals'
+            'pages',
+            'settings',
+            'slots',
+            'appointments',
+            'packages',
+            'transactions',
+            'user_subscriptions',
+            'meal_types',
+            'meals',
+            'meal_categories',
+            'workout_plans',
+            'workout_days',
+            'workout_day_exercises',
+            'nutrition_plans',
+            'nutrition_plan_days',
+            'nutrition_plan_day_meals',
+            'constants',
+            'contact_requests',
+            'user_details',
+            'faqs',
+            'wellness_tips',
+            'favourites',
+            'body_parts',
+            'exercise_equipments',
+            'events',
+            'user_events',
+            'exercises',
         ];
 
         $permissions = [];
-        foreach($modules as $module){
+        foreach ($modules as $module) {
             $permissions[] = Permission::create(['name' => $module . '.create'])->name;
             $permissions[] = Permission::create(['name' => $module . '.store'])->name;
             $permissions[] = Permission::create(['name' => $module . '.index'])->name;

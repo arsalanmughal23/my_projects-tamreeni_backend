@@ -23,7 +23,7 @@
 
         <div class="card">
 
-            {!! Form::model($users, ['route' => ['users.update', $users->id], 'method' => 'patch', 'autocomplete'=> 'off']) !!}
+            {!! Form::model($users, ['route' => ['users.update', $users->id], 'method' => 'patch', 'autocomplete'=> 'off', 'files' => true]) !!}
 
             <div class="card-body">
                 <div class="row">

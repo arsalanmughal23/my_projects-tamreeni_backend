@@ -2,14 +2,76 @@
 
 namespace App\Models;
 
+use Eloquent as Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Spatie\Translatable\HasTranslations;
 
+/**
+ * Class Question
+ * @package App\Models
+ * @version April 26, 2024, 4:31 pm UTC
+ *
+ * @property string $title
+ * @property string $cover_image
+ * @property string $answer_mode
+ * @property string $question_variable_name
+ * @property string $question_secondary_variable_name
+ */
 class Question extends Model
 {
+    use SoftDeletes;
     use HasFactory;
+    use HasTranslations;
 
     public $table = 'questions';
+    public $translatable = ['title'];
+
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = 'updated_at';
+
+    protected $dates = ['deleted_at'];
+
+    public $fillable = [
+        'title',
+        'cover_image',
+        'answer_mode',
+        'question_variable_name',
+        'question_secondary_variable_name'
+    ];
+
+    protected $with = ['options'];
+
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'id'                               => 'integer',
+        'title'                            => 'string',
+        'cover_image'                      => 'string',
+        'answer_mode'                      => 'string',
+        'question_variable_name'           => 'string',
+        'question_secondary_variable_name' => 'string'
+    ];
+
+    /**
+     * Validation rules
+     *
+     * @var array
+     */
+    public static $rules = [
+        'title'                            => 'required|array',
+        'title.en'                         => 'required|string|max:1000',
+        'title.ar'                         => 'required|string|max:1000',
+        'cover_image'                      => 'nullable|string',
+        'answer_mode'                      => 'required|string|max:191',
+        'question_variable_name'           => 'required|string|max:191',
+        'question_secondary_variable_name' => 'nullable|string|max:191',
+        'created_at'                       => 'nullable',
+        'updated_at'                       => 'nullable'
+    ];
 
     const Q1_GOAL   = 'goal';
     const Q2_GENDER = 'gender';
@@ -56,18 +118,11 @@ class Question extends Model
     const Q18_OPTS = [Option::Q18_OPT1__YES, Option::Q18_OPT2__NO];
     const Q19_OPTS = [Option::Q19_OPT1__2000_4000_STEPS, Option::Q19_OPT2__5000_7000_STEPS, Option::Q19_OPT3__7000_10000, Option::Q19_OPT3__10000_PLUS];
 
-    public $fillable = [
-        'title',
-        'cover_image',
-        'answer_mode',
-        'question_variable_name',
-        'question_secondary_variable_name'
-    ];
-
-    protected $with = ['options'];
 
     public function options()
     {
         return $this->hasMany(Option::class, 'question_id');
     }
+
+
 }

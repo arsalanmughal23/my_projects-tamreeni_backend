@@ -2,6 +2,7 @@
 
 namespace App\DataTables;
 
+use App\Helper\Util;
 use App\Models\Package;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
@@ -18,6 +19,13 @@ class PackageDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
+        $dataTable->editColumn('status', function (Package $model) {
+            return '<span class="label label-' . Util::getStatusCss($model->status) . '">' . Util::getStatusText($model->status) . '</span>';
+        });
+
+        $dataTable->rawColumns(['status', 'action']);
+
+
         return $dataTable->addColumn('action', 'packages.datatables_actions');
     }
 
@@ -29,7 +37,11 @@ class PackageDataTable extends DataTable
      */
     public function query(Package $model)
     {
-        return $model->newQuery();
+        if ($this->request->status) {
+            return $model
+                ->newQuery()->where('status', $this->request->status);
+        }
+        return $model->newQuery()->orderBy('created_at', 'desc');
     }
 
     /**

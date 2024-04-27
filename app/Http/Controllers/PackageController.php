@@ -6,6 +6,7 @@ use App\DataTables\PackageDataTable;
 use App\Http\Requests;
 use App\Http\Requests\CreatePackageRequest;
 use App\Http\Requests\UpdatePackageRequest;
+use App\Models\Package;
 use App\Repositories\PackageRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
@@ -13,7 +14,7 @@ use Response;
 
 class PackageController extends AppBaseController
 {
-    /** @var PackageRepository $packageRepository*/
+    /** @var PackageRepository $packageRepository */
     private $packageRepository;
 
     public function __construct(PackageRepository $packageRepo)
@@ -52,9 +53,9 @@ class PackageController extends AppBaseController
      */
     public function store(CreatePackageRequest $request)
     {
-        $input = $request->all();
-
-        $package = $this->packageRepository->create($input);
+        $input           = $request->all();
+        $input['status'] = Package::STATUS_ACTIVE;
+        $this->packageRepository->create($input);
 
         Flash::success('Package saved successfully.');
 

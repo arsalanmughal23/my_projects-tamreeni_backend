@@ -29,7 +29,7 @@ class MenuDataTable extends DataTable
      */
     public function query(Menu $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->orderBy('position', 'asc');
     }
 
     /**

@@ -2,12 +2,70 @@
 
 namespace App\Models;
 
+use Eloquent as Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Spatie\Translatable\HasTranslations;
 
+/**
+ * Class Option
+ * @package App\Models
+ * @version April 26, 2024, 5:43 pm UTC
+ *
+ * @property integer $question_id
+ * @property string $title
+ * @property string $image
+ * @property string $question_variable_name
+ * @property string $option_variable_name
+ */
 class Option extends Model
 {
     use HasFactory;
+    use HasTranslations;
+    
+    public $table = 'options';
+    public $translatable = ['title'];
+
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = 'updated_at';
+
+    public $fillable = [
+        'question_id',
+        'title',
+        'image',
+        'question_variable_name',
+        'option_variable_name'
+    ];
+
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'id'                     => 'integer',
+        'question_id'            => 'integer',
+        'title'                  => 'string',
+        'image'                  => 'string',
+        'question_variable_name' => 'string',
+        'option_variable_name'   => 'string'
+    ];
+
+    /**
+     * Validation rules
+     *
+     * @var array
+     */
+    public static $rules = [
+        'question_id'            => 'required',
+        'title'                  => 'required|array',
+        'title.en'               => 'required|string|max:1000',
+        'title.ar'               => 'required|string|max:1000',
+        'image'                  => 'nullable|string',
+        'question_variable_name' => 'required|string|max:191',
+        'option_variable_name'   => 'required|string|max:191',
+    ];
+
 
     const OPTS_IMAGE = [
         self::Q2_OPT1__MALE         => 'https://tamreeni-backend.s3.amazonaws.com/male-3x.png',
@@ -92,12 +150,8 @@ class Option extends Model
     const Q19_OPT3__10000_PLUS      = '10000_plus_steps';
 
 
-    public function setOptionVariableNameAttribute($optionVariableName)
+    public function question()
     {
-        $this->attributes['option_variable_name'] = $optionVariableName;
-        $name                                     = ucwords(str_replace('_', ' ', $optionVariableName));
-        $this->attributes['title']                = $name;
-
-        return $this->attributes;
+        return $this->belongsTo(Question::class, 'question_id');
     }
 }

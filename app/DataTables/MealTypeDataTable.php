@@ -5,6 +5,7 @@ namespace App\DataTables;
 use App\Models\MealType;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
+use App\Helper\Util;
 
 class MealTypeDataTable extends DataTable
 {
@@ -17,6 +18,20 @@ class MealTypeDataTable extends DataTable
     public function dataTable($query)
     {
         $dataTable = new EloquentDataTable($query);
+
+        $dataTable->editColumn('name', function (MealType $model) {
+            return ($model->name) ? $model->name : "";
+        });
+
+        $dataTable->editColumn('status', function (MealType $model) {
+            return '<span class="label label-' . Util::getBoolCss($model->status) . '">' . Util::getBoolText($model->status) . '</span>';
+        });
+
+        $dataTable->editColumn('created_at', function (MealType $model) {
+            return ($model->created_at !== null) ? $model->created_at ?->format('Y-m-d H:i:s'):"N/A";
+        });
+
+        $dataTable->rawColumns(['status', 'action']);
 
         return $dataTable->addColumn('action', 'meal_types.datatables_actions');
     }
@@ -66,7 +81,8 @@ class MealTypeDataTable extends DataTable
     {
         return [
             'name',
-            'status'
+            'status',
+            'created_at'
         ];
     }
 

@@ -18,11 +18,11 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a href="{{ route('users.index') }}" class="nav-link {{ Request::is('users*') ? 'active' : '' }}">
-                        <i class="fa fa-users"></i> <span>Users</span>
-                    </a>
-                </li>
+                {{--<li class="nav-item">--}}
+                {{--<a href="{{ route('users.index') }}" class="nav-link {{ Request::is('users*') ? 'active' : '' }}">--}}
+                {{--<i class="fa fa-users"></i> <span>Users</span>--}}
+                {{--</a>--}}
+                {{--</li>--}}
 
 
                 <li class="nav-item">
@@ -45,13 +45,14 @@
                     </a>
                 </li>
                 @endrole
-                @canany(['users.index', 'users.create', 'users.show', 'users.edit', 'users.destroy'])
-                <li class="nav-item">
-                    <a href="{{ route('users.index') }}" class="nav-link {{ Request::is('users*') ? 'active' : '' }}">
-                        <i class="fa fa-users"></i> <span>Users</span>
-                    </a>
-                </li>
-                @endcanany
+                {{--@canany(['users.index', 'users.create', 'users.show', 'users.edit', 'users.destroy'])--}}
+                {{--<li class="nav-item">--}}
+                {{--<a href="{{ route('users.index') }}"--}}
+                {{--class="nav-link {{ Request::is('users*') ? 'active' : '' }}">--}}
+                {{--<i class="fa fa-users"></i> <span>Users</span>--}}
+                {{--</a>--}}
+                {{--</li>--}}
+                {{--@endcanany--}}
 
                 {{-- @include('layouts.menu') --}}
 

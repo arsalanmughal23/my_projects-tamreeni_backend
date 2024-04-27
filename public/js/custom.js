@@ -48,9 +48,9 @@ function getURL(url) {
     let awsURL = new URL(url).origin + new URL(url).pathname;
     let params = {};
 
-	new URL(url).searchParams.forEach(function (val, key) {
-		params[key] = val;
-	});
+    new URL(url).searchParams.forEach(function (val, key) {
+        params[key] = val;
+    });
 
     return {url: awsURL, headers: params};
 }
@@ -333,30 +333,30 @@ $(document).ready(function () {
         }
     }
 
-    document.getElementById('password').addEventListener('input', checkPasswords);
-    document.getElementById('password_confirmation').addEventListener('input', checkPasswords);
+    // document.getElementById('password').addEventListener('input', checkPasswords);
+    // document.getElementById('password_confirmation').addEventListener('input', checkPasswords);
+    //
+    // $("#togglePassword").click(function () {
+    //     $(this).toggleClass("glyphicon-eye-close");
+    //     var input = $("#id_password");
+    //     if (input.attr("type") === "password") {
+    //         input.attr("type", "text");
+    //     } else {
+    //         input.attr("type", "password");
+    //     }
+    //
+    // });
 
-    $("#togglePassword").click(function () {
-        $(this).toggleClass("glyphicon-eye-close");
-        var input = $("#id_password");
-        if (input.attr("type") === "password") {
-            input.attr("type", "text");
-        } else {
-            input.attr("type", "password");
-        }
-
-    });
-
-    $("#togglePasswordConfirm").click(function () {
-        $(this).toggleClass("glyphicon-eye-close");
-        var input = $("#id_confirm_password");
-        if (input.attr("type") === "password") {
-            input.attr("type", "text");
-        } else {
-            input.attr("type", "password");
-        }
-
-    });
+    // $("#togglePasswordConfirm").click(function () {
+    //     $(this).toggleClass("glyphicon-eye-close");
+    //     var input = $("#id_confirm_password");
+    //     if (input.attr("type") === "password") {
+    //         input.attr("type", "text");
+    //     } else {
+    //         input.attr("type", "password");
+    //     }
+    //
+    // });
 
     $('.valid-phone').on('keydown', function () {
         var value = parseInt($(this).val());

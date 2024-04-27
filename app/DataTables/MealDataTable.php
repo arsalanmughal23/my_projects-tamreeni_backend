@@ -18,6 +18,22 @@ class MealDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
+        $dataTable->editColumn('name', function (Meal $model) {
+            return ($model->name) ? $model->name : "";
+        });
+
+        $dataTable->editColumn('diet_type', function (Meal $model) {
+            return ($model->diet_type) ? $model->diet_type : "";
+        });
+
+        $dataTable->editColumn('meal_category', function (Meal $model) {
+            return ($model->mealCategory) ? $model->mealCategory->name : "";
+        });
+
+        $dataTable->editColumn('created_at', function (Meal $model) {
+            return $model->created_at->format('Y-m-d H:i:s');
+        });
+
         return $dataTable->addColumn('action', 'meals.datatables_actions');
     }
 
@@ -65,12 +81,11 @@ class MealDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'diet_type',
-            'meal_category_id',
             'name',
-            'image',
             'calories',
-            'description'
+            'diet_type',
+            'meal_category',
+            'created_at',
         ];
     }
 

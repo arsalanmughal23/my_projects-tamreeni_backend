@@ -17,7 +17,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     // MustVerifyEmail -> hasVerifiedEmail, markEmailAsVerified, sendEmailVerificationNotification, getEmailForVerification
 
-    public static function boot ()
+    public static function boot()
     {
         parent::boot();
 
@@ -61,40 +61,40 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [];
 
     public static $rules = [
-        'name' => 'nullable|string|max:250',
-        'email' => 'required|email|max:250|unique:users,email,NULL,id,deleted_at,NULL',
-        'password' => 'required|confirmed|min:6',
+        'name'           => 'nullable|string|max:250',
+        'email'          => 'required|email|max:250|unique:users,email,NULL,id,deleted_at,NULL',
+        'password'       => 'required|confirmed|min:6',
         'remember_token' => 'nullable|string|max:100'
     ];
 
     public static $update_rules = [
-        'first_name' => 'nullable|string|max:250',
-        'last_name' => 'nullable|string|max:250',
-        'address' => 'nullable|string|max:250',
+        'first_name'   => 'nullable|string|max:250',
+        'last_name'    => 'nullable|string|max:250',
+        'address'      => 'nullable|string|max:250',
         'phone_number' => 'nullable|string|max:250',
-        'dob' => 'nullable|date',
-        'image' => 'nullable|string',
-        'gender' => 'nullable|string|in:male,female'
+        'dob'          => 'nullable|date',
+        'image'        => 'nullable|file',
+        'gender'       => 'nullable|string|in:male,female'
     ];
 
     public static $api_rules = [
-        'email'                 => 'required|email|max:250|unique:users,email,NULL,id,deleted_at,NULL',
-        'password'              => 'min:8|required|same:password_confirmation|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]+$/',
-        'password_confirmation' => 'min:8|required_with:password',
-        'device_token'          => 'required',
-        'device_type'           => 'required|string|in:ios,android,web',
-        'phone_number'          => 'nullable|string|max:250|unique:user_details,phone_number,NULL,id,deleted_at,NULL',
+        'email'                     => 'required|email|max:250|unique:users,email,NULL,id,deleted_at,NULL',
+        'password'                  => 'min:8|required|same:password_confirmation|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]+$/',
+        'password_confirmation'     => 'min:8|required_with:password',
+        'device_token'              => 'required',
+        'device_type'               => 'required|string|in:ios,android,web',
+        'phone_number'              => 'nullable|string|max:250|unique:user_details,phone_number,NULL,id,deleted_at,NULL',
         'phone_number_country_code' => 'sometimes|string'
     ];
 
     public static $api_update_rules = [
-        'name' => 'sometimes|string|max:250',
-        'first_name' => 'sometimes|string|max:250',
-        'last_name' => 'sometimes|string|max:250',
-        'address' => 'sometimes|string|max:250',
-        'phone_number' => 'sometimes|string|max:250',
+        'name'                      => 'sometimes|string|max:250',
+        'first_name'                => 'sometimes|string|max:250',
+        'last_name'                 => 'sometimes|string|max:250',
+        'address'                   => 'sometimes|string|max:250',
+        'phone_number'              => 'sometimes|string|max:250',
         'phone_number_country_code' => 'sometimes|string',
-        'image' => 'sometimes|url',
+        'image'                     => 'sometimes|url',
         // 'language' => 'sometimes|string|exists:constants,key,group,'.Constant::CONST_LANGUAGE,
 
         'push_notification' => 'sometimes|boolean'
@@ -112,7 +112,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $this->attributes['password'] = Hash::make($value);
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
@@ -136,16 +136,19 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(UserSocialAccount::class);
     }
-    
-    public function favourites() {
+
+    public function favourites()
+    {
         return $this->hasMany(Favourite::class, 'user_id');
     }
 
-    public function slots() {
+    public function slots()
+    {
         return $this->hasMany(Slot::class, 'user_id');
     }
 
-    public function transactions() {
+    public function transactions()
+    {
         return $this->hasMany(Transaction::class, 'user_id');
     }
 }

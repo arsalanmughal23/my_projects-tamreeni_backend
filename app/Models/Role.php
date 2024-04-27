@@ -31,6 +31,7 @@ class Role extends SpatieRole
 
     const SUPER_ADMIN = 'Super-Admin';
     const ADMIN = 'Admin';
+    const ADMIN_ID = 2;
     const API_USER = 'User';
     const COACH = 'Coach';
     const DIETITIAN = 'Dietitian';

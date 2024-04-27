@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             SettingSeeder::class,
             UserSeeder::class,
-            MenuSeeder::class,
+//            MenuSeeder::class,
             ConstantSeeder::class,
             WellnessTipsSeeder::class,
             MealCategoriesSeeder::class,

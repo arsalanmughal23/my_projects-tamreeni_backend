@@ -26,13 +26,15 @@ class Package extends Model
     use HasFactory;
 
     public $table = 'packages';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
+    const STATUS_ACTIVE   = 1;
+    const STATUS_INACTIVE = 2;
+
 
     protected $dates = ['deleted_at'];
-
 
 
     public $fillable = [
@@ -50,13 +52,13 @@ class Package extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
-        'name' => 'string',
+        'id'          => 'integer',
+        'name'        => 'string',
         'description' => 'string',
-        'currency' => 'string',
-        'amount' => 'float',
-        'sessions' => 'integer',
-        'status' => 'integer'
+        'currency'    => 'string',
+        'amount'      => 'float',
+        'sessions'    => 'integer',
+        'status'      => 'integer'
     ];
 
     /**
@@ -65,15 +67,12 @@ class Package extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string',
+        'name'        => 'required|string',
         'description' => 'required|string',
-        'currency' => 'required|string|max:191',
-        'amount' => 'required|numeric',
-        'sessions' => 'required|integer',
-        'status' => 'required|integer',
-        'created_at' => 'nullable',
-        'updated_at' => 'nullable',
-        'deleted_at' => 'nullable'
+        'currency'    => 'required',
+        'amount'      => 'required|numeric',
+        'sessions'    => 'required|numeric',
+        'status'      => 'nullable|integer',
     ];
 
     /**

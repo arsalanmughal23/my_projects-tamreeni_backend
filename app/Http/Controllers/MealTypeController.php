@@ -53,8 +53,8 @@ class MealTypeController extends AppBaseController
     public function store(CreateMealTypeRequest $request)
     {
         $input = $request->all();
-
-        $mealType = $this->mealTypeRepository->create($input);
+        $input['status'] = 1;
+        $this->mealTypeRepository->create($input);
 
         Flash::success('Meal Type saved successfully.');
 

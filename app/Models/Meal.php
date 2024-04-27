@@ -38,7 +38,13 @@ class Meal extends Model
     const DIET_TYPE_KETO_EN      = "keto";
     const DIET_TYPE_KETO_AR      = "كيتو";
 
-    protected $dates = ['deleted_at'];
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
+    protected $dateFormat = 'Y-m-d H:i:s';
 
     public $translatable = ['name', 'description', 'diet_type'];
 
@@ -49,6 +55,9 @@ class Meal extends Model
         'name',
         'image',
         'calories',
+        'protein',
+        'fats',
+        'carbs',
         'description'
     ];
 
@@ -60,14 +69,14 @@ class Meal extends Model
      * @var array
      */
     protected $casts = [
-        'id'               => 'integer',
-        'diet_type'        => 'string',
-        'meal_category_id' => 'integer',
-        'meal_type_id'     => 'integer',
-        'name'             => 'string',
-        'image'            => 'string',
-        'calories'         => 'float',
-        'description'      => 'string'
+//        'id'               => 'integer',
+//        'diet_type'        => 'string',
+//        'meal_category_id' => 'integer',
+//        'meal_type_id'     => 'integer',
+//        'name'             => 'string',
+//        'image'            => 'string',
+//        'calories'         => 'float',
+//        'description'      => 'string'
     ];
 
     /**
@@ -82,7 +91,7 @@ class Meal extends Model
         'name'             => 'required|array',
         'name.en'          => 'required|string|max:100',
         'name.ar'          => 'required|string|max:100',
-        'image'            => 'nullable|string',
+        'image'            => 'nullable|file',
         'calories'         => 'nullable|numeric',
         'description'      => 'nullable|array',
         'description.en'   => 'nullable|string|max:200',

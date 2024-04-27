@@ -60,4 +60,11 @@ return [
     '5000_7000_steps'   => '5000 7000 steps',
     '7000_10000_steps'  => '7000 10000 steps',
     '10000_plus_steps'  => '10000 plus steps',
+
+
+    'cm'=> 'Centimeter',
+    'm' => 'Meter',
+
+    'kg' => 'Kilogram',
+    'lbs'=> 'Pound'
 ];

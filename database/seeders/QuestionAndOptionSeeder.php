@@ -15,29 +15,32 @@ class QuestionAndOptionSeeder extends Seeder
      */
     public function run()
     {
+        Question::truncate();
+        Option::truncate();
+
         $questions = [
             [
-                'title'                  => "What's your goal?",
+                'title'                  => Question::Q1_GOAL,
                 'cover_image'            => 'https://via.placeholder.com/640x480.png',
                 'answer_mode'            => 'single_select',
                 'question_variable_name' => Question::Q1_GOAL,
                 'options'                => Question::Q1_OPTS
             ],
             [
-                'title'                  => "What's your gender?",
+                'title'                  => Question::Q2_GENDER,
                 'cover_image'            => 'https://via.placeholder.com/640x480.png',
                 'answer_mode'            => 'single_select',
                 'question_variable_name' => Question::Q2_GENDER,
                 'options'                => Question::Q2_OPTS
             ],
             [
-                'title'                  => "When is your birthday?",
+                'title'                  => Question::Q3_DOB,
                 'cover_image'            => 'https://via.placeholder.com/640x480.png',
                 'answer_mode'            => 'date',
                 'question_variable_name' => Question::Q3_DOB
             ],
             [
-                'title'                            => "What's your height?",
+                'title'                            => Question::Q4_HEIGHT_IN_M,
                 'cover_image'                      => 'https://via.placeholder.com/640x480.png',
                 'answer_mode'                      => 'number_with_unit',
                 'question_variable_name'           => Question::Q4_HEIGHT_IN_M,
@@ -45,7 +48,7 @@ class QuestionAndOptionSeeder extends Seeder
                 'options'                          => Question::Q4_SEC_OPTS
             ],
             [
-                'title'                            => "Tell us your current weight?",
+                'title'                            => Question::Q5_CURRENT_WEIGHT_IN_KG,
                 'cover_image'                      => 'https://via.placeholder.com/640x480.png',
                 'answer_mode'                      => 'number_with_unit',
                 'question_variable_name'           => Question::Q5_CURRENT_WEIGHT_IN_KG,
@@ -53,7 +56,7 @@ class QuestionAndOptionSeeder extends Seeder
                 'options'                          => Question::Q5_SEC_OPTS
             ],
             [
-                'title'                            => "Your target weight?",
+                'title'                            => Question::Q6_TARGET_WEIGHT_IN_KG,
                 'cover_image'                      => 'https://via.placeholder.com/640x480.png',
                 'answer_mode'                      => 'number_with_unit',
                 'question_variable_name'           => Question::Q6_TARGET_WEIGHT_IN_KG,
@@ -68,90 +71,90 @@ class QuestionAndOptionSeeder extends Seeder
             //     'options' => ['not_at_all', '1_to_2_workout_a_week', '2_to_4_workout_a_week', '4_to_6_workout_a_week']
             // ],
             [
-                'title'                  => "How many days do you want to workout in a week?",
+                'title'                  => Question::Q7_WORKOUT_DAYS_IN_A_WEEK,
                 'cover_image'            => 'https://via.placeholder.com/640x480.png',
                 'answer_mode'            => 'single_select',
                 'question_variable_name' => Question::Q7_WORKOUT_DAYS_IN_A_WEEK,
                 'options'                => Question::Q7_OPTS
             ],
             [
-                'title'                  => "How much time do you want to workout a day?",
+                'title'                  => Question::Q8_WORKOUT_DURATION_PER_DAY,
                 'cover_image'            => 'https://via.placeholder.com/640x480.png',
                 'answer_mode'            => 'single_select',
                 'question_variable_name' => Question::Q8_WORKOUT_DURATION_PER_DAY,
                 'options'                => Question::Q8_OPTS
             ],
             [
-                'title'                  => "Where do you prefer to workout?",
+                'title'                  => Question::Q9_WORKOUT_PREFERED_PLACE,
                 'cover_image'            => 'https://via.placeholder.com/640x480.png',
                 'answer_mode'            => 'single_select',
                 'question_variable_name' => Question::Q9_WORKOUT_PREFERED_PLACE,
                 'options'                => Question::Q9_OPTS
             ],
             [
-                'title'                  => "What type of equipment do you have?",
+                'title'                  => Question::Q10_EQUIPMENT_TYPE,
                 'cover_image'            => 'https://via.placeholder.com/640x480.png',
                 'answer_mode'            => 'single_select',
                 'question_variable_name' => Question::Q10_EQUIPMENT_TYPE,
                 'options'                => Question::Q10_OPTS
             ],
             [
-                'title'                  => "Do you have a scale at home?",
+                'title'                  => Question::Q11_HAVE_A_SCALE,
                 'cover_image'            => 'https://via.placeholder.com/640x480.png',
                 'answer_mode'            => 'single_select',
                 'question_variable_name' => Question::Q11_HAVE_A_SCALE,
                 'options'                => Question::Q11_OPTS
             ],
             [
-                'title'                  => "How long do you have time to workout?",
+                'title'                  => Question::Q12_HOW_LONG_TIME_TO_WORKOUT,
                 'cover_image'            => 'https://via.placeholder.com/640x480.png',
                 'answer_mode'            => 'single_select',
                 'question_variable_name' => Question::Q12_HOW_LONG_TIME_TO_WORKOUT,
                 'options'                => Question::Q12_OPTS
             ],
             [
-                'title'                  => "When do you want to reach your goal by the date?",
+                'title'                  => Question::Q13_REACH_GOAL_TARGET_DATE,
                 'cover_image'            => 'https://via.placeholder.com/640x480.png',
                 'answer_mode'            => 'date',
                 'question_variable_name' => Question::Q13_REACH_GOAL_TARGET_DATE
             ],
             [
-                'title'                  => "Which areas need the most attention?",
+                'title'                  => Question::Q14_BODY_PARTS,
                 'cover_image'            => 'https://via.placeholder.com/640x480.png',
                 'answer_mode'            => 'multi_select',
                 'question_variable_name' => Question::Q14_BODY_PARTS,
                 'options'                => Question::Q14_OPTS
             ],
             [
-                'title'                  => "Choose your diet type.",
+                'title'                  => Question::Q15_DIET_TYPE,
                 'cover_image'            => 'https://via.placeholder.com/640x480.png',
                 'answer_mode'            => 'single_select',
                 'question_variable_name' => Question::Q15_DIET_TYPE,
                 'options'                => Question::Q15_OPTS
             ],
             [
-                'title'                  => "Select your food preferences.",
+                'title'                  => Question::Q16_FOOD_PREFERENCES,
                 'cover_image'            => 'https://via.placeholder.com/640x480.png',
                 'answer_mode'            => 'multi_select',
                 'question_variable_name' => Question::Q16_FOOD_PREFERENCES,
                 'options'                => Question::Q16_OPTS
             ],
             [
-                'title'                  => "What level are you at?",
+                'title'                  => Question::Q17_LEVEL,
                 'cover_image'            => 'https://via.placeholder.com/640x480.png',
                 'answer_mode'            => 'single_select',
                 'question_variable_name' => Question::Q17_LEVEL,
                 'options'                => Question::Q17_OPTS
             ],
             [
-                'title'                  => "Are you currently pregnant / lactating / breastfeeding?",
+                'title'                  => Question::Q18_HEALTH_STATUS,
                 'cover_image'            => 'https://via.placeholder.com/640x480.png',
                 'answer_mode'            => 'single_select',
                 'question_variable_name' => Question::Q18_HEALTH_STATUS,
                 'options'                => Question::Q18_OPTS
             ],
             [
-                'title'                  => "How active are you during the day?",
+                'title'                  => Question::Q19_DAILY_STEPS_TAKEN,
                 'cover_image'            => 'https://via.placeholder.com/640x480.png',
                 'answer_mode'            => 'single_select',
                 'question_variable_name' => Question::Q19_DAILY_STEPS_TAKEN,
@@ -169,6 +172,10 @@ class QuestionAndOptionSeeder extends Seeder
         collect($questions)->map(function ($question) {
             $questionOptions = $question['options'] ?? [];
             unset($question['options']);
+            $question['title'] = json_encode([
+                'en' => __('questions.'.$question['title'], [], 'en'),
+                'ar' => __('questions.'.$question['title'], [], 'ar')
+            ]);
             $createdQuestion = Question::create($question);
 
             if (count($questionOptions) > 0) {
@@ -177,6 +184,10 @@ class QuestionAndOptionSeeder extends Seeder
                     $newOption['question_id'] = $createdQuestion?->id ?? null;
                     $newOption['question_variable_name'] = $createdQuestion ?->question_variable_name ?? null;
                     $newOption['option_variable_name'] = $option;
+                    $newOption['title']                = json_encode([
+                        'en' => __('options.'.$option, [], 'en'),
+                        'ar' => __('options.'.$option, [], 'ar')
+                    ]);
                     $newOption['image']                = Option::OPTS_IMAGE[$option] ?? null;
 
                     $createdOption = Option::create($newOption);

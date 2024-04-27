@@ -6,6 +6,7 @@ use App\Models\Question;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\API\SubmitAnswersAPIRequest;
+use App\Http\Resources\QuestionResource;
 use App\Repositories\QuestionRepository;
 use Response;
 
@@ -35,7 +36,7 @@ class QuestionAPIController extends AppBaseController
     {
         $question = $this->questionRepository->all();
 
-        return $this->sendResponse($question->toArray(), 'Questions retrieved successfully');
+        return $this->sendResponse(QuestionResource::collection($question), 'Questions retrieved successfully');
     }
 
     public function submitAnswers(SubmitAnswersAPIRequest $request)

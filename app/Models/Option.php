@@ -92,12 +92,4 @@ class Option extends Model
     const Q19_OPT3__10000_PLUS      = '10000_plus_steps';
 
 
-    public function setOptionVariableNameAttribute($optionVariableName)
-    {
-        $this->attributes['option_variable_name'] = $optionVariableName;
-        $name                                     = ucwords(str_replace('_', ' ', $optionVariableName));
-        $this->attributes['title']                = $name;
-
-        return $this->attributes;
-    }
 }

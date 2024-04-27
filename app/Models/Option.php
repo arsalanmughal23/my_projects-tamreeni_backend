@@ -4,10 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Translatable\HasTranslations;
 
 class Option extends Model
 {
     use HasFactory;
+    use HasTranslations;
+    
+    public $translatable = ['title'];
 
     const OPTS_IMAGE = [
         self::Q2_OPT1__MALE         => 'https://tamreeni-backend.s3.amazonaws.com/male-3x.png',

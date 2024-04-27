@@ -172,10 +172,10 @@ class QuestionAndOptionSeeder extends Seeder
         collect($questions)->map(function ($question) {
             $questionOptions = $question['options'] ?? [];
             unset($question['options']);
-            $question['title'] = json_encode([
+            $question['title'] = [
                 'en' => __('questions.'.$question['title'], [], 'en'),
                 'ar' => __('questions.'.$question['title'], [], 'ar')
-            ]);
+            ];
             $createdQuestion = Question::create($question);
 
             if (count($questionOptions) > 0) {
@@ -184,11 +184,11 @@ class QuestionAndOptionSeeder extends Seeder
                     $newOption['question_id'] = $createdQuestion?->id ?? null;
                     $newOption['question_variable_name'] = $createdQuestion ?->question_variable_name ?? null;
                     $newOption['option_variable_name'] = $option;
-                    $newOption['title']                = json_encode([
+                    $newOption['image']                = Option::OPTS_IMAGE[$option] ?? null;
+                    $newOption['title']                = [
                         'en' => __('options.'.$option, [], 'en'),
                         'ar' => __('options.'.$option, [], 'ar')
-                    ]);
-                    $newOption['image']                = Option::OPTS_IMAGE[$option] ?? null;
+                    ];
 
                     $createdOption = Option::create($newOption);
                 });

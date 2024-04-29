@@ -153,6 +153,11 @@ a.btn-default, a.btn-default:hover, a.btn-default:focus, a.btn-default:visited {
     border-radius: .25em;
 }
 
+.select2-container--default .select2-selection--single {
+    height: 38px;
+    padding-top: 10px;
+}
+
 .label-success {
     background-color: #5cb85c;
 }

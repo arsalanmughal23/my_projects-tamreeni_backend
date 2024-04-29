@@ -5,6 +5,7 @@ namespace App\Models;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * Class WellnessTip
@@ -18,8 +19,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class WellnessTip extends Model
 {
     use SoftDeletes;
-
     use HasFactory;
+    use HasTranslations;
 
     public $table = 'wellness_tips';
     
@@ -28,7 +29,7 @@ class WellnessTip extends Model
 
 
     protected $dates = ['deleted_at'];
-
+    public $translatable = ['title', 'content'];
 
 
     public $fillable = [

@@ -8,6 +8,7 @@ use App\Models\Transaction;
 use App\Repositories\TransactionRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\TransactionResource;
 use Response;
 use Config;
 
@@ -38,7 +39,7 @@ class TransactionAPIController extends AppBaseController
         $params['user_id'] = $request->user_id ?? $request->user()->id;
         $model = $this->transactionRepository->index($request, $params);
 
-        return $this->sendResponse($model->toArray(), 'Transactions retrieved successfully');
+        return $this->sendResponse(TransactionResource::collection($model), 'Transactions retrieved successfully');
     }
 
     /**
@@ -77,7 +78,7 @@ class TransactionAPIController extends AppBaseController
             return $this->sendError('Transaction not found');
         }
 
-        return $this->sendResponse($transaction->toArray(), 'Transaction retrieved successfully');
+        return $this->sendResponse(new TransactionResource($transaction), 'Transaction retrieved successfully');
     }
 
     /**

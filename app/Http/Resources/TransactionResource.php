@@ -5,40 +5,34 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class AppointmentResource extends JsonResource
+class TransactionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
         return [
-            'id'              => $this->id,
-            'customer_id'     => $this->customer_id,
-            'customer'        => $this->customer,
-            'user_id'         => $this->user_id,
-            'user'            => $this->user,
-            'slot_id'         => $this->slot_id,
-            'slot'            => $this->slot,
-            'package_id'      => $this->package_id,
-            'package'         => $this->package,
-            'date'            => $this->date,
-            'start_time'      => $this->start_time,
-            'end_time'        => $this->end_time,
-            'currency'        => $this->currency,
-            'amount'          => $this->amount,
-            'type'            => $this->type,
-            'profession_type' => $this->profession_type,
-            'status'          => $this->status,
-            'created_at'      => $this->created_at,
-            'updated_at'      => $this->updated_at,
-            'transaction' => new TransactionResource($this->transaction)
+            "id"        => $this->id,
+            "user_id"   => $this->user_id,
+            "transactionable_type"  => $this->transactionable_type,
+            "transactionable_id"    => $this->transactionable_id,
+            // "payment_intent_id"     => $this->payment_intent_id,
+            // "payment_charge_id"     => $this->payment_charge_id,
+            "description"   => $this->description,
+            "data"          => $this->data,
+            "currency"      => $this->currency,
+            "amount"        => $this->amount,
+            "status"        => $this->status,
+            "created_at"    => $this->created_at,
+            "updated_at"    => $this->updated_at,
+            "deleted_at"    => $this->deleted_at
         ];
     }
-
+    
     public static function collection($resource)
     {
         if ($resource instanceof LengthAwarePaginator) {

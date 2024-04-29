@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\WellnessTip;
 use App\Repositories\BaseRepository;
+use Illuminate\Http\Request;
 
 /**
  * Class WellnessTipRepository
@@ -40,8 +41,30 @@ class WellnessTipRepository extends BaseRepository
         return WellnessTip::class;
     }
 
-    public function WellnessQuery()
+    public function index(Request $request, $params = [])
     {
-        return WellnessTip::query();
+        $model = $this->model()::query();
+
+        $perPage            = $request->input('per_page', config('constants.PER_PAGE', 10));        
+        $orderableColumns   = ['id','created_at'];
+
+        if(count($params) > 0)
+            $model = $model->where($params);
+
+        if ($request->has('order')){
+            $orderBy = $request->order_by;
+            $orderBy == 'asc' ?: $orderBy = 'desc';
+            $orderColumn = in_array($request->order, $orderableColumns) ? $request->order : $orderableColumns[0];
+
+            $model = $model->orderBy($orderColumn, $orderBy);
+        }
+
+        if ($request->get('paginate')) {
+            $model = $model->paginate($perPage);
+        } else {
+            $model = $model->get();
+        }
+
+        return $model;
     }
 }

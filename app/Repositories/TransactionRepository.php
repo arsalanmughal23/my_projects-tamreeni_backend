@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Transaction;
 use App\Repositories\BaseRepository;
+use Illuminate\Http\Request;
 
 /**
  * Class TransactionRepository
@@ -43,12 +44,30 @@ class TransactionRepository extends BaseRepository
         return Transaction::class;
     }
 
-    public function getUserTransactions($user_id)
+    public function index(Request $request, $params = [])
     {
-        $query = Transaction::query();
+        $model = $this->model()::query();
 
-        $query->where('user_id', $user_id);
+        $perPage            = $request->input('per_page', config('constants.PER_PAGE', 10));        
+        $orderableColumns   = ['id','created_at'];
 
-        return $query;
+        if(count($params) > 0)
+            $model = $model->where($params);
+
+        if ($request->has('order')){
+            $orderBy = $request->order_by;
+            $orderBy == 'asc' ?: $orderBy = 'desc';
+            $orderColumn = in_array($request->order, $orderableColumns) ? $request->order : $orderableColumns[0];
+
+            $model = $model->orderBy($orderColumn, $orderBy);
+        }
+
+        if ($request->get('paginate')) {
+            $model = $model->paginate($perPage);
+        } else {
+            $model = $model->get();
+        }
+
+        return $model;
     }
 }

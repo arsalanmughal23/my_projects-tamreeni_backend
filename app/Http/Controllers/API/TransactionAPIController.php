@@ -35,16 +35,10 @@ class TransactionAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $perPage      = $request->input('per_page', Config::get('constants.PER_PAGE', 10));
-        $transactions = $this->transactionRepository->getUserTransactions($request->user()->id);
+        $params['user_id'] = $request->user_id ?? $request->user()->id;
+        $model = $this->transactionRepository->index($request, $params);
 
-        if ($request->get('paginate')) {
-            $transactions = $transactions->orderBy('created_at', 'desc')->paginate($perPage);
-        } else {
-            $transactions = $transactions->get();
-        }
-
-        return $this->sendResponse($transactions->toArray(), 'Transactions retrieved successfully');
+        return $this->sendResponse($model->toArray(), 'Transactions retrieved successfully');
     }
 
     /**

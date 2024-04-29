@@ -7,7 +7,7 @@
 <!-- Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('name', 'Name (Ar):', ['class'=>'required']) !!}
-    {!! Form::text('name[ar]', isset($mealCategory)?$mealCategory->getTranslation('name', 'ar'):null, ['class' => 'form-control','maxlength' => 255, 'required']) !!}
+    {!! Form::text('name[ar]', isset($mealCategory)?$mealCategory->getTranslation('name', 'ar'):null, ['class' => 'form-control','maxlength' => 255, 'required', 'dir'=>'rtl']) !!}
 </div>
 
 <!-- Diet Type Field -->

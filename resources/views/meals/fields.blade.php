@@ -7,7 +7,7 @@
 <!-- Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('name', 'Name (Ar):', ['class'=>'required']) !!}
-    {!! Form::text('name[ar]', isset($meal)?$meal->getTranslation('name', 'ar'):null, ['class' => 'form-control','maxlength' => 255, 'required']) !!}
+    {!! Form::text('name[ar]', isset($meal)?$meal->getTranslation('name', 'ar'):null, ['class' => 'form-control','maxlength' => 255, 'required', 'dir'=>'rtl']) !!}
 </div>
 
 <!-- Meal Category Id Field -->
@@ -51,8 +51,7 @@
 <!-- Image Field -->
 <div class="form-group col-sm-6">
 {!! Form::label('image', 'Image:', ['class'=>'required']) !!}
-{!! Form::file('image', null, ['class' => 'form-control', 'required', 'accept'=>['image/jpeg', 'image/png', '']]) !!}
-
+{!! Form::file('image', ['class' => 'form-control', (isset($meal)) ? '' : 'required' => 'required', 'accept' => 'image/jpeg,image/png']) !!}
 @if(isset($meal))
     <!-- Image Field -->
         <img src="{{ $meal->image}}" width="100" onerror="brokenImageHandler(this);">
@@ -68,7 +67,7 @@
 <!-- Description Field -->
 <div class="form-group col-sm-6 col-lg-6">
     {!! Form::label('description', 'Description (Ar):', ['class'=>'required']) !!}
-    {!! Form::textarea('description[ar]', isset($meal)?$meal->getTranslation('description', 'ar'):null, ['class' => 'form-control', 'rows'=>3, 'cols'=>3, 'required']) !!}
+    {!! Form::textarea('description[ar]', isset($meal)?$meal->getTranslation('description', 'ar'):null, ['class' => 'form-control', 'rows'=>3, 'cols'=>3, 'required', 'dir'=>'rtl']) !!}
 </div>
 
 <!-- Calories Field -->

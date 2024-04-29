@@ -6,6 +6,7 @@ use App\DataTables\ExerciseDataTable;
 use App\Http\Requests;
 use App\Http\Requests\CreateExerciseRequest;
 use App\Http\Requests\UpdateExerciseRequest;
+use App\Models\BodyPart;
 use App\Repositories\ExerciseRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
@@ -40,7 +41,8 @@ class ExerciseController extends AppBaseController
      */
     public function create()
     {
-        return view('exercises.create');
+        $bodyParts = BodyPart::all();
+        return view('exercises.create')->with(['bodyParts'=>$bodyParts]);
     }
 
     /**
@@ -91,14 +93,14 @@ class ExerciseController extends AppBaseController
     public function edit($id)
     {
         $exercise = $this->exerciseRepository->find($id);
-
+        $bodyParts = BodyPart::all();
         if (empty($exercise)) {
             Flash::error('Exercise not found');
 
             return redirect(route('exercises.index'));
         }
 
-        return view('exercises.edit')->with('exercise', $exercise);
+        return view('exercises.edit')->with(['exercise' => $exercise, 'bodyParts'=>$bodyParts]);
     }
 
     /**

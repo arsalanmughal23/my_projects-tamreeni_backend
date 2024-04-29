@@ -5,6 +5,7 @@ namespace App\Models;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * Class ExerciseEquipment
@@ -21,19 +22,22 @@ class ExerciseEquipment extends Model
 
     use HasFactory;
 
+    use HasTranslations;
+
     public $table = 'exercise_equipments';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
 
     protected $dates = ['deleted_at'];
 
-
+    protected $translatable = ['name'];
 
     public $fillable = [
         'name',
-        'icon'
+        'icon',
+        'type'
     ];
 
     /**
@@ -42,9 +46,10 @@ class ExerciseEquipment extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
+        'id'   => 'integer',
         'name' => 'string',
-        'icon' => 'string'
+        'icon' => 'string',
+        'type' => 'string'
     ];
 
     /**
@@ -53,11 +58,11 @@ class ExerciseEquipment extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string|max:255',
-        'icon' => 'nullable|string|max:255',
-        'created_at' => 'nullable',
-        'updated_at' => 'nullable',
-        'deleted_at' => 'nullable'
+        'name'    => 'required|array',
+        'name.en' => 'required|string|max:20',
+        'name.ar' => 'required|string|max:20',
+        'icon'    => 'nullable|file',
+        'type'    => 'required',
     ];
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\BodyPartDataTable;
+use App\Helper\FileHelper;
 use App\Http\Requests;
 use App\Http\Requests\CreateBodyPartRequest;
 use App\Http\Requests\UpdateBodyPartRequest;
@@ -13,7 +14,7 @@ use Response;
 
 class BodyPartController extends AppBaseController
 {
-    /** @var BodyPartRepository $bodyPartRepository*/
+    /** @var BodyPartRepository $bodyPartRepository */
     private $bodyPartRepository;
 
     public function __construct(BodyPartRepository $bodyPartRepo)
@@ -54,7 +55,11 @@ class BodyPartController extends AppBaseController
     {
         $input = $request->all();
 
-        $bodyPart = $this->bodyPartRepository->create($input);
+        if ($request->hasFile('image')) {
+            $input['image'] = FileHelper::s3Upload($input['image']);
+        }
+
+        $this->bodyPartRepository->create($input);
 
         Flash::success('Body Part saved successfully.');
 
@@ -113,13 +118,19 @@ class BodyPartController extends AppBaseController
     {
         $bodyPart = $this->bodyPartRepository->find($id);
 
+        $input = $request->all();
+
         if (empty($bodyPart)) {
             Flash::error('Body Part not found');
 
             return redirect(route('body_parts.index'));
         }
 
-        $bodyPart = $this->bodyPartRepository->update($request->all(), $id);
+        if ($request->hasFile('image')) {
+            $input['image'] = FileHelper::s3Upload($input['image']);
+        }
+
+        $this->bodyPartRepository->update($input, $id);
 
         Flash::success('Body Part updated successfully.');
 

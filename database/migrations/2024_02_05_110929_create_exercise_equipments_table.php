@@ -15,10 +15,11 @@ class CreateExerciseEquipmentsTable extends Migration
     {
         Schema::create('exercise_equipments', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
+            $table->text('name');
             $table->string('icon')->nullable();
             $table->enum('type', ['All Equipments', 'Machines', 'Free Weights', 'No Equipment At All'])->nullable();
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             $table->softDeletes();
         });
     }

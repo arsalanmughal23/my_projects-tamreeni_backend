@@ -219,6 +219,10 @@ class UserAPIController extends AppBaseController
             'bmi'       => $calculatedBMI,
             'bmi_description' => __('messages.bmi_description', ['bmi' => $calculatedBMI]),
             'user_details'      => $userDetails,
+            'current_day_required_calories' => 200,
+            'workout_week_count' => 4,
+            'current_week_target_calroies' => 80,
+            'current_week_consumed_calroies' => 20,
         ];
 
         return $this->sendResponse($responseData, 'Your personal statistics record');

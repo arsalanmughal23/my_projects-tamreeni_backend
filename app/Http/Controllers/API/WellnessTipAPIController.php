@@ -8,6 +8,7 @@ use App\Models\WellnessTip;
 use App\Repositories\WellnessTipRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\WellnessTipResource;
 use Response;
 use Config;
 use DB;
@@ -43,7 +44,7 @@ class WellnessTipAPIController extends AppBaseController
         // Paginate the results
         $wellness_tips = $wellnessQuery->paginate($perPage);
 
-        return $this->sendResponse($wellness_tips->toArray(), 'Wellness Tips retrieved successfully');
+        return $this->sendResponse(WellnessTipResource::collection($wellness_tips), 'Wellness Tips retrieved successfully');
     }
 
     /**
@@ -82,7 +83,7 @@ class WellnessTipAPIController extends AppBaseController
             return $this->sendError('Wellness Tip not found');
         }
 
-        return $this->sendResponse($wellnessTip->toArray(), 'Wellness Tip retrieved successfully');
+        return $this->sendResponse(new WellnessTipResource($wellnessTip), 'Wellness Tip retrieved successfully');
     }
 
     /**

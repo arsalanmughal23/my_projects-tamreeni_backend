@@ -23,7 +23,8 @@ class QuestionResource extends JsonResource
             "question_secondary_variable_name"  => $this->question_secondary_variable_name,
             "created_at"                => $this->created_at,
             "updated_at"                => $this->updated_at,
-            'options' => OptionResource::collection($this->whenLoaded('options'))
+            "position"                  => $this->position,
+            "options" => OptionResource::collection($this->whenLoaded('options'))
         ];
     }
 

@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\ExerciseDataTable;
+use App\Helper\FileHelper;
 use App\Http\Requests;
 use App\Http\Requests\CreateExerciseRequest;
 use App\Http\Requests\UpdateExerciseRequest;
+use App\Models\BodyPart;
+use App\Models\ExerciseEquipment;
 use App\Repositories\ExerciseRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
@@ -13,7 +16,7 @@ use Response;
 
 class ExerciseController extends AppBaseController
 {
-    /** @var ExerciseRepository $exerciseRepository*/
+    /** @var ExerciseRepository $exerciseRepository */
     private $exerciseRepository;
 
     public function __construct(ExerciseRepository $exerciseRepo)
@@ -30,7 +33,10 @@ class ExerciseController extends AppBaseController
      */
     public function index(ExerciseDataTable $exerciseDataTable)
     {
-        return $exerciseDataTable->render('exercises.index');
+        $bodyParts           = BodyPart::all();
+        $exercise_equipments = ExerciseEquipment::all();
+
+        return $exerciseDataTable->render('exercises.index', ['bodyParts' => $bodyParts, 'exercise_equipments' => $exercise_equipments]);
     }
 
     /**
@@ -40,7 +46,10 @@ class ExerciseController extends AppBaseController
      */
     public function create()
     {
-        return view('exercises.create');
+        $bodyParts           = BodyPart::all();
+        $exercise_equipments = ExerciseEquipment::all()->pluck('name', 'id');
+
+        return view('exercises.create')->with(['bodyParts' => $bodyParts, 'exercise_equipments' => $exercise_equipments]);
     }
 
     /**
@@ -52,9 +61,23 @@ class ExerciseController extends AppBaseController
      */
     public function store(CreateExerciseRequest $request)
     {
-        $input = $request->all();
+        $input            = $request->all();
+        $input['user_id'] = auth()->user()->id;
+
+        if ($request->hasFile('image')) {
+            $input['image'] = FileHelper::s3Upload($input['image']);
+        }
+
+        if ($request->hasFile('video')) {
+            $input['video'] = FileHelper::s3Upload($input['video']);
+        }
 
         $exercise = $this->exerciseRepository->create($input);
+
+        if (isset($input['exercise_equipments'])) {
+            $equipmentIds = $input['exercise_equipments'];
+            $exercise->equipment()->attach($equipmentIds);
+        }
 
         Flash::success('Exercise saved successfully.');
 
@@ -90,7 +113,11 @@ class ExerciseController extends AppBaseController
      */
     public function edit($id)
     {
-        $exercise = $this->exerciseRepository->find($id);
+        $exercise            = $this->exerciseRepository->find($id);
+        $bodyParts           = BodyPart::all();
+        $exercise_equipments = ExerciseEquipment::all()->pluck('name', 'id');
+
+        $selectedEquipments = $exercise->equipment->pluck('id')->toArray();
 
         if (empty($exercise)) {
             Flash::error('Exercise not found');
@@ -98,7 +125,7 @@ class ExerciseController extends AppBaseController
             return redirect(route('exercises.index'));
         }
 
-        return view('exercises.edit')->with('exercise', $exercise);
+        return view('exercises.edit')->with(['exercise' => $exercise, 'bodyParts' => $bodyParts, 'exercise_equipments' => $exercise_equipments, 'selectedEquipments' => $selectedEquipments]);
     }
 
     /**
@@ -112,14 +139,27 @@ class ExerciseController extends AppBaseController
     public function update($id, UpdateExerciseRequest $request)
     {
         $exercise = $this->exerciseRepository->find($id);
-
+        $input    = $request->all();
         if (empty($exercise)) {
             Flash::error('Exercise not found');
 
             return redirect(route('exercises.index'));
         }
 
-        $exercise = $this->exerciseRepository->update($request->all(), $id);
+        if ($request->hasFile('image')) {
+            $input['image'] = FileHelper::s3Upload($input['image']);
+        }
+
+        if ($request->hasFile('video')) {
+            $input['video'] = FileHelper::s3Upload($input['video']);
+        }
+
+        $this->exerciseRepository->update($input, $id);
+
+        if (isset($input['exercise_equipments'])) {
+            $equipmentIds = $input['exercise_equipments'];
+            $exercise->equipment()->sync($equipmentIds);
+        }
 
         Flash::success('Exercise updated successfully.');
 

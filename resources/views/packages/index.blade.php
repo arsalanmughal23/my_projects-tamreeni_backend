@@ -38,7 +38,7 @@
                     <div class="box box-primary">
                         <div class="box-body">
                             {!! Form::open(['method'=> 'GET']) !!}
-                            <div class="row">
+                            <div class="row justify-content-end">
                                 <div class="form-group col-md-6">
                                     <label>Status :</label>
 
@@ -52,7 +52,7 @@
                                         </option>
                                     </select>
                                 </div>
-                                <div class="form-group col-md-6" style="margin-top: 30px;">
+                                <div class="form-group col-md-4" style="margin-top: 30px;">
                                     <label></label>
                                     {!! Form::submit('Search', ['class' => 'btn btn-primary']) !!}
                                     <a href="{!! route('packages.index') !!}" class="btn btn-default">Cancel</a>

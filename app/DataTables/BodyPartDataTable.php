@@ -18,6 +18,14 @@ class BodyPartDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
+        $dataTable->editColumn('name', function (BodyPart $model) {
+            return ($model->name) ? $model->name : "";
+        });
+
+        $dataTable->editColumn('created_at', function (BodyPart $model) {
+            return $model->created_at->format('Y-m-d H:i:s');
+        });
+
         return $dataTable->addColumn('action', 'body_parts.datatables_actions');
     }
 
@@ -66,7 +74,7 @@ class BodyPartDataTable extends DataTable
     {
         return [
             'name',
-            'image'
+            'created_at'
         ];
     }
 

@@ -31,9 +31,10 @@ class CreateMealsTable extends Migration
             $table->double('protein', 8, 2)->default(0);
 
             $table->text('description')->nullable();
-            $table->softDeletes();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+            $table->softDeletes();
+
         });
     }
 

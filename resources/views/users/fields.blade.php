@@ -12,14 +12,20 @@
 
 <!-- Image Field -->
 <div class="form-group col-sm-6">
-{!! Form::label('image', 'Image:', ['class'=>'required']) !!}
-{!! Form::file('image', null, ['class' => 'form-control', 'required', 'accept'=>['image/jpeg', 'image/png', '']]) !!}
+    {!! Form::label('image', 'Image:', ['class'=>'required']) !!}
+    {!! Form::file('image', ['class' => 'form-control', (isset($users)) ? '' : 'required' => 'required', 'accept' => 'image/jpeg,image/png']) !!}
+</div>
 
 @if(isset($users))
-    <!-- Image Field -->
-        <img class="user-image img-circle imag-placeholder" src="{{ isset($users?->details)? $users?->details->image : asset('public/image/user.png') }}" width="100" onerror="brokenImageHandler(this);">
-    @endif
-</div>
+
+    <div class="form-group col-sm-6">
+
+        <!-- Image Field -->
+        <img class="user-image img-circle imag-placeholder"
+             src="{{ isset($users?->details)? $users?->details->image : asset('public/image/user.png') }}" width="100"
+             onerror="brokenImageHandler(this);">
+    </div>
+@endif
 
 @role(\App\Models\Role::SUPER_ADMIN)
 @if(!isset($users))
@@ -49,6 +55,7 @@
 @endif
 @endrole
 
+<hr>
 <!-- Password Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('password', 'Password:', [ 'class' => !isset($users)?'required':'']) !!}

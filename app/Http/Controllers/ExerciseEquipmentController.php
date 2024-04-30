@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\ExerciseEquipmentDataTable;
+use App\Helper\FileHelper;
 use App\Http\Requests;
 use App\Http\Requests\CreateExerciseEquipmentRequest;
 use App\Http\Requests\UpdateExerciseEquipmentRequest;
@@ -13,7 +14,7 @@ use Response;
 
 class ExerciseEquipmentController extends AppBaseController
 {
-    /** @var ExerciseEquipmentRepository $exerciseEquipmentRepository*/
+    /** @var ExerciseEquipmentRepository $exerciseEquipmentRepository */
     private $exerciseEquipmentRepository;
 
     public function __construct(ExerciseEquipmentRepository $exerciseEquipmentRepo)
@@ -53,6 +54,10 @@ class ExerciseEquipmentController extends AppBaseController
     public function store(CreateExerciseEquipmentRequest $request)
     {
         $input = $request->all();
+
+        if ($request->hasFile('image')) {
+            $input['icon'] = FileHelper::s3Upload($input['image']);
+        }
 
         $exerciseEquipment = $this->exerciseEquipmentRepository->create($input);
 
@@ -113,13 +118,19 @@ class ExerciseEquipmentController extends AppBaseController
     {
         $exerciseEquipment = $this->exerciseEquipmentRepository->find($id);
 
+        $input = $request->all();
+
         if (empty($exerciseEquipment)) {
             Flash::error('Exercise Equipment not found');
 
             return redirect(route('exercise_equipments.index'));
         }
 
-        $exerciseEquipment = $this->exerciseEquipmentRepository->update($request->all(), $id);
+        if ($request->hasFile('image')) {
+            $input['icon'] = FileHelper::s3Upload($input['image']);
+        }
+
+        $exerciseEquipment = $this->exerciseEquipmentRepository->update($input, $id);
 
         Flash::success('Exercise Equipment updated successfully.');
 

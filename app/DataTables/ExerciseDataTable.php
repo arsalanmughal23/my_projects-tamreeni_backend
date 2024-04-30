@@ -18,6 +18,22 @@ class ExerciseDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
+        $dataTable->editColumn('user_id', function (Exercise $model) {
+            return ($model->user) ? $model ?->user ?->name : "N/A";
+        });
+
+        $dataTable->editColumn('body_part_id', function (Exercise $model) {
+            return ($model->bodyPart) ? $model->bodyPart ?->name : "N/A";
+        });
+
+        $dataTable->editColumn('name', function (Exercise $model) {
+            return ($model->name) ? $model->name : "";
+        });
+
+        $dataTable->editColumn('created_at', function (Exercise $model) {
+            return $model->created_at->format('Y-m-d H:i:s');
+        });
+
         return $dataTable->addColumn('action', 'exercises.datatables_actions');
     }
 
@@ -29,6 +45,19 @@ class ExerciseDataTable extends DataTable
      */
     public function query(Exercise $model)
     {
+        if ($this->request->body_part) {
+            return $model
+                ->newQuery()->where('body_part_id', $this->request->body_part);
+        }
+
+        if ($this->request->equipment) {
+            $equipmentId = $this->request->equipment;
+            return $model
+                ->newQuery()->whereHas('equipment', function ($query) use ($equipmentId) {
+                        $query->where('exercise_equipment_id', $equipmentId);
+                    });
+        }
+
         return $model->newQuery();
     }
 
@@ -65,16 +94,12 @@ class ExerciseDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'user_id',
-            'body_part_id',
+            'user_id'      => ['title' => 'User', 'searchable' => false],
+            'body_part_id' => ['title' => 'Body Part', 'searchable' => false],
             'name',
-            'duration_in_m',
             'sets',
             'reps',
-            'burn_calories',
-            'image',
-            'video',
-            'description'
+            'created_at',
         ];
     }
 

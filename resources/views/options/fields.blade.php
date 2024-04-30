@@ -21,7 +21,7 @@
 <!-- Title Ar Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('title', 'Title (Ar):', ['class'=>'required']) !!}
-    {!! Form::text('title[ar]', isset($option)?$option->getTranslation('title', 'ar'):null, ['class' => 'form-control','maxlength' => 255, 'required']) !!}
+    {!! Form::text('title[ar]', isset($option)?$option->getTranslation('title', 'ar'):null, ['class' => 'form-control','maxlength' => 255, 'required', 'dir'=>'rtl']) !!}
 </div>
 
 

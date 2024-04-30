@@ -5,6 +5,7 @@ namespace App\Models;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * Class BodyPart
@@ -21,15 +22,17 @@ class BodyPart extends Model
 
     use HasFactory;
 
-    public $table = 'body_parts';
-    
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
+    use HasTranslations;
 
+    public $table = 'body_parts';
+
+    const CREATED_AT = 'created_at';
+
+    const UPDATED_AT = 'updated_at';
 
     protected $dates = ['deleted_at'];
 
-
+    public $translatable = ['name'];
 
     public $fillable = [
         'name',
@@ -42,8 +45,8 @@ class BodyPart extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
-        'name' => 'string',
+        'id'    => 'integer',
+        'name'  => 'string',
         'image' => 'string'
     ];
 
@@ -53,11 +56,10 @@ class BodyPart extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string|max:255',
-        'image' => 'nullable|string|max:255',
-        'created_at' => 'nullable',
-        'updated_at' => 'nullable',
-        'deleted_at' => 'nullable'
+        'name'    => 'required|array',
+        'name.en' => 'required|string|max:100',
+        'name.ar' => 'required|string|max:100',
+        'image'   => 'nullable|file',
     ];
 
     /**
@@ -65,6 +67,14 @@ class BodyPart extends Model
      **/
     public function events()
     {
-        return $this->hasMany(\App\Models\Event::class, 'body_part_id');
+        return $this->hasMany(Event::class, 'body_part_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     **/
+    public function exercises()
+    {
+        return $this->hasMany(Exercise::class, 'body_part_id');
     }
 }

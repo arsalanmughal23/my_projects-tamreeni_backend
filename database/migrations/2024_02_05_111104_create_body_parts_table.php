@@ -15,10 +15,12 @@ class CreateBodyPartsTable extends Migration
     {
         Schema::create('body_parts', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
+            $table->text('name');
             $table->string('image')->nullable();
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             $table->softDeletes();
+
         });
     }
 

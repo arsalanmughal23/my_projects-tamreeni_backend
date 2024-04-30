@@ -18,6 +18,18 @@ class ExerciseEquipmentDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
+        $dataTable->editColumn('name', function (ExerciseEquipment $model) {
+            return ($model->name) ? $model->name : "";
+        });
+
+        $dataTable->editColumn('type', function (ExerciseEquipment $model) {
+            return $model->type;
+        });
+
+        $dataTable->editColumn('created_at', function (ExerciseEquipment $model) {
+            return $model->created_at->format('Y-m-d H:i:s');
+        });
+
         return $dataTable->addColumn('action', 'exercise_equipments.datatables_actions');
     }
 
@@ -66,7 +78,8 @@ class ExerciseEquipmentDataTable extends DataTable
     {
         return [
             'name',
-            'icon'
+            'type',
+            'created_at'
         ];
     }
 

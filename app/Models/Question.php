@@ -37,7 +37,8 @@ class Question extends Model
         'cover_image',
         'answer_mode',
         'question_variable_name',
-        'question_secondary_variable_name'
+        'question_secondary_variable_name',
+        'position'
     ];
 
     protected $with = ['options'];

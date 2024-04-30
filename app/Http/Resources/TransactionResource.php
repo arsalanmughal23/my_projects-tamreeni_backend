@@ -2,38 +2,37 @@
 
 namespace App\Http\Resources;
 
-use App\Models\NutritionPlanDayMeal;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class NutritionPlanDayMealResource extends JsonResource
+class TransactionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
         return [
-            "id"                    => $this->id,
-            "nutrition_plan_day_id" => $this->nutrition_plan_day_id,
-            "meal_id"       => $this->meal_id,
-            "meal_type_id"  => $this->meal_type_id,
-            "name"          => $this->name,
-            "diet_type"     => $this->diet_type,
-            "calories"      => $this->calories,
-            "carbs"         => $this->carbs,
-            "fats"          => $this->fats,
-            "protein"       => $this->protein,
-            "image"         => $this->meal?->image,
+            "id"        => $this->id,
+            "user_id"   => $this->user_id,
+            "transactionable_type"  => $this->transactionable_type,
+            "transactionable_id"    => $this->transactionable_id,
+            // "payment_intent_id"     => $this->payment_intent_id,
+            // "payment_charge_id"     => $this->payment_charge_id,
+            "description"   => $this->description,
+            "data"          => $this->data,
+            "currency"      => $this->currency,
+            "amount"        => $this->amount,
             "status"        => $this->status,
             "created_at"    => $this->created_at,
-            "meal_type"     => new MealTypeResource($this->mealType)
+            "updated_at"    => $this->updated_at,
+            "deleted_at"    => $this->deleted_at
         ];
     }
-
+    
     public static function collection($resource)
     {
         if ($resource instanceof LengthAwarePaginator) {

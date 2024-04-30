@@ -42,8 +42,8 @@ class AppointmentAPIController extends AppBaseController
     {
         $params = $request->only('user_id','customer_id','type','profession_type','status','start_date','date','order_by','order');
 
-        $appointments = $this->appointmentRepository->pushCriteria(new AppointmentCriteria($params));
-        return $this->sendResponse($appointments->all(), 'Appointments retrieved successfully');
+        $appointments = $this->appointmentRepository->pushCriteria(new AppointmentCriteria($params))->all();
+        return $this->sendResponse(AppointmentResource::collection($appointments), 'Appointments retrieved successfully');
     }
 
     /**
@@ -180,13 +180,13 @@ class AppointmentAPIController extends AppBaseController
     public function show($id)
     {
         /** @var Appointment $appointment */
-        $appointment = $this->appointmentRepository->find($id);
+        $appointment = $this->appointmentRepository->findWithoutFail($id);
 
         if (empty($appointment)) {
             return $this->sendError('Appointment not found');
         }
 
-        return $this->sendResponse($appointment->toArray(), 'Appointment retrieved successfully');
+        return $this->sendResponse(new AppointmentResource($appointment), 'Appointment retrieved successfully');
     }
 
     /**

@@ -27,12 +27,6 @@ class PermissionSeeder extends Seeder
             'meal_types',
             'meals',
             'meal_categories',
-            'workout_plans',
-            'workout_days',
-            'workout_day_exercises',
-            'nutrition_plans',
-            'nutrition_plan_days',
-            'nutrition_plan_day_meals',
             'constants',
             'contact_requests',
             'user_details',
@@ -44,6 +38,13 @@ class PermissionSeeder extends Seeder
             'events',
             'user_events',
             'exercises',
+
+            // 'workout_plans',
+            // 'workout_days',
+            // 'workout_day_exercises',
+            // 'nutrition_plans',
+            // 'nutrition_plan_days',
+            // 'nutrition_plan_day_meals',
         ];
 
         $permissions = [];

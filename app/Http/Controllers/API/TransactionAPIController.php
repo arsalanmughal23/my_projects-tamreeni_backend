@@ -8,6 +8,7 @@ use App\Models\Transaction;
 use App\Repositories\TransactionRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\TransactionResource;
 use Response;
 use Config;
 
@@ -35,16 +36,10 @@ class TransactionAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $perPage      = $request->input('per_page', Config::get('constants.PER_PAGE', 10));
-        $transactions = $this->transactionRepository->getUserTransactions($request->user()->id);
+        $params['user_id'] = $request->user_id ?? $request->user()->id;
+        $model = $this->transactionRepository->index($request, $params);
 
-        if ($request->get('paginate')) {
-            $transactions = $transactions->orderBy('created_at', 'desc')->paginate($perPage);
-        } else {
-            $transactions = $transactions->get();
-        }
-
-        return $this->sendResponse($transactions->toArray(), 'Transactions retrieved successfully');
+        return $this->sendResponse(TransactionResource::collection($model), 'Transactions retrieved successfully');
     }
 
     /**
@@ -83,7 +78,7 @@ class TransactionAPIController extends AppBaseController
             return $this->sendError('Transaction not found');
         }
 
-        return $this->sendResponse($transaction->toArray(), 'Transaction retrieved successfully');
+        return $this->sendResponse(new TransactionResource($transaction), 'Transaction retrieved successfully');
     }
 
     /**

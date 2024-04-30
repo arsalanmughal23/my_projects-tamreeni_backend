@@ -38,13 +38,8 @@ class WellnessTipAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $perPage = $request->input('per_page', Config::get('constants.PER_PAGE', 10));
-        $wellnessQuery = $this->wellnessTipRepository->WellnessQuery();
-    
-        // Paginate the results
-        $wellness_tips = $wellnessQuery->paginate($perPage);
-
-        return $this->sendResponse(WellnessTipResource::collection($wellness_tips), 'Wellness Tips retrieved successfully');
+        $wellnessTips = $this->wellnessTipRepository->index($request);
+        return $this->sendResponse(WellnessTipResource::collection($wellnessTips), 'Wellness Tips retrieved successfully');
     }
 
     /**

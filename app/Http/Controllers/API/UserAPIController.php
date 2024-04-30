@@ -200,7 +200,7 @@ class UserAPIController extends AppBaseController
 
             $nutritionPlan = $this->nutritionPlanRepository->generateNutritionPlan($userDetails);
             $nutritionPlan = NutritionPlan::with('nutritionPlanDays.nutritionPlanDayMeals')->find($nutritionPlan->id);
-            $nutritionPlan = NutritionPlanResource::toObject($nutritionPlan);
+            $nutritionPlan = new NutritionPlanResource($nutritionPlan);
 
             DB::commit();
             return $this->sendResponse(['workout_plan' => $workoutPlan->toArray(), 'nutrition_plan' => $nutritionPlan], 'Workout Plan generated successfully');
@@ -219,6 +219,10 @@ class UserAPIController extends AppBaseController
             'bmi'       => $calculatedBMI,
             'bmi_description' => __('messages.bmi_description', ['bmi' => $calculatedBMI]),
             'user_details'      => $userDetails,
+            'current_day_required_calories' => 200,
+            'workout_week_count' => 4,
+            'current_week_target_calroies' => 80,
+            'current_week_consumed_calroies' => 20,
         ];
 
         return $this->sendResponse($responseData, 'Your personal statistics record');

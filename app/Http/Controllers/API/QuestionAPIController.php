@@ -34,8 +34,7 @@ class QuestionAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $question = $this->questionRepository->all();
-
+        $question = $this->questionRepository->index($request);
         return $this->sendResponse(QuestionResource::collection($question), 'Questions retrieved successfully');
     }
 

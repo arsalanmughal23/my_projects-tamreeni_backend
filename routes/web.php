@@ -21,6 +21,8 @@ Auth::routes(['register' => false]);
 // Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/payment-page', [App\Http\Controllers\PayTabsController::class, 'create_payment_page'])->name('payment-page');
+Route::get('/query-transaction', [App\Http\Controllers\PayTabsController::class, 'query_transaction'])->name('query-transaction');
 
 Route::group(['middleware' => ['auth', 'dynamic_permission']], function () {
 
@@ -52,7 +54,6 @@ Route::group(['middleware' => ['auth', 'dynamic_permission']], function () {
     )->name('io_generator_builder_generate_from_file');
 
 
-
     Route::get('/users/assignroles/{id}', [App\Http\Controllers\UsersController::class, 'assignRoles'])->name('users.assignroles');
     Route::patch('/users/updateroles/{id}', [App\Http\Controllers\UsersController::class, 'updateRoles'])->name("roles.rolesupdate");
 
@@ -68,9 +69,6 @@ Route::group(['middleware' => ['auth', 'dynamic_permission']], function () {
 });
 
 Route::resource('users', App\Http\Controllers\UsersController::class);
-
-
-
 
 
 Route::resource('pages', App\Http\Controllers\PageController::class);

@@ -45,6 +45,19 @@ class ExerciseDataTable extends DataTable
      */
     public function query(Exercise $model)
     {
+        if ($this->request->body_part) {
+            return $model
+                ->newQuery()->where('body_part_id', $this->request->body_part);
+        }
+
+        if ($this->request->equipment) {
+            $equipmentId = $this->request->equipment;
+            return $model
+                ->newQuery()->whereHas('equipment', function ($query) use ($equipmentId) {
+                        $query->where('exercise_equipment_id', $equipmentId);
+                    });
+        }
+
         return $model->newQuery();
     }
 

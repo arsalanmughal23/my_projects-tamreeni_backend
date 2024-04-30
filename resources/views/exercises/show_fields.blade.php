@@ -1,19 +1,37 @@
 <!-- User Id Field -->
 <div class="col-sm-12">
-    {!! Form::label('user_id', 'User Id:') !!}
-    <p>{{ $exercise->user_id }}</p>
+    {!! Form::label('user', 'User:') !!}
+    <p>{{ $exercise->user->name }}</p>
 </div>
 
 <!-- Body Part Id Field -->
 <div class="col-sm-12">
     {!! Form::label('body_part_id', 'Body Part Id:') !!}
-    <p>{{ $exercise->body_part_id }}</p>
+    <p>{{ $exercise->bodyPart->name }}</p>
 </div>
 
-<!-- Name Field -->
+<!-- Name En Field -->
 <div class="col-sm-12">
-    {!! Form::label('name', 'Name:') !!}
-    <p>{{ $exercise->name }}</p>
+    {!! Form::label('name_en', 'Name (En):') !!}
+    <p>{{ $exercise->getTranslation('name', 'en') }}</p>
+</div>
+
+<!-- Name Ar Field -->
+<div class="col-sm-12">
+    {!! Form::label('name_en', 'Name (Ar):') !!}
+    <p>{{ $exercise->getTranslation('name', 'ar') }}</p>
+</div>
+
+<!-- Description En Field -->
+<div class="col-sm-12">
+    {!! Form::label('description', 'Description (En):') !!}
+    <p>{{ $exercise->getTranslation('description', 'en')}}</p>
+</div>
+
+<!-- Description Ar Field -->
+<div class="col-sm-12">
+    {!! Form::label('description', 'Description (Ar):') !!}
+    <p>{{ $exercise->getTranslation('description', 'ar')}}</p>
 </div>
 
 <!-- Duration In M Field -->
@@ -40,21 +58,28 @@
     <p>{{ $exercise->burn_calories }}</p>
 </div>
 
+<!-- Equipment Field -->
+<div class="col-sm-12">
+    {!! Form::label('equipment', 'Equipment:') !!}
+    <p>{{ $exercise->equipmentCsv }}</p>
+</div>
+
 <!-- Image Field -->
 <div class="col-sm-12">
     {!! Form::label('image', 'Image:') !!}
-    <p>{{ $exercise->image }}</p>
+    <p>
+        <img src="{{ $exercise->image}}" width="360" onerror="brokenImageHandler(this);">
+    </p>
 </div>
 
 <!-- Video Field -->
 <div class="col-sm-12">
     {!! Form::label('video', 'Video:') !!}
-    <p>{{ $exercise->video }}</p>
-</div>
-
-<!-- Description Field -->
-<div class="col-sm-12">
-    {!! Form::label('description', 'Description:') !!}
-    <p>{{ $exercise->description }}</p>
+    <p>
+        <video width="360" controls>
+            <source src="{{ $exercise->video}}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </p>
 </div>
 

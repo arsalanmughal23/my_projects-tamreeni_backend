@@ -39,8 +39,8 @@
 
 <!-- Exercise Equipment Field -->
 <div class="form-group col-sm-3">
-    {!! Form::label('exercise_equipments', 'Exercise Equipments:', ['class'=>'required']) !!}
-    {!! Form::select('exercise_equipments[]',[], null,['class' => 'form-control select2', 'multiple'=>'multiple']) !!}
+    {!! Form::label('exercise_equipments', 'Equipments:', ['class'=>'required']) !!}
+    {!! Form::select('exercise_equipments[]',$exercise_equipments, isset($exercise) ?$selectedEquipments : [],['class' => 'form-control select2', 'multiple'=>'multiple', 'required'=>'required']) !!}
 
 </div>
 
@@ -71,13 +71,8 @@
 
 <!-- Image Field -->
 <div class="form-group col-sm-6 col-lg-3">
-{!! Form::label('image', 'Image:', ['class'=>'required']) !!}
-{!! Form::file('image', ['class' => 'form-control', (isset($exercise)) ? '' : 'required' => 'required', 'accept' => 'image/jpeg,image/png']) !!}
-
-@if(isset($exercise))
-    <!-- Image Field -->
-        <img src="{{ $exercise->image}}" width="100" onerror="brokenImageHandler(this);">
-    @endif
+    {!! Form::label('image', 'Image:', ['class'=>'required']) !!}
+    {!! Form::file('image', ['class' => 'form-control', (isset($exercise)) ? '' : 'required' => 'required', 'accept' => 'image/jpeg,image/png']) !!}
 </div>
 
 
@@ -86,6 +81,26 @@
     {!! Form::label('video', 'Video:', ['class'=>'required']) !!}
     {!! Form::file('video', ['class' => 'form-control', (isset($exercise)) ? '' : 'required' => 'required', 'accept' => 'video/mp4']) !!}
 </div>
+
+
+<!-- video Field -->
+@if(isset($exercise))
+    <div class="form-group col-sm-6 col-lg-6">
+        <img src="{{ $exercise->image}}" width="360" onerror="brokenImageHandler(this);">
+    </div>
+@endif
+
+<!-- video Field -->
+@if(isset($exercise))
+
+    <div class="form-group col-sm-6 col-lg-6">
+        <video width="360" controls>
+            <source src="{{ $exercise->video}}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+@endif
+
 
 @push('page_scripts')
     <script>

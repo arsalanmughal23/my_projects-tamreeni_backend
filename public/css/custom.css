@@ -101,7 +101,19 @@ a.btn-default, a.btn-default:hover, a.btn-default:focus, a.btn-default:visited {
 
 .select2-container--default .select2-results__option--highlighted[aria-selected], .select2-container--default .select2-results__option--highlighted[aria-selected]:hover {
     background-color: #33bba2 !important;
+}
 
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #33bba2;
+    border: 1px solid #33bba2;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    color: #fffefe;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__clear {
+    margin-right: 5px;
 }
 
 .page-item.active .page-link {

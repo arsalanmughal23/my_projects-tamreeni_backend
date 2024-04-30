@@ -88,15 +88,15 @@ class Exercise extends Model
         'name'           => 'required|array',
         'name.en'        => 'required|string|max:20',
         'name.ar'        => 'required|string|max:20',
-        'description'    => 'nullable|array',
-        'description.en' => 'nullable|string|max:200',
-        'description.ar' => 'nullable|string|max:200',
+        'description'    => 'required|array',
+        'description.en' => 'required|string|max:200',
+        'description.ar' => 'required|string|max:200',
         'duration_in_m'  => 'nullable|numeric',
         'sets'           => 'nullable|integer',
         'reps'           => 'nullable|integer',
         'burn_calories'  => 'nullable|numeric',
-        'image'          => 'nullable|string',
-        'video'          => 'nullable|string',
+        'image'          => 'nullable|file|mimes:jpeg,png',
+        'video'          => 'nullable|file|mimes:mp4',
     ];
 
     /**
@@ -131,6 +131,14 @@ class Exercise extends Model
     public function favourites()
     {
         return $this->morphMany(Favourite::class, 'favouritable');
+    }
+
+    /**
+     * @return string
+     */
+    public function getEquipmentCsvAttribute()
+    {
+        return implode(",", $this->equipment->pluck('name')->all());
     }
 
     public function getIsFavouriteAttribute()

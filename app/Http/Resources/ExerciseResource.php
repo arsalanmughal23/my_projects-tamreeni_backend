@@ -22,7 +22,7 @@ class ExerciseResource extends JsonResource
             'user_id'             => $this->user_id,
             'user'                => $this->user,
             'body_part_id'        => $this->body_part_id,
-            'body_part'           => $this->bodyPart,
+            'body_part'           => new BodyPartResource($this->bodyPart),
             'is_favourite'        => $this->is_favourite,
             'duration_in_m'       => $this->duration_in_m,
             'sets'                => $this->sets,
@@ -30,7 +30,7 @@ class ExerciseResource extends JsonResource
             'burn_calories'       => $this->burn_calories,
             'image'               => $this->image,
             'video'               => $this->video,
-            'exercise_equipments' => $this->equipment,
+            'exercise_equipments' => ExerciseEquipmentResource::collection($this->whenLoaded('equipment')),
             'created_at'          => $this->created_at,
             'updated_at'          => $this->updated_at,
         ];
@@ -62,23 +62,23 @@ class ExerciseResource extends JsonResource
         return parent::collection($resource);
     }
 
-    public static function single($resource)
-    {
-        return [
-            'id'            => $resource->id,
-            'name'          => $resource->getTranslation('name', app()->getLocale()),
-            'description'   => $resource->getTranslation('description', app()->getLocale()),
-            'user_id'       => $resource->user_id,
-            'body_part_id'  => $resource->body_part_id,
-            'body_part'     => $resource->bodyPart,
-            'is_favourite'  => $resource->is_favourite,
-            'duration_in_m' => $resource->duration_in_m,
-            'sets'          => $resource->sets,
-            'reps'          => $resource->reps,
-            'burn_calories' => $resource->burn_calories,
-            'image'         => $resource->image,
-            'video'         => $resource->video,
-            'created_at'    => $resource->created_at,
-        ];
-    }
+    // public static function single($resource)
+    // {
+    //     return [
+    //         'id'            => $resource->id,
+    //         'name'          => $resource->getTranslation('name', app()->getLocale()),
+    //         'description'   => $resource->getTranslation('description', app()->getLocale()),
+    //         'user_id'       => $resource->user_id,
+    //         'body_part_id'  => $resource->body_part_id,
+    //         'body_part'     => $resource->bodyPart,
+    //         'is_favourite'  => $resource->is_favourite,
+    //         'duration_in_m' => $resource->duration_in_m,
+    //         'sets'          => $resource->sets,
+    //         'reps'          => $resource->reps,
+    //         'burn_calories' => $resource->burn_calories,
+    //         'image'         => $resource->image,
+    //         'video'         => $resource->video,
+    //         'created_at'    => $resource->created_at,
+    //     ];
+    // }
 }

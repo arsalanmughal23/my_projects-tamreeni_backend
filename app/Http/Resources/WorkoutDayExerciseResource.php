@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class WorkoutDayExerciseResource extends JsonResource
 {
@@ -24,7 +25,33 @@ class WorkoutDayExerciseResource extends JsonResource
             "burn_calories"  => $this->burn_calories,
             "status"         => $this->status,
             "created_at"     => $this->created_at,
-            'exercise'       => ExerciseResource::single($this->exercise)
+            'exercise'       => new ExerciseResource($this->exercise)
         ];
+    }
+
+    public static function collection($resource)
+    {
+        if ($resource instanceof LengthAwarePaginator) {
+            return [
+                'data'  => parent::collection($resource),
+                'links' => [
+                    'first' => $resource->url(1),
+                    'last'  => $resource->url($resource->lastPage()),
+                    'prev'  => $resource->previousPageUrl(),
+                    'next'  => $resource->nextPageUrl(),
+                ],
+                'meta'  => [
+                    'current_page' => $resource->currentPage(),
+                    'from'         => $resource->firstItem(),
+                    'last_page'    => $resource->lastPage(),
+                    'path'         => $resource->path(),
+                    'per_page'     => $resource->perPage(),
+                    'to'           => $resource->lastItem(),
+                    'total'        => $resource->total(),
+                ],
+            ];
+        }
+
+        return parent::collection($resource);
     }
 }

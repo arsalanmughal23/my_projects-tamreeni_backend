@@ -182,12 +182,13 @@ class NutritionPlanDayMealAPIController extends AppBaseController
         // Add User Additional Meal with marked as Consumed
         $data = $request->validated();
         $data = array_merge($data, ['nutrition_plan_day_id' => $activeUserNutritionPlanDay->id, 'status' => NutritionPlanDay::STATUS_COMPLETED]);
-        $additionalMealConsumed = $this->nutritionPlanDayMealRepository->userAdditionalMealConsumed($data);
+        // $additionalMealConsumed = $this->nutritionPlanDayMealRepository->userAdditionalMealConsumed($data);
 
         // Increase user intake calories
-        $userDetails->calories += $additionalMealConsumed->calories;
+        // $userDetails->calories += $additionalMealConsumed->calories;
+        $userDetails->calories += $data['calories'] ?? 0;
         $userDetails->save();
 
-        return $this->sendResponse(new NutritionPlanDayMealResource($additionalMealConsumed), 'Additional Meal added successfully');
+        return $this->sendResponse(null, 'Additional Meal consumed successfully');
     }
 }

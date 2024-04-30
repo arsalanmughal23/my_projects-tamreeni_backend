@@ -180,13 +180,13 @@ class AppointmentAPIController extends AppBaseController
     public function show($id)
     {
         /** @var Appointment $appointment */
-        $appointment = $this->appointmentRepository->find($id);
+        $appointment = $this->appointmentRepository->findWithoutFail($id);
 
         if (empty($appointment)) {
             return $this->sendError('Appointment not found');
         }
 
-        return $this->sendResponse($appointment->toArray(), 'Appointment retrieved successfully');
+        return $this->sendResponse(new AppointmentResource($appointment), 'Appointment retrieved successfully');
     }
 
     /**

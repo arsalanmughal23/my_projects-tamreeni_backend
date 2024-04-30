@@ -36,6 +36,205 @@
 
     @stack('page_css')
 
+    <style>
+        [class*=sidebar-dark-] {
+            background-color: #33bba2 !important;
+        }
+
+        [class*=sidebar-dark-] .sidebar a {
+            color: #fff !important;
+        }
+
+        [class*=sidebar-dark] .brand-link, [class*=sidebar-dark] .brand-link .pushmenu {
+            color: #fff !important;
+        }
+
+        /*[input="file"].form-control {*/
+        /*padding: 3px !important;*/
+        /*}*/
+
+        input[type="file"] {
+            padding: 3px !important;
+        }
+
+        .sidebar {
+            padding-left: 0.3rem !important;
+            scrollbar-width: none !important;
+            scrollbar-color: #fff !important;
+        }
+
+        [class*=sidebar-dark] .brand-link {
+            border-bottom: 1px solid #f4f6f94a !important;
+        }
+
+        .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active, .sidebar-light-primary .nav-sidebar > .nav-item > .nav-link.active {
+            background-color: #fff !important;
+            color: #33bba2 !important;
+        }
+
+        .btn-primary {
+            background-color: #33bba2 !important;
+            border-color: #33bba2 !important;
+            color: #fff !important;
+        }
+
+        .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary:visited {
+            background-color: #33bba2 !important;
+            border-color: #33bba2 !important;
+            color: #fff !important;
+        }
+
+        .bg-primary {
+            background-color: #33bba2 !important;
+            color: #fff !important;
+        }
+
+        a {
+            color: #33bba2 !important;
+        }
+
+        a:hover, a:active, a:focus, a:visited {
+            color: #33bba2 !important;
+        }
+
+        .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show > .btn-primary.dropdown-toggle {
+            background-color: #33bba2 !important;
+            border-color: #33bba2 !important;
+        }
+
+        a.btn-default, a.btn-default:hover, a.btn-default:focus, a.btn-default:visited {
+            color: #444 !important;
+        }
+
+        #dataTableBuilder_filter {
+            position: relative !important;
+            float: right !important;
+        }
+
+        #dataTableBuilder_info {
+            position: relative !important;
+            float: left !important;
+        }
+
+        .icheck-primary > input:first-child:checked + input[type=hidden] + label::before, .icheck-primary > input:first-child:checked + label::before {
+            background-color: #33bba2 !important;
+            border-color: #33bba2 !important;
+        }
+
+        .icheck-primary > input:first-child:not(:checked):not(:disabled):hover + input[type=hidden] + label::before, .icheck-primary > input:first-child:not(:checked):not(:disabled):hover + label::before {
+            border-color: #33bba2 !important;
+        }
+
+        .brand-link .brand-image {
+            margin-top: -5px !important;
+            max-height: 40px !important;
+        }
+
+        .select2-container--default.select2-container--focus .select2-selection--multiple, .select2-container--default.select2-container--focus .select2-selection--single {
+            border-color: #33bba28c !important;
+        }
+
+        .select2-container--default .select2-results__option--highlighted[aria-selected] {
+            background-color: #33bba2 !important;
+        }
+
+        .select2-container--default .select2-results__option--highlighted[aria-selected], .select2-container--default .select2-results__option--highlighted[aria-selected]:hover {
+            background-color: #33bba2 !important;
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background-color: #33bba2 !important;
+            border: 1px solid #33bba2 !important;
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+            color: #fffefe !important;
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__clear {
+            margin-right: 5px !important;
+        }
+
+        .page-item.active .page-link {
+            background-color: #33bba2 !important;
+            border-color: #33bba2 !important;
+        }
+
+        .page-link {
+            color: #33bba2 !important;
+        }
+
+        .page-link:hover {
+            color: #33bba2 !important;
+        }
+
+        .form-control:focus {
+            border-color: #33bba2 !important;
+        }
+
+        .btn-outline-secondary {
+            color: #33bba2 !important;
+            border-color: #33bba2 !important;
+        }
+
+        .btn-outline-secondary:hover {
+            color: #fff !important;
+            background-color: #33bba2 !important;
+            border-color: #33bba2 !important;
+        }
+
+        .btn-outline-secondary:not(:disabled):not(.disabled).active, .btn-outline-secondary:not(:disabled):not(.disabled):active, .show > .btn-outline-secondary.dropdown-toggle {
+            color: #fff !important;
+            background-color: #33bba2 !important;
+            border-color: #33bba2 !important;
+        }
+
+        .btn-primary.disabled, .btn-primary:disabled {
+            color: #fff !important;
+            background-color: #33bba2 !important;
+            border-color: #33bba2 !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 23px !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 36px !important;
+        }
+
+        .label {
+            display: inline !important;
+            padding: .2em .6em .3em !important;
+            font-size: 75% !important;
+            font-weight: 700 !important;
+            line-height: 1 !important;
+            color: #fff !important;
+            text-align: center !important;
+            white-space: nowrap !important;
+            vertical-align: baseline !important;
+            border-radius: .25em !important;
+        }
+
+        .select2-container--default .select2-selection--single {
+            height: 38px !important;
+            padding-top: 10px !important;
+        }
+
+        .label-success {
+            background-color: #5cb85c !important;
+        }
+
+        .label-danger {
+            background-color: #d9534f !important;
+        }
+
+        @media (min-width: 576px) {
+            .navbar-nav > .user-menu .user-image {
+                margin-right: 0 !important;
+            }
+        }
+    </style>
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">

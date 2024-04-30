@@ -200,7 +200,7 @@ class UserAPIController extends AppBaseController
 
             $nutritionPlan = $this->nutritionPlanRepository->generateNutritionPlan($userDetails);
             $nutritionPlan = NutritionPlan::with('nutritionPlanDays.nutritionPlanDayMeals')->find($nutritionPlan->id);
-            $nutritionPlan = NutritionPlanResource::toObject($nutritionPlan);
+            $nutritionPlan = new NutritionPlanResource($nutritionPlan);
 
             DB::commit();
             return $this->sendResponse(['workout_plan' => $workoutPlan->toArray(), 'nutrition_plan' => $nutritionPlan], 'Workout Plan generated successfully');

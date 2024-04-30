@@ -31,7 +31,6 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <link rel="stylesheet" href="{{ asset('public/css/custom.css') }}">
     @stack('third_party_stylesheets')
 
     @stack('page_css')

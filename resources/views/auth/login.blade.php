@@ -35,7 +35,7 @@
 
     @stack('page_css')
 
-    <link rel="stylesheet" href="{{ asset('public/css/custom.css') }}?v=1.0">
+    <link rel="stylesheet" href="{{ asset('public/css/custom.css') }}?1714483542">
 
 </head>
 <body class="hold-transition login-page">

@@ -14,20 +14,6 @@ class NutritionPlanResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
-    
-    public static function toObject(NutritionPlan $data)
-    {
-        return [
-            'id'            => $data->id,
-            'user_id'       => $data->user_id,
-            'name'          => $data->name,
-            'start_date'    => $data->start_date,
-            'end_date'      => $data->end_date,
-            'status'        => $data->status,
-            'nutrition_plan_days' => NutritionPlanDayResource::collection($data->nutritionPlanDays)
-        ];
-    }
-
     public function toArray($request)
     {
         return [

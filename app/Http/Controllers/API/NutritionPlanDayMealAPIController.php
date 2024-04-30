@@ -188,6 +188,6 @@ class NutritionPlanDayMealAPIController extends AppBaseController
         $userDetails->calories += $additionalMealConsumed->calories;
         $userDetails->save();
 
-        return $this->sendResponse(NutritionPlanDayMealResource::toObject($additionalMealConsumed), 'Additional Meal added successfully');
+        return $this->sendResponse(new NutritionPlanDayMealResource($additionalMealConsumed), 'Additional Meal added successfully');
     }
 }

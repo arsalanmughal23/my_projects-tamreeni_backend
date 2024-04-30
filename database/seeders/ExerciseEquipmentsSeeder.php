@@ -15,8 +15,8 @@ class ExerciseEquipmentsSeeder extends Seeder
     public function run()
     {
         DB::table('exercise_equipments')->insert([
-            ['name' => 'Treadmill', 'icon' => 'treadmill-icon.png', 'type' => 'Machines'],
-            ['name' => 'Dumbbells', 'icon' => 'dumbbells-icon.png', 'type' => 'Free Weights'],
+            ['name' => json_encode(['en' => 'Treadmill', 'ar' => 'جهاز المشي']), 'icon' => 'treadmill-icon.png', 'type' => 'Machines'],
+            ['name' => json_encode(['en' => 'Dumbbells', 'ar' => 'اجراس صماء']), 'icon' => 'dumbbells-icon.png', 'type' => 'Free Weights'],
             // Add more data as needed
         ]);
     }

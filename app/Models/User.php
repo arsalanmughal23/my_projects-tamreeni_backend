@@ -73,7 +73,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'address'      => 'nullable|string|max:250',
         'phone_number' => 'nullable|string|max:250',
         'dob'          => 'nullable|date',
-        'image'        => 'nullable|file',
+        'image'        => 'nullable|file|mimes:jpeg,png|max:5000',
         'gender'       => 'nullable|string|in:male,female'
     ];
 

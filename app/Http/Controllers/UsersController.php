@@ -53,7 +53,7 @@ class UsersController extends AppBaseController
      */
     public function create()
     {
-        $roles = $this->rolesRepository->whereNotIn('id', [1])->get();
+        $roles = $this->rolesRepository->whereNotIn('id', [1,2])->get();
         return view('users.create')->with('roles', $roles);
     }
 
@@ -126,7 +126,7 @@ class UsersController extends AppBaseController
     public function edit($id)
     {
         $user  = $this->userRepository->find($id);
-        $roles = $this->rolesRepository->whereNotIn('id', [1])->get();
+        $roles = $this->rolesRepository->whereNotIn('id', [1,2])->get();
 
         if (empty($user)) {
             Flash::error('User not found');

@@ -6,6 +6,7 @@ use Flash;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\Request;
 use Response;
 
 class PayTabsController extends AppBaseController
@@ -16,14 +17,15 @@ class PayTabsController extends AppBaseController
     {
         $fields   = [
             "profile_id"       => env('PAYTABS_PROFILE_ID', 110359),
-            "tran_type"        => "Sale",
-            "tran_class"       => "recurring",//ecom | recurring
+            "tran_type"        => "sale",
+            "tran_class"       => "ecom",//ecom | recurring
             "cart_id"          => "Bsaray Sample Payment",
             "cart_description" => "Dummy Order 35925502061445345",
             "cart_currency"    => "SAR",
             "cart_amount"      => 46.17,
-            "callback"         => "https://yourdomain.com/yourcallback",
-            "return"           => "https://yourdomain.com/yourpage",
+            "callback"         => "https://webhook.site/8efb723d-af00-4d4c-a3d4-3c5973aaba5c",
+            "return"           => "https://paytabs-tutorials.test/payment/return",
+            "tokenize"         => "2", //for tokenized transaction
             "customer_details" => [
                 "name"    => "John Smith",
                 "email"   => "jsmith@gmail.com",
@@ -53,11 +55,11 @@ class PayTabsController extends AppBaseController
 
     }
 
-    function query_transaction()
+    function query_transaction(Request $request)
     {
         $fields   = [
             "profile_id" => env('PAYTABS_PROFILE_ID', 110359),
-            'tran_ref'   => 'TST2411700873305' // example
+            'tran_ref'   => $request->input('tran_ref') // example
         ];
         $response = \Illuminate\Support\Facades\Http::withHeaders([
             'authorization' => env('PAYTABS_SERVER_KEY', 'S6JNJBK9H2-JJDKTGLM6T-T6LMRMGBH9'),
@@ -65,5 +67,10 @@ class PayTabsController extends AppBaseController
         ])->post('https://secure.paytabs.sa/payment/query', $fields);
 
         return $response->json();
+    }
+
+    public function paytabs_return(Request $request)
+    {
+        dd($request->all());
     }
 }

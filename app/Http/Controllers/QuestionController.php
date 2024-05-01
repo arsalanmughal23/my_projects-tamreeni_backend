@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DataTables\OptionDataTable;
 use App\DataTables\QuestionDataTable;
+use App\Helper\FileHelper;
 use App\Http\Requests;
 use App\Http\Requests\CreateQuestionRequest;
 use App\Http\Requests\UpdateQuestionRequest;
@@ -14,7 +15,7 @@ use Response;
 
 class QuestionController extends AppBaseController
 {
-    /** @var QuestionRepository $questionRepository*/
+    /** @var QuestionRepository $questionRepository */
     private $questionRepository;
 
     public function __construct(QuestionRepository $questionRepo)
@@ -54,6 +55,10 @@ class QuestionController extends AppBaseController
     public function store(CreateQuestionRequest $request)
     {
         $input = $request->all();
+
+        if ($request->hasFile('cover_image')) {
+            $input['cover_image'] = FileHelper::s3Upload($input['cover_image']);
+        }
 
         $question = $this->questionRepository->create($input);
 
@@ -116,14 +121,18 @@ class QuestionController extends AppBaseController
     public function update($id, UpdateQuestionRequest $request)
     {
         $question = $this->questionRepository->find($id);
-
+        $input    = $request->all();
         if (empty($question)) {
             Flash::error('Question not found');
 
             return redirect(route('questions.index'));
         }
 
-        $question = $this->questionRepository->update($request->all(), $id);
+        if ($request->hasFile('cover_image')) {
+            $input['cover_image'] = FileHelper::s3Upload($input['cover_image']);
+        }
+
+        $question = $this->questionRepository->update($input, $id);
 
         Flash::success('Question updated successfully.');
 

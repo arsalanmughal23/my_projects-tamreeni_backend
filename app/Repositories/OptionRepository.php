@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Helper\FileHelper;
 use App\Models\Option;
 use App\Repositories\BaseRepository;
 
@@ -45,6 +46,11 @@ class OptionRepository extends BaseRepository
     public function updateRecord($request, $id)
     {
         $data = $request->all();
+
+        if ($request->hasFile('image')) {
+            $data['image'] = FileHelper::s3Upload($data['image']);
+        }
+
         return $this->update($data, $id);
     }
 }

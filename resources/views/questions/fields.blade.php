@@ -12,14 +12,31 @@
 
 
 <!-- Cover Image Field -->
+{{--<div class="form-group col-sm-12 col-lg-6">--}}
+{{--{!! Form::label('cover_image', 'Cover Image:') !!}--}}
+{{--{!! Form::textarea('cover_image', null, ['class' => 'form-control']) !!}--}}
+{{--@if(isset($question))--}}
+{{--<!-- Image Field -->--}}
+{{--<img src="{{ $question->cover_image}}" width="100" onerror="brokenImageHandler(this);">--}}
+{{--@endif--}}
+{{--</div>--}}
+
+
+<!-- Cover Image Field -->
 <div class="form-group col-sm-12 col-lg-6">
-    {!! Form::label('cover_image', 'Cover Image:') !!}
-    {{--{!! Form::textarea('cover_image', null, ['class' => 'form-control']) !!}--}}
-    @if(isset($question))
-        <!-- Image Field -->
-            <img src="{{ $question->cover_image}}" width="100" onerror="brokenImageHandler(this);">
-        @endif
+    {!! Form::label('cover_image', 'Cover Image:', ['class'=>'required']) !!}
+    {!! Form::file('cover_image', ['class' => 'form-control', (isset($question)) ? '' : 'required' => 'required', 'accept' => 'image/jpeg,image/png']) !!}
 </div>
+
+@if(isset($question))
+
+    <div class="form-group col-sm-6">
+
+        <!-- Cover Image Field -->
+        <img src="{{ $question->cover_image}}" width="100" onerror="brokenImageHandler(this);">
+
+    </div>
+@endif
 
 <!-- Answer Mode Field -->
 <div class="form-group col-sm-6">

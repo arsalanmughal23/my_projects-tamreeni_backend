@@ -66,12 +66,10 @@ class Question extends Model
         'title'                            => 'required|array',
         'title.en'                         => 'required|string|max:1000',
         'title.ar'                         => 'required|string|max:1000',
-        'cover_image'                      => 'nullable|string',
+        'cover_image'                      => 'nullable|file',
         'answer_mode'                      => 'required|string|max:191',
         'question_variable_name'           => 'required|string|max:191',
         'question_secondary_variable_name' => 'nullable|string|max:191',
-        'created_at'                       => 'nullable',
-        'updated_at'                       => 'nullable'
     ];
 
     const Q1_GOAL   = 'goal';

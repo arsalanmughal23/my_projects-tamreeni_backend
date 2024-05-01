@@ -27,33 +27,34 @@
     </div>
 @endif
 
-@role(\App\Models\Role::SUPER_ADMIN)
-@if(!isset($users))
-    {{--<div class="col-sm-12">--}}
-    {{--{!! Form::label('roles', 'Roles:') !!}--}}
-    {{--<div class="form-group">--}}
+@if(\App\Models\Role::SUPER_ADMIN || \App\Models\Role::ADMIN)
+    @if(!isset($users))
+        {{--<div class="col-sm-12">--}}
+        {{--{!! Form::label('roles', 'Roles:') !!}--}}
+        {{--<div class="form-group">--}}
 
-    {{--@foreach($roles as $role)--}}
-    {{--<label class="control-label col-2">--}}
-    {{--<input class="checkbox-inline" type="checkbox" name="role[{{$role->id}}]"--}}
-    {{--@if(isset($users) && $users->hasRole($role->name)) checked @endif >--}}
-    {{--{{ \Str::replace('-', ' ',  $role->name) }}</label>--}}
-    {{--@endforeach--}}
-    {{--</div>--}}
-    {{--</div>--}}
+        {{--@foreach($roles as $role)--}}
+        {{--<label class="control-label col-2">--}}
+        {{--<input class="checkbox-inline" type="checkbox" name="role[{{$role->id}}]"--}}
+        {{--@if(isset($users) && $users->hasRole($role->name)) checked @endif >--}}
+        {{--{{ \Str::replace('-', ' ',  $role->name) }}</label>--}}
+        {{--@endforeach--}}
+        {{--</div>--}}
+        {{--</div>--}}
 
-    <div class="form-group col-md-6">
-        {!! Form::label('roles', 'Roles:') !!}
-        <select name="role" class="form-control select2" required>
-            <option></option>
-            @foreach ($roles as $role)
-                <option value="{{ $role->id }}"
-                        @if(isset($users) && $users->hasRole($role->name)) selected @endif>{{ $role->name }}</option>
-            @endforeach
-        </select>
-    </div>
+        <div class="form-group col-md-6">
+            {!! Form::label('roles', 'Roles:') !!}
+            <select name="role" class="form-control select2" required>
+                <option></option>
+                @foreach ($roles as $role)
+                    <option value="{{ $role->id }}"
+                            @if(isset($users) && $users->hasRole($role->name)) selected @endif>{{ $role->name }}</option>
+                @endforeach
+            </select>
+        </div>
+    @endif
 @endif
-@endrole
+
 
 <hr>
 <!-- Password Field -->

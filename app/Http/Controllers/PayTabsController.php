@@ -24,7 +24,7 @@ class PayTabsController extends AppBaseController
             "cart_currency"    => "SAR",
             "cart_amount"      => 46.17,
             "callback"         => "https://webhook.site/8efb723d-af00-4d4c-a3d4-3c5973aaba5c",
-            "return"           => "https://paytabs-tutorials.test/payment/return",
+            "return"           => url('/paytabs-return'),
             "tokenize"         => "2", //for tokenized transaction
             "customer_details" => [
                 "name"    => "John Smith",

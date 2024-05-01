@@ -61,8 +61,8 @@ class MealType extends Model
      */
     public static $rules = [
         'name'             => 'required|array',
-        'name.en'          => 'required|string|max:100',
-        'name.ar'          => 'required|string|max:100',
+        'name.en'          => 'required|string|max:50',
+        'name.ar'          => 'required|string|max:50',
 //        'status'     => 'required|integer'
     ];
 

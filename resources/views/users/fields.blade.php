@@ -1,7 +1,7 @@
 <!-- Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('name', 'Name:', [ 'class' => 'required' ]) !!}
-    {!! Form::text('name', null, ['class' => 'form-control','maxlength' => 255, 'required' => 'required']) !!}
+    {!! Form::text('name', null, ['class' => 'form-control','maxlength' => 30, 'required' => 'required']) !!}
 </div>
 
 <!-- Email Field -->
@@ -61,7 +61,7 @@
 <div class="form-group col-sm-6">
     {!! Form::label('password', 'Password:', [ 'class' => !isset($users)?'required':'']) !!}
     <div class="input-group">
-        {!! Form::password('password', ['class' => 'form-control', 'id' => 'password', 'maxlength' => 255, !isset($users)?'required':'']) !!}
+        {!! Form::password('password', ['class' => 'form-control', 'id' => 'password', 'maxlength' => 60, !isset($users)?'required':'']) !!}
         <div class="input-group-append">
             <button class="btn btn-outline-secondary" type="button" id="togglePasswordVisibility">
                 <i class="fas fa-eye" id="togglePasswordIcon"></i>
@@ -75,7 +75,7 @@
 <div class="form-group col-sm-6">
     {!! Form::label('password_confirmation', 'Confirm Password:', [ 'class' => !isset($users)?'required':'']) !!}
     <div class="input-group">
-        {!! Form::password('password_confirmation', ['class' => 'form-control', 'id' => 'password_confirmation', 'maxlength' => 255, !isset($users)?'required':'']) !!}
+        {!! Form::password('password_confirmation', ['class' => 'form-control', 'id' => 'password_confirmation', 'maxlength' => 60, !isset($users)?'required':'']) !!}
         <div class="input-group-append">
             <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPasswordVisibility">
                 <i class="fas fa-eye" id="toggleConfirmPasswordIcon"></i>

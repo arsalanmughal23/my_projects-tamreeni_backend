@@ -31,7 +31,7 @@
 <!-- Status Field -->
 <div class="col-sm-12">
     {!! Form::label('status', 'Status:') !!}
-    <p>{{  \App\Helper\Util::getBoolText($package->status) }}</p>
+    <p>{{  \App\Helper\Util::getStatusText($package->status) }}</p>
 </div>
 
 <!-- Created At Field -->

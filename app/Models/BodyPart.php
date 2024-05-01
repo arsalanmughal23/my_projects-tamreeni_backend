@@ -57,9 +57,9 @@ class BodyPart extends Model
      */
     public static $rules = [
         'name'    => 'required|array',
-        'name.en' => 'required|string|max:100',
-        'name.ar' => 'required|string|max:100',
-        'image'   => 'nullable|file',
+        'name.en' => 'required|string|max:50',
+        'name.ar' => 'required|string|max:50',
+        'image'   => 'nullable|file|mimes:jpeg,png|max:5000',
     ];
 
     /**

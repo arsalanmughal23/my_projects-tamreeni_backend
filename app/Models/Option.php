@@ -22,8 +22,8 @@ class Option extends Model
 {
     use HasFactory;
     use HasTranslations;
-    
-    public $table = 'options';
+
+    public $table        = 'options';
     public $translatable = ['title'];
 
     const CREATED_AT = 'created_at';
@@ -61,7 +61,7 @@ class Option extends Model
         'title'                  => 'required|array',
         'title.en'               => 'required|string|max:1000',
         'title.ar'               => 'required|string|max:1000',
-        'image'                  => 'nullable|string',
+        'image'                  => 'nullable|file',
         'question_variable_name' => 'required|string|max:191',
         'option_variable_name'   => 'required|string|max:191',
     ];

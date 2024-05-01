@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\OptionDataTable;
+use App\Helper\FileHelper;
 use App\Http\Requests;
 use App\Http\Requests\CreateOptionRequest;
 use App\Http\Requests\UpdateOptionRequest;
@@ -56,6 +57,10 @@ class OptionController extends AppBaseController
     public function store(CreateOptionRequest $request)
     {
         $input = $request->all();
+
+        if ($request->hasFile('image')) {
+            $input['image'] = FileHelper::s3Upload($input['image']);
+        }
 
         $option = $this->optionRepository->create($input);
 
@@ -115,9 +120,8 @@ class OptionController extends AppBaseController
      */
     public function update($id, UpdateOptionRequest $request)
     {
-//        dd($request->all());
         $option = $this->optionRepository->find($id);
-
+        $input = $request->all();
         if (empty($option)) {
             Flash::error('Option not found');
 

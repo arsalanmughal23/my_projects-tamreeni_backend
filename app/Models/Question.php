@@ -64,9 +64,9 @@ class Question extends Model
      */
     public static $rules = [
         'title'                            => 'required|array',
-        'title.en'                         => 'required|string|max:1000',
-        'title.ar'                         => 'required|string|max:1000',
-        'cover_image'                      => 'nullable|file',
+        'title.en'                         => 'required|string|max:50',
+        'title.ar'                         => 'required|string|max:50',
+        'cover_image'                      => 'nullable|file|mimes:jpeg,png|max:5000',
         'answer_mode'                      => 'required|string|max:191',
         'question_variable_name'           => 'required|string|max:191',
         'question_secondary_variable_name' => 'nullable|string|max:191',

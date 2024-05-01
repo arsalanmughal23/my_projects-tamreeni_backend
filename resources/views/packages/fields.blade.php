@@ -1,7 +1,7 @@
 <!-- Name Field -->
 <div class="form-group col-sm-12 col-lg-6">
     {!! Form::label('name', 'Name:', ['class'=>'required']) !!}
-    {!! Form::text('name', null, ['class' => 'form-control', 'maxlength' => 255, 'required']) !!}
+    {!! Form::text('name', null, ['class' => 'form-control', 'maxlength' => 20, 'required']) !!}
 </div>
 
 <!-- Currency Field -->

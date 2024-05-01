@@ -59,9 +59,9 @@ class ExerciseEquipment extends Model
      */
     public static $rules = [
         'name'    => 'required|array',
-        'name.en' => 'required|string|max:20',
-        'name.ar' => 'required|string|max:20',
-        'icon'    => 'nullable|file',
+        'name.en' => 'required|string|max:50',
+        'name.ar' => 'required|string|max:50',
+        'icon'    => 'nullable|file|mimes:jpeg,png|max:5000',
         'type'    => 'required',
     ];
 
@@ -70,6 +70,6 @@ class ExerciseEquipment extends Model
      **/
     public function events()
     {
-        return $this->hasMany(\App\Models\Event::class, 'equipment_id');
+        return $this->hasMany(Event::class, 'equipment_id');
     }
 }

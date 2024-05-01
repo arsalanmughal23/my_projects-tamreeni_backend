@@ -67,7 +67,7 @@ class Package extends Model
      * @var array
      */
     public static $rules = [
-        'name'        => 'required|string',
+        'name'        => 'required|string|max:20',
         'description' => 'required|string',
         'currency'    => 'required',
         'amount'      => 'required|numeric',

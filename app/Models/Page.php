@@ -59,8 +59,8 @@ class Page extends Model
      * @var array
      */
     public static $rules = [
-        'title' => 'required|string|max:255',
-        'slug' => 'nullable|string|max:255',
+        'title' => 'required|string|max:50',
+        'slug' => 'nullable|string|max:50',
         'content' => 'required|string',
         'active' => 'required|boolean',
         'deleted_at' => 'nullable',

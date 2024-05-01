@@ -1,13 +1,13 @@
 <!-- Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('name', 'Name (En):', ['class'=>'required']) !!}
-    {!! Form::text('name[en]', isset($mealCategory)?$mealCategory->getTranslation('name', 'en'):null, ['class' => 'form-control','maxlength' => 255, 'required']) !!}
+    {!! Form::text('name[en]', isset($mealCategory)?$mealCategory->getTranslation('name', 'en'):null, ['class' => 'form-control','maxlength' => 50, 'required']) !!}
 </div>
 
 <!-- Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('name', 'Name (Ar):', ['class'=>'required']) !!}
-    {!! Form::text('name[ar]', isset($mealCategory)?$mealCategory->getTranslation('name', 'ar'):null, ['class' => 'form-control','maxlength' => 255, 'required', 'dir'=>'rtl']) !!}
+    {!! Form::text('name[ar]', isset($mealCategory)?$mealCategory->getTranslation('name', 'ar'):null, ['class' => 'form-control','maxlength' => 50, 'required', 'dir'=>'rtl']) !!}
 </div>
 
 <!-- Diet Type Field -->

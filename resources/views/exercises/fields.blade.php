@@ -1,26 +1,26 @@
 <!-- Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('name', 'Name (En):', ['class'=>'required']) !!}
-    {!! Form::text('name[en]', isset($exercise)?$exercise->getTranslation('name', 'en'):null, ['class' => 'form-control','maxlength' => 255, 'required']) !!}
+    {!! Form::text('name[en]', isset($exercise)?$exercise->getTranslation('name', 'en'):null, ['class' => 'form-control','maxlength' => 50, 'required']) !!}
 </div>
 
 <!-- Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('name', 'Name (Ar):', ['class'=>'required']) !!}
-    {!! Form::text('name[ar]', isset($exercise)?$exercise->getTranslation('name', 'ar'):null, ['class' => 'form-control','maxlength' => 255, 'required', 'dir'=>'rtl']) !!}
+    {!! Form::text('name[ar]', isset($exercise)?$exercise->getTranslation('name', 'ar'):null, ['class' => 'form-control','maxlength' => 50, 'required', 'dir'=>'rtl']) !!}
 </div>
 
 <!-- Description Field -->
 <div class="form-group col-sm-6 col-lg-6">
     {!! Form::label('description', 'Description (En):', ['class'=>'required']) !!}
-    {!! Form::textarea('description[en]', isset($exercise)?$exercise->getTranslation('description', 'en'):null, ['class' => 'form-control', 'rows'=>3, 'cols'=>3, 'required']) !!}
+    {!! Form::textarea('description[en]', isset($exercise)?$exercise->getTranslation('description', 'en'):null, ['class' => 'form-control', 'rows'=>3, 'cols'=>3, 'required', 'maxlength' => 100]) !!}
 </div>
 
 
 <!-- Description Field -->
 <div class="form-group col-sm-6 col-lg-6">
     {!! Form::label('description', 'Description (Ar):', ['class'=>'required']) !!}
-    {!! Form::textarea('description[ar]', isset($exercise)?$exercise->getTranslation('description', 'ar'):null, ['class' => 'form-control', 'rows'=>3, 'cols'=>3, 'required', 'dir'=>'rtl']) !!}
+    {!! Form::textarea('description[ar]', isset($exercise)?$exercise->getTranslation('description', 'ar'):null, ['class' => 'form-control', 'rows'=>3, 'cols'=>3, 'required', 'dir'=>'rtl', 'maxlength' => 100]) !!}
 </div>
 
 <!-- Body Part Id Field -->

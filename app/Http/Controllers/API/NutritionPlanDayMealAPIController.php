@@ -153,9 +153,12 @@ class NutritionPlanDayMealAPIController extends AppBaseController
         if ($nutritionPlanDayMeal->status == NutritionPlan::STATUS_COMPLETED)
             return $this->sendError('This meal is already consumed', 403);
 
-        $nutritionPlanDayMeal = $this->nutritionPlanDayMealRepository->update([ 'status' => NutritionPlanDayMeal::STATUS_COMPLETED ], $nutritionPlanDayMealId);
         // Increase user intake calories
-        $userDetails->calories += $nutritionPlanDayMeal->calories;
+        $userDetails->calories += $nutritionPlanDayMeal->calories ?? 0;
+        if($userDetails->calories > 999999)
+            return $this->sendError('You have maximum of calories', 403);
+
+        $nutritionPlanDayMeal = $this->nutritionPlanDayMealRepository->update([ 'status' => NutritionPlanDayMeal::STATUS_COMPLETED ], $nutritionPlanDayMealId);
         $userDetails->save();
 
         return $this->sendResponse($nutritionPlanDayMeal->toArray(), 'Meal consumed successfully');
@@ -187,6 +190,9 @@ class NutritionPlanDayMealAPIController extends AppBaseController
         // Increase user intake calories
         // $userDetails->calories += $additionalMealConsumed->calories;
         $userDetails->calories += $data['calories'] ?? 0;
+        if($userDetails->calories > 999999)
+            return $this->sendError('You have maximum of calories', 403);
+
         $userDetails->save();
 
         return $this->sendResponse(null, 'Additional Meal consumed successfully');

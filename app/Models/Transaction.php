@@ -39,6 +39,9 @@ class Transaction extends Model
     const STATUS_COMPLETE = 20;
     const STATUS_CANCEL = 30;
 
+    const PAY_TABS_SUCCESS_STATUS = "A";
+    const PAY_TABS_ERROR_STATUS = "D";
+
     public $fillable = [
         'user_id',
         'payment_intent_id',

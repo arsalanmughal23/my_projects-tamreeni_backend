@@ -37,4 +37,9 @@ return [
         'presignedUrl'  => env('AWS_PRESIGNED_URL'),
         'accelerateUrl' => env('AWS_ACCELERATED_URL'),
     ],
+    "paytabs"           => [
+        'PAYTABS_PROFILE_ID' => env('PAYTABS_PROFILE_ID'),
+        'PAYTABS_SERVER_KEY' => env('PAYTABS_SERVER_KEY'),
+        'PAYTABS_SERVER_URL' => env('PAYTABS_SERVER_URL'),
+    ]
 ];

@@ -75,13 +75,13 @@ class FileHelper
                 curl_setopt($ch2, CURLOPT_POSTFIELDS, $payload2);
 
                 $response = curl_exec($ch2);
-//                dd($response);
+                dd($response);
                 curl_close($ch1);
                 curl_close($ch2);
 
                 if ($response !== false) {
                     Log::error('File is successfully uploaded on s3');
-                    return $presignedUrl . '/' . $key;
+                    return config('constants.s3.accelerateUrl') . '/' . $key;
                 }
 
                 return false;

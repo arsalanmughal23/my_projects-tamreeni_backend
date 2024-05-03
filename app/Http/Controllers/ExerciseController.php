@@ -76,7 +76,7 @@ class ExerciseController extends AppBaseController
 //            dd($input['video']);
         }
 
-        dd($input);
+//        dd($input);
 
         $exercise = $this->exerciseRepository->create($input);
 

@@ -20,6 +20,7 @@ class FileHelper
         $s3Meta       = config('constants.s3');
         $token        = $s3Meta['token'];
         $presignedUrl = $s3Meta['presignedUrl'];
+        dd($s3Meta, $token, $presignedUrl);
         if ($s3Meta && $token && $presignedUrl) {
             try {
                 $fileType = $file->getMimeType();
@@ -27,7 +28,7 @@ class FileHelper
                 $payload = json_encode([
                     "contentType" => $fileType
                 ]);
-dd($s3Meta, $fileType);
+                dd($s3Meta, $fileType);
                 // Create cURL handle for the first POST request to get the presigned URL
                 $ch1 = curl_init();
                 curl_setopt($ch1, CURLOPT_URL, $presignedUrl);
@@ -73,7 +74,7 @@ dd($s3Meta, $fileType);
                 curl_setopt($ch2, CURLOPT_POSTFIELDS, $payload2);
 
                 $response = curl_exec($ch2);
-dd($response);
+                dd($response);
                 curl_close($ch1);
                 curl_close($ch2);
 

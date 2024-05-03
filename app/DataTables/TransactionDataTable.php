@@ -85,7 +85,7 @@ class TransactionDataTable extends DataTable
     {
         return [
             'user_id'    => ['title' => 'User', 'searchable' => false],
-            'user.name'  => ['visible' => false, 'searchable' => true],
+//            'user.name'  => ['visible' => false, 'searchable' => true],
             'package_id' => ['title' => 'Package', 'searchable' => false],
             'currency',
             'amount',

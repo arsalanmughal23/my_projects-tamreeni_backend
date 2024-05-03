@@ -31,10 +31,11 @@
         <option></option>
         @foreach ($bodyParts as $bodyPart)
             <option value="{{ $bodyPart->id }}"
-                    @if(isset($exercise) && $exercise->body_part_id == $bodyPart->id) selected @endif>{{ $bodyPart->name }}</option>
+                    @if(old('body_part_id') == $bodyPart->id || (isset($exercise) && $exercise->body_part_id == $bodyPart->id)) selected @endif>{{ $bodyPart->name }}</option>
         @endforeach
     </select>
 </div>
+
 
 
 <!-- Exercise Equipment Field -->

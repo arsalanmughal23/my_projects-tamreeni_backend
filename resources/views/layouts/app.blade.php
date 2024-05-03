@@ -275,7 +275,7 @@
         <ul class="navbar-nav ml-auto">
             <li class="nav-item dropdown user-menu">
                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                    <img src="{{ isset($users?->details)? $users?->details->image : asset('public/image/user.png') }}"
+                    <img src="{{ isset(auth()->user()?->details)? auth()->user()?->details->image : asset('public/image/user.png') }}"
                          class="user-image img-circle imag-placeholder" alt="User Image "
                          onerror="brokenImageHandler(this);">
                     <span class="d-none d-md-inline">{{ Auth::user()->name }}</span>
@@ -283,7 +283,7 @@
                 <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                     <!-- User image -->
                     <li class="user-header bg-primary">
-                        <img src="{{ isset($users?->details)? $users?->details->image : asset('public/image/user.png') }}"
+                        <img src="{{ isset(auth()->user()?->details)? auth()->user()?->details->image : asset('public/image/user.png') }}"
                              class="img-circle" alt="User Image"
                              onerror="brokenImageHandler(this);">
                         <p>

@@ -96,7 +96,7 @@ class Exercise extends Model
         'reps'           => 'nullable|integer',
         'burn_calories'  => 'nullable|numeric',
         'image'          => 'nullable|file|mimes:jpeg,png|max:5000',
-        'video'          => 'nullable|file|mimes:mp4',
+        'video'          => 'nullable|file|mimes:mp4|max:20000',
     ];
 
     /**

@@ -73,6 +73,8 @@
 <div class="form-group col-sm-6 col-lg-3">
     {!! Form::label('image', 'Image:', ['class'=>'required']) !!}
     {!! Form::file('image', ['class' => 'form-control', (isset($exercise)) ? '' : 'required' => 'required', 'accept' => 'image/jpeg,image/png']) !!}
+    <p class="text-muted">Max File Size 5MB</p>
+
 </div>
 
 
@@ -80,6 +82,8 @@
 <div class="form-group col-sm-6 col-lg-3">
     {!! Form::label('video', 'Video:', ['class'=>'required']) !!}
     {!! Form::file('video', ['class' => 'form-control', (isset($exercise)) ? '' : 'required' => 'required', 'accept' => 'video/mp4']) !!}
+    <p class="text-muted">Max File Size 20MB</p>
+
 </div>
 
 

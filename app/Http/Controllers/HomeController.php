@@ -23,7 +23,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-//        dd(phpinfo());
+        dd(phpinfo());
         return view('home');
     }
 }

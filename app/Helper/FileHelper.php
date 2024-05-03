@@ -20,8 +20,6 @@ class FileHelper
         $s3Meta       = config('constants.s3');
         $token        = $s3Meta['token'];
         $presignedUrl = $s3Meta['presignedUrl'];
-//        dd($s3Meta, $token, $presignedUrl);
-//        dd($s3Meta && $token && $presignedUrl);
         if ($s3Meta && $token && $presignedUrl) {
             try {
                 $fileType = $file->getMimeType();
@@ -75,7 +73,6 @@ class FileHelper
                 curl_setopt($ch2, CURLOPT_POSTFIELDS, $payload2);
 
                 $response = curl_exec($ch2);
-//                dd($response);
                 curl_close($ch1);
                 curl_close($ch2);
 

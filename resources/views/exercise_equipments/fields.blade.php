@@ -1,13 +1,13 @@
 <!-- Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('name', 'Name (En):', ['class'=>'required']) !!}
-    {!! Form::text('name[en]', isset($exerciseEquipment)?$exerciseEquipment->getTranslation('name', 'en'):null, ['class' => 'form-control','maxlength' => 50, 'required']) !!}
+    {!! Form::text('name[en]', isset($exerciseEquipment)?$exerciseEquipment->getTranslation('name', 'en'):null, ['class' => 'form-control','maxlength' => 70, 'required']) !!}
 </div>
 
 <!-- Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('name', 'Name (Ar):', ['class'=>'required']) !!}
-    {!! Form::text('name[ar]', isset($exerciseEquipment)?$exerciseEquipment->getTranslation('name', 'ar'):null, ['class' => 'form-control','maxlength' => 50, 'required', 'dir'=>'rtl']) !!}
+    {!! Form::text('name[ar]', isset($exerciseEquipment)?$exerciseEquipment->getTranslation('name', 'ar'):null, ['class' => 'form-control','maxlength' => 70, 'required', 'dir'=>'rtl']) !!}
 </div>
 
 <!-- Body Part Id Field -->

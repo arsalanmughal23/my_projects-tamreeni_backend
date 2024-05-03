@@ -1,13 +1,13 @@
 <!-- Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('name', 'Name (En):', ['class'=>'required']) !!}
-    {!! Form::text('name[en]', isset($exercise)?$exercise->getTranslation('name', 'en'):null, ['class' => 'form-control','maxlength' => 50, 'required']) !!}
+    {!! Form::text('name[en]', isset($exercise)?$exercise->getTranslation('name', 'en'):null, ['class' => 'form-control','maxlength' => 70, 'required']) !!}
 </div>
 
 <!-- Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('name', 'Name (Ar):', ['class'=>'required']) !!}
-    {!! Form::text('name[ar]', isset($exercise)?$exercise->getTranslation('name', 'ar'):null, ['class' => 'form-control','maxlength' => 50, 'required', 'dir'=>'rtl']) !!}
+    {!! Form::text('name[ar]', isset($exercise)?$exercise->getTranslation('name', 'ar'):null, ['class' => 'form-control','maxlength' => 70, 'required', 'dir'=>'rtl']) !!}
 </div>
 
 <!-- Description Field -->

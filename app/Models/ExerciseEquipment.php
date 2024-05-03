@@ -59,8 +59,8 @@ class ExerciseEquipment extends Model
      */
     public static $rules = [
         'name'    => 'required|array',
-        'name.en' => 'required|string|max:50',
-        'name.ar' => 'required|string|max:50',
+        'name.en' => 'required|string|max:70',
+        'name.ar' => 'required|string|max:70',
         'icon'    => 'nullable|file|mimes:jpeg,png|max:5000',
         'type'    => 'required',
     ];

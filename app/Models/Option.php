@@ -59,8 +59,8 @@ class Option extends Model
     public static $rules = [
         'question_id'            => 'required',
         'title'                  => 'required|array',
-        'title.en'               => 'required|string|max:50',
-        'title.ar'               => 'required|string|max:50',
+        'title.en'               => 'required|string|max:70',
+        'title.ar'               => 'required|string|max:70',
         'image'                  => 'nullable|file|mimes:jpeg,png|max:5000',
         'question_variable_name' => 'required|string|max:191',
         'option_variable_name'   => 'required|string|max:191',

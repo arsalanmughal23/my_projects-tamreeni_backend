@@ -21,7 +21,7 @@ class FileHelper
         $token        = $s3Meta['token'];
         $presignedUrl = $s3Meta['presignedUrl'];
 //        dd($s3Meta, $token, $presignedUrl);
-        dd($s3Meta && $token && $presignedUrl);
+//        dd($s3Meta && $token && $presignedUrl);
         if ($s3Meta && $token && $presignedUrl) {
             try {
                 $fileType = $file->getMimeType();

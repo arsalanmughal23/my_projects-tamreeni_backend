@@ -248,6 +248,37 @@
             margin-right: 5px;
         }
 
+        .nav {
+            list-style: none;
+            padding: 0;
+        }
+
+        .nav-item {
+            margin-bottom: 10px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            color: #000; /* Adjust color as needed */
+            text-decoration: none;
+        }
+
+        .nav-link.active {
+            font-weight: bold;
+            /* Add any other styles for active link */
+        }
+
+        .nav-link i {
+            margin-right: 10px; /* Adjust spacing between icon and text */
+        }
+
+        /* Additional styling for icons if needed */
+        .fa {
+            width: 20px; /* Adjust icon size as needed */
+        }
+
+
         @media (min-width: 576px) {
             .navbar-nav > .user-menu .user-image {
                 margin-right: 0;

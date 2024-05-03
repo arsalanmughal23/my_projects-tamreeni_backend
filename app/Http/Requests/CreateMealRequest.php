@@ -26,4 +26,14 @@ class CreateMealRequest extends FormRequest
     {
         return Meal::$rules;
     }
+
+    public function messages()
+    {
+        return [
+            'name.en.required' => 'The English name field is required.',
+            'name.ar.required' => 'The Arabic name field is required.',
+            'description.en.required' => 'The English description field is required.',
+            'description.ar.required' => 'The Arabic description field is required.',
+        ];
+    }
 }

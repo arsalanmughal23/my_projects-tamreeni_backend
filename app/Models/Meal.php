@@ -94,8 +94,8 @@ class Meal extends Model
         'image'            => 'nullable|file|mimes:jpeg,png|max:5000',
         'calories'         => 'nullable|numeric',
         'description'      => 'nullable|array',
-        'description.en'   => 'nullable|string|max:200',
-        'description.ar'   => 'nullable|string|max:200',
+        'description.en'   => 'required|string|max:200',
+        'description.ar'   => 'required|string|max:200',
     ];
 
     /**

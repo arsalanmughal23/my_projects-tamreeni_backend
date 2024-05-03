@@ -27,7 +27,7 @@ class FileHelper
                 $payload = json_encode([
                     "contentType" => $fileType
                 ]);
-
+dd($s3Meta, $fileType);
                 // Create cURL handle for the first POST request to get the presigned URL
                 $ch1 = curl_init();
                 curl_setopt($ch1, CURLOPT_URL, $presignedUrl);

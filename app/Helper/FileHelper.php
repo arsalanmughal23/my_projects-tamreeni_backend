@@ -29,7 +29,7 @@ class FileHelper
                 $payload = json_encode([
                     "contentType" => $fileType
                 ]);
-                dd($s3Meta, $fileType);
+//                dd($s3Meta, $fileType);
                 // Create cURL handle for the first POST request to get the presigned URL
                 $ch1 = curl_init();
                 curl_setopt($ch1, CURLOPT_URL, $presignedUrl);
@@ -81,11 +81,12 @@ class FileHelper
 
                 if ($response !== false) {
                     Log::error('File is successfully uploaded on s3');
-                    return config('constants.s3.accelerateUrl') . '/' . $key;
+                    return $presignedUrl . '/' . $key;
                 }
 
                 return false;
             } catch (\Exception $error) {
+                dd($error);
                 Log::error('File uploading on s3 is failed | Error: ' . $error->getMessage());
                 return null;
             }

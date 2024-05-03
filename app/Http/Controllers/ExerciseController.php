@@ -46,6 +46,7 @@ class ExerciseController extends AppBaseController
      */
     public function create()
     {
+        dd("asdad");
         $bodyParts           = BodyPart::all();
         $exercise_equipments = ExerciseEquipment::all()->pluck('name', 'id');
 

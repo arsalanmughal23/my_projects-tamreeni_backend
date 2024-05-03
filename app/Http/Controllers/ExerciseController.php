@@ -63,12 +63,12 @@ class ExerciseController extends AppBaseController
     public function store(CreateExerciseRequest $request)
     {
         $input = $request->all();
-        dd($input);
 
         $input['user_id'] = auth()->user()->id;
         if ($request->hasFile('image')) {
 //            $input['image'] = FileHelper::s3Upload($input['image']);
         }
+        dd($input, $request->hasFile('video'));
 
         if ($request->hasFile('video')) {
 //            dd($input);

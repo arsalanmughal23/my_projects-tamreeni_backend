@@ -72,6 +72,8 @@ class ExerciseController extends AppBaseController
             $input['video'] = FileHelper::s3Upload($input['video']);
         }
 
+        dd($input['video']);
+
         $exercise = $this->exerciseRepository->create($input);
 
         if (isset($input['exercise_equipments'])) {

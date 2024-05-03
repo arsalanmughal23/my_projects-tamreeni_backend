@@ -69,6 +69,7 @@ class ExerciseController extends AppBaseController
         }
 
         if ($request->hasFile('video')) {
+            dd($input);
             $input['video'] = FileHelper::s3Upload($input['video']);
             dd($input['video']);
         }

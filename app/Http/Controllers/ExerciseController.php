@@ -63,7 +63,7 @@ class ExerciseController extends AppBaseController
     {
         $input            = $request->all();
         $input['user_id'] = auth()->user()->id;
-
+        dd($input);
         if ($request->hasFile('image')) {
 //            $input['image'] = FileHelper::s3Upload($input['image']);
         }

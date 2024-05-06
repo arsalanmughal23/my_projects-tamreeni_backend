@@ -6,7 +6,7 @@
 
 <!-- Body Part Id Field -->
 <div class="col-sm-12">
-    {!! Form::label('body_part_id', 'Body Part Id:') !!}
+    {!! Form::label('body_part_id', 'Body Part:') !!}
     <p>{{ $exercise->bodyPart->name }}</p>
 </div>
 
@@ -36,7 +36,7 @@
 
 <!-- Duration In M Field -->
 <div class="col-sm-12">
-    {!! Form::label('duration_in_m', 'Duration In M:') !!}
+    {!! Form::label('duration_in_m', 'Duration In Min:') !!}
     <p>{{ $exercise->duration_in_m }}</p>
 </div>
 

@@ -59,9 +59,8 @@
                 @forelse (getMenus() as $menu)
                     @canany([$menu->slug . '.index', $menu->slug . '.create', $menu->slug . '.show', $menu->slug . '.edit', $menu->slug . '.destroy'])
                         <li class="nav-item">
-                            <a href="{{ route($menu->slug . '.index') }}"
-                               class="nav-link {{ Request::is($menu->slug . '*') ? 'active' : '' }}">
-                                <i class="fa fa-{{ $menu->icon }}"></i> <span>{{ $menu->name }}</span>
+                            <a href="{{ route($menu->slug . '.index') }}" class="nav-link {{ Request::is($menu->slug . '*') ? 'active' : '' }}">
+                                <i class="fa fa-{{ $menu->icon }}"></i><span>{{ $menu->name }}</span>
                             </a>
                         </li>
                     @endcan

@@ -12,25 +12,25 @@
 
 <!-- Name En Field -->
 <div class="col-sm-12">
-    {!! Form::label('name_en', 'Name (En):') !!}
+    {!! Form::label('name_en', 'Name (English):') !!}
     <p>{{ $exercise->getTranslation('name', 'en') }}</p>
 </div>
 
 <!-- Name Ar Field -->
 <div class="col-sm-12">
-    {!! Form::label('name_en', 'Name (Ar):') !!}
+    {!! Form::label('name_en', 'Name (Arabic):') !!}
     <p>{{ $exercise->getTranslation('name', 'ar') }}</p>
 </div>
 
 <!-- Description En Field -->
 <div class="col-sm-12">
-    {!! Form::label('description', 'Description (En):') !!}
+    {!! Form::label('description', 'Description (English):') !!}
     <p>{{ $exercise->getTranslation('description', 'en')}}</p>
 </div>
 
 <!-- Description Ar Field -->
 <div class="col-sm-12">
-    {!! Form::label('description', 'Description (Ar):') !!}
+    {!! Form::label('description', 'Description (Arabic):') !!}
     <p>{{ $exercise->getTranslation('description', 'ar')}}</p>
 </div>
 

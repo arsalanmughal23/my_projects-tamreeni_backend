@@ -98,7 +98,7 @@
 @if(isset($exercise))
 
     <div class="form-group col-sm-6 col-lg-6">
-        <video width="360" height="360" controls>
+        <video width="360" height="315" controls>
             <source src="{{ $exercise->video}}" type="video/mp4">
             Your browser does not support the video tag.
         </video>

@@ -37,7 +37,6 @@
 </div>
 
 
-
 <!-- Exercise Equipment Field -->
 <div class="form-group col-sm-3">
     {!! Form::label('exercise_equipments', 'Equipments:', ['class'=>'required']) !!}
@@ -99,7 +98,7 @@
 @if(isset($exercise))
 
     <div class="form-group col-sm-6 col-lg-6">
-        <video width="360" controls>
+        <video width="360" height="360" controls>
             <source src="{{ $exercise->video}}" type="video/mp4">
             Your browser does not support the video tag.
         </video>

@@ -25,10 +25,8 @@
 
         <div class="clearfix"></div>
 
-        <div class="container">
             <div class="row">
-                <div class="col-md-6"></div>
-                <div class="col-md-6">
+                <div class="col-md-8">
                     <div class="box box-primary">
                         <div class="box-body">
                             {!! Form::open(['method'=> 'GET']) !!}
@@ -65,7 +63,6 @@
                     </div>
                 </div>
             </div>
-        </div>
 
         <div class="card">
             <div class="card-body">

@@ -31,35 +31,32 @@
 
         </div>
 
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6"></div>
-                <div class="col-md-6">
-                    <div class="box box-primary">
-                        <div class="box-body">
-                            {!! Form::open(['method'=> 'GET']) !!}
-                            <div class="row justify-content-end">
-                                <div class="form-group col-md-6">
-                                    <label>Status :</label>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="box box-primary">
+                    <div class="box-body">
+                        {!! Form::open(['method'=> 'GET']) !!}
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label>Status :</label>
 
-                                    <select name="status" class="form-control" required>
-                                        <option value="">Select</option>
-                                        <option value="1" {{ isset($_GET['status']) && $_GET['status'] == 1 ? 'selected' : '' }}>
-                                            Yes
-                                        </option>
-                                        <option value="2" {{ isset($_GET['status']) && $_GET['status'] == 2 ? 'selected' : '' }}>
-                                            No
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-4" style="margin-top: 30px;">
-                                    <label></label>
-                                    {!! Form::submit('Search', ['class' => 'btn btn-primary']) !!}
-                                    <a href="{!! route('packages.index') !!}" class="btn btn-default">Cancel</a>
-                                </div>
+                                <select name="status" class="form-control" required>
+                                    <option value="">Select</option>
+                                    <option value="1" {{ isset($_GET['status']) && $_GET['status'] == 1 ? 'selected' : '' }}>
+                                        Yes
+                                    </option>
+                                    <option value="2" {{ isset($_GET['status']) && $_GET['status'] == 2 ? 'selected' : '' }}>
+                                        No
+                                    </option>
+                                </select>
                             </div>
-                            {!! Form::close() !!}
+                            <div class="form-group col-md-4" style="margin-top: 30px;">
+                                <label></label>
+                                {!! Form::submit('Search', ['class' => 'btn btn-primary']) !!}
+                                <a href="{!! route('packages.index') !!}" class="btn btn-default">Cancel</a>
+                            </div>
                         </div>
+                        {!! Form::close() !!}
                     </div>
                 </div>
             </div>

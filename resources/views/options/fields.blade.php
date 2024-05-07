@@ -14,14 +14,14 @@
 
 <!-- Title En Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('title', 'Title (En):', ['class'=>'required']) !!}
-    {!! Form::text('title[en]', isset($option)?$option->getTranslation('title', 'en'):null, ['class' => 'form-control','maxlength' => 50, 'required']) !!}
+    {!! Form::label('title', 'Title (English):', ['class'=>'required']) !!}
+    {!! Form::text('title[en]', isset($option)?$option->getTranslation('title', 'en'):null, ['class' => 'form-control','maxlength' => 70, 'required', 'pattern'=>'[a-zA-Z0-9_.\s]{0,70}']) !!}
 </div>
 
 <!-- Title Ar Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('title', 'Title (Ar):', ['class'=>'required']) !!}
-    {!! Form::text('title[ar]', isset($option)?$option->getTranslation('title', 'ar'):null, ['class' => 'form-control','maxlength' => 50, 'required', 'dir'=>'rtl']) !!}
+    {!! Form::label('title', 'Title (Arabic):', ['class'=>'required']) !!}
+    {!! Form::text('title[ar]', isset($option)?$option->getTranslation('title', 'ar'):null, ['class' => 'form-control','maxlength' => 70, 'required', 'dir'=>'rtl', 'pattern'=>'[a-zA-Z0-9_.\s]{0,70}']) !!}
 </div>
 
 

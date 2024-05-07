@@ -6,13 +6,13 @@
 
 <!-- Title En Field -->
 <div class="col-sm-12">
-    {!! Form::label('title', 'Title (En):') !!}
+    {!! Form::label('title', 'Title (English):') !!}
     <p>{{ $option->getTranslation('title', 'en') }}</p>
 </div>
 
 <!-- Title Ar Field -->
 <div class="col-sm-12">
-    {!! Form::label('title', 'Title (Ar):') !!}
+    {!! Form::label('title', 'Title (Arabic):') !!}
     <p>{{ $option->getTranslation('title', 'ar') }}</p>
 </div>
 

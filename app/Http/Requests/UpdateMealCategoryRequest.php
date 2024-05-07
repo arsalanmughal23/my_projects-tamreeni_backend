@@ -28,4 +28,12 @@ class UpdateMealCategoryRequest extends FormRequest
         
         return $rules;
     }
+
+    public function messages()
+    {
+        return [
+            'name.en.required' => 'The English name field is required.',
+            'name.ar.required' => 'The Arabic name field is required.',
+        ];
+    }
 }

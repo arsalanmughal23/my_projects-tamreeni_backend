@@ -1,7 +1,7 @@
 <!-- Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('name', 'Name:', [ 'class' => 'required' ]) !!}
-    {!! Form::text('name', null, ['class' => 'form-control','maxlength' => 30, 'required' => 'required']) !!}
+    {!! Form::text('name', null, ['class' => 'form-control','maxlength' => 30, 'required' => 'required', 'pattern'=>'[a-zA-Z0-9_.\s]{0,30}' ]) !!}
 </div>
 
 <!-- Email Field -->

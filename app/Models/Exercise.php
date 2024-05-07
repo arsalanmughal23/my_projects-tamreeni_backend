@@ -86,8 +86,8 @@ class Exercise extends Model
         'user_id'        => 'nullable',
         'body_part_id'   => 'required|integer',
         'name'           => 'required|array',
-        'name.en'        => 'required|string|max:50',
-        'name.ar'        => 'required|string|max:50',
+        'name.en'        => 'required|string|max:70',
+        'name.ar'        => 'required|string|max:70',
         'description'    => 'required|array',
         'description.en' => 'required|string|max:100',
         'description.ar' => 'required|string|max:100',
@@ -96,7 +96,7 @@ class Exercise extends Model
         'reps'           => 'nullable|integer',
         'burn_calories'  => 'nullable|numeric',
         'image'          => 'nullable|file|mimes:jpeg,png|max:5000',
-        'video'          => 'nullable|file|mimes:mp4',
+        'video'          => 'nullable|file|mimes:mp4|max:20000',
     ];
 
     /**

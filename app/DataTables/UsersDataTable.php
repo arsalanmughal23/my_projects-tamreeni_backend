@@ -20,9 +20,9 @@ class UsersDataTable extends DataTable
         $query     = $query->orderBy('created_at', 'desc');
         $dataTable = new EloquentDataTable($query);
 
-        // $dataTable->addColumn('user_details', function ($user) {
-        //     return $user->user_details->description ?? "";
-        // });
+        $dataTable->addColumn('name', function ($user) {
+            return $user->name ?? "N/A";
+        });
 
         return $dataTable->addColumn('action', 'users.datatables_actions');
     }

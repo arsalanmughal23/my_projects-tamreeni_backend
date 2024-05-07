@@ -217,6 +217,19 @@
             background-color: #d9534f;
         }
 
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background-color: #33bba2;
+            border: 1px solid #33bba2;
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+            color: #fffdfd;
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__clear{
+            margin-right: 5px;
+        }
+
         @media (min-width: 576px) {
             .navbar-nav > .user-menu .user-image {
                 margin-right: 0;

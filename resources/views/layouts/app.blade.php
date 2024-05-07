@@ -235,6 +235,50 @@
             background-color: #d9534f;
         }
 
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background-color: #33bba2;
+            border: 1px solid #33bba2;
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+            color: #fffdfd;
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__clear {
+            margin-right: 5px;
+        }
+
+        .nav {
+            list-style: none;
+            padding: 0;
+        }
+
+        .nav-item {
+            margin-bottom: 10px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            color: #000; /* Adjust color as needed */
+            text-decoration: none;
+        }
+
+        .nav-link.active {
+            font-weight: bold;
+            /* Add any other styles for active link */
+        }
+
+        .nav-link i {
+            margin-right: 10px; /* Adjust spacing between icon and text */
+        }
+
+        /* Additional styling for icons if needed */
+        .fa {
+            width: 20px; /* Adjust icon size as needed */
+        }
+
+
         @media (min-width: 576px) {
             .navbar-nav > .user-menu .user-image {
                 margin-right: 0;
@@ -262,7 +306,7 @@
         <ul class="navbar-nav ml-auto">
             <li class="nav-item dropdown user-menu">
                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                    <img src="{{ isset($users?->details)? $users?->details->image : asset('public/image/user.png') }}"
+                    <img src="{{ isset(auth()->user()?->details)? auth()->user()?->details->image : asset('public/image/user.png') }}"
                          class="user-image img-circle imag-placeholder" alt="User Image "
                          onerror="brokenImageHandler(this);">
                     <span class="d-none d-md-inline">{{ Auth::user()->name }}</span>
@@ -270,7 +314,7 @@
                 <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                     <!-- User image -->
                     <li class="user-header bg-primary">
-                        <img src="{{ isset($users?->details)? $users?->details->image : asset('public/image/user.png') }}"
+                        <img src="{{ isset(auth()->user()?->details)? auth()->user()?->details->image : asset('public/image/user.png') }}"
                              class="img-circle" alt="User Image"
                              onerror="brokenImageHandler(this);">
                         <p>

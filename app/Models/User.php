@@ -61,7 +61,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [];
 
     public static $rules = [
-        'name'           => 'nullable|string|max:250',
+        'name'           => 'nullable|string|max:30',
         'email'          => 'required|email|max:250|unique:users,email,NULL,id,deleted_at,NULL',
         'password'       => 'required|confirmed|min:6',
         'remember_token' => 'nullable|string|max:100'

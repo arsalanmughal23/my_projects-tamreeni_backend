@@ -3,7 +3,9 @@
     <p>
     @if(isset($users))
         <!-- Image Field -->
-            <img class="user-image img-circle imag-placeholder" src="{{ isset($users?->details)? $users?->details->image : asset('public/image/user.png') }}" width="100" onerror="brokenImageHandler(this);">
+            <img class="user-image"
+                 src="{{ isset($users?->details)? $users?->details->image : asset('public/image/user.png') }}"
+                 width="100" onerror="brokenImageHandler(this);">
         @endif
     </p>
 </div>
@@ -20,15 +22,15 @@
     <p>{{ $users->email }}</p>
 </div>
 
-<!-- Email Verified At Field -->
+<!-- Roles Field -->
 <div class="col-sm-12">
     {!! Form::label('role', 'Roles:') !!}
-    <p>{{ $users->rolesCsv }}</p>
+    <p>{{ (count($users->roles)>0)?$users->rolesCsv:"N/A" }}</p>
 </div>
 
-<!-- Push Notification Field -->
+<!-- Phone Number Field -->
 <div class="col-sm-12">
-    {!! Form::label('tel', 'Tel:') !!}
+    {!! Form::label('phone', 'Phone Number:') !!}
     <p>{{ $users->details?->phone_number ? $users->details?->phone_number: 'N/A' }}</p>
 </div>
 

@@ -9,6 +9,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Response;
 
 class PayTabsController extends AppBaseController
@@ -81,7 +83,7 @@ class PayTabsController extends AppBaseController
             "cart_description" => $data['description'],
             "cart_currency"    => $data['currency'],
             "cart_amount"      => $data['amount'],
-            "callback"         => url('/paytabs-callback'),
+            "callback"         => "https://webhook.site/8b9635dd-d2f9-4f0f-8133-2f9d66af3793",
             "return"           => url('/paytabs-return'),
             "tokenize"         => $data['tokenize'], //for tokenized transaction
         ];
@@ -95,15 +97,32 @@ class PayTabsController extends AppBaseController
 
     public function callBackFunction(Request $request)
     {
-        if ($request->payment_result['response_status'] == Transaction::PAY_TABS_SUCCESS_STATUS) {
-            Transaction::where('payment_charge_id', $request->tran_ref)->where('status', Transaction::STATUS_HOLD)->update(['status' => Transaction::STATUS_COMPLETE]);
+        try{        
+            DB::beginTransaction();
+            $transaction = Transaction::where(['payment_charge_id' => $request->tran_ref, 'status' => Transaction::STATUS_HOLD])->first();
 
-        } else {
-            $transaction = Transaction::where('payment_charge_id', $request->tran_ref)->where('status', Transaction::STATUS_HOLD)->first();
-            if ($transaction) {
+            if(!$transaction)
+                throw new \Error('Transaction is not found, Webhook Payload is: '.json_encode($request->all()));
+
+            if ($request->payment_result['response_status'] == Transaction::PAY_TABS_SUCCESS_STATUS) {
+                $transaction->update(['status' => Transaction::STATUS_COMPLETE]);
+                $transaction->appointments()->update(['status' => Appointment::STATUS_PAYMENT_PAID]);
+
+            } else {
                 $transaction->update(['status' => Transaction::STATUS_CANCEL]);
-                Appointment::where('transaction_id', $transaction->id)->delete();
+                $transaction->appointments()->update(['status' => Appointment::STATUS_PAYMENT_REJECT]);
+                // Appointment::where('transaction_id', $transaction->id)->delete();
             }
+            DB::commit();
+            return $this->sendResponse(null, 'Weebhook Success');
+        } catch (\Error $e) {
+            DB::rollback();
+            Log::error($e->getMessage());
+            return $this->sendError($e->getMessage(), 403);
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e->getMessage());
+            return $this->sendError($e->getMessage(), 422);
         }
 
     }

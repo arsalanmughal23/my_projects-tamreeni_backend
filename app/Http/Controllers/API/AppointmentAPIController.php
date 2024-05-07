@@ -145,21 +145,20 @@ function store(CreateAppointmentAPIRequest $request)
                 'status'            => Transaction::STATUS_HOLD
             ]);
         } else {
-//                $transaction = $this->createTransaction($transactionable, $user, $amountInSAR, $input['payment_method_id'], $description);
-
-            $payTabs = $this->createTransactionWithPayTab($transactionable, $user, $amountInSAR, $description, $request->card_id);
-
+            // $transaction = $this->createTransaction($transactionable, $user, $amountInSAR, $input['payment_method_id'], $description);
+            $payTabs = $this->createTransactionWithPayTab($transactionable, $user, $amountInSAR, $description, $createdAppointmentIds);
             $paymentCharge = $payTabs['paymentCharge'];
             $redirect_url  = $paymentCharge['redirect_url'];
-            $transaction   = $payTabs['$transaction'];
+            $transaction   = $payTabs['transaction'];
         }
 
-        $createdAppointments = $this->appointmentRepository->whereIn('id', $createdAppointmentIds)->where('transaction_id', $transaction->id)->get();
+        $createdAppointments = $this->appointmentRepository->whereIn('id', $createdAppointmentIds);
+        $createdAppointments->update(['transaction_id' => $transaction->id]);
 
         DB::commit();
 
         $data = [
-            'appointments'  => AppointmentResource::collection($createdAppointments),
+            'appointments'  => AppointmentResource::collection($createdAppointments->get()),
             'ephemeralKey'  => $ephemeralKey,
             'paymentIntent' => $paymentIntent,
             'transaction'   => $transaction,
@@ -250,28 +249,26 @@ function destroy($id)
     return $this->sendSuccess('Appointment deleted successfully');
 }
 
-// Function to calculate session fee based on profession type
-private
-function calculateSessionFee($profession_type)
-{
-    $setting        = Setting::first();
-    $service_fee    = $setting->service_fee;
-    $profession_fee = 0;
-    if ($profession_type == Appointment::PROFESSION_TYPE_COACH) {
-        $profession_fee = $setting->coach_fee;
+    // Function to calculate session fee based on profession type
+    private function calculateSessionFee($profession_type)
+    {
+        $setting        = Setting::first();
+        $service_fee    = $setting->service_fee;
+        $profession_fee = 0;
+        if ($profession_type == Appointment::PROFESSION_TYPE_COACH) {
+            $profession_fee = $setting->coach_fee;
+        }
+        if ($profession_type == Appointment::PROFESSION_TYPE_DIETITIAN) {
+            $profession_fee = $setting->dietitian_fee;
+        }
+        if ($profession_type == Appointment::PROFESSION_TYPE_THERAPIST) {
+            $profession_fee = $setting->therapist_fee;
+        }
+        return $profession_fee + $service_fee;
     }
-    if ($profession_type == Appointment::PROFESSION_TYPE_DIETITIAN) {
-        $profession_fee = $setting->dietitian_fee;
-    }
-    if ($profession_type == Appointment::PROFESSION_TYPE_THERAPIST) {
-        $profession_fee = $setting->therapist_fee;
-    }
-    return $profession_fee + $service_fee;
-}
 
-// Function to create transaction
-private
-function createTransaction(Package | Appointment $transactionable, $user, $amountInSAR, $payment_method_id, $description)
+    // Function to create transaction
+    private function createTransaction(Package | Appointment $transactionable, $user, $amountInSAR, $payment_method_id, $description)
     {
         $paymentIntentResponse = PaymentController::makePaymentIntent($amountInSAR, $description, $user->stripe_customer_id);
         if (!$paymentIntentResponse['status'])
@@ -295,26 +292,27 @@ function createTransaction(Package | Appointment $transactionable, $user, $amoun
         return $transaction;
     }
 
-    private function createTransactionWithPayTab(Appointment $transactionable, $user, $amountInSAR, $description, $card_id)
-{
-    $payTabs       = new PayTabsController();
-    $paymentCharge = $payTabs->createTransaction([
-        'tran_class'  => "ecom",
-        'cart_id'     => $card_id,
-        'description' => $description,
-        'currency'    => getCurrencySymbol(),
-        'amount'      => $amountInSAR,
-        'tokenize'    => time(),
-    ]);
+    private function createTransactionWithPayTab(Appointment | Package $transactionable, $user, $amountInSAR, $description, $card_id)
+    {
+        $payTabs       = new PayTabsController();
+        $currencySymbol= getCurrencySymbol();
+        $paymentCharge = $payTabs->createTransaction([
+            'tran_class'  => "ecom",
+            'cart_id'     => json_encode($card_id),
+            'description' => $description,
+            'currency'    => $currencySymbol,
+            'amount'      => $amountInSAR,
+            'tokenize'    => time(),
+        ]);
 
-    $transaction = $transactionable->transactions()->create([
-        'payment_charge_id' => $paymentCharge['tran_ref'],
-        'amount'            => $amountInSAR,
-        'description'       => $description,
-        'user_id'           => $user->id,
-        'currency'          => getCurrencySymbol(),
-        'status'            => Transaction::STATUS_HOLD,
-    ]);
-    return ['paymentCharge' => $paymentCharge, 'transaction' => $transaction];
-}
+        $transaction = $transactionable->transactions()->create([
+            'payment_charge_id' => $paymentCharge['tran_ref'],
+            'amount'            => $amountInSAR,
+            'description'       => $description,
+            'user_id'           => $user->id,
+            'currency'          => $currencySymbol,
+            'status'            => Transaction::STATUS_HOLD,
+        ]);
+        return ['paymentCharge' => $paymentCharge, 'transaction' => $transaction];
+    }
 }

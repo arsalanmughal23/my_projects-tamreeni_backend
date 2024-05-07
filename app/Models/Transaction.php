@@ -108,4 +108,9 @@ class Transaction extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class, 'transaction_id');
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Criteria\AppointmentCriteria;
+use App\Http\Controllers\PayTabsController;
 use App\Http\Requests\API\CreateAppointmentAPIRequest;
 use App\Http\Requests\API\UpdateAppointmentAPIRequest;
 use App\Models\Appointment;
@@ -21,7 +22,6 @@ use Illuminate\Support\Facades\DB;
  * Class AppointmentController
  * @package App\Http\Controllers\API
  */
-
 class AppointmentAPIController extends AppBaseController
 {
     public function __construct(
@@ -30,215 +30,224 @@ class AppointmentAPIController extends AppBaseController
     ) {
     }
 
-    /**
-     * Display a listing of the Appointment.
-     * GET|HEAD /appointments
-     *
-     * @param Request $request
-     * @return Response
-     */
+/**
+ * Display a listing of the Appointment.
+ * GET|HEAD /appointments
+ *
+ * @param Request $request
+ * @return Response
+ */
 
-    public function index(Request $request)
-    {
-        $params = $request->only('user_id','customer_id','type','profession_type','status','start_date','date','order_by','order');
+public
+function index(Request $request)
+{
+    $params = $request->only('user_id', 'customer_id', 'type', 'profession_type', 'status', 'start_date', 'date', 'order_by', 'order');
 
-        $appointments = $this->appointmentRepository->pushCriteria(new AppointmentCriteria($params))->all();
-        return $this->sendResponse(AppointmentResource::collection($appointments), 'Appointments retrieved successfully');
-    }
+    $appointments = $this->appointmentRepository->pushCriteria(new AppointmentCriteria($params))->all();
+    return $this->sendResponse(AppointmentResource::collection($appointments), 'Appointments retrieved successfully');
+}
 
-    /**
-     * Store a newly created Appointment in storage.
-     * POST /appointments
-     *
-     * @param CreateAppointmentAPIRequest $request
-     *
-     * @return Response
-     */
+/**
+ * Store a newly created Appointment in storage.
+ * POST /appointments
+ *
+ * @param CreateAppointmentAPIRequest $request
+ *
+ * @return Response
+ */
 
-    public function store(CreateAppointmentAPIRequest $request)
-    {
-        try {
-            DB::beginTransaction();
+public
+function store(CreateAppointmentAPIRequest $request)
+{
+    try {
+        DB::beginTransaction();
 
-            $user   = $request->user();
-            $input  = $request->validated();
-            $input['package_id'] = $input['package_id'] ?? null;
+        $user                = $request->user();
+        $input               = $request->validated();
+        $input['package_id'] = $input['package_id'] ?? null;
 
-            $type               = intval($input['type']);
-            $profession_type    = intval($input['profession_type']);
-            $amountInSAR = 0;
-            $paymentIntentRequired = $input['payment_intent_required'] ?? false;
+        $type                  = intval($input['type']);
+        $profession_type       = intval($input['profession_type']);
+        $amountInSAR           = 0;
+        $paymentIntentRequired = $input['payment_intent_required'] ?? false;
 
-            $transactionable = null;
-            $createdAppointmentIds = [];
-            switch ($type) {
-                case Appointment::TYPE_SESSION:
-                    // Create transaction if it's a session appointment
-                    $checkUserAppointment = $this->appointmentRepository
-                        ->checkUserAppointment($user->id, $input['user_id'], $input['date']);
+        $transactionable       = null;
+        $redirect_url          = null;
+        $createdAppointmentIds = [];
+        switch ($type) {
+            case Appointment::TYPE_SESSION:
+                // Create transaction if it's a session appointment
+                $checkUserAppointment = $this->appointmentRepository
+                    ->checkUserAppointment($user->id, $input['user_id'], $input['date']);
 
-                    if ($checkUserAppointment)
-                        return $this->sendError('Already book appointment', 422);
+                if ($checkUserAppointment)
+                    return $this->sendError('Already book appointment', 422);
 
-                    $description            = "1-1 Session - Appointment Payment";
-                    $amountInSAR            = $this->calculateSessionFee($profession_type);
-                    $input['customer_id']   = $user->id;
-                    $transactionable        = $this->appointmentRepository->create($input);
-                    $createdAppointmentIds[] = $transactionable->id;
-                    break;
+                $description             = "1-1 Session - Appointment Payment";
+                $amountInSAR             = $this->calculateSessionFee($profession_type);
+                $input['customer_id']    = $user->id;
+                $transactionable         = $this->appointmentRepository->create($input);
+                $createdAppointmentIds[] = $transactionable->id;
+                break;
 
-                case Appointment::TYPE_PACKAGE:
-                    foreach ($input['appointments'] as $appointment) {
-                        $appointmentExist = $this->appointmentRepository->checkUserAppointment($user->id, $input['user_id'], $appointment['date']);
-                        if ($appointmentExist)
-                            throw new \Error('Your appointment is already booked on ' . $appointment['date']);
-                    }
+            case Appointment::TYPE_PACKAGE:
+                foreach ($input['appointments'] as $appointment) {
+                    $appointmentExist = $this->appointmentRepository->checkUserAppointment($user->id, $input['user_id'], $appointment['date']);
+                    if ($appointmentExist)
+                        throw new \Error('Your appointment is already booked on ' . $appointment['date']);
+                }
 
-                    $package        = $transactionable = $this->packageRepository->findWithoutFail($input['package_id']);
-                    $amountInSAR    = $package->amount;
-                    $description    = $package->description . ' ' . ' Package Purchase';
+                $package     = $transactionable = $this->packageRepository->findWithoutFail($input['package_id']);
+                $amountInSAR = $package->amount;
+                $description = $package->description . ' ' . ' Package Purchase';
 
-                    $appointments = $input['appointments'];
-                    foreach ($appointments as $key => $appointment) {
-                        $appointment['user_id']         = $input['user_id'];
-                        $appointment['customer_id']     = $user->id;
-                        $appointment['package_id']      = $input['package_id'];
-                        $appointment['type']            = $type;
-                        $appointment['profession_type'] = $profession_type;
-                        $createdAppointment = $this->appointmentRepository->create($appointment);
-                        $createdAppointmentIds[] = $createdAppointment->id;
-                    }
-                    break;
+                $appointments = $input['appointments'];
+                foreach ($appointments as $key => $appointment) {
+                    $appointment['user_id']         = $input['user_id'];
+                    $appointment['customer_id']     = $user->id;
+                    $appointment['package_id']      = $input['package_id'];
+                    $appointment['type']            = $type;
+                    $appointment['profession_type'] = $profession_type;
+                    $createdAppointment             = $this->appointmentRepository->create($appointment);
+                    $createdAppointmentIds[]        = $createdAppointment->id;
+                }
+                break;
 
-                default:
-                    throw new \Error('Type is invalid');
-                    break;
-            }
-
-            $paymentIntent  = null;
-            $ephemeralKey   = null;
-            $transaction    = null;
-
-            if ($paymentIntentRequired) {
-                $paymentIntentResponse = PaymentController::makePaymentIntent($amountInSAR, $description, $user->stripe_customer_id);
-
-                if (!$paymentIntentResponse['status'])
-                    throw new \Error('Payment intent is not created');
-
-                $ephemeralKeyResponse = PaymentController::makeEphemeralKey($user->stripe_customer_id);
-                if (!$ephemeralKeyResponse['status'])
-                    throw new \Error('Ephemeral key is not created');
-
-                $paymentIntent  = $paymentIntentResponse['data'];
-                $ephemeralKey   = $ephemeralKeyResponse['data'];
-
-                $transaction = $transactionable->transactions()->create([
-                    'payment_intent_id' => $paymentIntent['id'],
-                    'payment_charge_id' => null,
-                    'amount'         => $amountInSAR,
-                    'description'    => $description,
-                    'user_id'        => $user->id,
-                    'currency'       => getCurrencySymbol(),
-                    'status'         => Transaction::STATUS_HOLD
-                ]);
-            } else {
-                $transaction = $this->createTransaction($transactionable, $user, $amountInSAR, $input['payment_method_id'], $description);
-            }
-
-            $createdAppointments = $this->appointmentRepository->whereIn('id', $createdAppointmentIds)
-                ->update(['transaction_id' => $transaction->id]);
-
-            $createdAppointments = $this->appointmentRepository->whereIn('id', $createdAppointmentIds)->where('transaction_id', $transaction->id)->get();
-
-            DB::commit();
-
-            $data = [
-                'appointments' => AppointmentResource::collection($createdAppointments),
-                'ephemeralKey' => $ephemeralKey,
-                'paymentIntent' => $paymentIntent,
-                'transaction' => $transaction
-            ];
-            return $this->sendResponse($data, 'Appointment saved successfully');
-        } catch (\Error $e) {
-            DB::rollback();
-            return $this->sendError($e->getMessage(), 403);
-        } catch (\Exception $e) {
-            DB::rollback();
-            return $this->sendError($e->getMessage(), 422);
-        }
-    }
-
-    /**
-     * Display the specified Appointment.
-     * GET|HEAD /appointments/{id}
-     *
-     * @param int $id
-     *
-     * @return Response
-     */
-
-    public function show($id)
-    {
-        /** @var Appointment $appointment */
-        $appointment = $this->appointmentRepository->findWithoutFail($id);
-
-        if (empty($appointment)) {
-            return $this->sendError('Appointment not found');
+            default:
+                throw new \Error('Type is invalid');
+                break;
         }
 
-        return $this->sendResponse(new AppointmentResource($appointment), 'Appointment retrieved successfully');
-    }
+        $paymentIntent = null;
+        $ephemeralKey  = null;
+        $transaction   = null;
 
-    /**
-     * Update the specified Appointment in storage.
-     * PUT/PATCH /appointments/{id}
-     *
-     * @param int $id
-     * @param UpdateAppointmentAPIRequest $request
-     *
-     * @return Response
-     */
+        if ($paymentIntentRequired) {
+            $paymentIntentResponse = PaymentController::makePaymentIntent($amountInSAR, $description, $user->stripe_customer_id);
 
-    public function update($id, UpdateAppointmentAPIRequest $request)
-    {
-        $input = $request->all();
+            if (!$paymentIntentResponse['status'])
+                throw new \Error('Payment intent is not created');
 
-        /** @var Appointment $appointment */
-        $appointment = $this->appointmentRepository->find($id);
+            $ephemeralKeyResponse = PaymentController::makeEphemeralKey($user->stripe_customer_id);
+            if (!$ephemeralKeyResponse['status'])
+                throw new \Error('Ephemeral key is not created');
 
-        if (empty($appointment)) {
-            return $this->sendError('Appointment not found');
+            $paymentIntent = $paymentIntentResponse['data'];
+            $ephemeralKey  = $ephemeralKeyResponse['data'];
+
+            $transaction = $transactionable->transactions()->create([
+                'payment_intent_id' => $paymentIntent['id'],
+                'payment_charge_id' => null,
+                'amount'            => $amountInSAR,
+                'description'       => $description,
+                'user_id'           => $user->id,
+                'currency'          => getCurrencySymbol(),
+                'status'            => Transaction::STATUS_HOLD
+            ]);
+        } else {
+            // $transaction = $this->createTransaction($transactionable, $user, $amountInSAR, $input['payment_method_id'], $description);
+            $payTabs = $this->createTransactionWithPayTab($transactionable, $user, $amountInSAR, $description, $createdAppointmentIds);
+            $paymentCharge = $payTabs['paymentCharge'];
+            $redirect_url  = $paymentCharge['redirect_url'];
+            $transaction   = $payTabs['transaction'];
         }
 
-        $appointment = $this->appointmentRepository->update($input, $id);
+        $createdAppointments = $this->appointmentRepository->whereIn('id', $createdAppointmentIds);
+        $createdAppointments->update(['transaction_id' => $transaction->id]);
 
-        return $this->sendResponse($appointment->toArray(), 'Appointment updated successfully');
+        DB::commit();
+
+        $data = [
+            'appointments'  => AppointmentResource::collection($createdAppointments->get()),
+            'ephemeralKey'  => $ephemeralKey,
+            'paymentIntent' => $paymentIntent,
+            'transaction'   => $transaction,
+            'redirect_url'  => $redirect_url,
+        ];
+        return $this->sendResponse($data, 'Appointment saved successfully');
+    } catch (\Error $e) {
+        DB::rollback();
+        return $this->sendError($e->getMessage(), 403);
+    } catch (\Exception $e) {
+        DB::rollback();
+        return $this->sendError($e->getMessage(), 422);
+    }
+}
+
+/**
+ * Display the specified Appointment.
+ * GET|HEAD /appointments/{id}
+ *
+ * @param int $id
+ *
+ * @return Response
+ */
+
+public
+function show($id)
+{
+    /** @var Appointment $appointment */
+    $appointment = $this->appointmentRepository->findWithoutFail($id);
+
+    if (empty($appointment)) {
+        return $this->sendError('Appointment not found');
     }
 
-    /**
-     * Remove the specified Appointment from storage.
-     * DELETE /appointments/{id}
-     *
-     * @param int $id
-     *
-     * @throws \Exception
-     *
-     * @return Response
-     */
+    return $this->sendResponse(new AppointmentResource($appointment), 'Appointment retrieved successfully');
+}
 
-    public function destroy($id)
-    {
-        /** @var Appointment $appointment */
-        $appointment = $this->appointmentRepository->find($id);
+/**
+ * Update the specified Appointment in storage.
+ * PUT/PATCH /appointments/{id}
+ *
+ * @param int $id
+ * @param UpdateAppointmentAPIRequest $request
+ *
+ * @return Response
+ */
 
-        if (empty($appointment)) {
-            return $this->sendError('Appointment not found');
-        }
+public
+function update($id, UpdateAppointmentAPIRequest $request)
+{
+    $input = $request->all();
 
-        $appointment->delete();
+    /** @var Appointment $appointment */
+    $appointment = $this->appointmentRepository->find($id);
 
-        return $this->sendSuccess('Appointment deleted successfully');
+    if (empty($appointment)) {
+        return $this->sendError('Appointment not found');
     }
+
+    $appointment = $this->appointmentRepository->update($input, $id);
+
+    return $this->sendResponse($appointment->toArray(), 'Appointment updated successfully');
+}
+
+/**
+ * Remove the specified Appointment from storage.
+ * DELETE /appointments/{id}
+ *
+ * @param int $id
+ *
+ * @throws \Exception
+ *
+ * @return Response
+ */
+
+public
+function destroy($id)
+{
+    /** @var Appointment $appointment */
+    $appointment = $this->appointmentRepository->find($id);
+
+    if (empty($appointment)) {
+        return $this->sendError('Appointment not found');
+    }
+
+    $appointment->delete();
+
+    return $this->sendSuccess('Appointment deleted successfully');
+}
 
     // Function to calculate session fee based on profession type
     private function calculateSessionFee($profession_type)
@@ -281,5 +290,29 @@ class AppointmentAPIController extends AppBaseController
             'status'            => Transaction::STATUS_COMPLETE,
         ]);
         return $transaction;
+    }
+
+    private function createTransactionWithPayTab(Appointment | Package $transactionable, $user, $amountInSAR, $description, $card_id)
+    {
+        $payTabs       = new PayTabsController();
+        $currencySymbol= getCurrencySymbol();
+        $paymentCharge = $payTabs->createTransaction([
+            'tran_class'  => "ecom",
+            'cart_id'     => json_encode($card_id),
+            'description' => $description,
+            'currency'    => $currencySymbol,
+            'amount'      => $amountInSAR,
+            'tokenize'    => time(),
+        ]);
+
+        $transaction = $transactionable->transactions()->create([
+            'payment_charge_id' => $paymentCharge['tran_ref'],
+            'amount'            => $amountInSAR,
+            'description'       => $description,
+            'user_id'           => $user->id,
+            'currency'          => $currencySymbol,
+            'status'            => Transaction::STATUS_HOLD,
+        ]);
+        return ['paymentCharge' => $paymentCharge, 'transaction' => $transaction];
     }
 }

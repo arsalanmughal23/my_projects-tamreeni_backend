@@ -21,10 +21,12 @@ Auth::routes(['register' => false]);
 // Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/payment-page', [App\Http\Controllers\PayTabsController::class, 'create_payment_page'])->name('payment-page');
+Route::get('/query-transaction', [App\Http\Controllers\PayTabsController::class, 'query_transaction'])->name('query-transaction');
+Route::get('/paytabs-return', [App\Http\Controllers\PayTabsController::class, 'payTabs_return'])->name('paytabs-return');
+Route::post('/paytabs-callback', [App\Http\Controllers\PayTabsController::class, 'callBackFunction'])->name('paytabs-callback');
 
 Route::group(['middleware' => ['auth', 'dynamic_permission']], function () {
-
-    Route::resource('users', App\Http\Controllers\UsersController::class);
 
     Route::post('/generate-crud-from-table', [App\Http\Controllers\GenerateTableController::class, 'generateCrudFromTable'])->name('dbtables.generate_crud_from_table');
 
@@ -66,87 +68,89 @@ Route::group(['middleware' => ['auth', 'dynamic_permission']], function () {
 
     Route::resource('permissions', App\Http\Controllers\PermissionsController::class);
 
-    Route::resource('meals', App\Http\Controllers\MealController::class);
-
-    Route::resource('meal_types', App\Http\Controllers\MealTypeController::class);
-
-    Route::resource('meal_categories', App\Http\Controllers\MealCategoryController::class);
-
-    Route::resource('transactions', App\Http\Controllers\TransactionController::class);
-
-    Route::resource('pages', App\Http\Controllers\PageController::class);
-
-    Route::resource('settings', App\Http\Controllers\SettingController::class);
-
-
-    Route::resource('constants', App\Http\Controllers\ConstantController::class);
-
-
-    Route::resource('user_details', App\Http\Controllers\UserDetailController::class);
-
-
-    Route::resource('faqs', App\Http\Controllers\FaqController::class);
-
-
-    Route::resource('wellness_tips', App\Http\Controllers\WellnessTipController::class);
-
-
-    Route::resource('favourites', App\Http\Controllers\FavouriteController::class);
-
-
-    Route::resource('body_parts', App\Http\Controllers\BodyPartController::class);
-
-
-    Route::resource('exercise_equipments', App\Http\Controllers\ExerciseEquipmentController::class);
-
-
-    Route::resource('events', App\Http\Controllers\EventController::class);
-
-
-    Route::resource('user_events', App\Http\Controllers\UserEventController::class);
-
-
-    Route::resource('exercises', App\Http\Controllers\ExerciseController::class);
-
-
-    Route::resource('exercise_equipment_pivots', App\Http\Controllers\ExerciseEquipmentPivotController::class);
-
-
-    Route::resource('contact_requests', App\Http\Controllers\ContactRequestController::class);
-
-
-    Route::resource('slots', App\Http\Controllers\SlotController::class);
-
-
-    Route::resource('appointments', App\Http\Controllers\AppointmentController::class);
-
-
-    Route::resource('packages', App\Http\Controllers\PackageController::class);
-
-
-    Route::resource('user_subscriptions', App\Http\Controllers\UserSubscriptionController::class);
-
-
-    Route::resource('workout_days', App\Http\Controllers\WorkoutDayController::class);
-
-
-    Route::resource('workout_day_exercises', App\Http\Controllers\WorkoutDayExerciseController::class);
-
-
-    Route::resource('workout_plans', App\Http\Controllers\WorkoutPlanController::class);
-
-
-    Route::resource('nutrition_plans', App\Http\Controllers\NutritionPlanController::class);
-
-
-    Route::resource('nutrition_plan_days', App\Http\Controllers\NutritionPlanDayController::class);
-
-
-    Route::resource('nutrition_plan_day_meals', App\Http\Controllers\NutritionPlanDayMealController::class);
-
-    Route::resource('questions', App\Http\Controllers\QuestionController::class);
-
 });
 
+Route::resource('users', App\Http\Controllers\UsersController::class);
 
-Route::resource('options', App\Http\Controllers\OptionController::class);
+
+Route::resource('pages', App\Http\Controllers\PageController::class);
+
+Route::resource('settings', App\Http\Controllers\SettingController::class);
+
+
+Route::resource('constants', App\Http\Controllers\ConstantController::class);
+
+
+Route::resource('user_details', App\Http\Controllers\UserDetailController::class);
+
+
+Route::resource('faqs', App\Http\Controllers\FaqController::class);
+
+
+Route::resource('wellness_tips', App\Http\Controllers\WellnessTipController::class);
+
+
+Route::resource('favourites', App\Http\Controllers\FavouriteController::class);
+
+
+Route::resource('meal_categories', App\Http\Controllers\MealCategoryController::class);
+
+
+Route::resource('meals', App\Http\Controllers\MealController::class);
+
+
+Route::resource('body_parts', App\Http\Controllers\BodyPartController::class);
+
+
+Route::resource('exercise_equipments', App\Http\Controllers\ExerciseEquipmentController::class);
+
+
+Route::resource('events', App\Http\Controllers\EventController::class);
+
+
+Route::resource('user_events', App\Http\Controllers\UserEventController::class);
+
+
+Route::resource('exercises', App\Http\Controllers\ExerciseController::class);
+
+
+Route::resource('exercise_equipment_pivots', App\Http\Controllers\ExerciseEquipmentPivotController::class);
+
+
+Route::resource('contact_requests', App\Http\Controllers\ContactRequestController::class);
+
+
+Route::resource('slots', App\Http\Controllers\SlotController::class);
+
+
+Route::resource('appointments', App\Http\Controllers\AppointmentController::class);
+
+
+Route::resource('packages', App\Http\Controllers\PackageController::class);
+
+
+Route::resource('transactions', App\Http\Controllers\TransactionController::class);
+
+
+Route::resource('user_subscriptions', App\Http\Controllers\UserSubscriptionController::class);
+
+
+Route::resource('meal_types', App\Http\Controllers\MealTypeController::class);
+
+
+Route::resource('workout_days', App\Http\Controllers\WorkoutDayController::class);
+
+
+Route::resource('workout_day_exercises', App\Http\Controllers\WorkoutDayExerciseController::class);
+
+
+Route::resource('workout_plans', App\Http\Controllers\WorkoutPlanController::class);
+
+
+Route::resource('nutrition_plans', App\Http\Controllers\NutritionPlanController::class);
+
+
+Route::resource('nutrition_plan_days', App\Http\Controllers\NutritionPlanDayController::class);
+
+
+Route::resource('nutrition_plan_day_meals', App\Http\Controllers\NutritionPlanDayMealController::class);

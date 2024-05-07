@@ -1,13 +1,13 @@
 <!-- Name Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('name', 'Name (En):', ['class'=>'required']) !!}
-    {!! Form::text('name[en]', isset($meal)?$meal->getTranslation('name', 'en'):null, ['class' => 'form-control','maxlength' => 50, 'required']) !!}
+    {!! Form::label('name', 'Name (English):', ['class'=>'required']) !!}
+    {!! Form::text('name[en]', isset($meal)?$meal->getTranslation('name', 'en'):null, ['class' => 'form-control','maxlength' => 70, 'required', 'pattern'=>'[a-zA-Z0-9_.\s]{0,70}']) !!}
 </div>
 
 <!-- Name Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('name', 'Name (Ar):', ['class'=>'required']) !!}
-    {!! Form::text('name[ar]', isset($meal)?$meal->getTranslation('name', 'ar'):null, ['class' => 'form-control','maxlength' => 50, 'required', 'dir'=>'rtl']) !!}
+    {!! Form::label('name', 'Name (Arabic):', ['class'=>'required']) !!}
+    {!! Form::text('name[ar]', isset($meal)?$meal->getTranslation('name', 'ar'):null, ['class' => 'form-control','maxlength' => 70, 'required', 'dir'=>'rtl', 'pattern'=>'[a-zA-Z0-9_.\s]{0,70}']) !!}
 </div>
 
 <!-- Meal Category Id Field -->
@@ -63,13 +63,13 @@
 
 <!-- Description Field -->
 <div class="form-group col-sm-6 col-lg-6">
-    {!! Form::label('description', 'Description (En):', ['class'=>'required']) !!}
+    {!! Form::label('description', 'Description (English):', ['class'=>'required']) !!}
     {!! Form::textarea('description[en]', isset($meal)?$meal->getTranslation('description', 'en'):null, ['class' => 'form-control', 'rows'=>3, 'cols'=>3, 'required', 'maxlength' => 100]) !!}
 </div>
 
 <!-- Description Field -->
 <div class="form-group col-sm-6 col-lg-6">
-    {!! Form::label('description', 'Description (Ar):', ['class'=>'required']) !!}
+    {!! Form::label('description', 'Description (Arabic):', ['class'=>'required']) !!}
     {!! Form::textarea('description[ar]', isset($meal)?$meal->getTranslation('description', 'ar'):null, ['class' => 'form-control', 'rows'=>3, 'cols'=>3, 'required', 'dir'=>'rtl']) !!}
 </div>
 

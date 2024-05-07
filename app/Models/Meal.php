@@ -89,13 +89,13 @@ class Meal extends Model
         'meal_category_id' => 'required|integer',
         'meal_type_id'     => 'required|integer',
         'name'             => 'required|array',
-        'name.en'          => 'required|string|max:50',
-        'name.ar'          => 'required|string|max:50',
+        'name.en'          => 'required|string|max:70',
+        'name.ar'          => 'required|string|max:70',
         'image'            => 'nullable|file|mimes:jpeg,png|max:5000',
         'calories'         => 'nullable|numeric',
         'description'      => 'nullable|array',
-        'description.en'   => 'nullable|string|max:200',
-        'description.ar'   => 'nullable|string|max:200',
+        'description.en'   => 'required|string|max:200',
+        'description.ar'   => 'required|string|max:200',
     ];
 
     /**

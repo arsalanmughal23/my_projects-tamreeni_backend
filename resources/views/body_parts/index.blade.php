@@ -28,12 +28,6 @@
         <div class="card">
             <div class="card-body">
                 @include('body_parts.table')
-
-                <div class="card-footer clearfix">
-                    <div class="float-right">
-                        
-                    </div>
-                </div>
             </div>
 
         </div>

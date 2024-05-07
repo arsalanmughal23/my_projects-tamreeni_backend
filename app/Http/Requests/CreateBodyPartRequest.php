@@ -26,4 +26,12 @@ class CreateBodyPartRequest extends FormRequest
     {
         return BodyPart::$rules;
     }
+
+    public function messages()
+    {
+        return [
+            'name.en.required' => 'The English name field is required.',
+            'name.ar.required' => 'The Arabic name field is required.',
+        ];
+    }
 }

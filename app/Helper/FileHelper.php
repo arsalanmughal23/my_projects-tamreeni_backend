@@ -27,7 +27,7 @@ class FileHelper
                 $payload = json_encode([
                     "contentType" => $fileType
                 ]);
-
+//                dd($s3Meta, $fileType);
                 // Create cURL handle for the first POST request to get the presigned URL
                 $ch1 = curl_init();
                 curl_setopt($ch1, CURLOPT_URL, $presignedUrl);
@@ -73,7 +73,6 @@ class FileHelper
                 curl_setopt($ch2, CURLOPT_POSTFIELDS, $payload2);
 
                 $response = curl_exec($ch2);
-
                 curl_close($ch1);
                 curl_close($ch2);
 
@@ -84,6 +83,7 @@ class FileHelper
 
                 return false;
             } catch (\Exception $error) {
+                dd($error);
                 Log::error('File uploading on s3 is failed | Error: ' . $error->getMessage());
                 return null;
             }

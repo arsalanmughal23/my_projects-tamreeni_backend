@@ -8,6 +8,7 @@ use App\Models\BodyPart;
 use App\Repositories\BodyPartRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\BodyPartResource;
 use Response;
 
 /**
@@ -37,7 +38,7 @@ class BodyPartAPIController extends AppBaseController
     {
         $body_parts = $this->bodyPartRepository->all();
 
-        return $this->sendResponse($body_parts->toArray(), 'Body Parts retrieved successfully');
+        return $this->sendResponse(BodyPartResource::collection($body_parts), 'Body Parts retrieved successfully');
     }
 
     /**
@@ -76,7 +77,7 @@ class BodyPartAPIController extends AppBaseController
             return $this->sendError('Body Part not found');
         }
 
-        return $this->sendResponse($bodyPart->toArray(), 'Body Part retrieved successfully');
+        return $this->sendResponse(new BodyPartResource($bodyPart), 'Body Part retrieved successfully');
     }
 
     /**

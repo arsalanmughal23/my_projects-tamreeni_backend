@@ -6,37 +6,37 @@
 
 <!-- Body Part Id Field -->
 <div class="col-sm-12">
-    {!! Form::label('body_part_id', 'Body Part Id:') !!}
+    {!! Form::label('body_part_id', 'Body Part:') !!}
     <p>{{ $exercise->bodyPart->name }}</p>
 </div>
 
 <!-- Name En Field -->
 <div class="col-sm-12">
-    {!! Form::label('name_en', 'Name (En):') !!}
+    {!! Form::label('name_en', 'Name (English):') !!}
     <p>{{ $exercise->getTranslation('name', 'en') }}</p>
 </div>
 
 <!-- Name Ar Field -->
 <div class="col-sm-12">
-    {!! Form::label('name_en', 'Name (Ar):') !!}
+    {!! Form::label('name_en', 'Name (Arabic):') !!}
     <p>{{ $exercise->getTranslation('name', 'ar') }}</p>
 </div>
 
 <!-- Description En Field -->
 <div class="col-sm-12">
-    {!! Form::label('description', 'Description (En):') !!}
+    {!! Form::label('description', 'Description (English):') !!}
     <p>{{ $exercise->getTranslation('description', 'en')}}</p>
 </div>
 
 <!-- Description Ar Field -->
 <div class="col-sm-12">
-    {!! Form::label('description', 'Description (Ar):') !!}
+    {!! Form::label('description', 'Description (Arabic):') !!}
     <p>{{ $exercise->getTranslation('description', 'ar')}}</p>
 </div>
 
 <!-- Duration In M Field -->
 <div class="col-sm-12">
-    {!! Form::label('duration_in_m', 'Duration In M:') !!}
+    {!! Form::label('duration_in_m', 'Duration In Min:') !!}
     <p>{{ $exercise->duration_in_m }}</p>
 </div>
 

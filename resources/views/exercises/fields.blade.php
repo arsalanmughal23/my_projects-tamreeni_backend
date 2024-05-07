@@ -1,25 +1,25 @@
 <!-- Name Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('name', 'Name (En):', ['class'=>'required']) !!}
-    {!! Form::text('name[en]', isset($exercise)?$exercise->getTranslation('name', 'en'):null, ['class' => 'form-control','maxlength' => 50, 'required']) !!}
+    {!! Form::label('name', 'Name (English):', ['class'=>'required']) !!}
+    {!! Form::text('name[en]', isset($exercise)?$exercise->getTranslation('name', 'en'):null, ['class' => 'form-control','maxlength' => 70, 'required', 'pattern'=>'[a-zA-Z0-9_.\s]{0,70}']) !!}
 </div>
 
 <!-- Name Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('name', 'Name (Ar):', ['class'=>'required']) !!}
-    {!! Form::text('name[ar]', isset($exercise)?$exercise->getTranslation('name', 'ar'):null, ['class' => 'form-control','maxlength' => 50, 'required', 'dir'=>'rtl']) !!}
+    {!! Form::label('name', 'Name (Arabic):', ['class'=>'required']) !!}
+    {!! Form::text('name[ar]', isset($exercise)?$exercise->getTranslation('name', 'ar'):null, ['class' => 'form-control','maxlength' => 70, 'required', 'dir'=>'rtl', 'pattern'=>'[a-zA-Z0-9_.\s]{0,70}']) !!}
 </div>
 
 <!-- Description Field -->
 <div class="form-group col-sm-6 col-lg-6">
-    {!! Form::label('description', 'Description (En):', ['class'=>'required']) !!}
+    {!! Form::label('description', 'Description (English):', ['class'=>'required']) !!}
     {!! Form::textarea('description[en]', isset($exercise)?$exercise->getTranslation('description', 'en'):null, ['class' => 'form-control', 'rows'=>3, 'cols'=>3, 'required', 'maxlength' => 100]) !!}
 </div>
 
 
 <!-- Description Field -->
 <div class="form-group col-sm-6 col-lg-6">
-    {!! Form::label('description', 'Description (Ar):', ['class'=>'required']) !!}
+    {!! Form::label('description', 'Description (Arabic):', ['class'=>'required']) !!}
     {!! Form::textarea('description[ar]', isset($exercise)?$exercise->getTranslation('description', 'ar'):null, ['class' => 'form-control', 'rows'=>3, 'cols'=>3, 'required', 'dir'=>'rtl', 'maxlength' => 100]) !!}
 </div>
 
@@ -31,7 +31,7 @@
         <option></option>
         @foreach ($bodyParts as $bodyPart)
             <option value="{{ $bodyPart->id }}"
-                    @if(isset($exercise) && $exercise->body_part_id == $bodyPart->id) selected @endif>{{ $bodyPart->name }}</option>
+                    @if(old('body_part_id') == $bodyPart->id || (isset($exercise) && $exercise->body_part_id == $bodyPart->id)) selected @endif>{{ $bodyPart->name }}</option>
         @endforeach
     </select>
 </div>
@@ -73,6 +73,8 @@
 <div class="form-group col-sm-6 col-lg-3">
     {!! Form::label('image', 'Image:', ['class'=>'required']) !!}
     {!! Form::file('image', ['class' => 'form-control', (isset($exercise)) ? '' : 'required' => 'required', 'accept' => 'image/jpeg,image/png']) !!}
+    <p class="text-muted">Max File Size 5MB</p>
+
 </div>
 
 
@@ -80,6 +82,8 @@
 <div class="form-group col-sm-6 col-lg-3">
     {!! Form::label('video', 'Video:', ['class'=>'required']) !!}
     {!! Form::file('video', ['class' => 'form-control', (isset($exercise)) ? '' : 'required' => 'required', 'accept' => 'video/mp4']) !!}
+    <p class="text-muted">Max File Size 20MB</p>
+
 </div>
 
 
@@ -94,7 +98,7 @@
 @if(isset($exercise))
 
     <div class="form-group col-sm-6 col-lg-6">
-        <video width="360" controls>
+        <video width="360" height="315" controls>
             <source src="{{ $exercise->video}}" type="video/mp4">
             Your browser does not support the video tag.
         </video>

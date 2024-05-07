@@ -8,6 +8,7 @@ use App\Models\ExerciseEquipment;
 use App\Repositories\ExerciseEquipmentRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\ExerciseEquipmentResource;
 use Response;
 
 /**
@@ -37,7 +38,7 @@ class ExerciseEquipmentAPIController extends AppBaseController
     {
         $exercise_equipments = $this->exerciseEquipmentRepository->all();
 
-        return $this->sendResponse($exercise_equipments->toArray(), 'Exercise Equipments retrieved successfully');
+        return $this->sendResponse(ExerciseEquipmentResource::collection($exercise_equipments), 'Exercise Equipments retrieved successfully');
     }
 
     /**
@@ -76,7 +77,7 @@ class ExerciseEquipmentAPIController extends AppBaseController
             return $this->sendError('Exercise Equipment not found');
         }
 
-        return $this->sendResponse($exerciseEquipment->toArray(), 'Exercise Equipment retrieved successfully');
+        return $this->sendResponse(new ExerciseEquipmentResource($exerciseEquipment), 'Exercise Equipment retrieved successfully');
     }
 
     /**

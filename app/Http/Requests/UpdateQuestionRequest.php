@@ -26,4 +26,12 @@ class UpdateQuestionRequest extends FormRequest
     {
         return Question::$rules;
     }
+
+    public function messages()
+    {
+        return [
+            'title.en.required' => 'The English title field is required.',
+            'title.ar.required' => 'The Arabic title field is required.',
+        ];
+    }
 }

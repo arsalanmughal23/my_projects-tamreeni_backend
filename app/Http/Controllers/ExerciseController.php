@@ -46,6 +46,7 @@ class ExerciseController extends AppBaseController
      */
     public function create()
     {
+//        dd("asdad");
         $bodyParts           = BodyPart::all();
         $exercise_equipments = ExerciseEquipment::all()->pluck('name', 'id');
 
@@ -61,9 +62,9 @@ class ExerciseController extends AppBaseController
      */
     public function store(CreateExerciseRequest $request)
     {
-        $input            = $request->all();
-        $input['user_id'] = auth()->user()->id;
+        $input = $request->all();
 
+        $input['user_id'] = auth()->user()->id;
         if ($request->hasFile('image')) {
             $input['image'] = FileHelper::s3Upload($input['image']);
         }

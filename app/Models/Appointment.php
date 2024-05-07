@@ -43,9 +43,11 @@ class Appointment extends Model
     const PROFESSION_TYPE_DIETITIAN = 20;
     const PROFESSION_TYPE_THERAPIST = 30;
 
-    const STATUS_PENDING = 0;
-    const STATUS_START   = 1;
-    const STATUS_END     = 2;
+    const STATUS_PENDING        = 0;
+    const STATUS_START          = 1;
+    const STATUS_END            = 2;
+    const STATUS_PAYMENT_PAID   = 3;
+    const STATUS_PAYMENT_REJECT = 4;
 
 
     protected $dates = ['deleted_at'];
@@ -93,7 +95,7 @@ class Appointment extends Model
     public static $rules = [
         'payment_intent_required'   => 'boolean',
         'user_id'                   => 'required',
-        'card_id'                   => 'required',
+        // 'card_id'                   => 'required',
         'slot_id'                   => 'required_if:type,10',
         'package_id'                => 'required_if:type,20|exists:packages,id',
         'date'                      => 'string|required_if:type,10',

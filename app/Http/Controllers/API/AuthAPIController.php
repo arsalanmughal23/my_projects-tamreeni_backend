@@ -259,7 +259,7 @@ class AuthAPIController extends AppBaseController
             };
 
             if (!$otpCode)
-                return $this->sendError('Invalid OTP Code.', 401);
+                return $this->sendError('Invalid OTP Code.', 404);
 
             if (self::checkOTPExpiry($otpCode->created_at)) {
                 $otpCode->delete();

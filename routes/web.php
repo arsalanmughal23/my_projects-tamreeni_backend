@@ -21,6 +21,10 @@ Auth::routes(['register' => false]);
 // Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/payment-page', [App\Http\Controllers\PayTabsController::class, 'create_payment_page'])->name('payment-page');
+Route::get('/query-transaction', [App\Http\Controllers\PayTabsController::class, 'query_transaction'])->name('query-transaction');
+Route::get('/paytabs-return', [App\Http\Controllers\PayTabsController::class, 'payTabs_return'])->name('paytabs-return');
+Route::post('/paytabs-callback', [App\Http\Controllers\PayTabsController::class, 'callBackFunction'])->name('paytabs-callback');
 
 Route::group(['middleware' => ['auth', 'dynamic_permission']], function () {
 

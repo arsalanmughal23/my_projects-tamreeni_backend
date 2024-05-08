@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Criteria\AppointmentCriteria;
+use App\Http\Controllers\PayTabsController;
 use App\Http\Requests\API\CreateAppointmentAPIRequest;
 use App\Http\Requests\API\UpdateAppointmentAPIRequest;
 use App\Models\Appointment;
@@ -21,7 +22,6 @@ use Illuminate\Support\Facades\DB;
  * Class AppointmentController
  * @package App\Http\Controllers\API
  */
-
 class AppointmentAPIController extends AppBaseController
 {
     public function __construct(
@@ -40,7 +40,7 @@ class AppointmentAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $params = $request->only('user_id','customer_id','type','profession_type','status','start_date','date','order_by','order');
+        $params = $request->only('user_id', 'customer_id', 'type', 'profession_type', 'status', 'start_date', 'date', 'order_by', 'order');
 
         $appointments = $this->appointmentRepository->pushCriteria(new AppointmentCriteria($params))->all();
         return $this->sendResponse(AppointmentResource::collection($appointments), 'Appointments retrieved successfully');
@@ -60,16 +60,17 @@ class AppointmentAPIController extends AppBaseController
         try {
             DB::beginTransaction();
 
-            $user   = $request->user();
-            $input  = $request->validated();
+            $user                = $request->user();
+            $input               = $request->validated();
             $input['package_id'] = $input['package_id'] ?? null;
 
-            $type               = intval($input['type']);
-            $profession_type    = intval($input['profession_type']);
-            $amountInSAR = 0;
+            $type                  = intval($input['type']);
+            $profession_type       = intval($input['profession_type']);
+            $amountInSAR           = 0;
             $paymentIntentRequired = $input['payment_intent_required'] ?? false;
 
-            $transactionable = null;
+            $transactionable       = null;
+            $redirect_url          = null;
             $createdAppointmentIds = [];
             switch ($type) {
                 case Appointment::TYPE_SESSION:
@@ -80,10 +81,10 @@ class AppointmentAPIController extends AppBaseController
                     if ($checkUserAppointment)
                         return $this->sendError('Already book appointment', 422);
 
-                    $description            = "1-1 Session - Appointment Payment";
-                    $amountInSAR            = $this->calculateSessionFee($profession_type);
-                    $input['customer_id']   = $user->id;
-                    $transactionable        = $this->appointmentRepository->create($input);
+                    $description             = "1-1 Session - Appointment Payment";
+                    $amountInSAR             = $this->calculateSessionFee($profession_type);
+                    $input['customer_id']    = $user->id;
+                    $transactionable         = $this->appointmentRepository->create($input);
                     $createdAppointmentIds[] = $transactionable->id;
                     break;
 
@@ -94,9 +95,9 @@ class AppointmentAPIController extends AppBaseController
                             throw new \Error('Your appointment is already booked on ' . $appointment['date']);
                     }
 
-                    $package        = $transactionable = $this->packageRepository->findWithoutFail($input['package_id']);
-                    $amountInSAR    = $package->amount;
-                    $description    = $package->description . ' ' . ' Package Purchase';
+                    $package     = $transactionable = $this->packageRepository->findWithoutFail($input['package_id']);
+                    $amountInSAR = $package->amount;
+                    $description = $package->description . ' ' . ' Package Purchase';
 
                     $appointments = $input['appointments'];
                     foreach ($appointments as $key => $appointment) {
@@ -105,8 +106,8 @@ class AppointmentAPIController extends AppBaseController
                         $appointment['package_id']      = $input['package_id'];
                         $appointment['type']            = $type;
                         $appointment['profession_type'] = $profession_type;
-                        $createdAppointment = $this->appointmentRepository->create($appointment);
-                        $createdAppointmentIds[] = $createdAppointment->id;
+                        $createdAppointment             = $this->appointmentRepository->create($appointment);
+                        $createdAppointmentIds[]        = $createdAppointment->id;
                     }
                     break;
 
@@ -115,9 +116,9 @@ class AppointmentAPIController extends AppBaseController
                     break;
             }
 
-            $paymentIntent  = null;
-            $ephemeralKey   = null;
-            $transaction    = null;
+            $paymentIntent = null;
+            $ephemeralKey  = null;
+            $transaction   = null;
 
             if ($paymentIntentRequired) {
                 $paymentIntentResponse = PaymentController::makePaymentIntent($amountInSAR, $description, $user->stripe_customer_id);
@@ -129,34 +130,37 @@ class AppointmentAPIController extends AppBaseController
                 if (!$ephemeralKeyResponse['status'])
                     throw new \Error('Ephemeral key is not created');
 
-                $paymentIntent  = $paymentIntentResponse['data'];
-                $ephemeralKey   = $ephemeralKeyResponse['data'];
+                $paymentIntent = $paymentIntentResponse['data'];
+                $ephemeralKey  = $ephemeralKeyResponse['data'];
 
                 $transaction = $transactionable->transactions()->create([
                     'payment_intent_id' => $paymentIntent['id'],
                     'payment_charge_id' => null,
-                    'amount'         => $amountInSAR,
-                    'description'    => $description,
-                    'user_id'        => $user->id,
-                    'currency'       => getCurrencySymbol(),
-                    'status'         => Transaction::STATUS_HOLD
+                    'amount'            => $amountInSAR,
+                    'description'       => $description,
+                    'user_id'           => $user->id,
+                    'currency'          => getCurrencySymbol(),
+                    'status'            => Transaction::STATUS_HOLD
                 ]);
             } else {
-                $transaction = $this->createTransaction($transactionable, $user, $amountInSAR, $input['payment_method_id'], $description);
+                // $transaction = $this->createTransaction($transactionable, $user, $amountInSAR, $input['payment_method_id'], $description);
+                $payTabs = $this->createTransactionWithPayTab($transactionable, $user, $amountInSAR, $description, $createdAppointmentIds);
+                $paymentCharge = $payTabs['paymentCharge'];
+                $redirect_url  = $paymentCharge['redirect_url'];
+                $transaction   = $payTabs['transaction'];
             }
 
-            $createdAppointments = $this->appointmentRepository->whereIn('id', $createdAppointmentIds)
-                ->update(['transaction_id' => $transaction->id]);
-
-            $createdAppointments = $this->appointmentRepository->whereIn('id', $createdAppointmentIds)->where('transaction_id', $transaction->id)->get();
+            $createdAppointments = $this->appointmentRepository->whereIn('id', $createdAppointmentIds);
+            $createdAppointments->update(['transaction_id' => $transaction->id]);
 
             DB::commit();
 
             $data = [
-                'appointments' => AppointmentResource::collection($createdAppointments),
-                'ephemeralKey' => $ephemeralKey,
+                'appointments'  => AppointmentResource::collection($createdAppointments->get()),
+                'ephemeralKey'  => $ephemeralKey,
                 'paymentIntent' => $paymentIntent,
-                'transaction' => $transaction
+                'transaction'   => $transaction,
+                'redirect_url'  => $redirect_url,
             ];
             return $this->sendResponse($data, 'Appointment saved successfully');
         } catch (\Error $e) {
@@ -281,5 +285,29 @@ class AppointmentAPIController extends AppBaseController
             'status'            => Transaction::STATUS_COMPLETE,
         ]);
         return $transaction;
+    }
+
+    private function createTransactionWithPayTab(Appointment | Package $transactionable, $user, $amountInSAR, $description, $card_id)
+    {
+        $payTabs       = new PayTabsController();
+        $currencySymbol= getCurrencySymbol();
+        $paymentCharge = $payTabs->createTransaction([
+            'tran_class'  => "ecom",
+            'cart_id'     => json_encode($card_id),
+            'description' => $description,
+            'currency'    => $currencySymbol,
+            'amount'      => $amountInSAR,
+            'tokenize'    => time(),
+        ]);
+
+        $transaction = $transactionable->transactions()->create([
+            'payment_charge_id' => $paymentCharge['tran_ref'],
+            'amount'            => $amountInSAR,
+            'description'       => $description,
+            'user_id'           => $user->id,
+            'currency'          => $currencySymbol,
+            'status'            => Transaction::STATUS_HOLD,
+        ]);
+        return ['paymentCharge' => $paymentCharge, 'transaction' => $transaction];
     }
 }

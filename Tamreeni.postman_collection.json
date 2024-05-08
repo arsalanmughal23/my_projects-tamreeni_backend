@@ -616,7 +616,7 @@
 									"disabled": true
 								},
 								{
-									"key": "height_in_m",
+									"key": "height_in_cm",
 									"value": "5.6",
 									"description": "sometimes|numeric",
 									"type": "text"

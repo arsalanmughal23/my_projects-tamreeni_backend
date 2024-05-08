@@ -29,12 +29,12 @@ class SubmitAnswersAPIRequest extends BaseAPIRequest
             'gender' => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q2_GENDER,
             'dob'    => 'required|date|date_format:"d-m-Y"|before:today',
 
-            'height_in_m'          => 'required|numeric|min:0.1',
-            'height_unit'          => 'required|string|exists:constants,key,group,' . Constant::CONST_SIZE_UNIT,
-            'current_weight_in_kg' => 'required|numeric',
-            'current_weight_unit'  => 'required|string|exists:constants,key,group,' . Constant::CONST_WEIGHT_UNIT,
-            'target_weight_in_kg'  => 'required|numeric',
-            'target_weight_unit'   => 'required|string|exists:constants,key,group,' . Constant::CONST_WEIGHT_UNIT,
+            'height'                => 'required|numeric|'.$this->getConditionalHeightRule('height'),
+            'height_unit'           => 'required|string|exists:constants,key,group,' . Constant::CONST_SIZE_UNIT,
+            'current_weight'        => 'required|numeric|'.$this->getConditionalWeightRule('current_weight'),
+            'current_weight_unit'   => 'required|string|exists:constants,key,group,' . Constant::CONST_WEIGHT_UNIT,
+            'target_weight'         => 'required|numeric|'.$this->getConditionalWeightRule('target_weight'),
+            'target_weight_unit'    => 'required|string|exists:constants,key,group,' . Constant::CONST_WEIGHT_UNIT,
 
             'workout_days_in_a_week'   => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q7_WORKOUT_DAYS_IN_A_WEEK,
             'workout_duration_per_day' => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q8_WORKOUT_DURATION_PER_DAY,
@@ -53,5 +53,42 @@ class SubmitAnswersAPIRequest extends BaseAPIRequest
             'health_status'     => 'string|exists:options,option_variable_name,question_variable_name,' . Question::Q18_HEALTH_STATUS,
             'daily_steps_taken' => 'string|exists:options,option_variable_name,question_variable_name,' . Question::Q19_DAILY_STEPS_TAKEN,
         ];
+    }
+    
+    /**
+     * Apply conditional validation rule for 'value' based on 'unit'
+     *
+     * @return \Illuminate\Validation\Rules\Rule
+     */
+    protected function getConditionalHeightRule($fieldName)
+    {
+        $rules = match ($this->input($fieldName.'_unit')){
+            'cm' => 'min:40', // Minimum Height is 40 when unit is cm
+            'ft' => 'min:1', // Minimum Height is 1 when unit is ft
+            default => 'min:1' // Minimum Height is 1 when unit is ft
+        };
+        return $rules;
+    }
+
+    protected function getConditionalWeightRule($fieldName)
+    {
+        $rules = match ($this->input($fieldName.'_unit')){
+            'kg' => 'min:1', // Minimum Height is 40 when unit is cm
+            'lbs' => 'min:2.2', // Minimum Height is 1 when unit is ft
+            default => 'min:1' // Minimum Height is 1 when unit is ft
+        };
+
+        // Check rule is used for target weight
+        if($fieldName == 'target_weight'){
+            // Set min / max rules according to selected goal
+            $rules .= match ($this->input('goal')){
+                'lose_weight' => '|max:'.$this->input('current_weight'),
+                'gain_weight' => '|min:'.$this->input('current_weight'),
+                // 'build_muscle' => '|min:'.$this->input('current_weight'),
+                // 'get_fit' => '|min:'.$this->input('current_weight')
+            };
+        }
+
+        return $rules;
     }
 }

@@ -12,6 +12,7 @@ use App\Http\Resources\NutritionPlanResource;
 use App\Models\NutritionPlan;
 use App\Models\UserDetail;
 use App\Repositories\UsersRepository;
+use Carbon\Carbon;
 use Error;
 use Illuminate\Support\Facades\DB;
 use Response;
@@ -196,14 +197,28 @@ class UserAPIController extends AppBaseController
             if (!$userDetails->goal) {
                 return $this->sendError('Goal not set');
             }
-            $workoutPlan   = $this->workoutPlanRepository->generateWorkoutPlan($userDetails);
 
-            $nutritionPlan = $this->nutritionPlanRepository->generateNutritionPlan($userDetails);
-            $nutritionPlan = NutritionPlan::with('nutritionPlanDays.nutritionPlanDayMeals')->find($nutritionPlan->id);
-            $nutritionPlan = new NutritionPlanResource($nutritionPlan);
+            // Set Nutrition Plan Start & End Date
+            $planStartDate  = Carbon::now();
+            $planEndDate    = Carbon::parse($userDetails->reach_goal_target_date);
+
+            $workoutPlan    = $this->workoutPlanRepository->generateWorkoutPlan($userDetails, $planStartDate, $planEndDate);
+
+            $calculatedRequiredCalories = calculateRequiredCalories($userDetails);
+            $nutritionPlan  = $this->nutritionPlanRepository->generateNutritionPlan($calculatedRequiredCalories, $planStartDate, $planEndDate);
+
+            if($workoutPlan)
+                $workoutPlan = $workoutPlan->toArray();
+            if($nutritionPlan)
+                $nutritionPlan = new NutritionPlanResource(NutritionPlan::with('nutritionPlanDays.nutritionPlanDayMeals')->find($nutritionPlan->id));
+
+            $message = ($workoutPlan || $nutritionPlan) ? 'Your plan is generated successfully' : 'Sorry, your plan is not generated';
 
             DB::commit();
-            return $this->sendResponse(['workout_plan' => $workoutPlan->toArray(), 'nutrition_plan' => $nutritionPlan], 'Workout Plan generated successfully');
+            return $this->sendResponse(['workout_plan' => $workoutPlan, 'nutrition_plan' => $nutritionPlan], $message);
+        } catch (\Error $error) {
+            DB::rollback();
+            return $this->sendError($error->getMessage());
         } catch (\Exception $exception) {
             DB::rollback();
             return $this->sendError($exception->getMessage());

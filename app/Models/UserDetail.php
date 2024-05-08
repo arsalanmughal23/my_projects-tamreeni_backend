@@ -57,11 +57,15 @@ class UserDetail extends Model
         'gender',
         'dob',
 
-        'height_in_m',
+        // 'age',
+        // 'height_in_cm',
+        // 'current_weight_in_kg',
+        // 'target_weight_in_kg',
+        'height',
         'height_unit',
-        'current_weight_in_kg',
+        'current_weight',
         'current_weight_unit',
-        'target_weight_in_kg',
+        'target_weight',
         'target_weight_unit',
 
         'workout_days_in_a_week',

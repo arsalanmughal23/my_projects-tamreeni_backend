@@ -75,12 +75,17 @@ class Option extends Model
         self::Q15_OPT1__TRADITIONAL => 'https://tamreeni-backend.s3.amazonaws.com/Traditional-3x.png',
         self::Q15_OPT2__KETO        => 'https://tamreeni-backend.s3.amazonaws.com/Keto-3x.png',
 
-        self::Q16_OPT1__EGG      => 'https://tamreeni-backend.s3.amazonaws.com/egg-3x.png',
-        self::Q16_OPT2__FISH     => 'https://tamreeni-backend.s3.amazonaws.com/fish-3x.png',
-        self::Q16_OPT3__SHRIMP   => 'https://tamreeni-backend.s3.amazonaws.com/shrimp-3x.png',
-        self::Q16_OPT4__DAIRY    => 'https://tamreeni-backend.s3.amazonaws.com/dairy-3x.png',
-        self::Q16_OPT5__VEGIES   => 'https://tamreeni-backend.s3.amazonaws.com/veggies-3x.png',
-        self::Q16_OPT6__SEA_FOOD => 'https://tamreeni-backend.s3.amazonaws.com/seaFood-3x.png'
+        self::Q16_OPT1__EGG         => 'https://tamreeni-backend.s3.amazonaws.com/egg-3x.png',
+        self::Q16_OPT2__FISH        => 'https://tamreeni-backend.s3.amazonaws.com/fish-3x.png',
+        self::Q16_OPT3__SHRIMP      => 'https://tamreeni-backend.s3.amazonaws.com/shrimp-3x.png',
+        self::Q16_OPT4__DAIRY       => 'https://tamreeni-backend.s3.amazonaws.com/dairy-3x.png',
+        self::Q16_OPT5__VEGIES      => 'https://tamreeni-backend.s3.amazonaws.com/veggies-3x.png',
+        self::Q16_OPT6__SEA_FOOD    => 'https://tamreeni-backend.s3.amazonaws.com/seaFood-3x.png',
+
+        self::Q21_OPTS1__SQUAT      => 'https://tamreeni-backend.s3.amazonaws.com/workoutHome-3x.png',
+        self::Q21_OPTS2__DEADLIFT   => 'https://tamreeni-backend.s3.amazonaws.com/workoutHome-3x.png',
+        self::Q21_OPTS3__BENCH      => 'https://tamreeni-backend.s3.amazonaws.com/workoutHome-3x.png',
+        self::Q21_OPTS4__OVERHEAD   => 'https://tamreeni-backend.s3.amazonaws.com/workoutHome-3x.png',
     ];
 
     const Q1_OPT1__LOSE_WEIGHT  = 'lose_weight';
@@ -148,6 +153,16 @@ class Option extends Model
     const Q19_OPT2__5000_7000_STEPS = '5000_7000_steps';
     const Q19_OPT3__7000_10000      = '7000_10000_steps';
     const Q19_OPT3__10000_PLUS      = '10000_plus_steps';
+
+    const Q20_OPT1__NOT_AT_ALL = 'not_at_all';
+    const Q20_OPT2__1_to_2_WORKOUT_A_WEEK = '1_to_2_workout_a_week';
+    const Q20_OPT3__2_to_4_WORKOUT_A_WEEK = '2_to_4_workout_a_week';
+    const Q20_OPT4__4_to_6_WORKOUT_A_WEEK = '4_to_6_workout_a_week';
+
+    const Q21_OPTS1__SQUAT      = 'squat__one_rep_max_in_kg';
+    const Q21_OPTS2__DEADLIFT   = 'deadlift__one_rep_max_in_kg';
+    const Q21_OPTS3__BENCH      = 'bench__one_rep_max_in_kg';
+    const Q21_OPTS4__OVERHEAD   = 'overhead__one_rep_max_in_kg';
 
 
     public function question()

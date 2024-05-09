@@ -28,7 +28,7 @@ class Constant extends Model
     const CONST_GROUP_DELETE_ACCOUNT_TYPE = 'delete_account_type';
 
     const CONST_SIZE_UNIT = 'size_unit';
-        const CONST_SIZE_OPTS = ['cm', 'm'];
+        const CONST_SIZE_OPTS = ['cm', 'ft'];
 
     const CONST_WEIGHT_UNIT = 'weight_unit';
         const CONST_WEIGHT_OPTS = ['kg', 'lbs'];

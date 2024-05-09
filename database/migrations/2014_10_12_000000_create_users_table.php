@@ -38,6 +38,7 @@ class CreateUsersTable extends Migration
             $table->string('phone_number')->nullable();
             $table->string('phone_number_country_code')->nullable();
             $table->date('dob')->nullable();
+            $table->integer('age')->default(0)->nullable();
             $table->text('image')->nullable();
 
             $table->tinyInteger('is_social_login')->default(0)->comment('0,1');
@@ -60,11 +61,14 @@ class CreateUsersTable extends Migration
             $table->string('health_status')->nullable();
             $table->string('daily_steps_taken')->nullable();
 
-            $table->float('height_in_m')->nullable()->default(0);
-            $table->string('height_unit')->nullable()->comment('height_unit'); // CONSTANT: cm, m
+            $table->float('height_in_cm')->nullable()->default(0);
+            $table->float('height')->nullable()->default(0);
+            $table->string('height_unit')->nullable()->comment('height_unit'); // CONSTANT: cm, ft
             $table->float('current_weight_in_kg')->nullable()->default(0);
+            $table->float('current_weight')->nullable()->default(0);
             $table->string('current_weight_unit')->nullable()->comment('weight_unit'); // CONSTANT: kg, lbs
             $table->float('target_weight_in_kg')->nullable()->default(0);
+            $table->float('target_weight')->nullable()->default(0);
             $table->string('target_weight_unit')->nullable()->comment('weight_unit'); // CONSTANT: kg, lbs
 
             $table->float('calories')->default(0.00);

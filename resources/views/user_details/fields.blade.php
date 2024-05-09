@@ -84,8 +84,8 @@
     {!! Form::number('target_weight_in_kg', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Height In M Field -->
+<!-- Height In CM Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('height_in_m', 'Height In M:') !!}
-    {!! Form::number('height_in_m', null, ['class' => 'form-control']) !!}
+    {!! Form::label('height_in_cm', 'Height In CM:') !!}
+    {!! Form::number('height_in_cm', null, ['class' => 'form-control']) !!}
 </div>

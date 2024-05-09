@@ -2,7 +2,10 @@
 
 use App\Constants\EmailServiceTemplateNames;
 use App\Jobs\SendEmail;
+use App\Models\Option;
 use App\Models\VerifyEmail;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Queue;
 
 if (!function_exists('getConstantValue')) {
@@ -182,34 +185,206 @@ if (!function_exists('getMenus')) {
         return \App\Models\Menu::orderBy('position', 'asc')->get();
     }
 }
-if (!function_exists('generateDatesByWeek')) {
-    function generateDatesByWeek($startDate, $endDate)
+
+if (!function_exists('convertSizeToCM')) {
+    function convertSizeToCM($size, $fromUnit = 'ft')
     {
-        // Convert start and end dates to DateTime objects
-        $start        = new DateTime($startDate);
-        $end          = new DateTime($endDate);
-        $startDayName = $start->format('l');
-        // Define an array to store dates grouped by week
+        return match($fromUnit){
+            'cm' => $size,
+            'ft' => $size * 30.48,
+            default => null
+        };
+    }
+}
+
+if (!function_exists('convertSizeToM')) {
+    function convertSizeToM($size, $fromUnit)
+    {
+        return match($fromUnit){
+            'cm' => $size / 100,
+            'ft' => $size / 3.28084,
+            default => null
+        };
+    }
+}
+
+if (!function_exists('convertWeightToKG')) {
+    function convertWeightToKG($weight, $fromUnit = 'lbs')
+    {
+        return match($fromUnit){
+            'kg' => $weight,
+            'lbs' => $weight * 0.453592,
+            default => null
+        };
+    }
+}
+
+if (!function_exists('calculateBMI')) {
+    function calculateBMI($weightInKg, $heightInCm)
+    {
+        $heightInM = convertSizeToM($heightInCm, 'cm');
+        $bmi = $weightInKg / pow($heightInM, 2);
+        return $bmi;
+    }
+}
+
+if (!function_exists('calculateRequiredCalories')) {
+    function calculateRequiredCalories($userDetails, $goal = null, $gender = null)
+    {
+        $PA         = 1;
+        $goal       = $goal ?? $userDetails->goal;
+        $gender     = $gender ?? $userDetails->gender;
+        $age        = $userDetails->age;
+        $weightInKg = $userDetails->current_weight_in_kg;
+        $heightInCm = $userDetails->height_in_cm;
+
+        $CONST_FOR_IBW_IS_HALF_OR_QUARTER = 1;//constant for calculate IBW (Ideal Body Weight) is half or quarter.
+        $CONST_FOR_BEE = 0;//baseline energy expenditure.
+        $CONST_FOR_EE_R_BM = 1;//constant for calculate energy expenditure related to body mass.
+        $CONST_FOR_EE_R_H = 1;//constant for calculate energy expenditure related to height.
+        $CONST_FOR_DECREASE_EE_WITH_Age = 1;//decrease in energy expenditure with age.
+
+        switch ($gender){
+            case Option::Q2_OPT1__MALE:
+                $CONST_FOR_IBW_IS_HALF_OR_QUARTER = 4;
+                $CONST_FOR_BEE = 66.5;
+                $CONST_FOR_EE_R_BM = 13.75;
+                $CONST_FOR_EE_R_H = 5;
+                $CONST_FOR_DECREASE_EE_WITH_Age = 6.78;
+            break;
+            case Option::Q2_OPT2__FEMALE:
+                $CONST_FOR_IBW_IS_HALF_OR_QUARTER = 2;
+                $CONST_FOR_BEE = 655;
+                $CONST_FOR_EE_R_BM = 9.56;
+                $CONST_FOR_EE_R_H = 1.85;
+                $CONST_FOR_DECREASE_EE_WITH_Age = 4.68;
+            break;
+            default:
+                // throw new Error('Invalid Gender');
+            break;    
+        }
+
+        $IBW        = ($heightInCm -100)-(($heightInCm -150)/$CONST_FOR_IBW_IS_HALF_OR_QUARTER)+(($age-20)/4);
+        $Adj_BW     = ($weightInKg-$IBW)*0.25+$IBW;
+
+        $FACTOR_AGE     = $CONST_FOR_DECREASE_EE_WITH_Age * $age;
+        $FACTOR_WEIGHT  = $CONST_FOR_EE_R_H * $heightInCm;
+
+        $REE        = $CONST_FOR_BEE + ($CONST_FOR_EE_R_BM * $weightInKg) + $FACTOR_WEIGHT - $FACTOR_AGE;
+        $REE_obese  = $CONST_FOR_BEE + ($CONST_FOR_EE_R_BM * $Adj_BW) + $FACTOR_WEIGHT - $FACTOR_AGE;
+        $TEE        = $REE * $PA;
+        $TEE_obese  = $REE_obese * $PA;
+        
+        $caloriesForMeal = 0;
+        $TEE_ACCORDING_TO_BMI = $userDetails->bmi < 30 ? $TEE : $TEE_obese;
+        switch ($goal) {
+            case Option::Q1_OPT1__LOSE_WEIGHT:
+                $caloriesForMeal = $TEE_ACCORDING_TO_BMI - 1000;
+            break;
+            case Option::Q1_OPT2__GAIN_WEIGHT:
+                $caloriesForMeal = $TEE_ACCORDING_TO_BMI * 1.2;
+            break;
+            case Option::Q1_OPT3__BUILD_MUSCLE:
+                $caloriesForMeal = $TEE_ACCORDING_TO_BMI - 500;
+            break;
+            case Option::Q1_OPT4__GET_FIT:
+                $caloriesForMeal = $TEE_ACCORDING_TO_BMI;
+            break;
+            default:
+                // throw new Error('Invalid Goal');
+            break;
+        }
+        
+        $caloriesBreakoutModulusValue = $caloriesForMeal % 100;
+        $breakdownCalories  = intval($caloriesForMeal - $caloriesBreakoutModulusValue);
+        $breakupCalories    = intval($caloriesForMeal + (100 - $caloriesBreakoutModulusValue));
+        $calculatedValues   = [
+            'gender'        => $gender,
+            'weightInKg'    => $weightInKg,
+            'heightInCm'    => $heightInCm,
+            'age'           => $age,
+            'goal'          => $goal,
+            'bmi'           => $userDetails->bmi,
+            'REE'           => $REE,
+            'REE_obese'     => $REE_obese,
+            'PA'            => $PA,
+            'IBW'           => $IBW,
+            'TEE'           => $TEE,
+            'TEE_obese'     => $TEE_obese,
+            'Adj_BW'        => $Adj_BW,
+            'TEE_REF'       => $userDetails->bmi < 30 ? 'TEE' : 'TEE_obese',
+            'TEE_ACCORDING_TO_BMI'  => $TEE_ACCORDING_TO_BMI,
+            'caloriesForMeal'       => $caloriesForMeal,
+            'breakdownCalories'     => $breakdownCalories,
+            'breakupCalories'       => $breakupCalories
+        ];
+        Log::info('UserId: '.$userDetails->user_id.', calculatedValues: '.json_encode($calculatedValues));
+
+        return $breakdownCalories;
+    }
+}
+
+if (!function_exists('generateDatesByWeek')) {
+    // function generateDatesByWeek($startDate, $endDate)
+    // {
+    //     // Convert start and end dates to DateTime objects
+    //     $start        = new DateTime($startDate);
+    //     $end          = new DateTime($endDate);
+    //     // Define an array to store dates grouped by week
+    //     $weeks = [];
+
+    //     // Loop through each week until the end date
+    //     while ($start <= $end) {
+    //         // Define an array to store dates for the current week
+    //         $weekDates = [];
+    //         // Generate Dates of Each Week from Sunday to Satruday
+    //         while ($start <= $end) {
+    //             $weekDates[] = $start->format('Y-m-d');
+    //             // Here we check date is reach end of the week, this loop is break 
+    //             // because next week dates are generate in next week Index
+    //             if($start->format('N') == now()->endOfWeek()->format('N'))
+    //                 break;
+    //             $start->modify('+1 day');
+    //         }
+
+    //         // Add the week to the array
+    //         $weeks[] = $weekDates;
+
+    //         // Move to the next week
+    //         $start->modify('+1 day');
+    //     }
+
+    //     return $weeks;
+    // }
+    
+    function generateDatesByWeek(Carbon $startDate, Carbon $endDate)
+    {
+        $startAt = clone $startDate;
+        $endAt = clone $endDate;
+        // Define an array to store dates grouping by week
         $weeks = [];
 
         // Loop through each week until the end date
-        while ($start <= $end) {
+        while ($startAt <= $endAt) {
             // Define an array to store dates for the current week
             $weekDates = [];
-
-            // Add dates for the current week to the array
-            while ($start <= $end && $start->format('N') <= 6) {
-                $weekDates[] = $start->format('Y-m-d');
-                $start->modify('+1 day');
+            // Generate Dates of Each Week from Sunday to Satruday
+            while ($startAt <= $endAt) {
+                // $weekDates[] = $startAt->format('Y-m-d');
+                $weekDates[] = $startAt->toISOString();
+                // Here we check date is reach end of the week, this loop is break 
+                // because next week dates are generate in next week Index
+                if($startAt->format('N') == now()->endOfWeek()->format('N'))
+                    break;
+                $startAt->modify('+1 day');
             }
 
             // Add the week to the array
             $weeks[] = $weekDates;
 
             // Move to the next week
-            $start->modify('+1 day');
+            $startAt->modify('+1 day');
         }
-
         return $weeks;
     }
 }

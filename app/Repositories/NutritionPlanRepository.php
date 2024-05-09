@@ -3,11 +3,12 @@
 namespace App\Repositories;
 
 use App\Models\Meal;
+use App\Models\MealType;
 use App\Models\NutritionPlan;
 use App\Models\NutritionPlanDay;
 use App\Models\NutritionPlanDayMeal;
-use App\Models\Option;
 use App\Repositories\BaseRepository;
+use Carbon\Carbon;
 
 /**
  * Class NutritionPlanRepository
@@ -45,64 +46,122 @@ class NutritionPlanRepository extends BaseRepository
         return NutritionPlan::class;
     }
 
-    public function generateNutritionPlan($user)
+    public function generateNutritionPlan(int $requiredCalories, Carbon $planStartDate, Carbon $planEndDate)
     {
+        // Generate Upcomming Days (Dates) by weekly grouping
+        $weekWiseDates  = generateDatesByWeek($planStartDate, $planEndDate);
+        if(!count($weekWiseDates) > 0)
+            return null;
+
         /* Mark complete previous nutrition plan */
         NutritionPlan::where('user_id', \Auth::id())->update([
             'status' => NutritionPlan::STATUS_COMPLETED
         ]);
-        /* TODO: need to confirm this with PM how long it will be, currently using same as workout plan */
-        $numberOfDaysPerWeek = Option::$DAYS_PER_WEEK[$user->workout_days_in_a_week] ?? 0;
-        $weekWiseDates       = generateDatesByWeek(date('Y-m-d'), $user->reach_goal_target_date);
-        $randomDates         = [];
+
+        $randomDates    = [];
+        // Set All Upcomming Days Dates in an array from all weeks
         foreach ($weekWiseDates as $key => $weekDates) {
-            if (count($weekDates) >= $numberOfDaysPerWeek) {
-                $randomDates = array_merge($randomDates, pickRandomIndices($weekDates, $numberOfDaysPerWeek));
-            }
+            $randomDates = array_merge($randomDates, $weekDates);
         }
+
+        // Create New Nutrition Plan
         $nutritionPlan = NutritionPlan::create([
             'user_id'    => \Auth::id(),
             'name'       => 'Nutrition Plan',
             'start_date' => $randomDates[0],
             'end_date'   => $randomDates[count($randomDates) - 1],
             'status'     => NutritionPlan::STATUS_TODO
-
         ]);
-        /* TODO: get meals through algo */
-        $meals = Meal::whereBetween('calories', [10, 1000])->inRandomOrder()->get()->unique('meal_type_id');
-        $nutritionPlan['nutrition_plan_days'] = $this->assignNutritionPlanDaysAndMeals($randomDates, $meals, $nutritionPlan->id);
-        return $nutritionPlan;
-    }
 
-    public function assignNutritionPlanDaysAndMeals($randomDates, $meals, $nutritionPlanId)
-    {
         $nutritionPlanDays = [];
+        // Create Nutrition Plan Days & Assign Meals on every each Day
         foreach ($randomDates as $key => $randomDate) {
+            $randomDate = Carbon::parse($randomDate);
+
+            // Create Nutrition Plan Day
             $nutritionPlanDay = NutritionPlanDay::create([
-                'nutrition_plan_id' => $nutritionPlanId,
+                'nutrition_plan_id' => $nutritionPlan->id,
                 'name'              => $key + 1,
                 'date'              => $randomDate,
                 'status'            => NutritionPlanDay::STATUS_TODO
             ]);
 
-            $nutritionPlanDayMeals = [];
-            foreach ($meals as $index => $meal) {
-                $nutritionPlanDayMeal = NutritionPlanDayMeal::create([
-                    'nutrition_plan_day_id' => $nutritionPlanDay->id,
-                    'meal_id'               => $meal->id,
-                    'meal_type_id'          => $meal->meal_type_id,
-                    'calories'              => $meal->calories,
-                    'carbs'                 => $meal->carbs,
-                    'fats'                  => $meal->fats,
-                    'protein'               => $meal->protein,
-                    'status'                => NutritionPlanDayMeal::STATUS_TODO
-                ]);
-                array_push($nutritionPlanDayMeals, $nutritionPlanDayMeal);
-            }
+            // Assign Meals on Each Nutrition Plan Day
+            $nutritionPlanDayMeals = $this->assignMealsOnNutritionPlanDay($nutritionPlanDay, $requiredCalories, $randomDate);
             $nutritionPlanDay['nutrition_plan_day_meals'] = $nutritionPlanDayMeals;
+            // Push Nutrition Plan Day into their listing array
             array_push($nutritionPlanDays, $nutritionPlanDay);
         }
-        return $nutritionPlanDays;
+        // Set All Nutrition Plan Days in Nutrition Plan Data
+        $nutritionPlan['nutrition_plan_days'] = $nutritionPlanDays;
+        return $nutritionPlan;
+    }
+
+    public function getRemainingMealTimes(Carbon $dateTime)
+    {
+        $dayRemainingMealTimes = [];
+        // Add Breakfast into array list if current time is before 11:00 AM UTC
+        if($dateTime <  now()->setTime(11,0))//11:00 AM UTC
+            array_push($dayRemainingMealTimes, MealType::NAME_BREAKFAST);
+
+        // Add Lunch into array list if current time is before 04:00 AM UTC
+        if($dateTime <  now()->setTime(16,0))//04:00 PM UTC
+            array_push($dayRemainingMealTimes, MealType::NAME_LUNCH);
+
+        // Add Fruit & Snack into array list if current time is before 05:00 AM UTC
+        if($dateTime <  now()->setTime(17,0))//05:00 PM UTC
+            $dayRemainingMealTimes = array_merge($dayRemainingMealTimes, [MealType::NAME_FRUIT, MealType::NAME_SNACK]);
+
+        // Add Dinner into array list if current time is before 10:00 AM UTC
+        if($dateTime <  now()->setTime(22,0))//10:00 PM UTC
+            array_push($dayRemainingMealTimes, MealType::NAME_DINNER);
+
+        // Return list of Remaining Meal Times
+        return $dayRemainingMealTimes;
+    }
+
+    public function assignMealsOnNutritionPlanDay(NutritionPlanDay $nutritionPlanDay, int $requiredCalories, Carbon $planDayDateTime)
+    {
+        $nutritionPlanDayMeals = [];
+        foreach(MealType::ALL_NAMES as $mealType) {
+            // Check Plan Day Date is Today's Date
+            if($planDayDateTime->isToday()){
+                // Get Today's Remaining Meal Times
+                $todayRemainingMealTimes = $this->getRemainingMealTimes($planDayDateTime);
+
+                // Skip this iteration when mealType is not exists in Remaining Meal Type
+                // Use Case: if lunch time is passed away no need to assign lunch or before meals
+                if(!in_array($mealType, $todayRemainingMealTimes))
+                    continue;
+            }
+
+            // Get Meal according to the Questionnaire and their algo
+            $meal = Meal::where('calories', $requiredCalories)->whereHas('mealType', function($mealTypeQuery) use($mealType) {
+                return $mealTypeQuery->whereSlug($mealType);
+            })->inRandomOrder()->first();
+
+            // Skip iteration when is not found
+            if(!$meal)
+                continue;
+
+            // Create Nutrition Plan Day Meal
+            // OR Assign each Meal on Nutrition Plan Day
+            $nutritionPlanDayMeal = NutritionPlanDayMeal::create([
+                'nutrition_plan_day_id' => $nutritionPlanDay->id,
+                'meal_id'               => $meal->id,
+                'meal_type_id'          => $meal->meal_type_id,
+                'calories'              => $meal->calories,
+                'carbs'                 => $meal->carbs,
+                'fats'                  => $meal->fats,
+                'protein'               => $meal->protein,
+                'status'                => NutritionPlanDayMeal::STATUS_TODO
+            ]);
+
+            // Push Nutrition Plan Day Meal into their listing array
+            array_push($nutritionPlanDayMeals, $nutritionPlanDayMeal);
+        }
+        // Retrun list of Nutrition Plan Day Meals
+        return $nutritionPlanDayMeals;
     }
 
     public function getUserActiveNutritionPlanByDate($user_id, $date = null)

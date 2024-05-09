@@ -34,7 +34,7 @@ class UserDetailFactory extends Factory
             'language' => $this->faker->randomElement(['en', 'ar']),
             'current_weight_in_kg' => $this->faker->randomDigitNotNull,
             'target_weight_in_kg' => $this->faker->randomDigitNotNull,
-            'height_in_m' => $this->faker->randomDigitNotNull,
+            'height_in_cm' => $this->faker->randomDigitNotNull,
             'goal_id' => $this->faker->numberBetween(1, 4),
             'height_unit_id' => $this->faker->numberBetween(5, 6),
             'current_weight_unit_id' => $this->faker->numberBetween(7, 8),

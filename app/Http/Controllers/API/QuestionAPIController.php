@@ -8,6 +8,7 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\API\SubmitAnswersAPIRequest;
 use App\Http\Resources\QuestionResource;
 use App\Repositories\QuestionRepository;
+use App\Repositories\UserDetailRepository;
 use Response;
 
 /**
@@ -16,13 +17,10 @@ use Response;
  */
 class QuestionAPIController extends AppBaseController
 {
-    /** @var  QuestionRepository */
-    private $questionRepository;
-
-    public function __construct(QuestionRepository $questionRepo)
-    {
-        $this->questionRepository = $questionRepo;
-    }
+    public function __construct(
+        private QuestionRepository $questionRepository,
+        private UserDetailRepository $userDetailRepository
+    ){}
 
     /**
      * Display a listing of the Question.
@@ -44,17 +42,13 @@ class QuestionAPIController extends AppBaseController
             /** @var User $user */
             $user = $request->user();
             if (!$userDetails = $user->details)
-                throw new Error('User detail not found');
+                throw new \Error('User detail not found');
 
-            $calculatedBMI = $request->current_weight_in_kg / pow($request->height_in_m, 2);
-            $calculatedBMI = number_format($calculatedBMI, 2);
-            $userDetails->update($request->validated());
-            $userDetails->bmi = $calculatedBMI;
-            $userDetails->save();
+            $userDetails = $this->userDetailRepository->updateRecord($request->validated(), $user);
 
             $responseData = [
-                'bmi'    => $calculatedBMI,
-                'bmi_description' => __('messages.bmi_description', ['bmi' => $calculatedBMI])
+                'bmi'    => $userDetails->bmi,
+                'bmi_description' => __('messages.bmi_description', ['bmi' => $userDetails->bmi])
             ];
 
             return $this->sendResponse($responseData, 'Answers are saved successfully');

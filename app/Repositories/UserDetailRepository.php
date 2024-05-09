@@ -30,7 +30,7 @@ class UserDetailRepository extends BaseRepository
         'language',
         'current_weight_in_kg',
         'target_weight_in_kg',
-        'height_in_m'
+        'height_in_cm'
     ];
 
     /**
@@ -53,7 +53,27 @@ class UserDetailRepository extends BaseRepository
 
     public function updateRecord($data, $user)
     {
-        $detail = $user->details;
-        return $this->update($data, $detail->id);
+        $userDetail = $user->details;
+
+        if($data['dob'])
+            $userDetail->age = \Carbon\Carbon::parse($data['dob'])->age;
+
+        if($data['height'] && $data['height_unit'])
+            $userDetail->height_in_cm = convertSizeToCM($data['height'], $data['height_unit']);
+
+        if($data['current_weight'] && $data['current_weight_unit'])
+            $userDetail->current_weight_in_kg = convertWeightToKG($data['current_weight'], $data['current_weight_unit']);
+
+        if($data['target_weight'] && $data['target_weight_unit'])
+            $userDetail->target_weight_in_kg = convertWeightToKG($data['target_weight'], $data['target_weight_unit']);
+
+        if($userDetail->current_weight_in_kg && $userDetail->height_in_cm){
+            $calculatedBMI = calculateBMI($userDetail->current_weight_in_kg, $userDetail->height_in_cm);
+            $calculatedBMI = number_format($calculatedBMI, 2);
+            $userDetail->bmi = $calculatedBMI;
+        }
+
+        $userDetail->save();
+        return $this->update($data, $userDetail->id);
     }
 }

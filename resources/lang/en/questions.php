@@ -6,9 +6,9 @@ return [
     'gender'    => 'What`s your gender?',
     'dob'       => 'When is your birthday?',
 
-    'height_in_m'           => 'What`s your height?',
+    'height'                => 'What`s your height?',
     // 'height_unit'           => 'Height unit',
-    'current_weight_in_kg'  => 'Tell us your current weight?',
+    'current_weight'        => 'Tell us your current weight?',
     // 'current_weight_unit'   => 'Current weight unit',
     'target_weight'         => 'Your target weight?',
     // 'target_weight_unit'    => 'Target weight unit',

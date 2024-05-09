@@ -76,12 +76,12 @@ class Question extends Model
     const Q2_GENDER = 'gender';
     const Q3_DOB    = 'dob';
 
-    const Q4_HEIGHT_IN_M          = 'height_in_m';
-    const Q4_SEC                  = 'height_unit';
-    const Q5_CURRENT_WEIGHT_IN_KG = 'current_weight_in_kg';
-    const Q5_SEC                  = 'current_weight_unit';
-    const Q6_TARGET_WEIGHT_IN_KG  = 'target_weight';
-    const Q6_SEC                  = 'target_weight_unit';
+    const Q4_HEIGHT         = 'height';
+    const Q4_SEC            = 'height_unit';
+    const Q5_CURRENT_WEIGHT = 'current_weight';
+    const Q5_SEC            = 'current_weight_unit';
+    const Q6_TARGET_WEIGHT  = 'target_weight';
+    const Q6_SEC            = 'target_weight_unit';
 
     const Q7_WORKOUT_DAYS_IN_A_WEEK    = 'workout_days_in_a_week';
     const Q8_WORKOUT_DURATION_PER_DAY  = 'workout_duration_per_day';

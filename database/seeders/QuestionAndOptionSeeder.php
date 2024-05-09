@@ -43,28 +43,28 @@ class QuestionAndOptionSeeder extends Seeder
                 'position'               => 3
             ],
             [
-                'title'                            => Question::Q4_HEIGHT_IN_M,
+                'title'                            => Question::Q4_HEIGHT,
                 'cover_image'                      => 'https://via.placeholder.com/640x480.png',
                 'answer_mode'                      => 'number_with_unit',
-                'question_variable_name'           => Question::Q4_HEIGHT_IN_M,
+                'question_variable_name'           => Question::Q4_HEIGHT,
                 'question_secondary_variable_name' => Question::Q4_SEC,
                 'options'                          => Question::Q4_SEC_OPTS,
                 'position'                         => 4
             ],
             [
-                'title'                            => Question::Q5_CURRENT_WEIGHT_IN_KG,
+                'title'                            => Question::Q5_CURRENT_WEIGHT,
                 'cover_image'                      => 'https://via.placeholder.com/640x480.png',
                 'answer_mode'                      => 'number_with_unit',
-                'question_variable_name'           => Question::Q5_CURRENT_WEIGHT_IN_KG,
+                'question_variable_name'           => Question::Q5_CURRENT_WEIGHT,
                 'question_secondary_variable_name' => Question::Q5_SEC,
                 'options'                          => Question::Q5_SEC_OPTS,
                 'position'                         => 5
             ],
             [
-                'title'                            => Question::Q6_TARGET_WEIGHT_IN_KG,
+                'title'                            => Question::Q6_TARGET_WEIGHT,
                 'cover_image'                      => 'https://via.placeholder.com/640x480.png',
                 'answer_mode'                      => 'number_with_unit',
-                'question_variable_name'           => Question::Q6_TARGET_WEIGHT_IN_KG,
+                'question_variable_name'           => Question::Q6_TARGET_WEIGHT,
                 'question_secondary_variable_name' => Question::Q6_SEC,
                 'options'                          => Question::Q6_SEC_OPTS,
                 'position'                         => 6

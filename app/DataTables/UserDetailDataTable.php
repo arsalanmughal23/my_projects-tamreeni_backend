@@ -78,7 +78,7 @@ class UserDetailDataTable extends DataTable
             'language',
             'current_weight_in_kg',
             'target_weight_in_kg',
-            'height_in_m'
+            'height_in_cm'
         ];
     }
 

@@ -70,9 +70,9 @@
     <p>{{ $userDetail->target_weight_in_kg }}</p>
 </div>
 
-<!-- Height In M Field -->
+<!-- Height In CM Field -->
 <div class="col-sm-12">
-    {!! Form::label('height_in_m', 'Height In M:') !!}
-    <p>{{ $userDetail->height_in_m }}</p>
+    {!! Form::label('height_in_cm', 'Height In CM:') !!}
+    <p>{{ $userDetail->height_in_cm }}</p>
 </div>
 

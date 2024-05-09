@@ -6,9 +6,9 @@ return [
     'gender'    => 'ما هو جنسك؟',
     'dob'       => 'متى عيد ميلادك؟',
 
-    'height_in_m'           => 'ما هو طولك؟',
+    'height'                => 'ما هو طولك؟',
     'height_unit'           => 'وحدة الارتفاع',
-    'current_weight_in_kg'  => 'أخبرنا بوزنك الحالي؟',
+    'current_weight'        => 'أخبرنا بوزنك الحالي؟',
     'current_weight_unit'   => 'وحدة الوزن الحالية',
     'target_weight'         => 'وزنك المستهدف؟',
     'target_weight_unit'    => 'وحدة الوزن المستهدف',

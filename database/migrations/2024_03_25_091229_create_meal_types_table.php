@@ -15,7 +15,8 @@ class CreateMealTypesTable extends Migration
     {
         Schema::create('meal_types', function (Blueprint $table) {
             $table->id();
-            $table->text('name')->comment('breakfast', 'lunch', 'dinner');
+            $table->string('slug')->comment('breakfast', 'lunch', 'dinner', 'fruit', 'snack');
+            $table->text('name');
             $table->integer('status')->default(1);
             $table->timestamps();
             $table->softDeletes();

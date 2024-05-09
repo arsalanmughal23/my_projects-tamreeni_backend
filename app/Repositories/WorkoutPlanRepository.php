@@ -4,10 +4,12 @@ namespace App\Repositories;
 
 use App\Models\Exercise;
 use App\Models\Option;
+use App\Models\UserDetail;
 use App\Models\WorkoutDay;
 use App\Models\WorkoutDayExercise;
 use App\Models\WorkoutPlan;
 use App\Repositories\BaseRepository;
+use Carbon\Carbon;
 
 /**
  * Class WorkoutPlanRepository
@@ -45,14 +47,18 @@ class WorkoutPlanRepository extends BaseRepository
     {
         return WorkoutPlan::class;
     }
-    public function generateWorkoutPlan($user)
+    public function generateWorkoutPlan(UserDetail $userDetails, Carbon $planStartDate, Carbon $planEndDate)
     {
+        $numberOfDaysPerWeek = Option::$DAYS_PER_WEEK[$userDetails->workout_days_in_a_week] ?? 0;
+        $weekWiseDates       = generateDatesByWeek($planStartDate, $planEndDate);
+        if(!count($weekWiseDates) > 0)
+            return null;
+
         /* Mark complete previous workout plan */
         WorkoutPlan::where('user_id', \Auth::id())->update([
             'status' => WorkoutPlan::STATUS_COMPLETED
         ]);
-        $numberOfDaysPerWeek = Option::$DAYS_PER_WEEK[$user->workout_days_in_a_week] ?? 0;
-        $weekWiseDates       = generateDatesByWeek(date('Y-m-d'), $user->reach_goal_target_date);
+
         $randomDates         = [];
         foreach ($weekWiseDates as $key => $weekDates) {
             if (count($weekDates) >= $numberOfDaysPerWeek) {
@@ -67,18 +73,18 @@ class WorkoutPlanRepository extends BaseRepository
             'status'     => WorkoutPlan::STATUS_TODO
 
         ]);
-        switch ($user->goal) {
+        switch ($userDetails->goal) {
             case Option::Q1_OPT1__LOSE_WEIGHT:
-                $this->generateWaitLosePlan($workoutPlan->id, $randomDates, $user);
+                $this->generateWaitLosePlan($workoutPlan->id, $randomDates, $userDetails);
                 break;
             case Option::Q1_OPT2__GAIN_WEIGHT:
-                $this->generateWaitGainPlan($workoutPlan->id, $randomDates, $user);
+                $this->generateWaitGainPlan($workoutPlan->id, $randomDates, $userDetails);
                 break;
             case Option::Q1_OPT3__BUILD_MUSCLE:
-                $this->generateBuildMusclesPlan($workoutPlan->id, $randomDates, $user);
+                $this->generateBuildMusclesPlan($workoutPlan->id, $randomDates, $userDetails);
                 break;
             case Option::Q1_OPT4__GET_FIT:
-                $this->generateGetFitPlan($workoutPlan->id, $randomDates, $user);
+                $this->generateGetFitPlan($workoutPlan->id, $randomDates, $userDetails);
                 break;
         }
         return $workoutPlan;
@@ -130,7 +136,7 @@ class WorkoutPlanRepository extends BaseRepository
                     'en' => WorkoutDay::DESCRIPTION_EN,
                     'ar' => WorkoutDay::DESCRIPTION_AR
                 ],
-                'date'            => $randomDate,
+                'date'            => Carbon::parse($randomDate),
                 'duration'        => $durationOfAllExercises,
                 'image'           => $exercises[0]->image ?? null,
                 'status'          => WorkoutDay::STATUS_TODO

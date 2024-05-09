@@ -36,9 +36,17 @@ class MealType extends Model
     const STATUS_ACTIVE = 1;
     const STATUS_INACTIVE = 0;
 
+    const NAME_BREAKFAST   = 'breakfast';
+    const NAME_LUNCH       = 'lunch';
+    const NAME_DINNER      = 'dinner';
+    const NAME_FRUIT       = 'fruit';
+    const NAME_SNACK       = 'snack';
+    const ALL_NAMES = [ self::NAME_BREAKFAST, self::NAME_LUNCH, self::NAME_DINNER, self::NAME_FRUIT, self::NAME_SNACK ];
+
     protected $dates = ['deleted_at'];
 
     public $fillable = [
+        'slug',
         'name',
         'status'
     ];
@@ -67,4 +75,8 @@ class MealType extends Model
     ];
 
 
+    public function meals()
+    {
+        return $this->hasMany(Meal::class, 'meal_type_id');
+    }
 }

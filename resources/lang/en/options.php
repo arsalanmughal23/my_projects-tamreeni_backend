@@ -64,6 +64,7 @@ return [
 
     'cm'=> 'Centimeter',
     'm' => 'Meter',
+    'ft' => 'Feet',
 
     'kg' => 'Kilogram',
     'lbs'=> 'Pound'

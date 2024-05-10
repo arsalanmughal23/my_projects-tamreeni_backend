@@ -100,12 +100,6 @@ class Option extends Model
     const Q7_OPT2__2_TO_4_DAYS_A_WEEK = '2_to_4_days_a_week';
     const Q7_OPT3__5_DAYS_A_WEEK      = '5_days_a_week';
 
-    public static $DAYS_PER_WEEK = [
-        self::Q7_OPT1__1_TO_2_DAYS_A_WEEK => 2,
-        self::Q7_OPT2__2_TO_4_DAYS_A_WEEK => 4,
-        self::Q7_OPT3__5_DAYS_A_WEEK      => 5
-    ];
-
     const Q8_OPT1__5_TO_10_MINS_A_DAY  = '5_to_10_mins_a_day';
     const Q8_OPT2__10_TO_15_MINS_A_DAY = '10_to_15_mins_a_day';
     const Q8_OPT3__15_TO_20_MINS_A_DAY = '15_to_20_mins_a_day';
@@ -163,6 +157,19 @@ class Option extends Model
     const Q21_OPTS2__DEADLIFT   = 'deadlift__one_rep_max_in_kg';
     const Q21_OPTS3__BENCH      = 'bench__one_rep_max_in_kg';
     const Q21_OPTS4__OVERHEAD   = 'overhead__one_rep_max_in_kg';
+
+    
+    public static $DAYS_PER_WEEK = [
+        self::Q7_OPT1__1_TO_2_DAYS_A_WEEK => 2,
+        self::Q7_OPT2__2_TO_4_DAYS_A_WEEK => 4,
+        self::Q7_OPT3__5_DAYS_A_WEEK      => 5
+    ];
+    const Q20_PHYSICALLY_ACTIVE_OPT_VALUES = [
+        self::Q20_OPT1__NOT_AT_ALL              => 0,
+        self::Q20_OPT2__1_to_2_WORKOUT_A_WEEK   => 2,
+        self::Q20_OPT3__2_to_4_WORKOUT_A_WEEK   => 4,
+        self::Q20_OPT4__4_to_6_WORKOUT_A_WEEK   => 7
+    ];
 
 
     public function question()

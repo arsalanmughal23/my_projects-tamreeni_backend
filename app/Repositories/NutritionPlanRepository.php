@@ -135,16 +135,25 @@ class NutritionPlanRepository extends BaseRepository
                     continue;
             }
 
-            // Get Meal according to the Questionnaire and their algo
-            $meal = Meal::where('calories', $requiredCalories)->whereHas('mealType', function($mealTypeQuery) use($mealType) {
-                return $mealTypeQuery->whereSlug($mealType);
-            })->inRandomOrder()->first();
+            // // Get Meal according to the Questionnaire and their algo
+            // $meal = Meal::where('calories', $requiredCalories)->whereHas('mealType', function($mealTypeQuery) use($mealType) {
+            //     return $mealTypeQuery->whereSlug($mealType);
+            // })->inRandomOrder()->first();
 
-            // TODO :: Need to remove this logger this is only for testing purpose
-            \Illuminate\Support\Facades\Log::info("Meal Not Found::".' calories:'.$requiredCalories.' mealType:'.$mealType);
+            // // Skip iteration when is not found
+            // if(!$meal)
+            //     continue;
+
+            
+            // Get Meal according to the Questionnaire and their algo
+            $meal = Meal::where('calories', $requiredCalories)->inRandomOrder()->first();
+
             // Skip iteration when is not found
-            if(!$meal)
+            if(!$meal){
+                // TODO :: Need to remove this logger this is only for testing purpose
+                \Illuminate\Support\Facades\Log::info("Meal Not Found::".' calories:'.$requiredCalories.' mealType:'.$mealType.' meal:'.$meal);
                 continue;
+            }
 
             // Create Nutrition Plan Day Meal
             // OR Assign each Meal on Nutrition Plan Day

@@ -140,6 +140,8 @@ class NutritionPlanRepository extends BaseRepository
                 return $mealTypeQuery->whereSlug($mealType);
             })->inRandomOrder()->first();
 
+            // TODO :: Need to remove this logger this is only for testing purpose
+            \Illuminate\Support\Facades\Log::info("Meal Not Found::".' calories:'.$requiredCalories.' mealType:'.$mealType);
             // Skip iteration when is not found
             if(!$meal)
                 continue;

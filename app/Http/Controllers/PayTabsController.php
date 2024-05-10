@@ -92,7 +92,8 @@ class PayTabsController extends AppBaseController
             'Content-type'  => 'application/json'
         ])->post('https://secure.paytabs.sa/payment/request', $fields);
         // TODO :: Need to remove logger
-        \Illuminate\Support\Facades\Log::info('test appointment api: '. json_encode($response->json()));
+        \Illuminate\Support\Facades\Log::info('test appointment api: fields: '.json_encode($fields));
+        \Illuminate\Support\Facades\Log::info('test appointment api: response: '.json_encode($response->json()));
         return $response->json();
     }
 

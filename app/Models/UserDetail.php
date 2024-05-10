@@ -74,12 +74,20 @@ class UserDetail extends Model
         'reach_goal_target_date',
 
         'body_parts',
+        
+        'physically_active',
+        
+        'level',
+        'squat__one_rep_max_in_kg',
+        'deadlift__one_rep_max_in_kg',
+        'bench__one_rep_max_in_kg',
+        'overhead__one_rep_max_in_kg',
+        
+        'health_status',
+        'daily_steps_taken',
+        
         'diet_type',
         'food_preferences',
-
-        'level',
-        'daily_steps_taken',
-        'health_status',
 
         'calories',
 

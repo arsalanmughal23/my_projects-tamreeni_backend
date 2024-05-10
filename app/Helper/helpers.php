@@ -231,7 +231,7 @@ if (!function_exists('calculateBMI')) {
 if (!function_exists('calculateRequiredCalories')) {
     function calculateRequiredCalories($userDetails, $goal = null, $gender = null)
     {
-        $PA         = 1;
+        $PA         = Option::Q20_PHYSICALLY_ACTIVE_OPT_VALUES[$userDetails->physically_active] ?? 0;
         $goal       = $goal ?? $userDetails->goal;
         $gender     = $gender ?? $userDetails->gender;
         $age        = $userDetails->age;

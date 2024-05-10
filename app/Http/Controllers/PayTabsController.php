@@ -91,7 +91,8 @@ class PayTabsController extends AppBaseController
             'authorization' => env('PAYTABS_SERVER_KEY', 'S6JNJBK9H2-JJDKTGLM6T-T6LMRMGBH9'),
             'Content-type'  => 'application/json'
         ])->post('https://secure.paytabs.sa/payment/request', $fields);
-
+        // TODO :: Need to remove logger
+        \Illuminate\Support\Facades\Log::info('test appointment api: '. json_encode($response->json()));
         return $response->json();
     }
 

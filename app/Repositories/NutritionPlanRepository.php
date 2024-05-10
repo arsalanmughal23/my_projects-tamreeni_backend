@@ -148,12 +148,15 @@ class NutritionPlanRepository extends BaseRepository
             // Get Meal according to the Questionnaire and their algo
             $meal = Meal::whereHas('mealType', function($mealTypeQuery) use($mealType) {
                 return $mealTypeQuery->whereSlug($mealType);
-            })->inRandomOrder()->first();
+            })->inRandomOrder();
+            $sql = $meal->toSql();
+            \Illuminate\Support\Facades\Log::info("Meal Not Found:: sql:".$sql);
+            $meal = $meal->first();
 
             // Skip iteration when is not found
             if(!$meal){
                 // TODO :: Need to remove this logger this is only for testing purpose
-                \Illuminate\Support\Facades\Log::info("Meal Not Found::".' calories:'.$requiredCalories.' mealType:'.$mealType.' meal:'.$meal);
+                // \Illuminate\Support\Facades\Log::info("Meal Not Found::".' calories:'.$requiredCalories.' mealType:'.$mealType.' meal:'.$meal);
                 continue;
             }
 

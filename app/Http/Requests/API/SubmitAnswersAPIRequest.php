@@ -50,11 +50,18 @@ class SubmitAnswersAPIRequest extends BaseAPIRequest
             'food_preferences.*'       => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q16_FOOD_PREFERENCES,
 
             'level'             => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q17_LEVEL,
-            'health_status'     => 'string|exists:options,option_variable_name,question_variable_name,' . Question::Q18_HEALTH_STATUS,
-            'daily_steps_taken' => 'string|exists:options,option_variable_name,question_variable_name,' . Question::Q19_DAILY_STEPS_TAKEN,
+            'health_status'     => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q18_HEALTH_STATUS,
+            'daily_steps_taken' => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q19_DAILY_STEPS_TAKEN,
+
+            'physically_active' => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q20_PHYSICALLY_ACTIVE,
+
+            'squat__one_rep_max_in_kg'      => 'numeric|min:1|max:200|required_if:level,intermediate,advanced',
+            'deadlift__one_rep_max_in_kg'   => 'numeric|min:1|max:200|required_if:level,intermediate,advanced',
+            'bench__one_rep_max_in_kg'      => 'numeric|min:1|max:200|required_if:level,intermediate,advanced',
+            'overhead__one_rep_max_in_kg'   => 'numeric|min:1|max:200|required_if:level,intermediate,advanced'
         ];
     }
-    
+
     /**
      * Apply conditional validation rule for 'value' based on 'unit'
      *

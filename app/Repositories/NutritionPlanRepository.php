@@ -146,7 +146,9 @@ class NutritionPlanRepository extends BaseRepository
 
             
             // Get Meal according to the Questionnaire and their algo
-            $meal = Meal::inRandomOrder()->first();
+            $meal = Meal::whereHas('mealType', function($mealTypeQuery) use($mealType) {
+                return $mealTypeQuery->whereSlug($mealType);
+            })->inRandomOrder()->first();
 
             // Skip iteration when is not found
             if(!$meal){

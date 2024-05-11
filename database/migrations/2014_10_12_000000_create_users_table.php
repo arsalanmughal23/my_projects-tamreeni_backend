@@ -50,6 +50,7 @@ class CreateUsersTable extends Migration
             $table->string('goal')->nullable()->comment('goal'); // CONSTANT: lose_weight, gain_weight, build_muscle, get_fit
 
             $table->string('workout_days_in_a_week')->nullable()->comment('workout_days_in_a_week');
+            $table->string('how_long_time_to_workout')->nullable()->comment('for making an impact on workout plan for assigning exercises');
             $table->string('workout_duration_per_day')->nullable()->comment('workout_duration_per_day');
             $table->string('equipment_type')->nullable()->comment('equipment_type');
 

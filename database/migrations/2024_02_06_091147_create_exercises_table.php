@@ -18,6 +18,8 @@ class CreateExercisesTable extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->integer('body_part_id')->unsigned();
             $table->text('name');
+            $table->string('exercise_category_name')->nullable()->comment('major_lift','accessory_movement','multi_joint','single_joint','cardio');
+            $table->string('exercise_type_name')->nullable()->comment('squat','deadlift','bench','overhead');
             $table->text('description')->nullable();
             $table->float('duration_in_m')->nullable();
             $table->integer('sets')->nullable();
@@ -28,7 +30,7 @@ class CreateExercisesTable extends Migration
             $table->text('record')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            
+
             // Foreign key constraints
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('body_part_id')->references('id')->on('body_parts')->onDelete('cascade');

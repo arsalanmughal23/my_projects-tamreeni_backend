@@ -43,6 +43,20 @@ class Exercise extends Model
 
     public $translatable = ['name', 'description'];
 
+    const CATEGORY_MAJOR_LIFT           = 'major_lift';
+    const CATEGORY_ACCESSORY_MOVEMENT   = 'accessory_movement';
+    const CATEGORY_SINGLE_JOINT         = 'multi_joint';
+    const CATEGORY_MULTI_JOINT          = 'single_joint';
+    const CATEGORY_CARDIO               = 'cardio';
+    const EXERCISE_CATEGORIES = [self::CATEGORY_MAJOR_LIFT, self::CATEGORY_ACCESSORY_MOVEMENT, self::CATEGORY_SINGLE_JOINT, self::CATEGORY_MULTI_JOINT, self::CATEGORY_CARDIO];
+
+    const TYPE_SQUAT    = 'squat';
+    const TYPE_DEADLIFT = 'deadlift';
+    const TYPE_BENCH    = 'bench';
+    const TYPE_OVERHEAD = 'overhead';
+    const EXERCISE_TYPES = [self::TYPE_SQUAT, self::TYPE_DEADLIFT, self::TYPE_BENCH, self::TYPE_OVERHEAD];
+
+
     public $fillable = [
         'user_id',
         'body_part_id',
@@ -53,7 +67,9 @@ class Exercise extends Model
         'burn_calories',
         'image',
         'video',
-        'description'
+        'description',
+        'exercise_category_name',
+        'exercise_type_name'
     ];
 
     public $appends = ['is_favourite'];

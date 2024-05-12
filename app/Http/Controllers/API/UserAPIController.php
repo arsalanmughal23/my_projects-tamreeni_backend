@@ -191,7 +191,7 @@ class UserAPIController extends AppBaseController
         return $this->sendSuccess('User deleted successfully');
     }
 
-    public function generateWorkoutPlan()
+    public function generatePlans()
     {
         try {
             DB::beginTransaction();

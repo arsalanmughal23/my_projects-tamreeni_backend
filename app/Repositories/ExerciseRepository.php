@@ -25,7 +25,9 @@ class ExerciseRepository extends BaseRepository
         'burn_calories',
         'image',
         'video',
-        'description'
+        'description',
+        'exercise_category_name',
+        'exercise_type_name'
     ];
 
     /**
@@ -78,6 +80,14 @@ class ExerciseRepository extends BaseRepository
             $query->whereHas('equipment', function ($q) use ($exerciseEquipmentIds) {
                 $q->whereIn('exercise_equipment_id', $exerciseEquipmentIds);
             });
+        }
+
+        if(isset($params['exercise_category_name'])) {
+            $query->where('exercise_category_name', $params['exercise_category_name']);
+        }
+
+        if(isset($params['exercise_type_name'])) {
+            $query->where('exercise_type_name', $params['exercise_type_name']);
         }
 
         if (isset($params['order']) && isset($params['order_by'])) {

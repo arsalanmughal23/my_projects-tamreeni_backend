@@ -22,10 +22,10 @@ class CreateWorkoutDayExercisesTable extends Migration
             $table->float('duration_in_m')->nullable();
             $table->integer('sets')->nullable(false);
             $table->integer('reps')->nullable(false);
+            $table->float('weight_in_kg')->default(0);
             $table->double('burn_calories', 8, 2)->nullable(false);
             $table->text('image')->nullable();
             $table->text('video')->nullable();
-            // $table->integer('duration')->nullable(false);
             $table->integer('status')->nullable(false);
 
             $table->integer('body_part_id')->unsigned();

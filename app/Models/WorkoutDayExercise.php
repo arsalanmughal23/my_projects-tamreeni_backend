@@ -51,6 +51,7 @@ class WorkoutDayExercise extends Model
         'duration_in_m',
         'sets',
         'reps',
+        'weight_in_kg',
         'burn_calories',
         'image',
         'video',

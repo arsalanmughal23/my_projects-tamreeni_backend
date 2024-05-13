@@ -25,6 +25,7 @@ class WorkoutDayExerciseResource extends JsonResource
             'video'                 => $this->video,
             'sets'          => $this->sets,
             'reps'          => $this->reps,
+            'weight_in_kg'  => $this->weight_in_kg,
             'duration_in_m' => $this->duration_in_m,
             'burn_calories' => $this->burn_calories,
             'workout_day_id'=> $this->workout_day_id,

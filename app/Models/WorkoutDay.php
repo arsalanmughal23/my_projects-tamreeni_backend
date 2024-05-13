@@ -107,8 +107,7 @@ class WorkoutDay extends Model
 
     public function getBodyPartsAttribute()
     {
-        $exercises = $this->workoutDayExercises()->get();
-        return $exercises->pluck('exercise')->pluck('bodyPart')->pluck('name')->toArray();
+        return $this->workoutDayExercises->pluck('bodyPart')->pluck('name')->unique('name')->toArray();
     }
 
     public function getEquipmentsAttribute()

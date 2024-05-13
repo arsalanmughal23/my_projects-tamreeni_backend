@@ -30,9 +30,7 @@ class NutritionPlanDayMealResource extends JsonResource
             "image"         => $this->meal?->image,
             "status"        => $this->status,
             "created_at"    => $this->created_at,
-            // TODO :: Change Meal Type from string to object
-            // "meal_type"     => new MealTypeResource($this->mealType)
-            "meal_type"     => $this->mealType?->name
+            "meal_type"     => new MealTypeResource($this->mealType)
         ];
     }
 

@@ -15,17 +15,29 @@ class CreateWorkoutDayExercisesTable extends Migration
     {
         Schema::create('workout_day_exercises', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('workout_day_id');
-            $table->foreign('workout_day_id')->references('id')->on('workout_days')->onDelete('cascade');
-            $table->unsignedInteger('exercise_id');
-            $table->foreign('exercise_id')->references('id')->on('exercises')->onDelete('cascade');
-            $table->integer('duration')->nullable(false);
+            $table->text('name');
+            $table->string('exercise_category_name')->nullable()->comment('major_lift','accessory_movement','multi_joint','single_joint','cardio');
+            $table->string('exercise_type_name')->nullable()->comment('squat','deadlift','bench','overhead');
+            $table->text('description')->nullable();
+            $table->float('duration_in_m')->nullable();
             $table->integer('sets')->nullable(false);
             $table->integer('reps')->nullable(false);
             $table->double('burn_calories', 8, 2)->nullable(false);
+            $table->text('image')->nullable();
+            $table->text('video')->nullable();
+            // $table->integer('duration')->nullable(false);
             $table->integer('status')->nullable(false);
+
+            $table->integer('body_part_id')->unsigned();
+            $table->unsignedBigInteger('workout_day_id');
+            $table->unsignedInteger('exercise_id');
+
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('workout_day_id')->references('id')->on('workout_days')->onDelete('cascade');
+            $table->foreign('exercise_id')->references('id')->on('exercises')->onDelete('cascade');
+            $table->foreign('body_part_id')->references('id')->on('body_parts')->onDelete('cascade');
         });
     }
 

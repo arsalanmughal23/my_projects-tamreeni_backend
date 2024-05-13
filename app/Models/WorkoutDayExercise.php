@@ -5,6 +5,7 @@ namespace App\Models;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * Class WorkoutDayExercise
@@ -27,6 +28,8 @@ class WorkoutDayExercise extends Model
 
     use HasFactory;
 
+    use HasTranslations;
+
     public $table = 'workout_day_exercises';
 
     const CREATED_AT = 'created_at';
@@ -38,15 +41,23 @@ class WorkoutDayExercise extends Model
 
     protected $dates = ['deleted_at'];
 
+    public $translatable = ['name', 'description'];
 
     public $fillable = [
-        'workout_day_id',
-        'exercise_id',
-        'duration',
+        'name',
+        'description',
+        'exercise_category_name',
+        'exercise_type_name',
+        'duration_in_m',
         'sets',
         'reps',
         'burn_calories',
-        'status'
+        'image',
+        'video',
+        'status',
+        'body_part_id',
+        'workout_day_id',
+        'exercise_id',
     ];
 
     /**

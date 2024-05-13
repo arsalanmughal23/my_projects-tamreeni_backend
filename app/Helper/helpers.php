@@ -361,6 +361,11 @@ if (!function_exists('generateDatesByWeek')) {
     {
         $startAt = clone $startDate;
         $endAt = clone $endDate;
+
+        // Add Day for EndAt because we want to generate dates from start-date to end-date
+        // Start Date & End Date should be included in generated dates
+        $endAt->addDay();
+
         // Define an array to store dates grouping by week
         $weeks = [];
 

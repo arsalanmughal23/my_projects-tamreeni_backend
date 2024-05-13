@@ -140,6 +140,11 @@ class WorkoutPlanRepository extends BaseRepository
 
         foreach ($exercises as $exercise) {
             $exerciseDetails = $this->getImpectualWorkoutExercisesDetails($userDetails, $exercise['exercise_category_name'], $this->getExerciseGeneralFactors());
+            $majorLiftExercisesMaxRep = $exercise['exercise_type_name'];
+            $majorLiftExercisesMaxRep ? $majorLiftExercisesMaxRep .='__one_rep_max_in_kg' : null;
+            $weightInKg = 0;
+            if($majorLiftExercisesMaxRep)
+                $weightInKg = calculateByPercentage($userDetails[$majorLiftExercisesMaxRep] ,$exerciseDetails['percentage']);
 
             $workoutPlanDayExercises[] = WorkoutDayExercise::create([
                 'name'                  => $exercise['name'],
@@ -149,6 +154,7 @@ class WorkoutPlanRepository extends BaseRepository
                 'duration_in_m'         => $exerciseDetails['time_in_m'],
                 'sets'                  => $exerciseDetails['sets'],
                 'reps'                  => $exerciseDetails['reps'],
+                'weight_in_kg'          => $weightInKg,
                 'burn_calories'         => $exercise['burn_calories'],
 
                 'image' => $exercise['image'],

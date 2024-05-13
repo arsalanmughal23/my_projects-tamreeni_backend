@@ -110,6 +110,14 @@ class NutritionPlanDayMeal extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      **/
+    public function mealCategory()
+    {
+        return $this->belongsTo(\App\Models\MealCategory::class, 'meal_category_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
     public function meal()
     {
         return $this->belongsTo(\App\Models\Meal::class, 'meal_id');

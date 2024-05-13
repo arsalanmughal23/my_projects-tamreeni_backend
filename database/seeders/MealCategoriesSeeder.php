@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\MealCategory;
 use Illuminate\Database\Seeder;
 use DB;
 
@@ -14,12 +15,19 @@ class MealCategoriesSeeder extends Seeder
      */
     public function run()
     {
-        $categories = [
-            [ 'diet_type' => 'traditional', 'name' => json_encode(['en'=>'eggs', 'ar'=>'بيض']) ],
-            [ 'diet_type' => 'traditional', 'name' => json_encode(['en'=>'shrimp', 'ar'=>'جمبري']) ],
-            [ 'diet_type' => 'keto', 'name' => json_encode(['en'=>'veggies', 'ar'=>'الخضار']) ],
+        $mealCategories = [
+            [ 'diet_type' => 'traditional', 'slug' => 'eggs' ],
+            [ 'diet_type' => 'keto', 'slug' => 'fish' ],
+            [ 'diet_type' => 'traditional', 'slug' => 'shrimp' ],
+            [ 'diet_type' => 'traditional', 'slug' => 'dairy' ],
+            [ 'diet_type' => 'keto', 'slug' => 'veggies' ],
+            [ 'diet_type' => 'traditional', 'slug' => 'sea_food' ],
         ];
 
-        DB::table('meal_categories')->insert($categories);
+        foreach($mealCategories as $mealCategory){
+            $mealCategory['name'] = ['en' => __('meal_category.'.$mealCategory['slug'], [], 'en'), 'ar' => __('meal_category.'.$mealCategory['slug'], [], 'ar')];
+            MealCategory::create($mealCategory);
+        }
+
     }
 }

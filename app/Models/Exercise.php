@@ -56,6 +56,18 @@ class Exercise extends Model
     const TYPE_OVERHEAD = 'overhead';
     const EXERCISE_TYPES = [self::TYPE_SQUAT, self::TYPE_DEADLIFT, self::TYPE_BENCH, self::TYPE_OVERHEAD];
 
+    const LOW_INTENSITY = 'low';
+    const MODERATE_INTENSITY = 'moderate';
+    const HIGH_INTENSITY = 'high';
+    const VERY_HIGH_INTENSITY = 'very_high';
+    const EXERCISE_INTENSITY_LEVELS = [self::LOW_INTENSITY, self::MODERATE_INTENSITY, self::HIGH_INTENSITY, self::VERY_HIGH_INTENSITY];
+    const EXERCISE_FACTORS = [
+        self::LOW_INTENSITY         => ['sets' => 3, 'reps' => 12, 'percentage' => 60],
+        self::MODERATE_INTENSITY    => ['sets' => 4, 'reps' => 8, 'percentage' => 70],
+        self::HIGH_INTENSITY        => ['sets' => 5, 'reps' => 5, 'percentage' => 80],
+        self::VERY_HIGH_INTENSITY   => ['sets' => 3, 'reps' => 3, 'percentage' => 90],
+    ];
+
 
     public $fillable = [
         'user_id',

@@ -19,6 +19,9 @@ use Carbon\Carbon;
 
 class WorkoutPlanRepository extends BaseRepository
 {
+    public function __construct(
+        private ExerciseRepository $exerciseRepository,
+    ){}
     /**
      * @var array
      */
@@ -71,63 +74,14 @@ class WorkoutPlanRepository extends BaseRepository
             'start_date' => $randomDates[0],
             'end_date'   => $randomDates[count($randomDates) - 1],
             'status'     => WorkoutPlan::STATUS_TODO
-
         ]);
-        switch ($userDetails->goal) {
-            case Option::Q1_OPT1__LOSE_WEIGHT:
-                $this->generateWaitLosePlan($workoutPlan->id, $randomDates, $userDetails);
-                break;
-            case Option::Q1_OPT2__GAIN_WEIGHT:
-                $this->generateWaitGainPlan($workoutPlan->id, $randomDates, $userDetails);
-                break;
-            case Option::Q1_OPT3__BUILD_MUSCLE:
-                $this->generateBuildMusclesPlan($workoutPlan->id, $randomDates, $userDetails);
-                break;
-            case Option::Q1_OPT4__GET_FIT:
-                $this->generateGetFitPlan($workoutPlan->id, $randomDates, $userDetails);
-                break;
-        }
-        return $workoutPlan;
-    }
 
-    public function generateWaitLosePlan($workoutPlanId, $randomDates, $user)
-    {
-        //TODO: get exercises as per define criteria
-        $exercises = Exercise::all();
-        /* create workout day and workout day exercises  */
-        $this->assignWorkoutDaysAndExercises($randomDates, $exercises, $workoutPlanId);
-    }
-
-    public function generateWaitGainPlan($workoutPlanId, $randomDates, $user)
-    {
-        //TODO: get exercises as per define criteria
-        $exercises = Exercise::all();
-        /* create workout day and workout day exercises  */
-        $this->assignWorkoutDaysAndExercises($randomDates, $exercises, $workoutPlanId);
-    }
-
-    public function generateBuildMusclesPlan($workoutPlanId, $randomDates, $user)
-    {
-        //TODO: get exercises as per define criteria
-        $exercises = Exercise::all();
-        /* create workout day and workout day exercises  */
-        $this->assignWorkoutDaysAndExercises($randomDates, $exercises, $workoutPlanId);
-    }
-
-    public function generateGetFitPlan($workoutPlanId, $randomDates, $user)
-    {
-        //TODO: get exercises as per define criteria
-        $exercises = Exercise::all();
-        /* create workout day and workout day exercises  */
-        $this->assignWorkoutDaysAndExercises($randomDates, $exercises, $workoutPlanId);
-    }
-
-    public function assignWorkoutDaysAndExercises($randomDates, $exercises, $workoutPlanId)
-    {
-        $durationOfAllExercises = array_sum($exercises->pluck('duration_in_m')->toArray());
+        // create workout day and workout day exercises
+        $workoutPlanDays = [];
         foreach ($randomDates as $key => $randomDate) {
+
             $workoutDay = WorkoutDay::create([
-                'workout_plan_id' => $workoutPlanId,
+                'workout_plan_id' => $workoutPlan->id,
                 'name'            => [
                     'en' => 'Day 0' . $key + 1,
                     'ar' => 'اليوم 0' . $key + 1
@@ -137,21 +91,116 @@ class WorkoutPlanRepository extends BaseRepository
                     'ar' => WorkoutDay::DESCRIPTION_AR
                 ],
                 'date'            => Carbon::parse($randomDate),
-                'duration'        => $durationOfAllExercises,
-                'image'           => $exercises[0]->image ?? null,
-                'status'          => WorkoutDay::STATUS_TODO
+                'status'          => WorkoutDay::STATUS_TODO,
+                'duration'        => 0,
+                'image'           => null,
             ]);
-            foreach ($exercises as $index => $exercise) {
-                WorkoutDayExercise::create([
-                    'workout_day_id' => $workoutDay->id,
-                    'exercise_id'    => $exercise->id,
-                    'duration'       => $exercise->duration_in_m,
-                    'sets'           => $exercise->sets,
-                    'reps'           => $exercise->reps,
-                    'burn_calories'  => $exercise->burn_calories,
-                    'status'         => WorkoutDayExercise::STATUS_TODO
-                ]);
-            }
+
+            // TODO : assign workoutday exercises
+            $workoutDayExercises = collect($this->assignWorkoutDayExercises($userDetails, $workoutDay->id));
+            $workoutDay->update(['duration' => $workoutDayExercises->sum('duration_in_m'), 'image' => $workoutDayExercises->first()->image ]);
+            $workoutDay['workout_day_exercises'] = $workoutDayExercises;
+            $workoutPlanDays[] = $workoutDay;
         }
+        $workoutPlan['workout_days'] = $workoutPlanDays;
+        return $workoutPlan;
+    }
+
+    private function makeExerciseDetails($exerciseFactors, $time)
+    {
+        return [
+            'sets'          => $exerciseFactors['sets'],
+            'reps'          => $exerciseFactors['reps'],
+            'percentage'    => $exerciseFactors['percentage'],
+            'time_in_m'     => $time
+        ];
+    }
+
+    private function getExerciseGeneralFactors($intensityLevelIndex = null)
+    {
+        $exerciseIntensityLevel = null;
+        if($intensityLevelIndex)
+            $exerciseIntensityLevel = Exercise::EXERCISE_INTENSITY_LEVELS[$intensityLevelIndex];
+
+        if(!$exerciseIntensityLevel)
+            $exerciseIntensityLevel = collect(Exercise::EXERCISE_INTENSITY_LEVELS)->random();
+    
+        $exerciseDetails = Exercise::EXERCISE_FACTORS[$exerciseIntensityLevel];
+        return $exerciseDetails;
+    }
+    public function assignWorkoutDayExercises(UserDetail $userDetails, $workoutDayId)
+    {
+        $workoutPlanDayExercises = [];
+
+        // TODO: get exercises as per define criteriai
+        $majorLiftExercises = $this->exerciseRepository->getExercises(['exercise_category_name' => Exercise::CATEGORY_MAJOR_LIFT])->inRandomOrder()->take(1)->get();
+        $accessoryMovementExercises = $this->exerciseRepository->getExercises(['exercise_category_name' => Exercise::CATEGORY_ACCESSORY_MOVEMENT])->inRandomOrder()->take(2)->get();
+        $cardioExercises = $this->exerciseRepository->getExercises(['exercise_category_name' => Exercise::CATEGORY_CARDIO])->inRandomOrder()->take(1)->get();
+        $exercises = array_merge($majorLiftExercises->toArray(), $accessoryMovementExercises->toArray(), $cardioExercises->toArray());
+
+        foreach ($exercises as $exercise) {
+            $exerciseDetails = $this->getImpectualWorkoutExercisesDetails($userDetails, $exercise['exercise_category_name'], $this->getExerciseGeneralFactors());
+
+            $workoutPlanDayExercises[] = WorkoutDayExercise::create([
+                'name'                  => $exercise['name'],
+                'description'           => $exercise['description'],
+                'exercise_category_name'=> $exercise['exercise_category_name'],
+                'exercise_type_name'    => $exercise['exercise_type_name'],
+                'duration_in_m'         => $exerciseDetails['time_in_m'],
+                'sets'                  => $exerciseDetails['sets'],
+                'reps'                  => $exerciseDetails['reps'],
+                'burn_calories'         => $exercise['burn_calories'],
+
+                'image' => $exercise['image'],
+                'video' => $exercise['video'],
+
+                'workout_day_id'=> $workoutDayId,
+                'exercise_id'   => $exercise['id'],
+                'body_part_id'  => $exercise['body_part_id'],
+                'status'        => WorkoutDayExercise::STATUS_TODO
+            ]);
+        }
+        return $workoutPlanDayExercises;
+    }
+
+    public function getImpectualWorkoutExercisesDetails($userDetails, $exerciseCategory, $exerciseFactors)
+    {
+        $exercisesDetails = null;
+        switch ($userDetails->how_long_time_to_workout) {
+            case Option::Q12_OPT1__30_MINS:
+                $exercisesDetails = match ($exerciseCategory) {
+                    Exercise::CATEGORY_MAJOR_LIFT => $this->makeExerciseDetails($exerciseFactors, 16),
+                    Exercise::CATEGORY_ACCESSORY_MOVEMENT => $this->makeExerciseDetails($exerciseFactors, 16),
+                    Exercise::CATEGORY_CARDIO => $this->makeExerciseDetails($exerciseFactors, 16),
+                    default => null
+                };
+                break;
+            case Option::Q12_OPT2__45_MINS:
+                $exercisesDetails = match ($exerciseCategory) {
+                    Exercise::CATEGORY_MAJOR_LIFT => $this->makeExerciseDetails($exerciseFactors, 16),
+                    Exercise::CATEGORY_ACCESSORY_MOVEMENT => $this->makeExerciseDetails($exerciseFactors, 16),
+                    Exercise::CATEGORY_CARDIO => $this->makeExerciseDetails($exerciseFactors, 16),
+                    default => null
+                };
+                break;
+            case Option::Q12_OPT3__1_HOUR:
+                $exercisesDetails = match ($exerciseCategory) {
+                    Exercise::CATEGORY_MAJOR_LIFT => $this->makeExerciseDetails($exerciseFactors, 16),
+                    Exercise::CATEGORY_ACCESSORY_MOVEMENT => $this->makeExerciseDetails($exerciseFactors, 16),
+                    Exercise::CATEGORY_CARDIO => $this->makeExerciseDetails($exerciseFactors, 16),
+                    default => null
+                };
+                break;
+            case Option::Q12_OPT4__MORE_THAN_1_HOUR:
+                $exercisesDetails = match ($exerciseCategory) {
+                    Exercise::CATEGORY_MAJOR_LIFT => $this->makeExerciseDetails($exerciseFactors, 16),
+                    Exercise::CATEGORY_ACCESSORY_MOVEMENT => $this->makeExerciseDetails($exerciseFactors, 16),
+                    Exercise::CATEGORY_CARDIO => $this->makeExerciseDetails($exerciseFactors, 16),
+                    default => null
+                };
+                break;
+        }
+
+        return $exercisesDetails;
     }
 }

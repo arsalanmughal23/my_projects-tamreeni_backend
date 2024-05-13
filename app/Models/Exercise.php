@@ -61,6 +61,7 @@ class Exercise extends Model
     const HIGH_INTENSITY = 'high';
     const VERY_HIGH_INTENSITY = 'very_high';
     const EXERCISE_INTENSITY_LEVELS = [self::LOW_INTENSITY, self::MODERATE_INTENSITY, self::HIGH_INTENSITY, self::VERY_HIGH_INTENSITY];
+
     const EXERCISE_FACTORS = [
         self::LOW_INTENSITY         => ['sets' => 3, 'reps' => 12, 'percentage' => 60],
         self::MODERATE_INTENSITY    => ['sets' => 4, 'reps' => 8, 'percentage' => 70],

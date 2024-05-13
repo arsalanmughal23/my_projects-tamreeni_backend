@@ -393,6 +393,13 @@ if (!function_exists('generateDatesByWeek')) {
         return $weeks;
     }
 }
+if (!function_exists('calculateByPercentage')) {
+    function calculateByPercentage($total, $percent)
+    {
+        $result = ($total / 100) * $percent;
+        return $result;
+    }
+}
 if (!function_exists('pickRandomIndices')) {
     function pickRandomIndices($array, $count)
     {

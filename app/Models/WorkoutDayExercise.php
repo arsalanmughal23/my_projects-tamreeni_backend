@@ -109,4 +109,12 @@ class WorkoutDayExercise extends Model
     {
         return $this->belongsTo(\App\Models\WorkoutDay::class, 'workout_day_id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function bodyPart()
+    {
+        return $this->belongsTo(BodyPart::class, 'body_part_id');
+    }
 }

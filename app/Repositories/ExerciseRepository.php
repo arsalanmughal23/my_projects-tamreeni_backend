@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Exercise;
+use App\Models\ExerciseEquipment;
 use App\Repositories\BaseRepository;
 
 /**
@@ -67,6 +68,25 @@ class ExerciseRepository extends BaseRepository
         if (isset($params['body_part_ids'])) {
             $bodyPartIds = explode(',', $params['body_part_ids']);
             $query->whereIn('body_part_id', $bodyPartIds);
+        }
+        if (isset($params['body_parts'])) {
+            $bodyParts = $params['body_parts'];
+
+            if(!is_array($bodyParts))
+                $bodyParts = explode(',', $bodyParts);
+
+            $query->whereHas('bodyPart', function($q) use($bodyParts) {
+                return $q->whereIn('slug', $bodyParts);
+            });
+        }
+        if (isset($params['equipment_type'])) {
+            $equipmentType = $params['equipment_type'];
+
+            $query = match ($params['equipment_type']) {
+                ExerciseEquipment::EQUIPMENT_TYPE_ALL_EQUIPMENTS => $query->whereHas('equipment'),
+                ExerciseEquipment::EQUIPMENT_TYPE_NO_EQUIPMENT_AT_ALL => $query->whereDoesntHave('equipment'),
+                default => $query->whereHas('equipment', function($q) use($equipmentType) { return $q->whereTypeSlug($equipmentType); }),
+            };
         }
 
         if (isset($params['is_favourite'])) {

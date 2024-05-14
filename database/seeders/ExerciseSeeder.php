@@ -163,14 +163,16 @@ class ExerciseSeeder extends Seeder
         // Insert the records into the database
         $exerciseEquipmentIds = ExerciseEquipment::pluck('id');
         foreach($exercises as $key => $exercise) {
-            $exercise['body_part_id'] = $bodyPartIds->random();
-            $newExercise = Exercise::create($exercise);
-
-            if($key < 2){
-                $newExercise->equipment()->attach($exerciseEquipmentIds);
-            } else {
-                if(!($key % 2 == 0))
-                    $newExercise->equipment()->attach($exerciseEquipmentIds->random());
+            foreach($bodyPartIds as $bodyPartId){
+                $exercise['body_part_id'] = $bodyPartId;
+                $newExercise = Exercise::create($exercise);
+                
+                if($key < 2){
+                    $newExercise->equipment()->attach($exerciseEquipmentIds);
+                } else {
+                    if(!($key % 2 == 0))
+                        $newExercise->equipment()->attach($exerciseEquipmentIds->random());
+                }
             }
         }
     }

@@ -34,6 +34,8 @@ class ExerciseEquipment extends Model
 
     protected $translatable = ['name'];
 
+    const EQUIPMENT_TYPES = ['machines', 'free_weight'];
+
     public $fillable = [
         'name',
         'icon',

@@ -98,7 +98,7 @@ class WorkoutPlanRepository extends BaseRepository
 
             // TODO : assign workoutday exercises
             $workoutDayExercises = collect($this->assignWorkoutDayExercises($userDetails, $workoutDay->id));
-            $workoutDay->update(['duration' => $workoutDayExercises->sum('duration_in_m'), 'image' => $workoutDayExercises->first()->image ]);
+            $workoutDay->update(['duration' => $workoutDayExercises->sum('duration_in_m'), 'image' => $workoutDayExercises->first()->image ?? null ]);
             $workoutDay['workout_day_exercises'] = $workoutDayExercises;
             $workoutPlanDays[] = $workoutDay;
         }
@@ -132,7 +132,8 @@ class WorkoutPlanRepository extends BaseRepository
     {
         $workoutPlanDayExercises = [];
 
-        $exercise = Exercise::query();
+        $exercise = $this->exerciseRepository->getExercises(['body_parts' => $userDetails->body_parts, 'equipment_type' => $userDetails->equipment_type]);
+
         $majorLiftExercises = clone $exercise;
         $accessoryMovementExercises = clone $exercise;
         $cardioExercises = clone $exercise;

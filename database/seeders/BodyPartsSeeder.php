@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\BodyPart;
 use DB;
 use Illuminate\Database\Seeder;
 
@@ -14,16 +15,18 @@ class BodyPartsSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('body_parts')->insert([
-            [
-                'name'  => json_encode(['en' => 'Biceps', 'ar' => 'عضلة البايسبس']),
-                'image' => 'biceps-image.jpg'
-            ],
-            [
-                'name'  => json_encode(['en' => 'Triceps', 'ar' => 'عضلة الثلاثي رؤوس']),
-                'image' => 'triceps-image.jpg'
-            ],
+        $bodyParts = [
+            [ 'slug' => 'back', 'image' => 'biceps-image.jpg' ],
+            [ 'slug' => 'arms', 'image' => 'biceps-image.jpg' ],
+            [ 'slug' => 'chest', 'image' => 'biceps-image.jpg' ],
+            [ 'slug' => 'abs', 'image' => 'biceps-image.jpg' ],
+            [ 'slug' => 'legs', 'image' => 'biceps-image.jpg' ],
             // Add more data as needed
-        ]);
+        ];
+
+        foreach($bodyParts as $bodyPart) {
+            $bodyPart['name'] = ['en' => __('options.'.$bodyPart['slug'], [], 'en'), 'ar' => __('options.'.$bodyPart['slug'], [], 'ar')];
+            BodyPart::create($bodyPart);
+        }
     }
 }

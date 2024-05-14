@@ -17,7 +17,8 @@ class CreateExerciseEquipmentsTable extends Migration
             $table->increments('id');
             $table->text('name');
             $table->string('icon')->nullable();
-            $table->enum('type', ['All Equipments', 'Machines', 'Free Weights', 'No Equipment At All'])->nullable();
+            // $table->enum('type', ['All Equipments', 'Machines', 'Free Weights', 'No Equipment At All'])->nullable();
+            $table->string('type_slug')->nullable(true)->comment('machines', 'free_weight');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             $table->softDeletes();

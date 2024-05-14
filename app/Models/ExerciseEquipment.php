@@ -37,7 +37,7 @@ class ExerciseEquipment extends Model
     public $fillable = [
         'name',
         'icon',
-        'type'
+        'type_slug'
     ];
 
     /**
@@ -49,7 +49,7 @@ class ExerciseEquipment extends Model
         'id'   => 'integer',
         'name' => 'string',
         'icon' => 'string',
-        'type' => 'string'
+        'type_slug' => 'string'
     ];
 
     /**
@@ -62,7 +62,7 @@ class ExerciseEquipment extends Model
         'name.en' => 'required|string|max:70',
         'name.ar' => 'required|string|max:70',
         'icon'    => 'nullable|file|mimes:jpeg,png|max:5000',
-        'type'    => 'required',
+        'type_slug' => 'required',
     ];
 
     /**

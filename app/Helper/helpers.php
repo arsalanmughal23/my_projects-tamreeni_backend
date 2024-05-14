@@ -157,7 +157,7 @@ if (!function_exists('getPermissionModelName')) {
     function getPermissionModelName($value)
     {
         if (isset($value)) {
-            $data = explode(".create", $value);
+            $data = explode(".", $value);
 
             $data = str_replace('_', ' ', $data[0]);
 

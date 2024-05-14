@@ -132,10 +132,14 @@ class WorkoutPlanRepository extends BaseRepository
     {
         $workoutPlanDayExercises = [];
 
-        // TODO: get exercises as per define criteriai
-        $majorLiftExercises = $this->exerciseRepository->getExercises(['exercise_category_name' => Exercise::CATEGORY_MAJOR_LIFT])->inRandomOrder()->take(1)->get();
-        $accessoryMovementExercises = $this->exerciseRepository->getExercises(['exercise_category_name' => Exercise::CATEGORY_ACCESSORY_MOVEMENT])->inRandomOrder()->take(2)->get();
-        $cardioExercises = $this->exerciseRepository->getExercises(['exercise_category_name' => Exercise::CATEGORY_CARDIO])->inRandomOrder()->take(1)->get();
+        $exercise = Exercise::query();
+        $majorLiftExercises = clone $exercise;
+        $accessoryMovementExercises = clone $exercise;
+        $cardioExercises = clone $exercise;
+
+        $majorLiftExercises = $majorLiftExercises->where(['exercise_category_name' => Exercise::CATEGORY_MAJOR_LIFT])->inRandomOrder()->take(1)->get();
+        $accessoryMovementExercises = $accessoryMovementExercises->where(['exercise_category_name' => Exercise::CATEGORY_ACCESSORY_MOVEMENT])->inRandomOrder()->take(2)->get();
+        $cardioExercises = $cardioExercises->where(['exercise_category_name' => Exercise::CATEGORY_CARDIO])->inRandomOrder()->take(1)->get();
         $exercises = array_merge($majorLiftExercises->toArray(), $accessoryMovementExercises->toArray(), $cardioExercises->toArray());
 
         foreach ($exercises as $exercise) {

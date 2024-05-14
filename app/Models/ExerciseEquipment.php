@@ -34,7 +34,11 @@ class ExerciseEquipment extends Model
 
     protected $translatable = ['name'];
 
-    const EQUIPMENT_TYPES = ['machines', 'free_weight'];
+    const EQUIPMENT_TYPE_MACHINE = 'machines';
+    const EQUIPMENT_TYPE_FREE_WEIGHT = 'free_weight';
+    const EQUIPMENT_TYPE_ALL_EQUIPMENTS = 'all_equipments';
+    const EQUIPMENT_TYPE_NO_EQUIPMENT_AT_ALL = 'no_equipment_at_all';
+    const EXERCISE_EQUIPMENT_TYPES = [self::EQUIPMENT_TYPE_MACHINE, self::EQUIPMENT_TYPE_FREE_WEIGHT];
 
     public $fillable = [
         'name',

@@ -50,6 +50,7 @@ class Meal extends Model
 
     public $fillable = [
         'diet_type',
+        'diet_type_slug',
         'meal_category_id',
         'meal_type_id',
         'name',
@@ -128,5 +129,10 @@ class Meal extends Model
             $isFavourite = $this->favourites()->where('user_id', $userId)->exists();
         }
         return $isFavourite;
+    }
+
+    public function foodPreferences()
+    {
+        return $this->belongsTo(MealCategory::class, 'meal_category_id');
     }
 }

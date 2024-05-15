@@ -67,5 +67,15 @@ return [
     'ft' => 'Feet',
 
     'kg' => 'Kilogram',
-    'lbs'=> 'Pound'
+    'lbs'=> 'Pound',
+
+    'not_at_all'            => 'Not At All',
+    '1_to_2_workout_a_week' => '1 to 2 Workout a week',
+    '2_to_4_workout_a_week' => '2 to 4 Workout a week',
+    '4_to_6_workout_a_week' => '4 to 6 Workout a week',
+
+    'squat__one_rep_max_in_kg'      => 'Squat',
+    'deadlift__one_rep_max_in_kg'   => 'Deadlift',
+    'bench__one_rep_max_in_kg'      => 'Bench',
+    'overhead__one_rep_max_in_kg'   => 'Overhead',
 ];

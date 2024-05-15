@@ -17,6 +17,7 @@ class MealTypeResource extends JsonResource
     {
         return [
             'id'         => $this->id,
+            'slug'      => $this->slug,
             'name'       => $this->getTranslation('name', app()->getLocale()),
             "created_at" => $this->created_at
         ];

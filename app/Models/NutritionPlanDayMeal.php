@@ -49,7 +49,11 @@ class NutritionPlanDayMeal extends Model
         'nutrition_plan_day_id',
         'meal_id',
         'meal_type_id',
+        'meal_category_id',
         'name',
+        'description',
+        'diet_type',
+        'image',
         'calories',
         'carbs',
         'fats',
@@ -101,6 +105,14 @@ class NutritionPlanDayMeal extends Model
     public function mealType()
     {
         return $this->belongsTo(\App\Models\MealType::class, 'meal_type_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function mealCategory()
+    {
+        return $this->belongsTo(\App\Models\MealCategory::class, 'meal_category_id');
     }
 
     /**

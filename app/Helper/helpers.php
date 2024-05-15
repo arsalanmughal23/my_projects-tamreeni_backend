@@ -157,7 +157,7 @@ if (!function_exists('getPermissionModelName')) {
     function getPermissionModelName($value)
     {
         if (isset($value)) {
-            $data = explode(".create", $value);
+            $data = explode(".", $value);
 
             $data = str_replace('_', ' ', $data[0]);
 
@@ -231,7 +231,7 @@ if (!function_exists('calculateBMI')) {
 if (!function_exists('calculateRequiredCalories')) {
     function calculateRequiredCalories($userDetails, $goal = null, $gender = null)
     {
-        $PA         = 1;
+        $PA         = Option::Q20_PHYSICALLY_ACTIVE_OPT_VALUES[$userDetails->physically_active] ?? 0;
         $goal       = $goal ?? $userDetails->goal;
         $gender     = $gender ?? $userDetails->gender;
         $age        = $userDetails->age;
@@ -361,6 +361,11 @@ if (!function_exists('generateDatesByWeek')) {
     {
         $startAt = clone $startDate;
         $endAt = clone $endDate;
+
+        // Add Day for EndAt because we want to generate dates from start-date to end-date
+        // Start Date & End Date should be included in generated dates
+        $endAt->addDay();
+
         // Define an array to store dates grouping by week
         $weeks = [];
 
@@ -386,6 +391,13 @@ if (!function_exists('generateDatesByWeek')) {
             $startAt->modify('+1 day');
         }
         return $weeks;
+    }
+}
+if (!function_exists('calculateByPercentage')) {
+    function calculateByPercentage($total, $percent)
+    {
+        $result = ($total / 100) * $percent;
+        return $result;
     }
 }
 if (!function_exists('pickRandomIndices')) {

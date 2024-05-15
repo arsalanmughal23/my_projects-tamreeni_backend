@@ -27,7 +27,6 @@ class DatabaseSeeder extends Seeder
             BodyPartsSeeder::class,
             EventsTableSeeder::class,
             ExerciseSeeder::class,
-            ExerciseEquipmentsPivotSeeder::class,
             QuestionAndOptionSeeder::class,
             PageSeeder::class,
             PackagesTableSeeder::class

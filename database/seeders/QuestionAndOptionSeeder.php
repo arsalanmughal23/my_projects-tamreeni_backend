@@ -69,13 +69,6 @@ class QuestionAndOptionSeeder extends Seeder
                 'options'                          => Question::Q6_SEC_OPTS,
                 'position'                         => 6
             ],
-            // [
-            //     'title' => "How physically active you are?",
-            //     'cover_image' => 'https://via.placeholder.com/640x480.png',
-            //     'answer_mode' => 'single_select',
-            //     'question_variable_name' => 'physically_active',
-            //     'options' => ['not_at_all', '1_to_2_workout_a_week', '2_to_4_workout_a_week', '4_to_6_workout_a_week']
-            // ],
             [
                 'title'                  => Question::Q7_WORKOUT_DAYS_IN_A_WEEK,
                 'cover_image'            => 'https://via.placeholder.com/640x480.png',
@@ -138,22 +131,14 @@ class QuestionAndOptionSeeder extends Seeder
                 'question_variable_name' => Question::Q14_BODY_PARTS,
                 'options'                => Question::Q14_OPTS,
                 'position'               => 14
-            ],
+            ],            
             [
-                'title'                  => Question::Q15_DIET_TYPE,
+                'title'                  => Question::Q20_PHYSICALLY_ACTIVE,//"How physically active you are?",
                 'cover_image'            => 'https://via.placeholder.com/640x480.png',
                 'answer_mode'            => 'single_select',
-                'question_variable_name' => Question::Q15_DIET_TYPE,
-                'options'                => Question::Q15_OPTS,
-                'position'               => 18
-            ],
-            [
-                'title'                  => Question::Q16_FOOD_PREFERENCES,
-                'cover_image'            => 'https://via.placeholder.com/640x480.png',
-                'answer_mode'            => 'multi_select',
-                'question_variable_name' => Question::Q16_FOOD_PREFERENCES,
-                'options'                => Question::Q16_OPTS,
-                'position'               => 19
+                'question_variable_name' => Question::Q20_PHYSICALLY_ACTIVE,//'physically_active',
+                'options'                => Question::Q20_OPTS,//['not_at_all', '1_to_2_workout_a_week', '2_to_4_workout_a_week', '4_to_6_workout_a_week'],
+                'position'               => 15
             ],
             [
                 'title'                  => Question::Q17_LEVEL,
@@ -161,7 +146,15 @@ class QuestionAndOptionSeeder extends Seeder
                 'answer_mode'            => 'single_select',
                 'question_variable_name' => Question::Q17_LEVEL,
                 'options'                => Question::Q17_OPTS,
-                'position'               => 15
+                'position'               => 16
+            ],
+            [
+                'title'                  => Question::Q21_ONE_REP_MAX_WEIGHT,
+                'cover_image'            => 'https://via.placeholder.com/640x480.png',
+                'answer_mode'            => 'multi_input_number',
+                'question_variable_name' => Question::Q21_ONE_REP_MAX_WEIGHT,
+                'options'                => Question::Q21_OPTS_MULTI_INPUT,
+                'position'               => 17
             ],
             [
                 'title'                  => Question::Q18_HEALTH_STATUS,
@@ -169,7 +162,7 @@ class QuestionAndOptionSeeder extends Seeder
                 'answer_mode'            => 'single_select',
                 'question_variable_name' => Question::Q18_HEALTH_STATUS,
                 'options'                => Question::Q18_OPTS,
-                'position'               => 16
+                'position'               => 18
             ],
             [
                 'title'                  => Question::Q19_DAILY_STEPS_TAKEN,
@@ -177,9 +170,24 @@ class QuestionAndOptionSeeder extends Seeder
                 'answer_mode'            => 'single_select',
                 'question_variable_name' => Question::Q19_DAILY_STEPS_TAKEN,
                 'options'                => Question::Q19_OPTS,
-                'position'               => 17
-            ]
-
+                'position'               => 19
+            ],
+            [
+                'title'                  => Question::Q15_DIET_TYPE,
+                'cover_image'            => 'https://via.placeholder.com/640x480.png',
+                'answer_mode'            => 'single_select',
+                'question_variable_name' => Question::Q15_DIET_TYPE,
+                'options'                => Question::Q15_OPTS,
+                'position'               => 20
+            ],
+            [
+                'title'                  => Question::Q16_FOOD_PREFERENCES,
+                'cover_image'            => 'https://via.placeholder.com/640x480.png',
+                'answer_mode'            => 'multi_select',
+                'question_variable_name' => Question::Q16_FOOD_PREFERENCES,
+                'options'                => Question::Q16_OPTS,
+                'position'               => 21
+            ],
         ];
 
         self::makeQuestion($questions);

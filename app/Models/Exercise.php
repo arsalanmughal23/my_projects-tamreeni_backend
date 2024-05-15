@@ -43,6 +43,33 @@ class Exercise extends Model
 
     public $translatable = ['name', 'description'];
 
+    const CATEGORY_MAJOR_LIFT           = 'major_lift';
+    const CATEGORY_ACCESSORY_MOVEMENT   = 'accessory_movement';
+    const CATEGORY_SINGLE_JOINT         = 'multi_joint';
+    const CATEGORY_MULTI_JOINT          = 'single_joint';
+    const CATEGORY_CARDIO               = 'cardio';
+    const EXERCISE_CATEGORIES = [self::CATEGORY_MAJOR_LIFT, self::CATEGORY_ACCESSORY_MOVEMENT, self::CATEGORY_SINGLE_JOINT, self::CATEGORY_MULTI_JOINT, self::CATEGORY_CARDIO];
+
+    const TYPE_SQUAT    = 'squat';
+    const TYPE_DEADLIFT = 'deadlift';
+    const TYPE_BENCH    = 'bench';
+    const TYPE_OVERHEAD = 'overhead';
+    const EXERCISE_TYPES = [self::TYPE_SQUAT, self::TYPE_DEADLIFT, self::TYPE_BENCH, self::TYPE_OVERHEAD];
+
+    const LOW_INTENSITY = 'low';
+    const MODERATE_INTENSITY = 'moderate';
+    const HIGH_INTENSITY = 'high';
+    const VERY_HIGH_INTENSITY = 'very_high';
+    const EXERCISE_INTENSITY_LEVELS = [self::LOW_INTENSITY, self::MODERATE_INTENSITY, self::HIGH_INTENSITY, self::VERY_HIGH_INTENSITY];
+
+    const EXERCISE_FACTORS = [
+        self::LOW_INTENSITY         => ['sets' => 3, 'reps' => 12, 'percentage' => 60],
+        self::MODERATE_INTENSITY    => ['sets' => 4, 'reps' => 8, 'percentage' => 70],
+        self::HIGH_INTENSITY        => ['sets' => 5, 'reps' => 5, 'percentage' => 80],
+        self::VERY_HIGH_INTENSITY   => ['sets' => 3, 'reps' => 3, 'percentage' => 90],
+    ];
+
+
     public $fillable = [
         'user_id',
         'body_part_id',
@@ -53,7 +80,9 @@ class Exercise extends Model
         'burn_calories',
         'image',
         'video',
-        'description'
+        'description',
+        'exercise_category_name',
+        'exercise_type_name'
     ];
 
     public $appends = ['is_favourite'];

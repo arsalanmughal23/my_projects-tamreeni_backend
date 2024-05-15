@@ -96,6 +96,8 @@ class Question extends Model
     const Q17_LEVEL                    = 'level';
     const Q18_HEALTH_STATUS            = 'health_status';
     const Q19_DAILY_STEPS_TAKEN        = 'daily_steps_taken';
+    const Q20_PHYSICALLY_ACTIVE        = 'physically_active';
+    const Q21_ONE_REP_MAX_WEIGHT       = 'one_rep_max';
 
     const Q1_OPTS = [Option::Q1_OPT1__LOSE_WEIGHT, Option::Q1_OPT2__GAIN_WEIGHT, Option::Q1_OPT3__BUILD_MUSCLE, Option::Q1_OPT4__GET_FIT];
     const Q2_OPTS = [Option::Q2_OPT1__MALE, Option::Q2_OPT2__FEMALE];
@@ -116,6 +118,8 @@ class Question extends Model
     const Q17_OPTS = [Option::Q17_OPT1__BEGINNER, Option::Q17_OPT2__INTERMEDIATE, Option::Q17_OPT3__ADVANCED];
     const Q18_OPTS = [Option::Q18_OPT1__YES, Option::Q18_OPT2__NO];
     const Q19_OPTS = [Option::Q19_OPT1__2000_4000_STEPS, Option::Q19_OPT2__5000_7000_STEPS, Option::Q19_OPT3__7000_10000, Option::Q19_OPT3__10000_PLUS];
+    const Q20_OPTS = [Option::Q20_OPT1__NOT_AT_ALL, Option::Q20_OPT2__1_to_2_WORKOUT_A_WEEK, Option::Q20_OPT3__2_to_4_WORKOUT_A_WEEK, Option::Q20_OPT4__4_to_6_WORKOUT_A_WEEK];
+    const Q21_OPTS_MULTI_INPUT = [Option::Q21_OPTS1__SQUAT, Option::Q21_OPTS2__DEADLIFT, Option::Q21_OPTS3__BENCH, Option::Q21_OPTS4__OVERHEAD];
 
 
     public function options()

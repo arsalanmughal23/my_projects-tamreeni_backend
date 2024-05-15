@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Exercise;
+use App\Models\ExerciseEquipment;
 use App\Repositories\BaseRepository;
 
 /**
@@ -25,7 +26,9 @@ class ExerciseRepository extends BaseRepository
         'burn_calories',
         'image',
         'video',
-        'description'
+        'description',
+        'exercise_category_name',
+        'exercise_type_name'
     ];
 
     /**
@@ -66,6 +69,25 @@ class ExerciseRepository extends BaseRepository
             $bodyPartIds = explode(',', $params['body_part_ids']);
             $query->whereIn('body_part_id', $bodyPartIds);
         }
+        if (isset($params['body_parts'])) {
+            $bodyParts = $params['body_parts'];
+
+            if(!is_array($bodyParts))
+                $bodyParts = explode(',', $bodyParts);
+
+            $query->whereHas('bodyPart', function($q) use($bodyParts) {
+                return $q->whereIn('slug', $bodyParts);
+            });
+        }
+        if (isset($params['equipment_type'])) {
+            $equipmentType = $params['equipment_type'];
+
+            $query = match ($params['equipment_type']) {
+                ExerciseEquipment::EQUIPMENT_TYPE_ALL_EQUIPMENTS => $query->whereHas('equipment'),
+                ExerciseEquipment::EQUIPMENT_TYPE_NO_EQUIPMENT_AT_ALL => $query->whereDoesntHave('equipment'),
+                default => $query->whereHas('equipment', function($q) use($equipmentType) { return $q->whereTypeSlug($equipmentType); }),
+            };
+        }
 
         if (isset($params['is_favourite'])) {
             $query->whereHas('favourites', function ($q) {
@@ -78,6 +100,14 @@ class ExerciseRepository extends BaseRepository
             $query->whereHas('equipment', function ($q) use ($exerciseEquipmentIds) {
                 $q->whereIn('exercise_equipment_id', $exerciseEquipmentIds);
             });
+        }
+
+        if(isset($params['exercise_category_name'])) {
+            $query->where('exercise_category_name', $params['exercise_category_name']);
+        }
+
+        if(isset($params['exercise_type_name'])) {
+            $query->where('exercise_type_name', $params['exercise_type_name']);
         }
 
         if (isset($params['order']) && isset($params['order_by'])) {

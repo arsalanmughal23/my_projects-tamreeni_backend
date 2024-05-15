@@ -81,4 +81,12 @@ class WorkoutPlan extends Model
     {
         return $this->belongsTo(\App\Models\User::class, 'user_id');
     }
+    
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     **/
+    public function workoutPlanDays()
+    {
+        return $this->hasMany(\App\Models\WorkoutDay::class, 'workout_plan_id');
+    }
 }

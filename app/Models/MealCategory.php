@@ -34,6 +34,7 @@ class MealCategory extends Model
 
     public $fillable = [
         'diet_type',
+        'slug',
         'name'
     ];
 

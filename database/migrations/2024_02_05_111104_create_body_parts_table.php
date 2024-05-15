@@ -15,6 +15,7 @@ class CreateBodyPartsTable extends Migration
     {
         Schema::create('body_parts', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('slug')->comment('back', 'arm', 'chest', 'abs', 'leg');
             $table->text('name');
             $table->string('image')->nullable();
             $table->timestamp('created_at')->useCurrent();

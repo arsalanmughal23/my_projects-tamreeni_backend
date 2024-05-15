@@ -35,6 +35,7 @@ class BodyPart extends Model
     public $translatable = ['name'];
 
     public $fillable = [
+        'slug',
         'name',
         'image'
     ];

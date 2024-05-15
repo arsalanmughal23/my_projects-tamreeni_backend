@@ -52,4 +52,4 @@ pipelines:
             - chmod 400 tek-staging.pem
             - apt-get update
             - apt-get -y install openssh-client
-            - ssh -v -o StrictHostKeyChecking=no -i tek-staging.pem ubuntu@$MACHINE_IP "cd /home/ubuntu/tamreeni-backend && git fetch origin && git reset --hard origin/devops && php artisan migrate:fresh --seed && sudo cp -r /home/ubuntu/tamreeni-backend /var/www/html/"
+            - ssh -v -o StrictHostKeyChecking=no -i tek-staging.pem ubuntu@$MACHINE_IP "cd /home/ubuntu/tamreeni-backend && git fetch origin && git reset --hard origin/devops && sudo cp -r /home/ubuntu/tamreeni-backend /var/www/html/"

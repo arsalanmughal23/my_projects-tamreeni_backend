@@ -3,6 +3,7 @@
 use App\Constants\EmailServiceTemplateNames;
 use App\Jobs\SendEmail;
 use App\Models\Option;
+use App\Models\UserDetail;
 use App\Models\VerifyEmail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -229,7 +230,7 @@ if (!function_exists('calculateBMI')) {
 }
 
 if (!function_exists('calculateRequiredCalories')) {
-    function calculateRequiredCalories($userDetails, $goal = null, $gender = null)
+    function calculateRequiredCalories(UserDetail $userDetails, $goal = null, $gender = null)
     {
         $PA         = Option::Q20_PHYSICALLY_ACTIVE_OPT_VALUES[$userDetails->physically_active] ?? 0;
         $goal       = $goal ?? $userDetails->goal;

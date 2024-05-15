@@ -48,7 +48,7 @@ class MealRepository extends BaseRepository
         $query = Meal::query();
 
         if(isset($params['diet_type'])){
-            $query->where('diet_type', $params['diet_type']);
+            $query->where('diet_type_slug', $params['diet_type']);
         }
 
         if(isset($params['meal_category_ids'])){
@@ -79,7 +79,24 @@ class MealRepository extends BaseRepository
             $maxCalorie = floatval($params['max_calories']);
             $query->where('calories', '<=', $maxCalorie);
         }
-
+        
+        if(isset($params['calories'])){
+            $query->where('calories', $params['calories']);
+        }
+        
+        if(isset($params['food_preferences'])){
+            $foodPreferences = $params['food_preferences'];
+            $query->whereHas('foodPreferences', function($q) use($foodPreferences) {
+                return $q->whereIn('slug', $foodPreferences);
+            });
+        }
+        
+        if(isset($params['meal_type'])){
+            $mealType = $params['meal_type'];
+            $query->whereHas('mealType', function($mealTypeQuery) use($mealType) {
+                return $mealTypeQuery->whereSlug($mealType);
+            });
+        }
 
         return $query;
     }

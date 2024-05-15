@@ -39,3 +39,11 @@
     {!! Form::label('created_at', 'Created At:') !!}
     <p>{{ $users->created_at }}</p>
 </div>
+
+@if(auth()->user()->hasRole('Super-Admin'))
+    <!-- User Details Field -->
+    <div class="col-sm-12">
+        {!! Form::label('user_details', 'User Details:') !!}
+        <p>{{ $users->details }}</p>
+    </div>
+@endif

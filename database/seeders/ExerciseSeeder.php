@@ -170,7 +170,7 @@ class ExerciseSeeder extends Seeder
                 if($key < 2){
                     $newExercise->equipment()->attach($exerciseEquipmentIds);
                 } else {
-                    if(!($key % 2 == 0))
+                    if(!($key % 2 == 0) || ($key > (count($exercises) - 2)))
                         $newExercise->equipment()->attach($exerciseEquipmentIds->random());
                 }
             }

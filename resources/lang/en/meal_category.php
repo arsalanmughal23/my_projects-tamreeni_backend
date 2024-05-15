@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'eggs' => 'Eggs',
+    'egg' => 'Eggs',
     'fish' => 'Fish',
     'shrimp' => 'Shrimp',
     'dairy' => 'Dairy',
-    'veggies' => 'Veggies',
+    'vegies' => 'Veggies',
     'sea_food' => 'Sea Food'
 ];

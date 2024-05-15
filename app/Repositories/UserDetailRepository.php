@@ -79,4 +79,10 @@ class UserDetailRepository extends BaseRepository
         $userDetail->save();
         return $this->update($data, $userDetail->id);
     }
+
+    public function updatedStatusPlanIsGenerated(UserDetail $userDetails, $status)
+    {
+        $userDetails->is_last_attempt_plan_generated = $status;
+        $userDetails->save();
+    }
 }

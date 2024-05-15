@@ -138,10 +138,15 @@ class NutritionPlanRepository extends BaseRepository
             }
 
             // Get Meal according to the Questionnaire and their algo
-            $meal = Meal::where('calories', $requiredCalories)->whereHas('mealType', function($mealTypeQuery) use($mealType) {
-                return $mealTypeQuery->whereSlug($mealType);
-            })->inRandomOrder()->first();
-
+            $meal = Meal::where('calories', $requiredCalories)
+                ->where('diet_type_slug', $userDetails->diet_type)
+                ->whereHas('foodPreferences', function($q) use($userDetails) {
+                    return $q->whereIn('slug', $userDetails->food_preferences);
+                })
+                ->whereHas('mealType', function($mealTypeQuery) use($mealType) {
+                    return $mealTypeQuery->whereSlug($mealType);
+                })
+                ->inRandomOrder()->first();
             // Skip iteration when is not found
             if(!$meal)
                 continue;

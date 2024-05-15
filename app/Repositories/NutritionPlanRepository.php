@@ -18,6 +18,10 @@ use Carbon\Carbon;
  */
 class NutritionPlanRepository extends BaseRepository
 {
+    public function __construct(
+        private MealRepository $mealRepository,
+    ){}
+
     /**
      * @var array
      */
@@ -138,16 +142,15 @@ class NutritionPlanRepository extends BaseRepository
             }
 
             // Get Meal according to the Questionnaire and their algo
-            $meal = Meal::where('calories', $requiredCalories)
-                ->where('diet_type_slug', $userDetails->diet_type)
-                ->whereHas('foodPreferences', function($q) use($userDetails) {
-                    return $q->whereIn('slug', $userDetails->food_preferences);
-                })
-                ->whereHas('mealType', function($mealTypeQuery) use($mealType) {
-                    return $mealTypeQuery->whereSlug($mealType);
-                })
+            $meal = $this->mealRepository->getMeals([
+                    'meal_type' => $mealType,
+                    'calories' => $requiredCalories,
+                    'diet_type' => $userDetails->diet_type,
+                    'food_preferences' => $userDetails->food_preferences,
+                ])
                 ->inRandomOrder()->first();
-            // Skip iteration when is not found
+
+            // Skip iteration when meal is not found
             if(!$meal)
                 continue;
 

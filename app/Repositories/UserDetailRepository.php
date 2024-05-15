@@ -73,6 +73,9 @@ class UserDetailRepository extends BaseRepository
             $userDetail->bmi = $calculatedBMI;
         }
 
+        if(isset($data['algo_required_calories']))
+            $userDetail->algo_required_calories = $data['algo_required_calories'];
+
         $userDetail->save();
         return $this->update($data, $userDetail->id);
     }

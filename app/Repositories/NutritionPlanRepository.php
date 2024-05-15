@@ -7,6 +7,7 @@ use App\Models\MealType;
 use App\Models\NutritionPlan;
 use App\Models\NutritionPlanDay;
 use App\Models\NutritionPlanDayMeal;
+use App\Models\UserDetail;
 use App\Repositories\BaseRepository;
 use Carbon\Carbon;
 
@@ -46,7 +47,7 @@ class NutritionPlanRepository extends BaseRepository
         return NutritionPlan::class;
     }
 
-    public function generateNutritionPlan(int $requiredCalories, Carbon $planStartDate, Carbon $planEndDate)
+    public function generateNutritionPlan(UserDetail $userDetails, Carbon $planStartDate, Carbon $planEndDate)
     {
         // Generate Upcomming Days (Dates) by weekly grouping
         $weekWiseDates  = generateDatesByWeek($planStartDate, $planEndDate);
@@ -87,7 +88,7 @@ class NutritionPlanRepository extends BaseRepository
             ]);
 
             // Assign Meals on Each Nutrition Plan Day
-            $nutritionPlanDayMeals = $this->assignMealsOnNutritionPlanDay($nutritionPlanDay, $requiredCalories, $randomDate);
+            $nutritionPlanDayMeals = $this->assignMealsOnNutritionPlanDay($userDetails, $nutritionPlanDay, $randomDate);
             $nutritionPlanDay['nutrition_plan_day_meals'] = $nutritionPlanDayMeals;
             // Push Nutrition Plan Day into their listing array
             array_push($nutritionPlanDays, $nutritionPlanDay);
@@ -120,8 +121,9 @@ class NutritionPlanRepository extends BaseRepository
         return $dayRemainingMealTimes;
     }
 
-    public function assignMealsOnNutritionPlanDay(NutritionPlanDay $nutritionPlanDay, int $requiredCalories, Carbon $planDayDateTime)
+    public function assignMealsOnNutritionPlanDay(UserDetail $userDetails, NutritionPlanDay $nutritionPlanDay, Carbon $planDayDateTime)
     {
+        $requiredCalories = $userDetails->algo_required_calories ?? 0;
         $nutritionPlanDayMeals = [];
         foreach(MealType::ALL_NAMES as $mealType) {
             // Check Plan Day Date is Today's Date

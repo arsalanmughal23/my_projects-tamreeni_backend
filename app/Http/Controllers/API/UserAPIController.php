@@ -13,6 +13,9 @@ use App\Http\Resources\WorkoutPlanResource;
 use App\Models\NutritionPlan;
 use App\Models\UserDetail;
 use App\Models\WorkoutPlan;
+use App\Models\Exercise;
+use App\Repositories\ExerciseRepository;
+use App\Repositories\MealRepository;
 use App\Repositories\UserDetailRepository;
 use App\Repositories\UsersRepository;
 use Carbon\Carbon;
@@ -32,6 +35,8 @@ class UserAPIController extends AppBaseController
         private UserDetailRepository $userDetailRepository,
         private WorkoutPlanRepository $workoutPlanRepository,
         private NutritionPlanRepository $nutritionPlanRepository,
+        private ExerciseRepository $exerciseRepository,
+        private MealRepository $mealRepository,
     ){}
 
     public function myProfile(Request $request)
@@ -231,6 +236,42 @@ class UserAPIController extends AppBaseController
             DB::rollback();
             return $this->sendError($exception->getMessage());
         }
+    }
+
+    public function checkUserGeneratablePlans(Request $request, User $user)
+    {
+        $userDetails = $user->details;
+        if (!$userDetails->goal) {
+            return $this->sendError('Goal not set');
+        }
+
+        if(!$userDetails->is_last_attempt_plan_generated)
+            $userDetails = $this->userDetailRepository->updateRecord(['algo_required_calories' => calculateRequiredCalories($userDetails)], $user);
+            
+        $exercise = $this->exerciseRepository->getExercises(['body_parts' => $userDetails->body_parts, 'equipment_type' => $userDetails->equipment_type]);
+        $majorLiftExercises = clone $exercise;
+        $accessoryMovementExercises = clone $exercise;
+        $cardioExercises = clone $exercise;
+
+        $majorLiftExercises = $majorLiftExercises->where(['exercise_category_name' => Exercise::CATEGORY_MAJOR_LIFT])->inRandomOrder()->take(1)->get();
+        $accessoryMovementExercises = $accessoryMovementExercises->where(['exercise_category_name' => Exercise::CATEGORY_ACCESSORY_MOVEMENT])->inRandomOrder()->take(2)->get();
+        $cardioExercises = $cardioExercises->where(['exercise_category_name' => Exercise::CATEGORY_CARDIO])->inRandomOrder()->take(1)->get();
+        $exercises = array_merge($majorLiftExercises->toArray(), $accessoryMovementExercises->toArray(), $cardioExercises->toArray());
+
+        $requiredCalories = $userDetails->algo_required_calories;
+        $meals = $this->mealRepository->getMeals([
+            // 'meal_type' => $mealType,
+            'calories' => $requiredCalories,
+            'diet_type' => $userDetails->diet_type,
+            'food_preferences' => $userDetails->food_preferences,
+        ])
+        ->with('mealType')
+        ->inRandomOrder()->take(6)->get();
+
+        return [
+            'exercises' => $exercises,
+            'meals' => $meals
+        ];
     }
 
     public function getPersonalStatistics(Request $request)

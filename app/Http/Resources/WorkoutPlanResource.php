@@ -2,38 +2,27 @@
 
 namespace App\Http\Resources;
 
-use App\Models\NutritionPlanDayMeal;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class NutritionPlanDayMealResource extends JsonResource
+class WorkoutPlanResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
         return [
-            "id"                    => $this->id,
-            "nutrition_plan_day_id" => $this->nutrition_plan_day_id,
-            "meal_id"               => $this->meal_id,
-            "meal_type_id"          => $this->meal_type_id,
-            "meal_category_id"      => $this->meal_category_id,
-            "name"                  => $this->name,
-            "description"           => $this->description,
-            "diet_type"             => $this->diet_type,
-            "calories"              => $this->calories,
-            "carbs"                 => $this->carbs,
-            "fats"                  => $this->fats,
-            "protein"               => $this->protein,
-            "image"                 => $this->image,
-            "status"                => $this->status,
-            "created_at"            => $this->created_at,
-            "meal_type"             => new MealTypeResource($this->mealType),
-            "meal_category"         => new MealCategoryResource($this->mealCategory)
+            'id'            => $this->id,
+            'user_id'       => $this->user_id,
+            'name'          => $this->name,
+            'start_date'    => $this->start_date,
+            'end_date'      => $this->end_date,
+            'status'        => $this->status,
+            'workout_plan_days' => WorkoutDayResource::collection($this->whenLoaded('workoutPlanDays'))
         ];
     }
 

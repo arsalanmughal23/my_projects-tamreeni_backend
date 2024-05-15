@@ -31,4 +31,7 @@ return [
 
     'health_status'     => 'Are you currently pregnant / lactating / breastfeeding?',
     'daily_steps_taken' => 'How active are you during the day?',
+
+    'physically_active' => 'How physically active you are?',
+    'one_rep_max'       => 'Enter your 1 rep max'
 ];

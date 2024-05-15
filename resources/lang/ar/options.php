@@ -67,5 +67,15 @@ return [
     'ft' => 'قدم',
 
     'kg' => 'كيلوغرام',
-    'lbs'=> 'جنيه'
+    'lbs'=> 'جنيه',
+
+    'not_at_all'            => 'ليس على الإطلاق',
+    '1_to_2_workout_a_week' => 'تمرين من 1 إلى 2 في الأسبوع',
+    '2_to_4_workout_a_week' => '2 إلى 4 تمرينات في الأسبوع',
+    '4_to_6_workout_a_week' => '4 إلى 6 تمارين في الأسبوع',
+
+    'squat__one_rep_max_in_kg'      => 'قرفصاء',
+    'deadlift__one_rep_max_in_kg'   => 'الرفعة الميتة',
+    'bench__one_rep_max_in_kg'      => 'مقعد',
+    'overhead__one_rep_max_in_kg'   => 'النفقات العامة',
 ];

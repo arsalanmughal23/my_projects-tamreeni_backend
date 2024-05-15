@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\ExerciseEquipment;
 use Illuminate\Database\Seeder;
 use DB;
 
@@ -15,8 +16,8 @@ class ExerciseEquipmentsSeeder extends Seeder
     public function run()
     {
         DB::table('exercise_equipments')->insert([
-            ['name' => json_encode(['en' => 'Treadmill', 'ar' => 'جهاز المشي']), 'icon' => 'treadmill-icon.png', 'type' => 'Machines'],
-            ['name' => json_encode(['en' => 'Dumbbells', 'ar' => 'اجراس صماء']), 'icon' => 'dumbbells-icon.png', 'type' => 'Free Weights'],
+            ['name' => json_encode(['en' => 'Treadmill', 'ar' => 'جهاز المشي']), 'icon' => 'treadmill-icon.png', 'type_slug' => ExerciseEquipment::EXERCISE_EQUIPMENT_TYPES[0]],
+            ['name' => json_encode(['en' => 'Dumbbells', 'ar' => 'اجراس صماء']), 'icon' => 'dumbbells-icon.png', 'type_slug' => ExerciseEquipment::EXERCISE_EQUIPMENT_TYPES[1]],
             // Add more data as needed
         ]);
     }

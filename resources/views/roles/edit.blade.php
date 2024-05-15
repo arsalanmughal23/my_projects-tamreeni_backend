@@ -27,16 +27,19 @@
             <div class="card-body">
                 <div class="col-12">
                     <div class="form-group">
+                        @php $moduleNames = []; @endphp
                         @foreach ($permissions as $key => $permission)
-                            @if ($key % 7 == 0)
+                            @php $data = getPermissionModelName($permission->name); @endphp
+
+                            @if(!in_array($data, $moduleNames))
+
+                                @php array_push($moduleNames, $data); @endphp
                                 <div class="row"></br></div>
-                                @php
-                                    $data = getPermissionModelName($permission->name);
-                                @endphp
+
                                 <h6>{{ $data }} Permissions </h6>
                                 <label class="control-label mt-2 col-md-3" style="font-weight: normal !important;">
                                     <input class="checkbox-inline select-all-permissions" type="checkbox"
-                                        value="{{ $data }}">
+                                    value="{{ $data }}">
                                     Select All
                                 </label>
                                 <div class="row"></div>

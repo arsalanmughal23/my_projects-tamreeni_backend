@@ -34,10 +34,16 @@ class ExerciseEquipment extends Model
 
     protected $translatable = ['name'];
 
+    const EQUIPMENT_TYPE_MACHINE = 'machines';
+    const EQUIPMENT_TYPE_FREE_WEIGHT = 'free_weight';
+    const EQUIPMENT_TYPE_ALL_EQUIPMENTS = 'all_equipments';
+    const EQUIPMENT_TYPE_NO_EQUIPMENT_AT_ALL = 'no_equipment_at_all';
+    const EXERCISE_EQUIPMENT_TYPES = [self::EQUIPMENT_TYPE_MACHINE, self::EQUIPMENT_TYPE_FREE_WEIGHT];
+
     public $fillable = [
         'name',
         'icon',
-        'type'
+        'type_slug'
     ];
 
     /**
@@ -49,7 +55,7 @@ class ExerciseEquipment extends Model
         'id'   => 'integer',
         'name' => 'string',
         'icon' => 'string',
-        'type' => 'string'
+        'type_slug' => 'string'
     ];
 
     /**
@@ -62,7 +68,7 @@ class ExerciseEquipment extends Model
         'name.en' => 'required|string|max:70',
         'name.ar' => 'required|string|max:70',
         'icon'    => 'nullable|file|mimes:jpeg,png|max:5000',
-        'type'    => 'required',
+        'type_slug' => 'required',
     ];
 
     /**

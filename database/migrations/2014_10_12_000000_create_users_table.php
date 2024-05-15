@@ -50,16 +50,9 @@ class CreateUsersTable extends Migration
             $table->string('goal')->nullable()->comment('goal'); // CONSTANT: lose_weight, gain_weight, build_muscle, get_fit
 
             $table->string('workout_days_in_a_week')->nullable()->comment('workout_days_in_a_week');
+            $table->string('how_long_time_to_workout')->nullable()->comment('for making an impact on workout plan for assigning exercises');
             $table->string('workout_duration_per_day')->nullable()->comment('workout_duration_per_day');
             $table->string('equipment_type')->nullable()->comment('equipment_type');
-            $table->date('reach_goal_target_date')->nullable()->comment('reach_goal_target_date');
-            $table->string('body_parts')->default(json_encode([]))->comment('body_parts');
-            $table->string('diet_type')->nullable()->comment('diet_type'); // CONSTANT: traditional, keto
-            $table->string('food_preferences')->default(json_encode([]))->comment('food_preferences');
-            $table->string('level')->nullable()->comment('level');
-
-            $table->string('health_status')->nullable();
-            $table->string('daily_steps_taken')->nullable();
 
             $table->float('height_in_cm')->nullable()->default(0);
             $table->float('height')->nullable()->default(0);
@@ -70,6 +63,23 @@ class CreateUsersTable extends Migration
             $table->float('target_weight_in_kg')->nullable()->default(0);
             $table->float('target_weight')->nullable()->default(0);
             $table->string('target_weight_unit')->nullable()->comment('weight_unit'); // CONSTANT: kg, lbs
+
+            $table->date('reach_goal_target_date')->nullable()->comment('reach_goal_target_date');
+            $table->string('body_parts')->default(json_encode([]))->comment('body_parts');
+
+            $table->string('physically_active')->nullable()->comment('physically_active');
+
+            $table->string('level')->nullable()->comment('level');
+            $table->float('squat__one_rep_max_in_kg')->nullable()->default(0);
+            $table->float('deadlift__one_rep_max_in_kg')->nullable()->default(0);
+            $table->float('bench__one_rep_max_in_kg')->nullable()->default(0);
+            $table->float('overhead__one_rep_max_in_kg')->nullable()->default(0);
+            
+            $table->string('health_status')->nullable();
+            $table->string('daily_steps_taken')->nullable();
+
+            $table->string('diet_type')->nullable()->comment('diet_type'); // CONSTANT: traditional, keto
+            $table->string('food_preferences')->default(json_encode([]))->comment('food_preferences');
 
             $table->float('calories')->default(0.00);
             $table->float('bmi')->default(0.00);

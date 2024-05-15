@@ -9,8 +9,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\API\UpdateUserAPIRequest;
 use App\Http\Resources\NutritionPlanResource;
+use App\Http\Resources\WorkoutPlanResource;
 use App\Models\NutritionPlan;
 use App\Models\UserDetail;
+use App\Models\WorkoutPlan;
 use App\Repositories\UsersRepository;
 use Carbon\Carbon;
 use Error;
@@ -189,7 +191,7 @@ class UserAPIController extends AppBaseController
         return $this->sendSuccess('User deleted successfully');
     }
 
-    public function generateWorkoutPlan()
+    public function generatePlans()
     {
         try {
             DB::beginTransaction();
@@ -208,7 +210,7 @@ class UserAPIController extends AppBaseController
             $nutritionPlan  = $this->nutritionPlanRepository->generateNutritionPlan($calculatedRequiredCalories, $planStartDate, $planEndDate);
 
             if($workoutPlan)
-                $workoutPlan = $workoutPlan->toArray();
+                $workoutPlan = new WorkoutPlanResource(WorkoutPlan::with('workoutPlanDays.workoutDayExercises')->find($workoutPlan->id));
             if($nutritionPlan)
                 $nutritionPlan = new NutritionPlanResource(NutritionPlan::with('nutritionPlanDays.nutritionPlanDayMeals')->find($nutritionPlan->id));
 

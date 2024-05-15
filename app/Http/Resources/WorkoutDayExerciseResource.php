@@ -16,16 +16,25 @@ class WorkoutDayExerciseResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "id"             => $this->id,
-            "workout_day_id" => $this->workout_day_id,
-            "exercise_id"    => $this->exercise_id,
-            "duration"       => $this->duration,
-            "sets"           => $this->sets,
-            "reps"           => $this->reps,
-            "burn_calories"  => $this->burn_calories,
-            "status"         => $this->status,
-            "created_at"     => $this->created_at,
-            'exercise'       => new ExerciseResource($this->exercise)
+            'id'            => $this->id,
+            'name'          => $this->getTranslation('name', app()->getLocale()),
+            'description'   => $this->getTranslation('description', app()->getLocale()),
+            'exercise_category_name'=> $this->exercise_category_name,
+            'exercise_type_name'    => $this->exercise_type_name,
+            'image'                 => $this->image,
+            'video'                 => $this->video,
+            'sets'          => $this->sets,
+            'reps'          => $this->reps,
+            'weight_in_kg'  => $this->weight_in_kg,
+            'duration_in_m' => $this->duration_in_m,
+            'burn_calories' => $this->burn_calories,
+            'workout_day_id'=> $this->workout_day_id,
+            'exercise_id'   => $this->exercise_id,
+            'body_part_id'  => $this->body_part_id,
+            'status'        => $this->status,
+            'created_at'    => $this->created_at,
+            'body_part'     => new BodyPartResource($this->bodyPart)
+            // 'exercise'      => new ExerciseResource($this->exercise)
         ];
     }
 

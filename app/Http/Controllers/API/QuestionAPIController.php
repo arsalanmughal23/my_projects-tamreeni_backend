@@ -45,6 +45,7 @@ class QuestionAPIController extends AppBaseController
                 throw new \Error('User detail not found');
 
             $userDetails = $this->userDetailRepository->updateRecord($request->validated(), $user);
+            $this->userDetailRepository->updatedStatusPlanIsGenerated($userDetails, 0);
 
             $responseData = [
                 'bmi'    => $userDetails->bmi,

@@ -82,6 +82,8 @@ class CreateUsersTable extends Migration
             $table->string('food_preferences')->default(json_encode([]))->comment('food_preferences');
 
             $table->float('calories')->default(0.00);
+            $table->float('algo_required_calories')->default(0.00);
+            $table->boolean('is_last_attempt_plan_generated')->default(0);
             $table->float('bmi')->default(0.00);
 
             $table->unsignedBigInteger('delete_account_type_id')->nullable();

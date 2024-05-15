@@ -13,6 +13,7 @@ use App\Http\Resources\WorkoutPlanResource;
 use App\Models\NutritionPlan;
 use App\Models\UserDetail;
 use App\Models\WorkoutPlan;
+use App\Repositories\UserDetailRepository;
 use App\Repositories\UsersRepository;
 use Carbon\Carbon;
 use Error;
@@ -28,6 +29,7 @@ class UserAPIController extends AppBaseController
 {    
     public function __construct(
         private UsersRepository $userRepository,
+        private UserDetailRepository $userDetailRepository,
         private WorkoutPlanRepository $workoutPlanRepository,
         private NutritionPlanRepository $nutritionPlanRepository,
     ){}
@@ -195,7 +197,8 @@ class UserAPIController extends AppBaseController
     {
         try {
             DB::beginTransaction();
-            $userDetails = \Auth::user()->details;
+            $user = \Auth::user();
+            $userDetails = $user->details;
             if (!$userDetails->goal) {
                 return $this->sendError('Goal not set');
             }
@@ -204,15 +207,18 @@ class UserAPIController extends AppBaseController
             $planStartDate  = Carbon::now();
             $planEndDate    = Carbon::parse($userDetails->reach_goal_target_date);
 
-            $workoutPlan    = $this->workoutPlanRepository->generateWorkoutPlan($userDetails, $planStartDate, $planEndDate);
+            if(!$userDetails->is_last_attempt_plan_generated)
+                $userDetails = $this->userDetailRepository->updateRecord(['algo_required_calories' => calculateRequiredCalories($userDetails)], $user);
 
-            $calculatedRequiredCalories = calculateRequiredCalories($userDetails);
-            $nutritionPlan  = $this->nutritionPlanRepository->generateNutritionPlan($calculatedRequiredCalories, $planStartDate, $planEndDate);
+            $workoutPlan    = $this->workoutPlanRepository->generateWorkoutPlan($userDetails, $planStartDate, $planEndDate);
+            $nutritionPlan  = $this->nutritionPlanRepository->generateNutritionPlan($userDetails, $planStartDate, $planEndDate);
 
             if($workoutPlan)
                 $workoutPlan = new WorkoutPlanResource(WorkoutPlan::with('workoutPlanDays.workoutDayExercises')->find($workoutPlan->id));
             if($nutritionPlan)
                 $nutritionPlan = new NutritionPlanResource(NutritionPlan::with('nutritionPlanDays.nutritionPlanDayMeals')->find($nutritionPlan->id));
+
+            $this->userDetailRepository->updatedStatusPlanIsGenerated($userDetails, 1);
 
             $message = ($workoutPlan || $nutritionPlan) ? 'Your plan is generated successfully' : 'Sorry, your plan is not generated';
 

@@ -16,11 +16,11 @@ class MealCategoriesSeeder extends Seeder
     public function run()
     {
         $mealCategories = [
-            [ 'diet_type' => 'traditional', 'slug' => 'eggs' ],
+            [ 'diet_type' => 'traditional', 'slug' => 'egg' ],
             [ 'diet_type' => 'keto', 'slug' => 'fish' ],
             [ 'diet_type' => 'traditional', 'slug' => 'shrimp' ],
             [ 'diet_type' => 'traditional', 'slug' => 'dairy' ],
-            [ 'diet_type' => 'keto', 'slug' => 'veggies' ],
+            [ 'diet_type' => 'keto', 'slug' => 'vegies' ],
             [ 'diet_type' => 'traditional', 'slug' => 'sea_food' ],
         ];
 

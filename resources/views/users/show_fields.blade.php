@@ -41,6 +41,15 @@
 </div>
 
 @if(auth()->user()->hasRole('Super-Admin'))
+
+    <div class="col-sm-12">
+        <p>
+            <a href="{{ route('check-user-generatable-plans', $users->id) }}" target="__blank">
+                <button class="btn btn-primary">Check Generatable Plans</button>
+            </a>
+        </p>
+    </div>
+
     <!-- User Details Field -->
     <div class="col-sm-12">
         {!! Form::label('user_details', 'User Details:') !!}

@@ -39,8 +39,8 @@
 
 <!-- Exercise Equipment Field -->
 <div class="form-group col-sm-3">
-    {!! Form::label('exercise_equipments', 'Equipments:', ['class'=>'required']) !!}
-    {!! Form::select('exercise_equipments[]',$exercise_equipments, isset($exercise) ?$selectedEquipments : [],['class' => 'form-control select2', 'multiple'=>'multiple', 'required'=>'required']) !!}
+    {!! Form::label('exercise_equipments', 'Equipments:', ['class'=>'']) !!}
+    {!! Form::select('exercise_equipments[]',$exercise_equipments, isset($exercise) ?$selectedEquipments : [],['class' => 'form-control select2', 'multiple'=>'multiple']) !!}
 
 </div>
 

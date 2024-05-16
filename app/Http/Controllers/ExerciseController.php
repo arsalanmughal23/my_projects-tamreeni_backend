@@ -63,6 +63,7 @@ class ExerciseController extends AppBaseController
     public function store(CreateExerciseRequest $request)
     {
         $input = $request->all();
+        $equipmentIds = $request->get('exercise_equipments', []);
 
         $input['user_id'] = auth()->user()->id;
         if ($request->hasFile('image')) {
@@ -79,6 +80,8 @@ class ExerciseController extends AppBaseController
             $equipmentIds = $input['exercise_equipments'];
             $exercise->equipment()->attach($equipmentIds);
         }
+
+        $exercise->equipment()->sync($equipmentIds);
 
         Flash::success('Exercise saved successfully.');
 
@@ -140,6 +143,8 @@ class ExerciseController extends AppBaseController
     public function update($id, UpdateExerciseRequest $request)
     {
         $exercise = $this->exerciseRepository->find($id);
+        $equipmentIds = $request->get('exercise_equipments', []);
+
         $input    = $request->all();
         if (empty($exercise)) {
             Flash::error('Exercise not found');
@@ -157,10 +162,7 @@ class ExerciseController extends AppBaseController
 
         $this->exerciseRepository->update($input, $id);
 
-        if (isset($input['exercise_equipments'])) {
-            $equipmentIds = $input['exercise_equipments'];
-            $exercise->equipment()->sync($equipmentIds);
-        }
+        $exercise->equipment()->sync($equipmentIds);
 
         Flash::success('Exercise updated successfully.');
 

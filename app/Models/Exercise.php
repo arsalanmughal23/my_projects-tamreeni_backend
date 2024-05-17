@@ -85,7 +85,7 @@ class Exercise extends Model
         'exercise_type_name'
     ];
 
-    public $appends = ['is_favourite'];
+    public $appends = ['category_name', 'type_name', 'is_favourite'];
 
     /**
      * The attributes that should be casted to native types.
@@ -179,5 +179,14 @@ class Exercise extends Model
             $isFavourite = $this->favourites()->where('user_id', $userId)->exists();
         }
         return $isFavourite;
+    }
+
+    public function getCategoryNameAttribute()
+    {
+        return $this->exercise_category_name ? __('general.'.$this->exercise_category_name) : null;
+    }
+    public function getTypeNameAttribute()
+    {
+        return $this->exercise_type_name ? __('general.'.$this->exercise_type_name) : null;
     }
 }

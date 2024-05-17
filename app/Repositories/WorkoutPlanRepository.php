@@ -181,15 +181,16 @@ class WorkoutPlanRepository extends BaseRepository
             case Option::Q12_OPT1__30_MINS:
                 $exercisesDetails = match ($exerciseCategory) {
                     Exercise::CATEGORY_MAJOR_LIFT => $this->makeExerciseDetails($exerciseFactors, 16),
-                    Exercise::CATEGORY_ACCESSORY_MOVEMENT => $this->makeExerciseDetails($exerciseFactors, 16),
+                    Exercise::CATEGORY_SINGLE_JOINT, Exercise::CATEGORY_MULTI_JOINT => $this->makeExerciseDetails($exerciseFactors, 16),
                     Exercise::CATEGORY_CARDIO => $this->makeExerciseDetails($exerciseFactors, 16),
-                    default => null
+                    default => null // TODO : Need to fix when match case falls in default it return null 
+                    // and it will return error on assignWorkoutDayExercises function (WorkoutDayExercise creation)
                 };
                 break;
             case Option::Q12_OPT2__45_MINS:
                 $exercisesDetails = match ($exerciseCategory) {
                     Exercise::CATEGORY_MAJOR_LIFT => $this->makeExerciseDetails($exerciseFactors, 16),
-                    Exercise::CATEGORY_ACCESSORY_MOVEMENT => $this->makeExerciseDetails($exerciseFactors, 16),
+                    Exercise::CATEGORY_SINGLE_JOINT, Exercise::CATEGORY_MULTI_JOINT => $this->makeExerciseDetails($exerciseFactors, 16),
                     Exercise::CATEGORY_CARDIO => $this->makeExerciseDetails($exerciseFactors, 16),
                     default => null
                 };
@@ -197,7 +198,7 @@ class WorkoutPlanRepository extends BaseRepository
             case Option::Q12_OPT3__1_HOUR:
                 $exercisesDetails = match ($exerciseCategory) {
                     Exercise::CATEGORY_MAJOR_LIFT => $this->makeExerciseDetails($exerciseFactors, 16),
-                    Exercise::CATEGORY_ACCESSORY_MOVEMENT => $this->makeExerciseDetails($exerciseFactors, 16),
+                    Exercise::CATEGORY_SINGLE_JOINT, Exercise::CATEGORY_MULTI_JOINT => $this->makeExerciseDetails($exerciseFactors, 16),
                     Exercise::CATEGORY_CARDIO => $this->makeExerciseDetails($exerciseFactors, 16),
                     default => null
                 };
@@ -205,7 +206,7 @@ class WorkoutPlanRepository extends BaseRepository
             case Option::Q12_OPT4__MORE_THAN_1_HOUR:
                 $exercisesDetails = match ($exerciseCategory) {
                     Exercise::CATEGORY_MAJOR_LIFT => $this->makeExerciseDetails($exerciseFactors, 16),
-                    Exercise::CATEGORY_ACCESSORY_MOVEMENT => $this->makeExerciseDetails($exerciseFactors, 16),
+                    Exercise::CATEGORY_SINGLE_JOINT, Exercise::CATEGORY_MULTI_JOINT => $this->makeExerciseDetails($exerciseFactors, 16),
                     Exercise::CATEGORY_CARDIO => $this->makeExerciseDetails($exerciseFactors, 16),
                     default => null
                 };

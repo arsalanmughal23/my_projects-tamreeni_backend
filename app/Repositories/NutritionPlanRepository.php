@@ -129,7 +129,9 @@ class NutritionPlanRepository extends BaseRepository
     {
         $requiredCalories = $userDetails->algo_required_calories ?? 0;
         $nutritionPlanDayMeals = [];
-        foreach(MealType::ALL_NAMES as $mealType) {
+
+        $mealTypes = MealType::whereIn('slug', MealType::ALL_NAMES)->get();
+        foreach($mealTypes as $mealType) {
             // Check Plan Day Date is Today's Date
             if($planDayDateTime->isToday()){
                 // Get Today's Remaining Meal Times
@@ -137,14 +139,17 @@ class NutritionPlanRepository extends BaseRepository
 
                 // Skip this iteration when mealType is not exists in Remaining Meal Type
                 // Use Case: if lunch time is passed away no need to assign lunch or before meals
-                if(!in_array($mealType, $todayRemainingMealTimes))
+                if(!in_array($mealType->slug, $todayRemainingMealTimes))
                     continue;
             }
 
             // Get Meal according to the Questionnaire and their algo
+            $perDayTargetCaloriePercentage = $mealType->day_target_calorie_percentage ?? 0;
+            $assignableMealCalorie = calculateByPercentage($requiredCalories, $perDayTargetCaloriePercentage);
+
             $meal = $this->mealRepository->getMeals([
-                    'meal_type' => $mealType,
-                    'calories' => $requiredCalories,
+                    'meal_type' => $mealType->slug,
+                    'calories' => $assignableMealCalorie,
                     'diet_type' => $userDetails->diet_type,
                     'food_preferences' => $userDetails->food_preferences,
                 ])

@@ -405,7 +405,8 @@ if (!function_exists('generateDatesByWeek')) {
 if (!function_exists('calculateByPercentage')) {
     function calculateByPercentage($total, $percent)
     {
-        $result = ($total / 100) * $percent;
+        $onePercentValue = $total / 100;
+        $result = $onePercentValue * $percent;
         return $result;
     }
 }

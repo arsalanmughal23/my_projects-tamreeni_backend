@@ -171,6 +171,25 @@ class Option extends Model
         self::Q20_OPT4__4_to_6_WORKOUT_A_WEEK   => 7
     ];
 
+    const Q19_DAILY_STEPS_TAKEN_OPT_VALUES = [
+        self::Q19_OPT1__2000_4000_STEPS => 1,
+        self::Q19_OPT2__5000_7000_STEPS => 2,
+        self::Q19_OPT3__7000_10000      => 3,
+        self::Q19_OPT3__10000_PLUS      => 4
+    ];
+
+    const PHYSICAL_ACTIVITY_FACTOR = [
+        1   => 1.3,
+        2   => 1.4,
+        3   => 1.5,
+        4   => 1.6,
+        5   => 1.7,
+        6   => 1.8,
+        7   => 1.9,
+        8   => 2,
+        9   => 2.1,
+        10  => 2.2,
+    ];
 
     public function question()
     {

@@ -228,11 +228,19 @@ if (!function_exists('calculateBMI')) {
         return $bmi;
     }
 }
-
+if (!function_exists('calculatePA')) {
+    function calculatePA(UserDetail $userDetails)
+    {
+        $physically_active = Option::Q20_PHYSICALLY_ACTIVE_OPT_VALUES[$userDetails->physically_active] ?? 0;
+        $daily_steps_taken = Option::Q19_DAILY_STEPS_TAKEN_OPT_VALUES[$userDetails->daily_steps_taken] ?? 1;
+        $PA_KEY = $physically_active + $daily_steps_taken;
+        return Option::PHYSICAL_ACTIVITY_FACTOR[$PA_KEY] ?? 1.3;
+    }
+}
 if (!function_exists('calculateRequiredCalories')) {
     function calculateRequiredCalories(UserDetail $userDetails, $goal = null, $gender = null)
     {
-        $PA         = Option::Q20_PHYSICALLY_ACTIVE_OPT_VALUES[$userDetails->physically_active] ?? 0;
+        $PA         = calculatePA($userDetails);
         $goal       = $goal ?? $userDetails->goal;
         $gender     = $gender ?? $userDetails->gender;
         $age        = $userDetails->age;

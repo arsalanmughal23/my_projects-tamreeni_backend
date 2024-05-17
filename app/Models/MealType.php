@@ -48,6 +48,7 @@ class MealType extends Model
     public $fillable = [
         'slug',
         'name',
+        'day_target_calorie_percentage',
         'status'
     ];
 

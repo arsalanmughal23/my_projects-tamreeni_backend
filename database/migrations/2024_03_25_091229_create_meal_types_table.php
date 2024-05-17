@@ -17,6 +17,7 @@ class CreateMealTypesTable extends Migration
             $table->id();
             $table->string('slug')->comment('breakfast', 'lunch', 'dinner', 'fruit', 'snack');
             $table->text('name');
+            $table->float('day_target_calorie_percentage')->default(0);
             $table->integer('status')->default(1);
             $table->timestamps();
             $table->softDeletes();

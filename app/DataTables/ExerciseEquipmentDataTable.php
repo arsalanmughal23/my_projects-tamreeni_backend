@@ -22,7 +22,7 @@ class ExerciseEquipmentDataTable extends DataTable
             return ($model->name) ? $model->name : "";
         });
 
-        $dataTable->editColumn('type', function (ExerciseEquipment $model) {
+        $dataTable->editColumn('type_slug', function (ExerciseEquipment $model) {
             return $model->type;
         });
 
@@ -78,7 +78,7 @@ class ExerciseEquipmentDataTable extends DataTable
     {
         return [
             'name',
-            'type',
+            'type_slug' => [ 'data' => 'type_slug', 'name' => 'type_slug', 'title' => 'Type' ],
             'created_at'
         ];
     }

@@ -30,6 +30,13 @@ class ExerciseDataTable extends DataTable
             return ($model->name) ? $model->name : "";
         });
 
+        $dataTable->editColumn('exercise_category_name', function (Exercise $model) {
+            return $model->category_name ?? "N/A";
+        });
+        $dataTable->editColumn('exercise_type_name', function (Exercise $model) {
+            return $model->type_name ?? "N/A";
+        });
+
         $dataTable->editColumn('created_at', function (Exercise $model) {
             return $model->created_at->format('Y-m-d H:i:s');
         });
@@ -97,6 +104,8 @@ class ExerciseDataTable extends DataTable
             'user_id'      => ['title' => 'User', 'searchable' => false],
             'body_part_id' => ['title' => 'Body Part', 'searchable' => false],
             'name',
+            'exercise_category_name'=> ['title' => 'Category Name', 'searchable' => true],
+            'exercise_type_name'=> ['title' => 'Type Name', 'searchable' => true],
             'sets',
             'reps',
             'created_at',

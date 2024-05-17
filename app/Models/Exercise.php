@@ -48,6 +48,7 @@ class Exercise extends Model
     const CATEGORY_SINGLE_JOINT         = 'multi_joint';
     const CATEGORY_MULTI_JOINT          = 'single_joint';
     const CATEGORY_CARDIO               = 'cardio';
+    const CATEGORY_ACCESSORY_MOVEMENT_CATEGORIES = [self::CATEGORY_SINGLE_JOINT, self::CATEGORY_MULTI_JOINT];
     const EXERCISE_CATEGORIES = [self::CATEGORY_MAJOR_LIFT, self::CATEGORY_ACCESSORY_MOVEMENT, self::CATEGORY_SINGLE_JOINT, self::CATEGORY_MULTI_JOINT, self::CATEGORY_CARDIO];
 
     const TYPE_SQUAT    = 'squat';

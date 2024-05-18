@@ -145,6 +145,89 @@ class NutritionPlanRepository extends BaseRepository
             // Get Meal according to the Questionnaire and their algo
             $meal = $this->mealRepository->getMeals([
                     'meal_type' => $mealType,
+                    // 'calories' => $requiredCalories,
+                    'diet_type' => $userDetails->diet_type,
+                    // 'food_preferences' => $userDetails->food_preferences,
+                ])
+                ->inRandomOrder()->first();
+
+            // Skip iteration when meal is not found
+            if(!$meal)
+                continue;
+
+            $mealName = null;
+            $mealDescription = null;
+            $mealCalories = null;
+            switch ($mealType) {
+                case MealType::NAME_BREAKFAST :
+                    $mealName = $meal->name;
+                    $mealDescription = '2 units of ' . $meal->name;
+                    $mealCalories = 200;
+                    break;
+                    
+                case MealType::NAME_LUNCH :
+                    $mealName = $meal->name . ' + (Raw vegetables)';
+                    $mealDescription = '4 units of ' . $meal->name . ' & 1 unit of Raw vegetables';
+                    $mealCalories = 450;
+                    break;
+                    
+                case MealType::NAME_DINNER :
+                    $mealName = $meal->name . ' + (Cooked vegetables)';
+                    $mealDescription = '3 units of ' . $meal->name . ' & 1 unit of Cooked vegetables';
+                    $mealCalories = 350;
+                    break;
+                    
+                default :
+                    $mealName = $meal->name;
+                    $mealDescription = '1 units of ' . $meal->name;
+                    $mealCalories = 50;
+                    break;
+            }
+            // Create Nutrition Plan Day Meal
+            // OR Assign each Meal on Nutrition Plan Day
+            $nutritionPlanDayMeal = NutritionPlanDayMeal::create([
+                'nutrition_plan_day_id' => $nutritionPlanDay->id,
+                'meal_id'               => $meal->id,
+                'meal_type_id'          => $meal->meal_type_id,
+                'meal_category_id'      => $meal->meal_category_id,
+                'name'                  => $mealName,
+                'description'           => $mealDescription,
+                'diet_type'             => $meal->diet_type,
+                'image'                 => $meal->image,
+                'calories'              => $mealCalories,
+                'carbs'                 => $meal->carbs,
+                'fats'                  => $meal->fats,
+                'protein'               => $meal->protein,
+                'status'                => NutritionPlanDayMeal::STATUS_TODO
+            ]);
+
+            // Push Nutrition Plan Day Meal into their listing array
+            array_push($nutritionPlanDayMeals, $nutritionPlanDayMeal);
+        }
+        // Retrun list of Nutrition Plan Day Meals
+        return $nutritionPlanDayMeals;
+    }
+
+    public function bkup__assignMealsOnNutritionPlanDay(UserDetail $userDetails, NutritionPlanDay $nutritionPlanDay, Carbon $planDayDateTime)
+    {
+        $requiredCalories = $userDetails->algo_required_calories ?? 0;
+        $nutritionPlanDayMeals = [];
+
+        foreach(MealType::ALL_NAMES as $mealType) {
+            // Check Plan Day Date is Today's Date
+            if($planDayDateTime->isToday()){
+                // Get Today's Remaining Meal Times
+                $todayRemainingMealTimes = $this->getRemainingMealTimes($planDayDateTime);
+
+                // Skip this iteration when mealType is not exists in Remaining Meal Type
+                // Use Case: if lunch time is passed away no need to assign lunch or before meals
+                if(!in_array($mealType, $todayRemainingMealTimes))
+                    continue;
+            }
+
+            // Get Meal according to the Questionnaire and their algo
+            $meal = $this->mealRepository->getMeals([
+                    'meal_type' => $mealType,
                     'calories' => $requiredCalories,
                     'diet_type' => $userDetails->diet_type,
                     'food_preferences' => $userDetails->food_preferences,

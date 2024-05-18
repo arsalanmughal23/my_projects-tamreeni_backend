@@ -143,8 +143,9 @@ class WorkoutPlanRepository extends BaseRepository
         $cardioExercises = $cardioExercises->where(['exercise_category_name' => Exercise::CATEGORY_CARDIO])->inRandomOrder()->take(1)->get();
         $exercises = array_merge($majorLiftExercises->toArray(), $accessoryMovementExercises->toArray(), $cardioExercises->toArray());
 
+        $exerciseGeneralFactors = $this->getExerciseGeneralFactors();
         foreach ($exercises as $exercise) {
-            $exerciseDetails = $this->getImpectualWorkoutExercisesDetails($userDetails, $exercise['exercise_category_name'], $this->getExerciseGeneralFactors());
+            $exerciseDetails = $this->getImpectualWorkoutExercisesDetails($userDetails, $exercise['exercise_category_name'], $exerciseGeneralFactors);
             $majorLiftExercisesMaxRep = $exercise['exercise_type_name'];
             $majorLiftExercisesMaxRep ? $majorLiftExercisesMaxRep .='__one_rep_max_in_kg' : null;
             $weightInKg = 0;

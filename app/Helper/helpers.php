@@ -304,6 +304,7 @@ if (!function_exists('calculateRequiredCalories')) {
             break;
         }
         
+        $caloriesForMeal < 1000 && $caloriesForMeal = 1000;
         $caloriesBreakoutModulusValue = $caloriesForMeal % 100;
         $breakdownCalories  = intval($caloriesForMeal - $caloriesBreakoutModulusValue);
         $breakupCalories    = intval($caloriesForMeal + (100 - $caloriesBreakoutModulusValue));

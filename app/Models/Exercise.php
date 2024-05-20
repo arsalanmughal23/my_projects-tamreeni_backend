@@ -48,6 +48,7 @@ class Exercise extends Model
     const CATEGORY_SINGLE_JOINT         = 'multi_joint';
     const CATEGORY_MULTI_JOINT          = 'single_joint';
     const CATEGORY_CARDIO               = 'cardio';
+    const CATEGORY_ACCESSORY_MOVEMENT_CATEGORIES = [self::CATEGORY_SINGLE_JOINT, self::CATEGORY_MULTI_JOINT];
     const EXERCISE_CATEGORIES = [self::CATEGORY_MAJOR_LIFT, self::CATEGORY_ACCESSORY_MOVEMENT, self::CATEGORY_SINGLE_JOINT, self::CATEGORY_MULTI_JOINT, self::CATEGORY_CARDIO];
 
     const TYPE_SQUAT    = 'squat';
@@ -85,7 +86,7 @@ class Exercise extends Model
         'exercise_type_name'
     ];
 
-    public $appends = ['is_favourite'];
+    public $appends = ['category_name', 'type_name', 'is_favourite'];
 
     /**
      * The attributes that should be casted to native types.
@@ -179,5 +180,14 @@ class Exercise extends Model
             $isFavourite = $this->favourites()->where('user_id', $userId)->exists();
         }
         return $isFavourite;
+    }
+
+    public function getCategoryNameAttribute()
+    {
+        return $this->exercise_category_name ? __('general.'.$this->exercise_category_name) : null;
+    }
+    public function getTypeNameAttribute()
+    {
+        return $this->exercise_type_name ? __('general.'.$this->exercise_type_name) : null;
     }
 }

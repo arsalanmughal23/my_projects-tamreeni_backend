@@ -304,6 +304,7 @@ if (!function_exists('calculateRequiredCalories')) {
             break;
         }
         
+        $caloriesForMeal < 1000 && $caloriesForMeal = 1000;
         $caloriesBreakoutModulusValue = $caloriesForMeal % 100;
         $breakdownCalories  = intval($caloriesForMeal - $caloriesBreakoutModulusValue);
         $breakupCalories    = intval($caloriesForMeal + (100 - $caloriesBreakoutModulusValue));
@@ -405,7 +406,8 @@ if (!function_exists('generateDatesByWeek')) {
 if (!function_exists('calculateByPercentage')) {
     function calculateByPercentage($total, $percent)
     {
-        $result = ($total / 100) * $percent;
+        $onePercentValue = $total / 100;
+        $result = $onePercentValue * $percent;
         return $result;
     }
 }

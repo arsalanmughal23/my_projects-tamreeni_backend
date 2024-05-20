@@ -26,7 +26,7 @@ class MealDataTable extends DataTable
             return ($model->diet_type) ? $model->diet_type : "";
         });
 
-        $dataTable->editColumn('meal_category', function (Meal $model) {
+        $dataTable->editColumn('meal_category_id', function (Meal $model) {
             return ($model->mealCategory) ? $model->mealCategory->name : "";
         });
 
@@ -84,7 +84,7 @@ class MealDataTable extends DataTable
             'name',
             'calories',
             'diet_type',
-            'meal_category',
+            'meal_category_id' => [ 'data' => 'meal_category_id', 'name' => 'meal_category_id', 'title' => 'Meal Category' ],
             'created_at',
         ];
     }

@@ -46,6 +46,8 @@ class ExerciseEquipment extends Model
         'type_slug'
     ];
 
+    public $appends = [ 'type' ];
+
     /**
      * The attributes that should be casted to native types.
      *
@@ -71,6 +73,10 @@ class ExerciseEquipment extends Model
         'type_slug' => 'required',
     ];
 
+    public function getTypeAttribute()
+    {
+        return __('options.'.$this->type_slug, [], app()->getLocale()) ?? $this->type_slug;
+    }
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      **/
@@ -78,4 +84,5 @@ class ExerciseEquipment extends Model
     {
         return $this->hasMany(Event::class, 'equipment_id');
     }
+
 }

@@ -68,7 +68,7 @@ class EventsTableSeeder extends Seeder
                 'end_time' => $event['end_time'],
                 'duration' => $duration,
                 'description' => $event['description'],
-                'image' => null, // Add image path if applicable
+                'image' => 'https://tamreeni-backend.s3.amazonaws.com/7BJDR8UVCrRO', // Add image path if applicable
                 'body_part_id' => $event['body_part_id'],
                 'equipment_id' => $event['equipment_id'],
                 'user_id' => $event['user_id'],

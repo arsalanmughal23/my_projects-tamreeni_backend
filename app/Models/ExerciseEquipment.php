@@ -84,4 +84,5 @@ class ExerciseEquipment extends Model
     {
         return $this->hasMany(Event::class, 'equipment_id');
     }
+
 }

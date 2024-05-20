@@ -75,7 +75,7 @@ class ExerciseEquipment extends Model
 
     public function getTypeAttribute()
     {
-        return __('options.'.$this->type_slug, [], 'en') ?? $this->type_slug;
+        return __('options.'.$this->type_slug, [], app()->getLocale()) ?? $this->type_slug;
     }
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

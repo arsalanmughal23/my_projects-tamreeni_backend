@@ -44,6 +44,7 @@ class WorkoutDay extends Model
 
     protected $dates = ['deleted_at'];
 
+    // public $appends = ['body_parts', 'equipments', 'equipment_types'];
     public $appends = ['body_parts', 'equipments'];
 
     public $fillable = [
@@ -119,4 +120,15 @@ class WorkoutDay extends Model
 
         return $equipments;
     }
+
+    
+    // public function getEquipmentTypesAttribute()
+    // {
+    //     /* TODO: need to improve this code */
+    //     $exercises       = $this->workoutDayExercises()->get()->pluck('exercise')->pluck('id')->toArray();
+    //     $equipmentsPivot = ExerciseEquipmentPivot::whereIn('exercise_id', $exercises)->with('exerciseEquipment')->pluck('exercise_equipment_id')->unique();
+    //     $equipmentTypes  = ExerciseEquipment::whereIn('id', $equipmentsPivot)->pluck('type_slug')->toArray();
+
+    //     return $equipmentTypes;
+    // }
 }

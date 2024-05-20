@@ -77,14 +77,14 @@ class QuestionAndOptionSeeder extends Seeder
                 'options'                => Question::Q7_OPTS,
                 'position'               => 7
             ],
-            [
-                'title'                  => Question::Q8_WORKOUT_DURATION_PER_DAY,
-                'cover_image'            => 'https://via.placeholder.com/640x480.png',
-                'answer_mode'            => 'single_select',
-                'question_variable_name' => Question::Q8_WORKOUT_DURATION_PER_DAY,
-                'options'                => Question::Q8_OPTS,
-                'position'               => 8
-            ],
+            // [
+            //     'title'                  => Question::Q8_WORKOUT_DURATION_PER_DAY,
+            //     'cover_image'            => 'https://via.placeholder.com/640x480.png',
+            //     'answer_mode'            => 'single_select',
+            //     'question_variable_name' => Question::Q8_WORKOUT_DURATION_PER_DAY,
+            //     'options'                => Question::Q8_OPTS,
+            //     'position'               => 8
+            // ],
             [
                 'title'                  => Question::Q9_WORKOUT_PREFERED_PLACE,
                 'cover_image'            => 'https://via.placeholder.com/640x480.png',

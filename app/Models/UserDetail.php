@@ -70,7 +70,7 @@ class UserDetail extends Model
 
         'workout_days_in_a_week',
         'how_long_time_to_workout',
-        'workout_duration_per_day',
+        // 'workout_duration_per_day',
         'equipment_type',
         'reach_goal_target_date',
 

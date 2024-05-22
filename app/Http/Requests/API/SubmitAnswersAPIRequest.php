@@ -37,7 +37,7 @@ class SubmitAnswersAPIRequest extends BaseAPIRequest
             'target_weight_unit'    => 'required|string|exists:constants,key,group,' . Constant::CONST_WEIGHT_UNIT,
 
             'workout_days_in_a_week'   => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q7_WORKOUT_DAYS_IN_A_WEEK,
-            'workout_duration_per_day' => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q8_WORKOUT_DURATION_PER_DAY,
+            // 'workout_duration_per_day' => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q8_WORKOUT_DURATION_PER_DAY,
             'workout_prefered_place'   => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q9_WORKOUT_PREFERED_PLACE,
             'equipment_type'           => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q10_EQUIPMENT_TYPE,
             'have_a_scale'             => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q11_HAVE_A_SCALE,

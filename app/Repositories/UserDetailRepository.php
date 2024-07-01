@@ -82,6 +82,38 @@ class UserDetailRepository extends BaseRepository
 
     public function updatedStatusPlanIsGenerated(UserDetail $userDetails, $status)
     {
+        if ($status) {
+
+            $data = [
+                'language' => null,     'goal' => null,         'gender' => null,           'dob' => null, 
+                'height' => null,       'height_unit' => null,  'current_weight' => null,   'current_weight_unit' => null, 
+                'target_weight' => null,'target_weight_unit' => null,
+
+                'workout_days_in_a_week' => null,'how_long_time_to_workout' => null,
+                'equipment_type' => null,        'reach_goal_target_date' => null, 
+                
+                'body_parts' => [], 'physically_active' => null, 'level' => null,
+                
+                'squat__one_rep_max_in_kg' => null, 'deadlift__one_rep_max_in_kg' => null, 
+                'bench__one_rep_max_in_kg' => null, 'overhead__one_rep_max_in_kg' => null, 
+                
+                'health_status' => null,'daily_steps_taken' => null,
+                'diet_type' => null,    'food_preferences' => [],
+                'calories' => 0,
+
+                'workout_duration_per_day' => null, 'age' => null,
+                'height_in_cm' => null, 'current_weight_in_kg' => null, 'target_weight_in_kg' => null,
+            ];
+
+            $userDetails->update($data);
+
+            $userDetails->age = null;
+            $userDetails->height_in_cm = null;
+            $userDetails->target_weight_in_kg = null;
+            $userDetails->current_weight_in_kg = null;
+            $userDetails->workout_duration_per_day = null;
+        }
+            
         $userDetails->is_last_attempt_plan_generated = $status;
         $userDetails->save();
     }

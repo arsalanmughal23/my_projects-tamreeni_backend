@@ -94,6 +94,9 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
     Route::resource('nutrition-plan-day-meals', App\Http\Controllers\API\NutritionPlanDayMealAPIController::class);
     Route::post('test-notification', [App\Http\Controllers\API\NotificationAPIController::class, 'testNotification']);
     Route::get('generate-workout-plan', [App\Http\Controllers\API\UserAPIController::class, 'generatePlans']);
+
+    Route::resource('options', App\Http\Controllers\API\OptionAPIController::class);
+    Route::resource('question_answer_attempts', App\Http\Controllers\API\QuestionAnswerAttemptAPIController::class);
 });
 
 Route::resource('menus', App\Http\Controllers\API\MenuAPIController::class);
@@ -103,8 +106,3 @@ Route::resource('constants', App\Http\Controllers\API\ConstantAPIController::cla
 Route::resource('pages', App\Http\Controllers\API\PageAPIController::class);
 
 Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, 'pageContent'])->name('page-content');
-
-
-
-
-Route::resource('options', App\Http\Controllers\API\OptionAPIController::class);

@@ -152,7 +152,9 @@ Route::group(['middleware' => ['auth', 'dynamic_permission']], function () {
 
     Route::resource('questions', App\Http\Controllers\QuestionController::class);
 
+    Route::resource('options', App\Http\Controllers\OptionController::class);
+
+    Route::resource('question_answer_attempts', App\Http\Controllers\QuestionAnswerAttemptController::class);
 });
 
 
-Route::resource('options', App\Http\Controllers\OptionController::class);

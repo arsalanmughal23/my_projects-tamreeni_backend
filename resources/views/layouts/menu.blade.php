@@ -298,3 +298,13 @@
 @endcan
 
 
+@canany(['question_answer_attempts.index', 'question_answer_attempts.create', 'question_answer_attempts.show', 'question_answer_attempts.edit', 'question_answer_attempts.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('question_answer_attempts.index') }}"
+        class="nav-link {{ Request::is('question_answer_attempts*') ? 'active' : '' }}">
+            <p>Question Answer Attempts</p>
+        </a>
+    </li>
+@endcan
+
+

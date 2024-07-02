@@ -150,6 +150,6 @@ class CreateUsersTable extends Migration
         Schema::dropIfExists('user_social_accounts');
         Schema::dropIfExists('user_devices');
         Schema::dropIfExists('user_details');
-        Schema::dropIfExists('users');
+        // Schema::dropIfExists('users');
     }
 }

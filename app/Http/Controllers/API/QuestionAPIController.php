@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\API\SubmitAnswersAPIRequest;
 use App\Http\Resources\QuestionResource;
+use App\Models\User;
+use App\Models\UserDetail;
 use App\Repositories\QuestionRepository;
 use App\Repositories\UserDetailRepository;
 use Response;
@@ -41,6 +43,8 @@ class QuestionAPIController extends AppBaseController
         try {
             /** @var User $user */
             $user = $request->user();
+
+            /** @var UserDetail $userDetails */
             if (!$userDetails = $user->details)
                 throw new \Error('User detail not found');
 

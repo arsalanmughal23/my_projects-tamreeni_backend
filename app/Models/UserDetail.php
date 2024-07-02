@@ -22,6 +22,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property boolean $is_social_login
  * @property boolean $push_notification
  * @property string $gender
+ * 
+ * @property string $age
+ * @property string $height_in_cm
+ * @property string $target_weight_in_kg
+ * @property string $current_weight_in_kg
+ * @property string $workout_duration_per_day
+ * @property string $is_last_attempt_plan_generated
  */
 class UserDetail extends Model
 {
@@ -153,5 +160,14 @@ class UserDetail extends Model
     {
         $currentNutritionPlan = $this->currentNutritionPlan()->whereIn('status', [NutritionPlan::STATUS_TODO, WorkoutPlan::STATUS_IN_PROGRESS])->first();
         return $currentNutritionPlan->id ?? null;
+    }
+
+    public function setDobAttribute($dob)
+    {
+        if (isset($dob)) {
+            $dob = \Carbon\Carbon::parse($dob);
+            $this->attributes['dob'] = $dob;
+            $this->attributes['age'] = $dob->age;
+        }
     }
 }

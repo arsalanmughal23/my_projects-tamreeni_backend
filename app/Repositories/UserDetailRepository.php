@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\User;
 use App\Models\UserDetail;
 use App\Repositories\BaseRepository;
 
@@ -51,12 +52,9 @@ class UserDetailRepository extends BaseRepository
         return UserDetail::class;
     }
 
-    public function updateRecord($data, $user)
+    public function updateRecord($data, User $user)
     {
         $userDetail = $user->details;
-
-        if(isset($data['dob']))
-            $userDetail->age = \Carbon\Carbon::parse($data['dob'])->age;
 
         if(isset($data['height']) && isset($data['height_unit']))
             $userDetail->height_in_cm = convertSizeToCM($data['height'], $data['height_unit']);

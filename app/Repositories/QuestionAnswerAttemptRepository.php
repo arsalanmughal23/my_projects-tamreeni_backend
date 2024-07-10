@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\QuestionAnswerAttempt;
+use App\Models\UserDetail;
 use App\Repositories\BaseRepository;
 
 /**
@@ -72,5 +73,10 @@ class QuestionAnswerAttemptRepository extends BaseRepository
     public function model()
     {
         return QuestionAnswerAttempt::class;
+    }
+
+    public function createRecord(UserDetail | QuestionAnswerAttempt $data)
+    {
+        return $this->create($data->toArray());
     }
 }

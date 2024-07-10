@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMealBreakdownTable extends Migration
+class CreateMealBreakdownsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateMealBreakdownTable extends Migration
      */
     public function up()
     {
-        Schema::create('meal_breakdown', function (Blueprint $table) {
+        Schema::create('meal_breakdowns', function (Blueprint $table) {
             $table->id();
             $table->enum('diet_type', ['traditional', 'keto']);
             $table->bigInteger('total_calories');
@@ -33,6 +33,6 @@ class CreateMealBreakdownTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('meal_breakdown');
+        Schema::dropIfExists('meal_breakdowns');
     }
 }

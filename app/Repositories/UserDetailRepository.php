@@ -74,45 +74,53 @@ class UserDetailRepository extends BaseRepository
         if(isset($data['algo_required_calories']))
             $userDetail->algo_required_calories = $data['algo_required_calories'];
 
+        if(isset($data['planed_answer_attempt_id']))
+            $userDetail->planed_answer_attempt_id = $data['planed_answer_attempt_id'];
+
         $userDetail->save();
         return $this->update($data, $userDetail->id);
     }
 
-    public function updatedStatusPlanIsGenerated(UserDetail $userDetails, $status)
+    public function clearQuestionnaireUserDetails(UserDetail $userDetails)
     {
-        if ($status) {
+        $data = [
+            'language' => null,     'goal' => null,         'gender' => null,           'dob' => null, 
+            'height' => null,       'height_unit' => null,  'current_weight' => null,   'current_weight_unit' => null, 
+            'target_weight' => null,'target_weight_unit' => null,
 
-            $data = [
-                'language' => null,     'goal' => null,         'gender' => null,           'dob' => null, 
-                'height' => null,       'height_unit' => null,  'current_weight' => null,   'current_weight_unit' => null, 
-                'target_weight' => null,'target_weight_unit' => null,
-
-                'workout_days_in_a_week' => null,'how_long_time_to_workout' => null,
-                'equipment_type' => null,        'reach_goal_target_date' => null, 
-                
-                'body_parts' => [], 'physically_active' => null, 'level' => null,
-                
-                'squat__one_rep_max_in_kg' => null, 'deadlift__one_rep_max_in_kg' => null, 
-                'bench__one_rep_max_in_kg' => null, 'overhead__one_rep_max_in_kg' => null, 
-                
-                'health_status' => null,'daily_steps_taken' => null,
-                'diet_type' => null,    'food_preferences' => [],
-                'calories' => 0,
-
-                'workout_duration_per_day' => null, 'age' => null,
-                'height_in_cm' => null, 'current_weight_in_kg' => null, 'target_weight_in_kg' => null,
-            ];
-
-            $userDetails->update($data);
-
-            $userDetails->age = null;
-            $userDetails->height_in_cm = null;
-            $userDetails->target_weight_in_kg = null;
-            $userDetails->current_weight_in_kg = null;
-            $userDetails->workout_duration_per_day = null;
-        }
+            'workout_days_in_a_week' => null,'how_long_time_to_workout' => null,
+            'equipment_type' => null,        'reach_goal_target_date' => null, 
             
-        $userDetails->is_last_attempt_plan_generated = $status;
+            'body_parts' => [], 'physically_active' => null, 'level' => null,
+            
+            'squat__one_rep_max_in_kg' => null, 'deadlift__one_rep_max_in_kg' => null, 
+            'bench__one_rep_max_in_kg' => null, 'overhead__one_rep_max_in_kg' => null, 
+            
+            'health_status' => null,'daily_steps_taken' => null,
+            'diet_type' => null,    'food_preferences' => [],
+            'calories' => 0,
+
+            'workout_duration_per_day' => null, 'age' => null,
+            'height_in_cm' => null, 'current_weight_in_kg' => null, 'target_weight_in_kg' => null,
+        ];
+
+        $userDetails->update($data);
+
+        $userDetails->age = null;
+        $userDetails->height_in_cm = null;
+        $userDetails->target_weight_in_kg = null;
+        $userDetails->current_weight_in_kg = null;
+        $userDetails->workout_duration_per_day = null;
+        $userDetails->is_last_attempt_plan_generated = false;
         $userDetails->save();
+        return $userDetails->refresh();
+    }
+
+    public function updatedStatusPlanIsGenerated(UserDetail $userDetails)
+    {
+        $userDetails->is_last_attempt_plan_generated = true;
+        $userDetails->planed_answer_attempt_id = $userDetails->unplaned_answer_attempt_id;
+        $userDetails->save();
+        return $userDetails->refresh();
     }
 }

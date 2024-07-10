@@ -42,6 +42,15 @@ class QuestionAPIController extends AppBaseController
 
     public function submitAnswers(SubmitAnswersAPIRequest $request)
     {
+        $requestData = $request->validated();
+
+        if ($requestData['level'] == 'beginner') {
+            unset($requestData['squat__one_rep_max_in_kg']);
+            unset($requestData['deadlift__one_rep_max_in_kg']);
+            unset($requestData['bench__one_rep_max_in_kg']);
+            unset($requestData['overhead__one_rep_max_in_kg']);
+        }
+
         try {
             /** @var User $user */
             $user = $request->user();
@@ -50,11 +59,8 @@ class QuestionAPIController extends AppBaseController
             if (!$userDetails = $user->details)
                 throw new \Error('User detail not found');
 
-            // if (!$userAnswerAttempt = $user->lastAnswerAttemptWithStatus(QuestionAnswerAttempt::STATUS_ACTIVE))
-            //     throw new \Error('Attempted Answer is not found');
-
             $this->userDetailRepository->clearQuestionnaireUserDetails($userDetails);
-            $userDetails = $this->userDetailRepository->updateRecord($request->validated(), $user);
+            $userDetails = $this->userDetailRepository->updateRecord($requestData, $user);
             $userAnswerAttempt = $this->userAnswerAttempt->createRecord($userDetails);
             $userDetails->unplaned_answer_attempt_id = $userAnswerAttempt->id;
             $userDetails->save();

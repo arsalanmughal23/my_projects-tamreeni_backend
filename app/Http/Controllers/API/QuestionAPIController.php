@@ -9,6 +9,7 @@ use App\Http\Requests\API\SubmitAnswersAPIRequest;
 use App\Http\Resources\QuestionResource;
 use App\Models\User;
 use App\Models\UserDetail;
+use App\Repositories\QuestionAnswerAttemptRepository;
 use App\Repositories\QuestionRepository;
 use App\Repositories\UserDetailRepository;
 use Response;
@@ -21,7 +22,8 @@ class QuestionAPIController extends AppBaseController
 {
     public function __construct(
         private QuestionRepository $questionRepository,
-        private UserDetailRepository $userDetailRepository
+        private UserDetailRepository $userDetailRepository,
+        private QuestionAnswerAttemptRepository $userAnswerAttempt
     ){}
 
     /**
@@ -48,12 +50,18 @@ class QuestionAPIController extends AppBaseController
             if (!$userDetails = $user->details)
                 throw new \Error('User detail not found');
 
+            // if (!$userAnswerAttempt = $user->lastAnswerAttemptWithStatus(QuestionAnswerAttempt::STATUS_ACTIVE))
+            //     throw new \Error('Attempted Answer is not found');
+
+            $this->userDetailRepository->clearQuestionnaireUserDetails($userDetails);
             $userDetails = $this->userDetailRepository->updateRecord($request->validated(), $user);
-            $this->userDetailRepository->updatedStatusPlanIsGenerated($userDetails, 0);
+            $userAnswerAttempt = $this->userAnswerAttempt->createRecord($userDetails);
+            $userDetails->unplaned_answer_attempt_id = $userAnswerAttempt->id;
+            $userDetails->save();
 
             $responseData = [
-                'bmi'    => $userDetails->bmi,
-                'bmi_description' => __('messages.bmi_description', ['bmi' => $userDetails->bmi])
+                'bmi'    => $userAnswerAttempt->bmi,
+                'bmi_description' => __('messages.bmi_description', ['bmi' => $userAnswerAttempt->bmi])
             ];
 
             return $this->sendResponse($responseData, 'Answers are saved successfully');

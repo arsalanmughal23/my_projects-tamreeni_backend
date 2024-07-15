@@ -23,6 +23,7 @@ class CreateMealBreakdownsTable extends Migration
             $table->unsignedBigInteger('fruit_units')->default(0);
             $table->unsignedBigInteger('snack_units')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

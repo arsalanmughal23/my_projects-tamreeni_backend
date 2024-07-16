@@ -49,9 +49,12 @@ class CreateNutritionPlanDayMealTable extends Migration
     public function down()
     {
         Schema::table('nutrition_plan_day_meals', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('nutrition_plan_day_id');
-            $table->dropConstrainedForeignId('meal_id');
-            $table->dropConstrainedForeignId('meal_type_id');
+            $table->dropForeign(['nutrition_plan_day_id']);
+            $table->dropForeign(['meal_id']);
+            $table->dropForeign(['meal_type_id']);
+            $table->dropForeign(['meal_category_id']);
         });
+
+        Schema::dropIfExists('nutrition_plan_day_meals');
     }
 }

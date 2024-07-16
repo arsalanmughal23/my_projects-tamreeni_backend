@@ -98,7 +98,6 @@ class CreateUsersTable extends Migration
                 $table->timestamps();
                 
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-                $table->foreign('planed_answer_attempt_id')->references('id')->on('question_answer_attempts')->restrictOnDelete('cascade');
             });
         }
 
@@ -163,6 +162,6 @@ class CreateUsersTable extends Migration
         Schema::dropIfExists('user_social_accounts');
         Schema::dropIfExists('user_devices');
         Schema::dropIfExists('user_details');
-        // Schema::dropIfExists('users');
+        Schema::dropIfExists('users');
     }
 }

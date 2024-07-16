@@ -37,7 +37,7 @@ class CreateMealBreakdownsTable extends Migration
     public function down()
     {
         Schema::table('meal_breakdowns', function (Blueprint $table) {
-            $table->dropUnique(['type', 'calories']);
+            $table->dropUnique(['diet_type', 'total_calories']);
         });
 
         Schema::dropIfExists('meal_breakdowns');

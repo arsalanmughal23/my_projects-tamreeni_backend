@@ -43,6 +43,10 @@ class CreateRecipeTable extends Migration
      */
     public function down()
     {
+        Schema::table('recipe', function (Blueprint $table) {
+            $table->dropUnique(['diet_type', 'calories']);
+        });
+
         Schema::dropIfExists('recipe');
     }
 }

@@ -24,6 +24,8 @@ class CreateMealBreakdownsTable extends Migration
             $table->unsignedBigInteger('snack_units')->default(0);
             $table->timestamps();
             $table->softDeletes();
+
+            $table->unique(['diet_type', 'total_calories']);
         });
     }
 
@@ -34,6 +36,10 @@ class CreateMealBreakdownsTable extends Migration
      */
     public function down()
     {
+        Schema::table('table_name', function (Blueprint $table) {
+            $table->dropUnique(['type', 'calories']);
+        });
+
         Schema::dropIfExists('meal_breakdowns');
     }
 }

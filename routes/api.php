@@ -97,6 +97,8 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
 
     Route::resource('options', App\Http\Controllers\API\OptionAPIController::class);
     Route::resource('question_answer_attempts', App\Http\Controllers\API\QuestionAnswerAttemptAPIController::class);
+
+    Route::resource('meal_breakdowns', App\Http\Controllers\API\MealBreakdownAPIController::class);
 });
 
 Route::resource('menus', App\Http\Controllers\API\MenuAPIController::class);

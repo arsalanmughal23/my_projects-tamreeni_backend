@@ -67,10 +67,6 @@ class CreateQuestionAnswerAttemptsTable extends Migration
 
             $table->softDeletes();
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('workout_plan_id')->references('id')->on('workout_plans')->onDelete('cascade');
-            $table->foreign('nutrition_plan_id')->references('id')->on('nutrition_plans')->onDelete('cascade');
         });
     }
 

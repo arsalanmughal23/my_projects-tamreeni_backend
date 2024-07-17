@@ -16,13 +16,13 @@ class CreateRecipesTable extends Migration
         Schema::create('recipes', function (Blueprint $table) {            
             $table->id();
             $table->enum('diet_type', ['traditional', 'keto']);
-            $table->string('title');
+            $table->text('title');
             $table->longText('description');
-            $table->text('image');
+            $table->text('image')->nullable();
             $table->longText('instruction');
             $table->bigInteger('units_in_recipe');
             $table->bigInteger('divide_recipe_by');
-            $table->bigInteger('number_of_units');
+            $table->bigInteger('number_of_units')->default(1);
 
             $table->bigInteger('calories')->default(0);
             $table->double('carbs', 8, 2)->default(0);

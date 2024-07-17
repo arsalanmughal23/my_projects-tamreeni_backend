@@ -12,10 +12,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @version July 17, 2024, 4:13 am UTC
  *
  * @property string $diet_type
- * @property string $title
- * @property string $description
+ * @property json $title
+ * @property json $description
+ * @property json $instruction
  * @property string $image
- * @property string $instruction
  * @property integer $units_in_recipe
  * @property integer $divide_recipe_by
  * @property integer $number_of_units
@@ -63,10 +63,10 @@ class Recipe extends Model
     protected $casts = [
         'id' => 'integer',
         'diet_type' => 'string',
-        'title' => 'string',
-        'description' => 'string',
+        'title' => 'json',
+        'description' => 'json',
+        'instruction' => 'json',
         'image' => 'string',
-        'instruction' => 'string',
         'units_in_recipe' => 'integer',
         'divide_recipe_by' => 'integer',
         'number_of_units' => 'integer',
@@ -83,17 +83,30 @@ class Recipe extends Model
      */
     public static $rules = [
         'diet_type' => 'required|string',
-        'title' => 'required|string|max:191',
-        'description' => 'required|string',
-        'image' => 'required|string',
-        'instruction' => 'required|string',
-        'units_in_recipe' => 'required',
-        'divide_recipe_by' => 'required',
-        'number_of_units' => 'required',
+        
+        'title'     => 'required|array',
+        'title.en'  => 'required|string|max:120',
+        'title.ar'  => 'required|string|max:120',
+        
+        'description'     => 'required|array',
+        'description.en'  => 'required|string|max:500',
+        'description.ar'  => 'required|string|max:500',
+
+        'instruction'     => 'required|array',
+        'instruction.en'  => 'required|string|max:500',
+        'instruction.ar'  => 'required|string|max:500',
+
+        'image' => 'sometimes|string',
+
+        'units_in_recipe' => 'required|numeric',
+        'divide_recipe_by' => 'required|numeric',
+        'number_of_units' => 'sometimes|numeric',
+
         'calories' => 'required',
         'carbs' => 'required|numeric',
         'fats' => 'required|numeric',
         'protein' => 'required|numeric',
+
         'created_at' => 'nullable',
         'updated_at' => 'nullable',
         'deleted_at' => 'nullable'

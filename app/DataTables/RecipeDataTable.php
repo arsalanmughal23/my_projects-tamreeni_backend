@@ -18,6 +18,15 @@ class RecipeDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
+        $dataTable->editColumn('title', function(Recipe $model) {
+            return ($model->title) ? $model->title['en'] : '';
+        });
+        // $dataTable->editColumn('description', function(Recipe $model) {
+        //     return ($model->description) ? $model->description['en'] : '';
+        // });
+        // $dataTable->editColumn('instruction', function(Recipe $model) {
+        //     return ($model->instruction) ? $model->instruction['en'] : '';
+        // });
         return $dataTable->addColumn('action', 'recipes.datatables_actions');
     }
 
@@ -66,14 +75,14 @@ class RecipeDataTable extends DataTable
     {
         return [
             'diet_type',
+            'calories',
             'title',
-            'description',
+            // 'description',
+            // 'instruction',
             'image',
-            'instruction',
             'units_in_recipe',
             'divide_recipe_by',
             'number_of_units',
-            'calories',
             'carbs',
             'fats',
             'protein'

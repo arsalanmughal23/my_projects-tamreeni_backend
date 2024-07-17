@@ -102,7 +102,7 @@ class Recipe extends Model
         'divide_recipe_by' => 'required|numeric',
         'number_of_units' => 'sometimes|numeric',
 
-        'calories' => 'required',
+        'calories' => ['required', 'numeric'],
         'carbs' => 'required|numeric',
         'fats' => 'required|numeric',
         'protein' => 'required|numeric',

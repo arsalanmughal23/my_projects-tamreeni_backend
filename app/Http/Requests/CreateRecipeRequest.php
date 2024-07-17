@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Recipe;
+use App\Rules\RecipeUniqueDietTypeCalories;
 
 class CreateRecipeRequest extends FormRequest
 {
@@ -24,6 +25,8 @@ class CreateRecipeRequest extends FormRequest
      */
     public function rules()
     {
-        return Recipe::$rules;
+        $rules = Recipe::$rules;
+        array_push($rules['calories'], new RecipeUniqueDietTypeCalories($this->diet_type, $this->calories));
+        return $rules;
     }
 }

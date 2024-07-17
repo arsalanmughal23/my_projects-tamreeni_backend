@@ -108,3 +108,6 @@ Route::resource('constants', App\Http\Controllers\API\ConstantAPIController::cla
 Route::resource('pages', App\Http\Controllers\API\PageAPIController::class);
 
 Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, 'pageContent'])->name('page-content');
+
+
+Route::resource('recipes', App\Http\Controllers\API\RecipeAPIController::class);

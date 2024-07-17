@@ -160,3 +160,6 @@ Route::group(['middleware' => ['auth', 'dynamic_permission']], function () {
 });
 
 
+
+
+Route::resource('recipes', App\Http\Controllers\RecipeController::class);

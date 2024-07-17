@@ -303,3 +303,13 @@
         </a>
     </li>
 @endcan
+@canany(['recipes.index', 'recipes.create', 'recipes.show', 'recipes.edit', 'recipes.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('recipes.index') }}"
+        class="nav-link {{ Request::is('recipes*') ? 'active' : '' }}">
+            <p>Recipes</p>
+        </a>
+    </li>
+@endcan
+
+

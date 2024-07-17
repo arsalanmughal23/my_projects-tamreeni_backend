@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @package App\Models
  * @version July 17, 2024, 4:13 am UTC
  *
+ * @property integer $id
  * @property string $diet_type
  * @property json $title
  * @property json $description

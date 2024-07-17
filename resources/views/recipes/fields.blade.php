@@ -56,12 +56,12 @@
 <!-- Title (English) Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('title', 'Title (English):') !!}
-    {!! Form::text('title[en]', null, ['class' => 'form-control','maxlength' => 191,'maxlength' => 191,'maxlength' => 191, 'required' => true, 'pattern'=>'[a-zA-Z0-9_.\s+\-]{0,70}']) !!}
+    {!! Form::text('title[en]', null, ['class' => 'form-control', 'maxlength' => 70, 'required' => true, 'pattern'=>'[a-zA-Z0-9_.\s+\-]{0,70}']) !!}
 </div>
 <!-- Title (Arabic) Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('title', 'Title (Arabic):') !!}
-    {!! Form::text('title[ar]', null, ['class' => 'form-control','maxlength' => 191,'maxlength' => 191,'maxlength' => 191, 'required' => true, 'pattern' => '[ا-ي0-9_.\s+\-]{0,70}', 'dir' => 'rtl']) !!}
+    {!! Form::text('title[ar]', null, ['class' => 'form-control', 'maxlength' => 70, 'required' => true, 'pattern' => '[ا-ي0-9_.\s+\-]{0,70}', 'dir' => 'rtl']) !!}
 </div>
 
 <!-- Description Field -->

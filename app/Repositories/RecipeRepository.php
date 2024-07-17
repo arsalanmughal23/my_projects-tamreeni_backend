@@ -48,4 +48,9 @@ class RecipeRepository extends BaseRepository
     {
         return Recipe::class;
     }
+
+    public function getRecipeSelectOptions() 
+    {
+        return $this->model()::pluck('title', 'id');
+    }
 }

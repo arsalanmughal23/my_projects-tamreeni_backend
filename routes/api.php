@@ -111,3 +111,6 @@ Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, '
 
 
 Route::resource('recipes', App\Http\Controllers\API\RecipeAPIController::class);
+
+
+Route::resource('recipe_ingredients', App\Http\Controllers\API\RecipeIngredientAPIController::class);

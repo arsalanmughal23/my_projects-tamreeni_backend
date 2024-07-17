@@ -24,7 +24,7 @@ class CreateRecipesTable extends Migration
             $table->bigInteger('divide_recipe_by');
             $table->bigInteger('number_of_units');
 
-            $table->float('calories')->nullable();
+            $table->bigInteger('calories')->default(0);
             $table->double('carbs', 8, 2)->default(0);
             $table->double('fats', 8, 2)->default(0);
             $table->double('protein', 8, 2)->default(0);

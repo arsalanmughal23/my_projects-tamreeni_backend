@@ -7,25 +7,26 @@
 <!-- Title Field -->
 <div class="col-sm-12">
     {!! Form::label('title', 'Title:') !!}
-    <p>{{ $recipe->title }}</p>
+    <p>{{ $recipe->title['en'] ?? '' }}</p>
 </div>
 
 <!-- Description Field -->
 <div class="col-sm-12">
     {!! Form::label('description', 'Description:') !!}
-    <p>{{ $recipe->description }}</p>
-</div>
-
-<!-- Image Field -->
-<div class="col-sm-12">
-    {!! Form::label('image', 'Image:') !!}
-    <p>{{ $recipe->image }}</p>
+    <p>{{ $recipe->description['en'] ?? '' }}</p>
 </div>
 
 <!-- Instruction Field -->
 <div class="col-sm-12">
     {!! Form::label('instruction', 'Instruction:') !!}
-    <p>{{ $recipe->instruction }}</p>
+    <p>{{ $recipe->instruction['en'] ?? '' }}</p>
+</div>
+
+<!-- Image Field -->
+<div class="col-sm-12">
+    {!! Form::label('image', 'Image:') !!}
+    <br/>
+    <img src="{{ $recipe->image }}" alt="" height="150">
 </div>
 
 <!-- Units In Recipe Field -->

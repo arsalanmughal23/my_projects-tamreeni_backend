@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\RecipeDataTable;
+use App\Helper\FileHelper;
 use App\Http\Requests;
 use App\Http\Requests\CreateRecipeRequest;
 use App\Http\Requests\UpdateRecipeRequest;
@@ -52,7 +53,10 @@ class RecipeController extends AppBaseController
      */
     public function store(CreateRecipeRequest $request)
     {
-        $input = $request->all();
+        $input = $request->validated();
+
+        if ($request->hasFile('image'))
+            $input['image'] = FileHelper::s3Upload($input['image']);
 
         $recipe = $this->recipeRepository->create($input);
 
@@ -112,6 +116,7 @@ class RecipeController extends AppBaseController
     public function update($id, UpdateRecipeRequest $request)
     {
         $recipe = $this->recipeRepository->find($id);
+        $input = $request->validated();
 
         if (empty($recipe)) {
             Flash::error('Recipe not found');
@@ -119,7 +124,10 @@ class RecipeController extends AppBaseController
             return redirect(route('recipes.index'));
         }
 
-        $recipe = $this->recipeRepository->update($request->all(), $id);
+        if ($request->hasFile('image'))
+            $input['image'] = FileHelper::s3Upload($input['image']);
+
+        $recipe = $this->recipeRepository->update($input, $id);
 
         Flash::success('Recipe updated successfully.');
 

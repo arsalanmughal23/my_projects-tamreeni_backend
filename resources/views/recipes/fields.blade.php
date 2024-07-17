@@ -6,9 +6,9 @@
 
 <!-- Image Field -->
 <div class="form-group col-sm-12 col-lg-6">
-    <!-- {!! Form::label('image', 'Image:') !!}
+    {!! Form::label('image', 'Image:') !!}
     <br/>
-    {!! Form::file('image', null, ['class' => 'form-control', 'required' => true]) !!} -->
+    {!! Form::file('image', null, ['class' => 'form-control', 'required' => true]) !!}
 </div>
 
 <!-- Calories Field -->

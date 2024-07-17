@@ -96,7 +96,7 @@ class Recipe extends Model
         'instruction.en'  => 'required|string|max:500',
         'instruction.ar'  => 'required|string|max:500',
 
-        'image' => 'sometimes|string',
+        'image'   => 'nullable|file|mimes:jpeg,png|max:5000',
 
         'units_in_recipe' => 'required|numeric',
         'divide_recipe_by' => 'required|numeric',

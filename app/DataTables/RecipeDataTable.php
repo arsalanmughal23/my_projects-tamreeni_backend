@@ -21,13 +21,18 @@ class RecipeDataTable extends DataTable
         $dataTable->editColumn('title', function(Recipe $model) {
             return ($model->title) ? $model->title['en'] : '';
         });
+        
+        $dataTable->editColumn('image', function(Recipe $model) {
+            return ($model->image) ? '<img src="'.$model->image.'" height="40" />' : '';
+        });
         // $dataTable->editColumn('description', function(Recipe $model) {
         //     return ($model->description) ? $model->description['en'] : '';
         // });
         // $dataTable->editColumn('instruction', function(Recipe $model) {
         //     return ($model->instruction) ? $model->instruction['en'] : '';
         // });
-        return $dataTable->addColumn('action', 'recipes.datatables_actions');
+        return $dataTable->addColumn('action', 'recipes.datatables_actions')
+                    ->rawColumns(['image', 'action']);
     }
 
     /**

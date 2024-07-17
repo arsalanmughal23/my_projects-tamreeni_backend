@@ -156,7 +156,16 @@
     <li class="nav-item">
         <a href="{{ route('meal_breakdowns.index') }}"
         class="nav-link {{ Request::is('meal_breakdowns*') ? 'active' : '' }}">
-            <i class="fa fa-bread-slice"></i><p>Meal Breakdowns</p>
+            <i class="fa fa-table"></i><p>Meal Breakdowns</p>
+        </a>
+    </li>
+@endcan
+
+@canany(['recipes.index', 'recipes.create', 'recipes.show', 'recipes.edit', 'recipes.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('recipes.index') }}"
+        class="nav-link {{ Request::is('recipes*') ? 'active' : '' }}">
+            <i class="fa fa-rectangle-list"></i><p>Recipes</p>
         </a>
     </li>
 @endcan
@@ -303,13 +312,3 @@
         </a>
     </li>
 @endcan
-@canany(['recipes.index', 'recipes.create', 'recipes.show', 'recipes.edit', 'recipes.destroy'])
-    <li class="nav-item">
-        <a href="{{ route('recipes.index') }}"
-        class="nav-link {{ Request::is('recipes*') ? 'active' : '' }}">
-            <p>Recipes</p>
-        </a>
-    </li>
-@endcan
-
-

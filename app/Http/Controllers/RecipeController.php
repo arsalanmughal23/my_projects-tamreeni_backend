@@ -10,17 +10,21 @@ use App\Http\Requests\UpdateRecipeRequest;
 use App\Repositories\RecipeRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
+use App\Models\Meal;
+use App\Repositories\MealCategoryRepository;
+use App\Repositories\MealTypeRepository;
 use Response;
 
 class RecipeController extends AppBaseController
 {
-    /** @var RecipeRepository $recipeRepository*/
-    private $recipeRepository;
+    /** @var RecipeRepository $recipeRepo*/
+    /** @var MealTypeRepository $mealTypeRepo*/
 
-    public function __construct(RecipeRepository $recipeRepo)
-    {
-        $this->recipeRepository = $recipeRepo;
-    }
+    public function __construct(
+        private RecipeRepository $recipeRepo,
+        private MealTypeRepository $mealTypeRepo,
+        private MealCategoryRepository $mealCategoryRepo,
+    ) {}
 
     /**
      * Display a listing of the Recipe.
@@ -41,7 +45,10 @@ class RecipeController extends AppBaseController
      */
     public function create()
     {
-        return view('recipes.create');
+        $dietTypeSelectOptions = Meal::COSNT_DIET_TYPES;
+        $mealTypeSelectOptions = $this->mealTypeRepo->all();
+        $mealCategorySelectOptions = $this->mealCategoryRepo->all();
+        return view('recipes.create', compact('dietTypeSelectOptions', 'mealTypeSelectOptions', 'mealCategorySelectOptions'));
     }
 
     /**
@@ -58,7 +65,10 @@ class RecipeController extends AppBaseController
         if ($request->hasFile('image'))
             $input['image'] = FileHelper::s3Upload($input['image']);
 
-        $recipe = $this->recipeRepository->create($input);
+        $recipe = $this->recipeRepo->create($input);
+
+        if(count($input['meal_category_ids']))
+            $recipe->mealCategories()->sync($input['meal_category_ids']);
 
         Flash::success('Recipe saved successfully.');
 
@@ -74,7 +84,7 @@ class RecipeController extends AppBaseController
      */
     public function show($id)
     {
-        $recipe = $this->recipeRepository->find($id);
+        $recipe = $this->recipeRepo->find($id);
 
         if (empty($recipe)) {
             Flash::error('Recipe not found');
@@ -94,7 +104,7 @@ class RecipeController extends AppBaseController
      */
     public function edit($id)
     {
-        $recipe = $this->recipeRepository->find($id);
+        $recipe = $this->recipeRepo->find($id);
 
         if (empty($recipe)) {
             Flash::error('Recipe not found');
@@ -102,7 +112,11 @@ class RecipeController extends AppBaseController
             return redirect(route('recipes.index'));
         }
 
-        return view('recipes.edit')->with('recipe', $recipe);
+        $dietTypeSelectOptions = Meal::COSNT_DIET_TYPES;
+        $mealTypeSelectOptions = $this->mealTypeRepo->all();
+        $mealCategorySelectOptions = $this->mealCategoryRepo->all();
+
+        return view('recipes.edit', compact('recipe', 'dietTypeSelectOptions', 'mealTypeSelectOptions', 'mealCategorySelectOptions'));
     }
 
     /**
@@ -115,7 +129,7 @@ class RecipeController extends AppBaseController
      */
     public function update($id, UpdateRecipeRequest $request)
     {
-        $recipe = $this->recipeRepository->find($id);
+        $recipe = $this->recipeRepo->find($id);
         $input = $request->validated();
 
         if (empty($recipe)) {
@@ -127,7 +141,10 @@ class RecipeController extends AppBaseController
         if ($request->hasFile('image'))
             $input['image'] = FileHelper::s3Upload($input['image']);
 
-        $recipe = $this->recipeRepository->update($input, $id);
+        $recipe = $this->recipeRepo->update($input, $id);
+
+        if(count($input['meal_category_ids']))
+            $recipe->mealCategories()->sync($input['meal_category_ids']);
 
         Flash::success('Recipe updated successfully.');
 
@@ -143,7 +160,7 @@ class RecipeController extends AppBaseController
      */
     public function destroy($id)
     {
-        $recipe = $this->recipeRepository->find($id);
+        $recipe = $this->recipeRepo->find($id);
 
         if (empty($recipe)) {
             Flash::error('Recipe not found');
@@ -151,7 +168,7 @@ class RecipeController extends AppBaseController
             return redirect(route('recipes.index'));
         }
 
-        $this->recipeRepository->delete($id);
+        $this->recipeRepo->delete($id);
 
         Flash::success('Recipe deleted successfully.');
 

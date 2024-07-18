@@ -5,6 +5,7 @@ namespace App\Models;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Class Recipe
@@ -16,6 +17,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property json $title
  * @property json $description
  * @property json $instruction
+ * @property json $meal_category_ids
  * @property string $image
  * @property integer $units_in_recipe
  * @property integer $divide_recipe_by
@@ -43,6 +45,8 @@ class Recipe extends Model
 
     public $fillable = [
         'diet_type',
+        'meal_category_ids',
+        'meal_type_id',
         'title',
         'description',
         'image',
@@ -64,6 +68,8 @@ class Recipe extends Model
     protected $casts = [
         'id' => 'integer',
         'diet_type' => 'string',
+        'meal_type_id' => 'integer',
+        'meal_category_ids' => 'json',
         'title' => 'json',
         'description' => 'json',
         'instruction' => 'json',
@@ -83,8 +89,12 @@ class Recipe extends Model
      * @var array
      */
     public static $rules = [
-        'diet_type' => 'required|string',
-        
+        'diet_type' => 'required|string|in:traditional,keto',
+
+        'meal_category_ids' => 'required|array|min:1',
+        'meal_category_ids.*' => 'required|integer|exists:meal_categories,id',
+        'meal_type_id' => 'required|integer|exists:meal_types,id',
+
         'title'     => 'required|array',
         'title.en'  => 'required|string|max:120',
         'title.ar'  => 'required|string|max:120',
@@ -113,5 +123,8 @@ class Recipe extends Model
         'deleted_at' => 'nullable'
     ];
 
-    
+    public function mealCategories():BelongsToMany
+    {
+        return $this->belongsToMany(MealCategory::class, 'recipe_meal_category_pivots');
+    }
 }

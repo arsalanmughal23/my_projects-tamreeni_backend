@@ -1,7 +1,13 @@
 <!-- Diet Type Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('diet_type', 'Diet Type:') !!}
-    {!! Form::select('diet_type', ['' => 'Select Diet Type', 'traditional' => 'Traditional', 'keto' => 'Keto'], null, ['class' => 'form-control', 'required' => true]) !!}
+    <!-- {!! Form::select('diet_type', ['' => 'Select Diet Type', 'traditional' => 'Traditional', 'keto' => 'Keto'], null, ['class' => 'form-control', 'required' => true]) !!} -->
+    <select name="diet_type" id="" class="form-control" required=true >
+        <option value="">Select Diet Type</option>
+        @foreach($dietTypeSelectOptions as $dietType)
+        <option value="{{ $dietType }}" {{ isset($recipe) ? ($recipe->diet_type == $dietType ? 'selected' : '') : '' }}>{{ $dietType }}</option>
+        @endforeach
+    </select>
 </div>
 
 <!-- Image Field -->
@@ -9,6 +15,30 @@
     {!! Form::label('image', 'Image:') !!}
     <br/>
     {!! Form::file('image', null, ['class' => 'form-control', 'required' => true]) !!}
+</div>
+
+<!-- Meal Type Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('meal_type_id', 'Meal Type:') !!}
+    <!-- {!! Form::select('meal_type_id', ['' => 'Select Meal Type'], null, ['class' => 'form-control', 'required' => true]) !!} -->
+    <select name="meal_type_id" id="" class="form-control" required=true >
+        <option value="">Select Meal Type</option>
+        @foreach($mealTypeSelectOptions as $mealType)
+            <option value="{{ $mealType->id }}" {{ isset($recipe) ? ($recipe->meal_type_id == $mealType->id ? 'selected' : '') : '' }}>{{ $mealType->name }}</option>
+        @endforeach
+    </select>
+</div>
+
+<!-- Meal Categories Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('meal_category_ids', 'Meal Categories:') !!}
+    <!-- {!! Form::select('meal_category_ids', ['' => 'Select Meal Categories'], null, ['class' => 'form-control', 'required' => true]) !!} -->
+    <select name="meal_category_ids[]" id="" class="form-control select2" multiple required=true >
+        <option value="">Select Meal Categories</option>
+        @foreach($mealCategorySelectOptions as $mealCategory)
+            <option value="{{ $mealCategory->id }}" {{ isset($recipe) ? (in_array($mealCategory->id, $recipe->meal_category_ids) ? 'selected' : '') : '' }}>{{ $mealCategory->name }}</option>
+        @endforeach
+    </select>
 </div>
 
 <!-- Calories Field -->

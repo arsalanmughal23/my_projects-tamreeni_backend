@@ -16,6 +16,11 @@ class CreateRecipesTable extends Migration
         Schema::create('recipes', function (Blueprint $table) {            
             $table->id();
             $table->enum('diet_type', ['traditional', 'keto']);
+
+            $table->json('meal_category_ids');
+            $table->unsignedBigInteger('meal_type_id'); // 'Breakfast', 'Lunch', 'Dinner', 'Fruit', 'Snack'
+            $table->foreign('meal_type_id')->references('id')->on('meal_types')->onDelete('cascade');
+
             $table->text('title');
             $table->longText('description');
             $table->text('image')->nullable();
@@ -44,6 +49,7 @@ class CreateRecipesTable extends Migration
     public function down()
     {
         Schema::table('recipes', function (Blueprint $table) {
+            $table->dropForeign(['meal_type_id']);
             $table->dropUnique(['diet_type', 'calories']);
         });
 

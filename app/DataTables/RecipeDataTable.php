@@ -22,6 +22,10 @@ class RecipeDataTable extends DataTable
             return ($model->title) ? $model->title['en'] : '';
         });
         
+        $dataTable->editColumn('meal_type_id', function(Recipe $model) {
+            return $model->mealType?->slug ?? '';
+        });
+
         $dataTable->editColumn('image', function(Recipe $model) {
             return ($model->image) ? '<img src="'.$model->image.'" height="40" />' : '';
         });
@@ -79,6 +83,7 @@ class RecipeDataTable extends DataTable
     protected function getColumns()
     {
         return [
+            'meal_type_id' => ['title' => 'Meal Type'],
             'diet_type',
             'calories',
             'title',

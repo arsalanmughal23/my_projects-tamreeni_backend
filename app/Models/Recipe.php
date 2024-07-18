@@ -5,6 +5,7 @@ namespace App\Models;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
@@ -126,5 +127,10 @@ class Recipe extends Model
     public function mealCategories():BelongsToMany
     {
         return $this->belongsToMany(MealCategory::class, 'recipe_meal_category_pivots');
+    }
+    
+    public function mealType():BelongsTo
+    {
+        return $this->belongsTo(MealType::class);
     }
 }

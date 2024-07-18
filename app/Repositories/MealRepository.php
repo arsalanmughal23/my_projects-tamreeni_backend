@@ -53,7 +53,7 @@ class MealRepository extends BaseRepository
 
         if(isset($params['meal_category_ids'])){
             $mealCategoryIds = array_map('intval', $params['meal_category_ids']);
-            $query->whereIn('meal_category_ids', $mealCategoryIds);
+            $query->whereIn('meal_category_id', $mealCategoryIds);
         }
 
         if(isset($params['is_favourite'])){

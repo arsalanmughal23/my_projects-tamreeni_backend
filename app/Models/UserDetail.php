@@ -32,6 +32,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $unplaned_answer_attempt_id
  * @property string $planed_answer_attempt_id
  * 
+ * @property string $diet_type
+ * @property json $food_preferences
+ * @property float $algo_required_calories
+ * 
  * @property BelongsTo $questionAnswerAttempts
  */
 

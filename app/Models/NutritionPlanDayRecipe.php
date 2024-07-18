@@ -77,11 +77,11 @@ class NutritionPlanDayRecipe extends Model
         'nutrition_plan_day_id' => 'integer',
         'meal_type_id' => 'integer',
         'recipe_id' => 'integer',
-        'meal_category_ids' => 'string',
-        'title' => 'string',
-        'description' => 'string',
+        'meal_category_ids' => 'json',
+        'title' => 'json',
+        'description' => 'json',
+        'instruction' => 'json',
         'image' => 'string',
-        'instruction' => 'string',
         'units_in_recipe' => 'integer',
         'divide_recipe_by' => 'integer',
         'number_of_units' => 'integer',
@@ -140,5 +140,10 @@ class NutritionPlanDayRecipe extends Model
     public function recipe()
     {
         return $this->belongsTo(\App\Models\Recipe::class, 'recipe_id');
+    }
+
+    public function mealCategories()
+    {
+        return $this->belongsToMany(MealCategory::class, 'recipe_meal_category_pivots');
     }
 }

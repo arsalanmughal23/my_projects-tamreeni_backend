@@ -43,4 +43,19 @@ class MealBreakdownRepository extends BaseRepository
     {
         return MealBreakdown::class;
     }
+
+    public function getMealBreakdowns($params = []){
+
+        $query = MealBreakdown::query();
+
+        if(isset($params['diet_type'])){
+            $query->where('diet_type', $params['diet_type']);
+        }
+
+        if(isset($params['calories'])){
+            $query->where('total_calories', $params['calories']);
+        }
+
+        return $query;
+    }
 }

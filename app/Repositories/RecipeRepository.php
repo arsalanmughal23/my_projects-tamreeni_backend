@@ -53,4 +53,63 @@ class RecipeRepository extends BaseRepository
     {
         return $this->model()::pluck('title', 'id');
     }
+
+    public function getRecipes($params = []){
+
+        $query = Recipe::query();
+
+        if(isset($params['diet_type'])){
+            $query->where('diet_type', $params['diet_type']);
+        }
+
+        if(isset($params['meal_category_ids'])){
+            $mealCategoryIds = array_map('intval', $params['meal_category_ids']);
+
+            // $query->whereIn('meal_category_ids', $mealCategoryIds);
+            $query->whereHas('mealCategories', function ($mealCategory) use ($mealCategoryIds) {
+                return $mealCategory->whereIn('id', $mealCategoryIds);
+            });
+        }
+        
+        if(isset($params['meal_category_slugs'])){
+            $mealCategorySlugs = $params['meal_category_slugs'];
+
+            // $query->whereIn('meal_category_slugs', $mealCategorySlugs);
+            $query->whereHas('mealCategories', function ($mealCategory) use ($mealCategorySlugs) {
+                return $mealCategory->whereIn('slug', $mealCategorySlugs);
+            });
+        }
+
+        if (isset($params['keyword'])) {
+            $keyword = $params['keyword'];
+            $query->where(function ($q) use ($keyword) {
+                $q->where('title', 'like', '%' . $keyword . '%')
+                    ->orWhere('description', 'like', '%' . $keyword . '%')
+                    ->orWhere('instruction', 'like', '%' . $keyword . '%');
+            });
+        }
+
+        if(isset($params['min_calories'])){
+            $minCalorie = floatval($params['min_calories']);
+            $query->where('calories', '>=', $minCalorie);
+        }
+
+        if(isset($params['max_calories'])){
+            $maxCalorie = floatval($params['max_calories']);
+            $query->where('calories', '<=', $maxCalorie);
+        }
+        
+        if(isset($params['calories'])){
+            $query->where('calories', $params['calories']);
+        }
+
+        if(isset($params['meal_type'])){
+            $mealType = $params['meal_type'];
+            $query->whereHas('mealType', function($mealTypeQuery) use($mealType) {
+                return $mealTypeQuery->whereSlug($mealType);
+            });
+        }
+
+        return $query;
+    }
 }

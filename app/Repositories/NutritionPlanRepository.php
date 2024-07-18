@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Models\Meal;
+use App\Models\MealBreakdown;
 use App\Models\MealType;
 use App\Models\NutritionPlan;
 use App\Models\NutritionPlanDay;
@@ -20,6 +20,10 @@ class NutritionPlanRepository extends BaseRepository
 {
     public function __construct(
         private MealRepository $mealRepository,
+        private RecipeRepository $recipeRepository,
+        private MealBreakdownRepository $mealBreakdownRepository,
+        private NutritionPlanDayRecipeRepository $nutritionPlanDayRecipeRepository,
+        private NplanDayRecipeIngredientRepository $nplanDayRecipeIngredientRepository,
     ){}
 
     /**
@@ -78,6 +82,13 @@ class NutritionPlanRepository extends BaseRepository
             'status'     => NutritionPlan::STATUS_TODO
         ]);
 
+        
+        $mealBreakdown = $this->mealBreakdownRepository->getMealBreakdowns([
+                'diet_type' => $userDetails->diet_type,
+                'total_calories' => $userDetails->algo_required_calories
+            ])
+            ->inRandomOrder()->first();
+
         $nutritionPlanDays = [];
         // Create Nutrition Plan Days & Assign Meals on every each Day
         foreach ($randomDates as $key => $randomDate) {
@@ -92,8 +103,13 @@ class NutritionPlanRepository extends BaseRepository
             ]);
 
             // Assign Meals on Each Nutrition Plan Day
-            $nutritionPlanDayMeals = $this->assignMealsOnNutritionPlanDay($userDetails, $nutritionPlanDay, $randomDate);
-            $nutritionPlanDay['nutrition_plan_day_meals'] = $nutritionPlanDayMeals;
+            // $nutritionPlanDayMeals = $this->assignMealsOnNutritionPlanDay($userDetails, $nutritionPlanDay, $randomDate);
+            // $nutritionPlanDay['nutrition_plan_day_meals'] = $nutritionPlanDayMeals;
+
+            // Assign Recipes on Each Nutrition Plan Day
+            $nutritionPlanDayRecipes = $this->assignRecipesOnNutritionPlanDay($userDetails, $nutritionPlanDay, $mealBreakdown, $randomDate);
+            $nutritionPlanDay['nutrition_plan_day_recipes'] = $nutritionPlanDayRecipes;
+
             // Push Nutrition Plan Day into their listing array
             array_push($nutritionPlanDays, $nutritionPlanDay);
         }
@@ -123,6 +139,55 @@ class NutritionPlanRepository extends BaseRepository
 
         // Return list of Remaining Meal Times
         return $dayRemainingMealTimes;
+    }
+
+    public function assignRecipesOnNutritionPlanDay(UserDetail $userDetails, NutritionPlanDay $nutritionPlanDay, MealBreakdown $mealBreakdown, Carbon $planDayDateTime)
+    {
+        $requiredCalories = $userDetails->algo_required_calories ?? 0;
+        $nutritionPlanDayRecipes = [];
+
+        foreach(MealType::ALL_NAMES as $mealType) {
+            // Check Plan Day Date is Today's Date
+            if($planDayDateTime->isToday()){
+                // Get Today's Remaining Meal Times
+                $todayRemainingMealTimes = $this->getRemainingMealTimes($planDayDateTime);
+
+                // Skip this iteration when mealType is not exists in Remaining Meal Type
+                // Use Case: if lunch time is passed away no need to assign lunch or before meals
+                if(!in_array($mealType, $todayRemainingMealTimes))
+                    continue;
+            }
+
+            // Get Recipe according to the Questionnaire and their algo
+            $recipe = $this->recipeRepository->getRecipes([
+                'meal_type' => $mealType,
+                'calories' => $requiredCalories,
+                'diet_type' => $userDetails->diet_type,
+                'meal_category_slugs' => $userDetails->food_preferences,
+            ])
+            ->inRandomOrder()->first();
+            
+            // Skip iteration when meal is not found
+            if(!$recipe)
+                continue;
+
+            // recipe-calorie / units-in-recipe * no-of-units
+            $recipeUnits = $mealBreakdown[$mealType.'_units'] ?? 0;
+            $totalUnitsInRecipe = $recipe->units_in_recipe * $recipeUnits;
+            $recipeScaledQuantity = ($totalUnitsInRecipe > 0) ? $recipe->calories / $totalUnitsInRecipe : $recipe->quantity;
+
+            $nutritionPlanDayRecipe = array_merge([
+                    'scaled_unit' => $recipe->unit,
+                    'scaled_quantity' => $recipeScaledQuantity
+                ], $recipe->toArray());
+
+            $nutritionPlanDayRecipe = $nutritionPlanDay->nutritionPlanDayRecipes()->create($nutritionPlanDayRecipe);
+
+            // Push Nutrition Plan Day Recipe into their listing array
+            array_push($nutritionPlanDayRecipes, $nutritionPlanDayRecipe);
+        }
+        // Retrun list of Nutrition Plan Day Recipes
+        return $nutritionPlanDayRecipes;
     }
 
     public function assignMealsOnNutritionPlanDay(UserDetail $userDetails, NutritionPlanDay $nutritionPlanDay, Carbon $planDayDateTime)

@@ -17,10 +17,10 @@ class CreateMealsTable extends Migration
             $table->increments('id');
             $table->string('diet_type_slug')->comment('traditional', 'keto');
             $table->string('diet_type');
-            $table->unsignedInteger('meal_category_id'); //'breakfast', 'lunch', 'dinner'
+            $table->unsignedInteger('meal_category_id'); // 'Veggies', 'Shrimp', 'Sea Food', 'Fish', 'Eggs', 'Dairy'
             $table->foreign('meal_category_id')->references('id')->on('meal_categories')->onDelete('cascade');
 
-            $table->unsignedBigInteger('meal_type_id');
+            $table->unsignedBigInteger('meal_type_id'); // 'Breakfast', 'Lunch', 'Dinner', 'Fruit', 'Snack'
             $table->foreign('meal_type_id')->references('id')->on('meal_types')->onDelete('cascade');
 
             $table->text('name');

@@ -316,7 +316,7 @@
     <li class="nav-item">
         <a href="{{ route('recipe_ingredients.index') }}"
         class="nav-link {{ Request::is('recipe_ingredients*') ? 'active' : '' }}">
-            <p>Recipe Ingredients</p>
+            <i class="fa fa-apple-alt"></i><p>Recipe Ingredients</p>
         </a>
     </li>
 @endcan

@@ -277,6 +277,15 @@
     </li>
 @endcan
 
+@canany(['nutrition_plan_day_recipes.index', 'nutrition_plan_day_recipes.create', 'nutrition_plan_day_recipes.show', 'nutrition_plan_day_recipes.edit', 'nutrition_plan_day_recipes.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('nutrition_plan_day_recipes.index') }}"
+        class="nav-link {{ Request::is('nutrition_plan_day_recipes*') ? 'active' : '' }}">
+            <i class="fa fa-location-arrow"></i><p>Nutrition Plan Day Recipes</p>
+        </a>
+    </li>
+@endcan
+
 @canany(['nutrition_plan_day_meals.index', 'nutrition_plan_day_meals.create', 'nutrition_plan_day_meals.show', 'nutrition_plan_day_meals.edit', 'nutrition_plan_day_meals.destroy'])
     <li class="nav-item">
         <a href="{{ route('nutrition_plan_day_meals.index') }}"

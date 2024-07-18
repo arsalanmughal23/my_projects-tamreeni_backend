@@ -99,6 +99,10 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
     Route::resource('question_answer_attempts', App\Http\Controllers\API\QuestionAnswerAttemptAPIController::class);
 
     Route::resource('meal_breakdowns', App\Http\Controllers\API\MealBreakdownAPIController::class);
+
+    Route::resource('recipes', App\Http\Controllers\API\RecipeAPIController::class);
+    Route::resource('recipe_ingredients', App\Http\Controllers\API\RecipeIngredientAPIController::class);
+    Route::resource('nutrition_plan_day_recipes', App\Http\Controllers\API\NutritionPlanDayRecipeAPIController::class);
 });
 
 Route::resource('menus', App\Http\Controllers\API\MenuAPIController::class);
@@ -110,7 +114,7 @@ Route::resource('pages', App\Http\Controllers\API\PageAPIController::class);
 Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, 'pageContent'])->name('page-content');
 
 
-Route::resource('recipes', App\Http\Controllers\API\RecipeAPIController::class);
 
 
-Route::resource('recipe_ingredients', App\Http\Controllers\API\RecipeIngredientAPIController::class);
+
+

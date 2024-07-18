@@ -157,12 +157,17 @@ Route::group(['middleware' => ['auth', 'dynamic_permission']], function () {
     Route::resource('question_answer_attempts', App\Http\Controllers\QuestionAnswerAttemptController::class);
 
     Route::resource('meal_breakdowns', App\Http\Controllers\MealBreakdownController::class);
+
+    Route::resource('recipes', App\Http\Controllers\RecipeController::class);
+    Route::resource('recipe_ingredients', App\Http\Controllers\RecipeIngredientController::class);
+
+    Route::resource('nutrition_plan_day_recipes', App\Http\Controllers\NutritionPlanDayRecipeController::class);
 });
 
 
 
 
-Route::resource('recipes', App\Http\Controllers\RecipeController::class);
 
 
-Route::resource('recipe_ingredients', App\Http\Controllers\RecipeIngredientController::class);
+
+

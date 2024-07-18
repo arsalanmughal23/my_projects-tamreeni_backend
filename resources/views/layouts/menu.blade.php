@@ -286,6 +286,15 @@
     </li>
 @endcan
 
+@canany(['nplan_day_recipe_ingredients.index', 'nplan_day_recipe_ingredients.create', 'nplan_day_recipe_ingredients.show', 'nplan_day_recipe_ingredients.edit', 'nplan_day_recipe_ingredients.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('nplan_day_recipe_ingredients.index') }}"
+        class="nav-link {{ Request::is('nplan_day_recipe_ingredients*') ? 'active' : '' }}">
+            <i class="fa fa-location-arrow"></i><p>Nplan Day Recipe Ingredients</p>
+        </a>
+    </li>
+@endcan
+
 @canany(['nutrition_plan_day_meals.index', 'nutrition_plan_day_meals.create', 'nutrition_plan_day_meals.show', 'nutrition_plan_day_meals.edit', 'nutrition_plan_day_meals.destroy'])
     <li class="nav-item">
         <a href="{{ route('nutrition_plan_day_meals.index') }}"

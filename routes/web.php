@@ -162,12 +162,5 @@ Route::group(['middleware' => ['auth', 'dynamic_permission']], function () {
     Route::resource('recipe_ingredients', App\Http\Controllers\RecipeIngredientController::class);
 
     Route::resource('nutrition_plan_day_recipes', App\Http\Controllers\NutritionPlanDayRecipeController::class);
+    Route::resource('nplan_day_recipe_ingredients', App\Http\Controllers\NplanDayRecipeIngredientController::class);
 });
-
-
-
-
-
-
-
-

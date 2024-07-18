@@ -142,7 +142,6 @@
     </li>
 @endcan
 
-
 @canany(['meals.index', 'meals.create', 'meals.show', 'meals.edit', 'meals.destroy'])
     <li class="nav-item">
         <a href="{{ route('meals.index') }}"
@@ -166,6 +165,15 @@
         <a href="{{ route('recipes.index') }}"
         class="nav-link {{ Request::is('recipes*') ? 'active' : '' }}">
             <i class="fa fa-rectangle-list"></i><p>Recipes</p>
+        </a>
+    </li>
+@endcan
+
+@canany(['recipe_ingredients.index', 'recipe_ingredients.create', 'recipe_ingredients.show', 'recipe_ingredients.edit', 'recipe_ingredients.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('recipe_ingredients.index') }}"
+        class="nav-link {{ Request::is('recipe_ingredients*') ? 'active' : '' }}">
+            <i class="fa fa-apple-alt"></i><p>Recipe Ingredients</p>
         </a>
     </li>
 @endcan
@@ -215,7 +223,6 @@
     </li>
 @endcan
 
-
 @canany(['transactions.index', 'transactions.create', 'transactions.show', 'transactions.edit', 'transactions.destroy'])
     <li class="nav-item">
         <a href="{{ route('transactions.index') }}"
@@ -243,7 +250,6 @@
     </li>
 @endcan
 
-
 @canany(['workout_day_exercises.index', 'workout_day_exercises.create', 'workout_day_exercises.show', 'workout_day_exercises.edit', 'workout_day_exercises.destroy'])
     <li class="nav-item">
         <a href="{{ route('workout_day_exercises.index') }}"
@@ -252,7 +258,6 @@
         </a>
     </li>
 @endcan
-
 
 @canany(['nutrition_plans.index', 'nutrition_plans.create', 'nutrition_plans.show', 'nutrition_plans.edit', 'nutrition_plans.destroy'])
     <li class="nav-item">
@@ -263,7 +268,6 @@
     </li>
 @endcan
 
-
 @canany(['nutrition_plan_days.index', 'nutrition_plan_days.create', 'nutrition_plan_days.show', 'nutrition_plan_days.edit', 'nutrition_plan_days.destroy'])
     <li class="nav-item">
         <a href="{{ route('nutrition_plan_days.index') }}"
@@ -272,7 +276,6 @@
         </a>
     </li>
 @endcan
-
 
 @canany(['nutrition_plan_day_meals.index', 'nutrition_plan_day_meals.create', 'nutrition_plan_day_meals.show', 'nutrition_plan_day_meals.edit', 'nutrition_plan_day_meals.destroy'])
     <li class="nav-item">
@@ -283,7 +286,6 @@
     </li>
 @endcan
 
-
 @canany(['questions.index', 'questions.create', 'questions.show', 'questions.edit', 'questions.destroy'])
     <li class="nav-item">
         <a href="{{ route('questions.index') }}"
@@ -292,7 +294,6 @@
         </a>
     </li>
 @endcan
-
 
 @canany(['options.index', 'options.create', 'options.show', 'options.edit', 'options.destroy'])
     <li class="nav-item">
@@ -303,7 +304,6 @@
     </li>
 @endcan
 
-
 @canany(['question_answer_attempts.index', 'question_answer_attempts.create', 'question_answer_attempts.show', 'question_answer_attempts.edit', 'question_answer_attempts.destroy'])
     <li class="nav-item">
         <a href="{{ route('question_answer_attempts.index') }}"
@@ -312,13 +312,3 @@
         </a>
     </li>
 @endcan
-@canany(['recipe_ingredients.index', 'recipe_ingredients.create', 'recipe_ingredients.show', 'recipe_ingredients.edit', 'recipe_ingredients.destroy'])
-    <li class="nav-item">
-        <a href="{{ route('recipe_ingredients.index') }}"
-        class="nav-link {{ Request::is('recipe_ingredients*') ? 'active' : '' }}">
-            <i class="fa fa-apple-alt"></i><p>Recipe Ingredients</p>
-        </a>
-    </li>
-@endcan
-
-

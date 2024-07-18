@@ -5,27 +5,26 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class NutritionPlanDayResource extends JsonResource
+class NplanDayRecipeIngredientResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
+        
         return [
-            'id'                       => $this->id,
-            'nutrition_plan_id'        => $this->nutrition_plan_id,
-            'name'                     => $this->getTranslation('name', app()->getLocale()),
-            'date'                     => $this->date,
-            'day_target_calories'      => $this->day_target_calories,
-            'day_take_in_calories'      => $this->day_take_in_calories,
-            'status'                   => $this->status,
-            'created_at'               => $this->created_at,
-            'nutrition_plan_day_meals' => NutritionPlanDayMealResource::collection($this->whenLoaded('nutritionPlanDayMeals')),
-            'nutrition_plan_day_recipes' => NutritionPlanDayRecipeResource::collection($this->whenLoaded('nutritionPlanDayRecipes'))
+            'id'                => $this->id,
+            'recipe_id'         => $this->recipe_id,
+            'type'              => $this->type,
+            'name'              => $this->getTranslation('name', app()->getLocale()),
+            'quantity'          => $this->quantity,
+            'unit'              => $this->unit,
+            'scaled_quantity'   => $this->scaled_quantity,
+            'scaled_unit'       => $this->scaled_unit
         ];
     }
 

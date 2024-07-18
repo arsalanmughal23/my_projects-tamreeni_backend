@@ -5,6 +5,7 @@ namespace App\Models;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * Class NplanDayRecipeIngredient
@@ -25,9 +26,12 @@ class NplanDayRecipeIngredient extends Model
     use SoftDeletes;
 
     use HasFactory;
+    use HasTranslations;
 
     public $table = 'nplan_day_recipe_ingredients';
-    
+
+    public $translatable = ['name'];
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 

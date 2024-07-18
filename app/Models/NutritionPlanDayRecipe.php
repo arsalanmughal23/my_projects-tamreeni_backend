@@ -5,6 +5,8 @@ namespace App\Models;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * Class NutritionPlanDayRecipe
@@ -36,9 +38,12 @@ class NutritionPlanDayRecipe extends Model
     use SoftDeletes;
 
     use HasFactory;
+    use HasTranslations;
 
     public $table = 'nutrition_plan_day_recipes';
-    
+
+    public $translatable = ['title', 'description', 'instruction'];
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
@@ -145,5 +150,10 @@ class NutritionPlanDayRecipe extends Model
     public function mealCategories()
     {
         return $this->belongsToMany(MealCategory::class, 'recipe_meal_category_pivots');
+    }
+
+    public function nPlanDayRecipeIngredients():HasMany
+    {
+        return $this->hasMany(NplanDayRecipeIngredient::class, 'recipe_id');
     }
 }

@@ -222,7 +222,7 @@ class UserAPIController extends AppBaseController
             if($workoutPlan)
                 $workoutPlan = new WorkoutPlanResource(WorkoutPlan::with('workoutPlanDays.workoutDayExercises')->find($workoutPlan->id));
             if($nutritionPlan)
-                $nutritionPlan = new NutritionPlanResource(NutritionPlan::with('nutritionPlanDays.nutritionPlanDayMeals')->find($nutritionPlan->id));
+                $nutritionPlan = new NutritionPlanResource(NutritionPlan::with(['nutritionPlanDays.nutritionPlanDayMeals','nutritionPlanDays.nutritionPlanDayRecipes.nPlanDayRecipeIngredients'])->find($nutritionPlan->id));
 
             $this->userDetailRepository->updatedStatusPlanIsGenerated($userDetails);
 

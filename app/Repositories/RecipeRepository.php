@@ -54,9 +54,11 @@ class RecipeRepository extends BaseRepository
         return $this->model()::pluck('title', 'id');
     }
 
-    public function getRecipes($params = []){
-
-        $query = Recipe::query();
+    // Filters Implemented: 'diet_type', 'meal_category_ids', 'meal_category_slugs', 'keyword', 'min_calories', 'max_calories', 'calories', 'meal_type', 'title', 
+    // Filters UnAvailable: 'units_in_recipe', 'divide_recipe_by', 'number_of_units', 'carbs','fats','protein'
+    public function getRecipes($params = [])
+    {
+        $query = Recipe::query()->with('recipeIngredients');
 
         if(isset($params['diet_type'])){
             $query->where('diet_type', $params['diet_type']);
@@ -73,11 +75,13 @@ class RecipeRepository extends BaseRepository
         
         if(isset($params['meal_category_slugs'])){
             $mealCategorySlugs = $params['meal_category_slugs'];
-
-            // $query->whereIn('meal_category_slugs', $mealCategorySlugs);
             $query->whereHas('mealCategories', function ($mealCategory) use ($mealCategorySlugs) {
                 return $mealCategory->whereIn('slug', $mealCategorySlugs);
             });
+        }
+
+        if(isset($params['title'])){
+            $query->where('title', 'like', '%' . $params['title'] . '%');
         }
 
         if (isset($params['keyword'])) {

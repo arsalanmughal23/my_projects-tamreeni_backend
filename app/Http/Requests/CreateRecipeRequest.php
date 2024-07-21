@@ -26,7 +26,7 @@ class CreateRecipeRequest extends FormRequest
     public function rules()
     {
         $rules = Recipe::$rules;
-        array_push($rules['calories'], new RecipeUniqueDietTypeCalories($this->diet_type, $this->calories));
+        // array_push($rules['calories'], new RecipeUniqueDietTypeCalories($this->diet_type, $this->calories));
         return $rules;
     }
 }

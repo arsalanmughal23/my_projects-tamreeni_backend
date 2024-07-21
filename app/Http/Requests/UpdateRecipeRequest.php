@@ -27,7 +27,7 @@ class UpdateRecipeRequest extends FormRequest
     {
         $recipeId = $this->route('recipe');
         $rules = Recipe::$rules;
-        array_push($rules['calories'], new RecipeUniqueDietTypeCalories($this->diet_type, $this->calories, $recipeId));
+        // array_push($rules['calories'], new RecipeUniqueDietTypeCalories($this->diet_type, $this->calories, $recipeId));
         return $rules;
     }
 }

@@ -13,7 +13,7 @@ use Spatie\Translatable\HasTranslations;
  * @version July 18, 2024, 6:53 pm UTC
  *
  * @property \App\Models\Recipe $recipe
- * @property integer $recipe_id
+ * @property integer $nplan_day_recipe_id
  * @property string $type
  * @property string $name
  * @property integer $quantity
@@ -41,7 +41,7 @@ class NplanDayRecipeIngredient extends Model
 
 
     public $fillable = [
-        'recipe_id',
+        'nplan_day_recipe_id',
         'type',
         'name',
         'quantity',
@@ -57,7 +57,7 @@ class NplanDayRecipeIngredient extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'recipe_id' => 'integer',
+        'nplan_day_recipe_id' => 'integer',
         'type' => 'string',
         'name' => 'string',
         'quantity' => 'integer',
@@ -72,7 +72,7 @@ class NplanDayRecipeIngredient extends Model
      * @var array
      */
     public static $rules = [
-        'recipe_id' => 'required',
+        'nplan_day_recipe_id' => 'required',
         'type' => 'required|string',
         'name' => 'required|string',
         'quantity' => 'required',
@@ -87,8 +87,8 @@ class NplanDayRecipeIngredient extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      **/
-    public function recipe()
+    public function nPlanDayRecipe()
     {
-        return $this->belongsTo(\App\Models\Recipe::class, 'recipe_id');
+        return $this->belongsTo(\App\Models\Recipe::class, 'nplan_day_recipe_id');
     }
 }

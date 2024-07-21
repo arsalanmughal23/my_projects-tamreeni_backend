@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class Recipe
@@ -41,7 +42,7 @@ class Recipe extends Model
 
 
     protected $dates = ['deleted_at'];
-
+    protected $appends = ['meal_type_name', 'meal_category_names'];
 
 
     public $fillable = [
@@ -132,5 +133,19 @@ class Recipe extends Model
     public function mealType():BelongsTo
     {
         return $this->belongsTo(MealType::class);
+    }
+
+    public function recipeIngredients():HasMany
+    {
+        return $this->hasMany(RecipeIngredient::class, 'recipe_id');
+    }
+
+    public function getMealCategoryNamesAttribute()
+    {
+        return $this->mealCategories()->pluck('name');
+    }
+    public function getMealTypeNameAttribute()
+    {
+        return $this->mealType->name;
     }
 }

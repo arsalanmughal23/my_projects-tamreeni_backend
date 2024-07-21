@@ -19,7 +19,7 @@ use Spatie\Translatable\HasTranslations;
  * @property string $diet_type
  * @property integer $nutrition_plan_day_id
  * @property integer $meal_type_id
- * @property integer $recipe_id
+ * @property integer $nplan_day_recipe_id
  * @property string $meal_category_ids
  * @property string $title
  * @property string $description
@@ -43,6 +43,7 @@ class NutritionPlanDayRecipe extends Model
     public $table = 'nutrition_plan_day_recipes';
 
     public $translatable = ['title', 'description', 'instruction'];
+    protected $appends = ['meal_type_name', 'meal_category_names'];
 
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
@@ -56,7 +57,7 @@ class NutritionPlanDayRecipe extends Model
         'diet_type',
         'nutrition_plan_day_id',
         'meal_type_id',
-        'recipe_id',
+        'nplan_day_recipe_id',
         'meal_category_ids',
         'title',
         'description',
@@ -81,7 +82,7 @@ class NutritionPlanDayRecipe extends Model
         'diet_type' => 'string',
         'nutrition_plan_day_id' => 'integer',
         'meal_type_id' => 'integer',
-        'recipe_id' => 'integer',
+        'nplan_day_recipe_id' => 'integer',
         'meal_category_ids' => 'json',
         'title' => 'json',
         'description' => 'json',
@@ -105,7 +106,7 @@ class NutritionPlanDayRecipe extends Model
         'diet_type' => 'required|string',
         'nutrition_plan_day_id' => 'required',
         'meal_type_id' => 'required',
-        'recipe_id' => 'nullable',
+        'nplan_day_recipe_id' => 'nullable',
         'meal_category_ids' => 'required|string',
         'title' => 'required|string',
         'description' => 'required|string',
@@ -139,14 +140,6 @@ class NutritionPlanDayRecipe extends Model
         return $this->belongsTo(\App\Models\NutritionPlanDay::class, 'nutrition_plan_day_id');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     **/
-    public function recipe()
-    {
-        return $this->belongsTo(\App\Models\Recipe::class, 'recipe_id');
-    }
-
     public function mealCategories()
     {
         return $this->belongsToMany(MealCategory::class, 'recipe_meal_category_pivots');
@@ -154,6 +147,15 @@ class NutritionPlanDayRecipe extends Model
 
     public function nPlanDayRecipeIngredients():HasMany
     {
-        return $this->hasMany(NplanDayRecipeIngredient::class, 'recipe_id');
+        return $this->hasMany(NplanDayRecipeIngredient::class, 'nplan_day_recipe_id');
+    }
+
+    public function getMealCategoryNamesAttribute()
+    {
+        return $this->mealCategories()->pluck('name');
+    }
+    public function getMealTypeNameAttribute()
+    {
+        return $this->mealType->name;
     }
 }

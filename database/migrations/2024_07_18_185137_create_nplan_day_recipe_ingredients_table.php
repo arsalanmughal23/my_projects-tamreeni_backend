@@ -15,7 +15,7 @@ class CreateNplanDayRecipeIngredientsTable extends Migration
     {
         Schema::create('nplan_day_recipe_ingredients', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('recipe_id');
+            $table->unsignedBigInteger('nplan_day_recipe_id');
             $table->enum('type', ['main', 'sub']);
             $table->text('name');
             $table->bigInteger('quantity');
@@ -25,7 +25,7 @@ class CreateNplanDayRecipeIngredientsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('recipe_id')->references('id')->on('recipes')->onDelete('cascade');
+            $table->foreign('nplan_day_recipe_id')->references('id')->on('nutrition_plan_day_recipes')->onDelete('cascade');
         });
     }
 
@@ -38,7 +38,7 @@ class CreateNplanDayRecipeIngredientsTable extends Migration
     {
         if(Schema::hasTable('nplan_day_recipe_ingredients')){
             Schema::table('nplan_day_recipe_ingredients', function (Blueprint $table) {
-                $table->dropForeign(['recipe_id']);
+                $table->dropForeign(['nplan_day_recipe_id']);
             });
         }
 

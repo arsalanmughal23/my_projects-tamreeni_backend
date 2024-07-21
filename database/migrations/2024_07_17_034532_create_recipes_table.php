@@ -37,7 +37,7 @@ class CreateRecipesTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unique(['diet_type', 'calories']);
+            // $table->unique(['diet_type', 'calories']);
         });
     }
 
@@ -50,7 +50,7 @@ class CreateRecipesTable extends Migration
     {
         Schema::table('recipes', function (Blueprint $table) {
             $table->dropForeign(['meal_type_id']);
-            $table->dropUnique(['diet_type', 'calories']);
+            // $table->dropUnique(['diet_type', 'calories']);
         });
 
         Schema::dropIfExists('recipes');

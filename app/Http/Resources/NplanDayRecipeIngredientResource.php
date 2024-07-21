@@ -18,7 +18,7 @@ class NplanDayRecipeIngredientResource extends JsonResource
         
         return [
             'id'                => $this->id,
-            'recipe_id'         => $this->recipe_id,
+            'nplan_day_recipe_id'         => $this->nplan_day_recipe_id,
             'type'              => $this->type,
             'name'              => $this->getTranslation('name', app()->getLocale()),
             'quantity'          => $this->quantity,

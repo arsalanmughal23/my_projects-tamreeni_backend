@@ -35,6 +35,8 @@ class NutritionPlanDayRecipeResource extends JsonResource
             'protein'               => $this->protein,
             'status'                => $this->status,
             'created_at'            => $this->created_at,
+            'meal_type_name'        => $this->meal_type_name, 
+            'meal_category_names'   => $this->meal_category_names,
             'recipe_ingredients'    => NplanDayRecipeIngredientResource::collection($this->whenLoaded('nPlanDayRecipeIngredients'))
         ];
     }

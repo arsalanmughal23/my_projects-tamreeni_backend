@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Meal;
 use App\Models\MealCategory;
 use App\Models\MealType;
 use App\Models\Recipe;
@@ -48,7 +49,7 @@ class RecipeWithRelationalDataSeeder extends Seeder
 
         $recipes = [
             [
-                'diet_type'         => 'traditional',
+                'diet_type'         => Meal::DIET_TYPE_TRADITION_EN,
                 'meal_category_ids' => $mealCategoryIds,
                 'meal_type_id'      => $this->getMealTypeBySlug('breakfast')?->id,
                 'title'             => ['en' => 'Biryani in breakfast', 'ar' => 'برياني'],
@@ -58,7 +59,7 @@ class RecipeWithRelationalDataSeeder extends Seeder
                 'ingredients'       => $biryaniIngredients
             ],
             [
-                'diet_type'         => 'traditional',
+                'diet_type'         => Meal::DIET_TYPE_TRADITION_EN,
                 'meal_category_ids' => $mealCategoryIds,
                 'meal_type_id'      => $this->getMealTypeBySlug('lunch')?->id,
                 'title'             => ['en' => 'Biryani in lunch', 'ar' => 'برياني'],
@@ -68,7 +69,7 @@ class RecipeWithRelationalDataSeeder extends Seeder
                 'ingredients'       => $biryaniIngredients
             ],
             [
-                'diet_type'         => 'traditional',
+                'diet_type'         => Meal::DIET_TYPE_TRADITION_EN,
                 'meal_category_ids' => $mealCategoryIds,
                 'meal_type_id'      => $this->getMealTypeBySlug('dinner')?->id,
                 'title'             => ['en' => 'Biryani in dinner', 'ar' => 'برياني'],
@@ -78,7 +79,7 @@ class RecipeWithRelationalDataSeeder extends Seeder
                 'ingredients'       => $biryaniIngredients
             ],
             [
-                'diet_type'         => 'traditional',
+                'diet_type'         => Meal::DIET_TYPE_TRADITION_EN,
                 'meal_category_ids' => $mealCategoryIds,
                 'meal_type_id'      => $this->getMealTypeBySlug('fruit')?->id,
                 'title'             => ['en' => 'Apple', 'ar' => 'تفاحة'],
@@ -87,7 +88,7 @@ class RecipeWithRelationalDataSeeder extends Seeder
                 'units_in_recipe'   => 20
             ],
             [
-                'diet_type'         => 'traditional',
+                'diet_type'         => Meal::DIET_TYPE_TRADITION_EN,
                 'meal_category_ids' => $mealCategoryIds,
                 'meal_type_id'      => $this->getMealTypeBySlug('snack')?->id,
                 'title'             => ['en' => 'Chips', 'ar' => 'رقائق'],
@@ -116,12 +117,12 @@ class RecipeWithRelationalDataSeeder extends Seeder
                 $recipeIngredients = $recipeData['ingredients'] ?? [];
                 unset($recipeData['ingredients']);
 
-                $recipeData['diet_type'] = 'traditional';
+                $recipeData['diet_type'] = Meal::DIET_TYPE_TRADITION_EN;
                 $recipeData['calories'] = $calorie;
                 $traditionalRecipe = Recipe::create($recipeData);
                 $traditionalRecipe->mealCategories()->sync($recipe['meal_category_ids']);
                 
-                $recipeData['diet_type'] = 'keto';
+                $recipeData['diet_type'] = Meal::DIET_TYPE_KETO_EN;
                 $ketoRecipe = Recipe::create($recipeData);
                 $ketoRecipe->mealCategories()->sync($recipe['meal_category_ids']);
 

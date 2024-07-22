@@ -65,7 +65,7 @@ class NplanDayRecipeIngredientDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'recipe_id',
+            'nplan_day_recipe_id',
             'type',
             'name',
             'quantity',

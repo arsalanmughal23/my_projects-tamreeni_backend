@@ -17,9 +17,8 @@ class CreateRecipesTable extends Migration
             $table->id();
             $table->enum('diet_type', ['traditional', 'keto']);
 
-            $table->json('meal_category_ids');
-            $table->unsignedBigInteger('meal_type_id'); // 'Breakfast', 'Lunch', 'Dinner', 'Fruit', 'Snack'
-            $table->foreign('meal_type_id')->references('id')->on('meal_types')->onDelete('cascade');
+            $table->unsignedBigInteger('meal_type_id'); // 'breakfast', 'lunch', 'dinner', 'fruit', 'snack'
+            $table->json('meal_category_ids'); // 'veggies', 'shrimp', 'sea_food', 'fish', 'eggs', 'dairy'
 
             $table->text('title');
             $table->longText('description');
@@ -37,6 +36,7 @@ class CreateRecipesTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
+            $table->foreign('meal_type_id')->references('id')->on('meal_types')->onDelete('cascade');
             // $table->unique(['diet_type', 'calories']);
         });
     }

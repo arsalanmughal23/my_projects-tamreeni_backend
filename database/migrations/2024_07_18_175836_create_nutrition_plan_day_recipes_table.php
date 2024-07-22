@@ -18,9 +18,9 @@ class CreateNutritionPlanDayRecipesTable extends Migration
             $table->enum('diet_type', ['traditional', 'keto']);
             
             $table->unsignedBigInteger('nutrition_plan_day_id');
-            $table->unsignedBigInteger('meal_type_id'); // 'Breakfast', 'Lunch', 'Dinner', 'Fruit', 'Snack'
             $table->unsignedBigInteger('recipe_id')->nullable();
-            $table->json('meal_category_ids');
+            $table->unsignedBigInteger('meal_type_id'); // 'breakfast', 'lunch', 'dinner', 'fruit', 'snack'
+            $table->json('meal_category_ids'); // 'veggies', 'shrimp', 'sea_food', 'fish', 'eggs', 'dairy'
 
             $table->text('title');
             $table->longText('description');

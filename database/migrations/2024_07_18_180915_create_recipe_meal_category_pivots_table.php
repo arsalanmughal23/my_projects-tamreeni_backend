@@ -22,7 +22,7 @@ class CreateRecipeMealCategoryPivotsTable extends Migration
             $table->unsignedBigInteger('nutrition_plan_day_recipe_id')->nullable();
             $table->foreign('nutrition_plan_day_recipe_id')->references('id')->on('nutrition_plan_day_recipes')->onDelete('cascade');
 
-            $table->unsignedInteger('meal_category_id'); // 'Veggies', 'Shrimp', 'Sea Food', 'Fish', 'Eggs', 'Dairy'
+            $table->unsignedInteger('meal_category_id'); // 'veggies', 'shrimp', 'sea_food', 'fish', 'eggs', 'dairy'
             $table->foreign('meal_category_id')->references('id')->on('meal_categories')->onDelete('cascade');
 
             $table->timestamps();

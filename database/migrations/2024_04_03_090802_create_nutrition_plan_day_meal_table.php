@@ -17,8 +17,8 @@ class CreateNutritionPlanDayMealTable extends Migration
             $table->id();
             $table->unsignedBigInteger('nutrition_plan_day_id');
             $table->unsignedInteger('meal_id')->nullable();
-            $table->bigInteger('meal_type_id')->unsigned();
-            $table->unsignedInteger('meal_category_id'); //'breakfast', 'lunch', 'dinner'
+            $table->bigInteger('meal_type_id')->unsigned(); // 'breakfast', 'lunch', 'dinner', 'fruit', 'snack'
+            $table->unsignedInteger('meal_category_id'); // 'veggies', 'shrimp', 'sea_food', 'fish', 'eggs', 'dairy'
 
             $table->text('name');
             $table->text('description')->nullable();

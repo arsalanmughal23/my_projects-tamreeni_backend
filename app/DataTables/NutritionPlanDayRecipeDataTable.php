@@ -18,6 +18,16 @@ class NutritionPlanDayRecipeDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
+        $dataTable->editColumn('title', function(NutritionPlanDayRecipe $model) {
+            return $model->title ?? '';
+        });
+        $dataTable->editColumn('description', function(NutritionPlanDayRecipe $model) {
+            return $model->description ?? '';
+        });
+        $dataTable->editColumn('instruction', function(NutritionPlanDayRecipe $model) {
+            return $model->instruction ?? '';
+        });
+
         return $dataTable->addColumn('action', 'nutrition_plan_day_recipes.datatables_actions');
     }
 
@@ -69,11 +79,8 @@ class NutritionPlanDayRecipeDataTable extends DataTable
             'nutrition_plan_day_id',
             'meal_type_id',
             'recipe_id',
-            'meal_category_ids',
+            'meal_category_names',
             'title',
-            'description',
-            'image',
-            'instruction',
             'units_in_recipe',
             'divide_recipe_by',
             'number_of_units',
@@ -81,6 +88,10 @@ class NutritionPlanDayRecipeDataTable extends DataTable
             'carbs',
             'fats',
             'protein'
+            // 'meal_category_ids',
+            // 'description',
+            // 'instruction',
+            // 'image',
         ];
     }
 

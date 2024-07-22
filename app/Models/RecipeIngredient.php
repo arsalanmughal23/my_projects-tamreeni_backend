@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property \App\Models\Recipe $recipe
  * @property integer $recipe_id
  * @property string $type
- * @property string $name
+ * @property json $name
  * @property integer $quantity
  * @property string $unit
  */

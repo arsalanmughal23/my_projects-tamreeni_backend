@@ -54,6 +54,8 @@ class WorkoutPlanRepository extends BaseRepository
     {
         $numberOfDaysPerWeek = Option::$DAYS_PER_WEEK[$userDetails->workout_days_in_a_week] ?? 0;
         $weekWiseDates       = generateDatesByWeek($planStartDate, $planEndDate);
+        $generatedDates = array_merge(...$weekWiseDates);
+
         if(!count($weekWiseDates) > 0)
             return null;
 
@@ -68,6 +70,7 @@ class WorkoutPlanRepository extends BaseRepository
                 $randomDates = array_merge($randomDates, pickRandomIndices($weekDates, $numberOfDaysPerWeek));
             }
         }
+
         $workoutPlan = WorkoutPlan::create([
             'user_id'    => \Auth::id(),
             'name'       => 'Workout Plan',
@@ -78,7 +81,7 @@ class WorkoutPlanRepository extends BaseRepository
 
         // create workout day and workout day exercises
         $workoutPlanDays = [];
-        foreach ($randomDates as $key => $randomDate) {
+        foreach ($generatedDates as $key => $generatedDate) {
 
             $workoutDay = WorkoutDay::create([
                 'workout_plan_id' => $workoutPlan->id,
@@ -90,17 +93,19 @@ class WorkoutPlanRepository extends BaseRepository
                     'en' => WorkoutDay::DESCRIPTION_EN,
                     'ar' => WorkoutDay::DESCRIPTION_AR
                 ],
-                'date'            => Carbon::parse($randomDate),
+                'date'            => Carbon::parse($generatedDate),
                 'status'          => WorkoutDay::STATUS_TODO,
                 'duration'        => 0,
                 'image'           => null,
             ]);
 
-            // TODO : assign workoutday exercises
-            $workoutDayExercises = collect($this->assignWorkoutDayExercises($userDetails, $workoutDay->id));
-            $workoutDay->update(['duration' => $workoutDayExercises->sum('duration_in_m'), 'image' => $workoutDayExercises->first()->image ?? null ]);
-            $workoutDay['workout_day_exercises'] = $workoutDayExercises;
-            $workoutPlanDays[] = $workoutDay;
+            if (in_array($generatedDate, $randomDates)) {
+                // TODO : assign workoutday exercises
+                $workoutDayExercises = collect($this->assignWorkoutDayExercises($userDetails, $workoutDay->id));
+                $workoutDay->update(['duration' => $workoutDayExercises->sum('duration_in_m'), 'image' => $workoutDayExercises->first()->image ?? null ]);
+                $workoutDay['workout_day_exercises'] = $workoutDayExercises;
+                $workoutPlanDays[] = $workoutDay;
+            }
         }
         $workoutPlan['workout_days'] = $workoutPlanDays;
         return $workoutPlan;

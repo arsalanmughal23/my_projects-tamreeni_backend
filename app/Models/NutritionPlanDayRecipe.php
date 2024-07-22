@@ -19,7 +19,7 @@ use Spatie\Translatable\HasTranslations;
  * @property string $diet_type
  * @property integer $nutrition_plan_day_id
  * @property integer $meal_type_id
- * @property integer $nplan_day_recipe_id
+ * @property integer $recipe_id
  * @property string $meal_category_ids
  * @property string $title
  * @property string $description
@@ -57,7 +57,7 @@ class NutritionPlanDayRecipe extends Model
         'diet_type',
         'nutrition_plan_day_id',
         'meal_type_id',
-        'nplan_day_recipe_id',
+        'recipe_id',
         'meal_category_ids',
         'title',
         'description',
@@ -82,7 +82,7 @@ class NutritionPlanDayRecipe extends Model
         'diet_type' => 'string',
         'nutrition_plan_day_id' => 'integer',
         'meal_type_id' => 'integer',
-        'nplan_day_recipe_id' => 'integer',
+        'recipe_id' => 'integer',
         'meal_category_ids' => 'json',
         'title' => 'json',
         'description' => 'json',
@@ -106,7 +106,7 @@ class NutritionPlanDayRecipe extends Model
         'diet_type' => 'required|string',
         'nutrition_plan_day_id' => 'required',
         'meal_type_id' => 'required',
-        'nplan_day_recipe_id' => 'nullable',
+        'recipe_id' => 'nullable',
         'meal_category_ids' => 'required|string',
         'title' => 'required|string',
         'description' => 'required|string',
@@ -130,6 +130,14 @@ class NutritionPlanDayRecipe extends Model
     public function mealType()
     {
         return $this->belongsTo(\App\Models\MealType::class, 'meal_type_id');
+    }
+    
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function recipe()
+    {
+        return $this->belongsTo(\App\Models\Recipe::class, 'recipe_id');
     }
 
     /**

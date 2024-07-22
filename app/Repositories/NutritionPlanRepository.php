@@ -89,6 +89,9 @@ class NutritionPlanRepository extends BaseRepository
             ])
             ->inRandomOrder()->first();
 
+        if(!$mealBreakdown)
+            return $nutritionPlan;
+
         $nutritionPlanDays = [];
         // Create Nutrition Plan Days & Assign Meals on every each Day
         foreach ($randomDates as $key => $randomDate) {

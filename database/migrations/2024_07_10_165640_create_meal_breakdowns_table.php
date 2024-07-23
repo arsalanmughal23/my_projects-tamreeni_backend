@@ -16,7 +16,7 @@ class CreateMealBreakdownsTable extends Migration
         Schema::create('meal_breakdowns', function (Blueprint $table) {
             $table->id();
             $table->enum('diet_type', ['traditional', 'keto']);
-            $table->bigInteger('total_calories');
+            $table->bigInteger('total_calories')->default(0);
             $table->unsignedBigInteger('breakfast_units')->default(0);
             $table->unsignedBigInteger('lunch_units')->default(0);
             $table->unsignedBigInteger('dinner_units')->default(0);

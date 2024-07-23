@@ -21,7 +21,7 @@ class AddForiegnKeysInQuestionAnswerAttemptsTable extends Migration
         
         if (Schema::hasTable('user_details')) {
             Schema::table('user_details', function (Blueprint $table) {
-                $table->unsignedBigInteger('planed_answer_attempt_id')->nullable();
+                // $table->unsignedBigInteger('planed_answer_attempt_id')->nullable();
                 $table->foreign('planed_answer_attempt_id')->references('id')->on('question_answer_attempts')->restrictOnDelete('cascade');
             });
         }

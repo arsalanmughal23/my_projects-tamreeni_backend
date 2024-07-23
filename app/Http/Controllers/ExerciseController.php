@@ -12,6 +12,7 @@ use App\Models\ExerciseEquipment;
 use App\Repositories\ExerciseRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
+use App\Models\Exercise;
 use Response;
 
 class ExerciseController extends AppBaseController
@@ -46,11 +47,13 @@ class ExerciseController extends AppBaseController
      */
     public function create()
     {
-//        dd("asdad");
         $bodyParts           = BodyPart::all();
         $exercise_equipments = ExerciseEquipment::all()->pluck('name', 'id');
 
-        return view('exercises.create')->with(['bodyParts' => $bodyParts, 'exercise_equipments' => $exercise_equipments]);
+        $exerciseCategories     = Exercise::EXERCISE_CATEGORIES;
+        $exerciseTypes          = Exercise::EXERCISE_TYPES;
+
+        return view('exercises.create', compact('exerciseCategories', 'exerciseTypes', 'bodyParts', 'exercise_equipments'));
     }
 
     /**
@@ -62,7 +65,7 @@ class ExerciseController extends AppBaseController
      */
     public function store(CreateExerciseRequest $request)
     {
-        $input = $request->all();
+        $input = $request->validated();
         $equipmentIds = $request->get('exercise_equipments', []);
 
         $input['user_id'] = auth()->user()->id;
@@ -117,9 +120,11 @@ class ExerciseController extends AppBaseController
      */
     public function edit($id)
     {
-        $exercise            = $this->exerciseRepository->find($id);
-        $bodyParts           = BodyPart::all();
-        $exercise_equipments = ExerciseEquipment::all()->pluck('name', 'id');
+        $exercise               = $this->exerciseRepository->find($id);
+        $bodyParts              = BodyPart::all();
+        $exercise_equipments    = ExerciseEquipment::all()->pluck('name', 'id');
+        $exerciseCategories     = Exercise::EXERCISE_CATEGORIES;
+        $exerciseTypes          = Exercise::EXERCISE_TYPES;
 
         $selectedEquipments = $exercise->equipment->pluck('id')->toArray();
 
@@ -129,7 +134,7 @@ class ExerciseController extends AppBaseController
             return redirect(route('exercises.index'));
         }
 
-        return view('exercises.edit')->with(['exercise' => $exercise, 'bodyParts' => $bodyParts, 'exercise_equipments' => $exercise_equipments, 'selectedEquipments' => $selectedEquipments]);
+        return view('exercises.edit', compact('exerciseCategories', 'exerciseTypes', 'exercise', 'bodyParts', 'exercise_equipments', 'selectedEquipments'));
     }
 
     /**
@@ -145,7 +150,7 @@ class ExerciseController extends AppBaseController
         $exercise = $this->exerciseRepository->find($id);
         $equipmentIds = $request->get('exercise_equipments', []);
 
-        $input    = $request->all();
+        $input = $request->validated();
         if (empty($exercise)) {
             Flash::error('Exercise not found');
 

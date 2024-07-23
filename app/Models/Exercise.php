@@ -49,7 +49,7 @@ class Exercise extends Model
     const CATEGORY_MULTI_JOINT          = 'multi_joint';
     const CATEGORY_CARDIO               = 'cardio';
     const CATEGORY_ACCESSORY_MOVEMENT_CATEGORIES = [self::CATEGORY_SINGLE_JOINT, self::CATEGORY_MULTI_JOINT];
-    const EXERCISE_CATEGORIES = [self::CATEGORY_MAJOR_LIFT, self::CATEGORY_ACCESSORY_MOVEMENT, self::CATEGORY_SINGLE_JOINT, self::CATEGORY_MULTI_JOINT, self::CATEGORY_CARDIO];
+    const EXERCISE_CATEGORIES = [self::CATEGORY_MAJOR_LIFT, self::CATEGORY_SINGLE_JOINT, self::CATEGORY_MULTI_JOINT, self::CATEGORY_CARDIO];
 
     const TYPE_SQUAT    = 'squat';
     const TYPE_DEADLIFT = 'deadlift';
@@ -114,6 +114,8 @@ class Exercise extends Model
      */
     public static $rules = [
         'user_id'        => 'nullable',
+        'exercise_category_name' => 'required|string|in:major_lift,single_joint,multi_joint,cardio',
+        'exercise_type_name' => 'required_if:exercise_category_name,major_lift|in:squat,deadlift,bench,overhead',
         'body_part_id'   => 'required|integer',
         'name'           => 'required|array',
         'name.en'        => 'required|string|max:70',

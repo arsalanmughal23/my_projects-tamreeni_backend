@@ -23,6 +23,32 @@
     {!! Form::textarea('description[ar]', isset($exercise)?$exercise->getTranslation('description', 'ar'):null, ['class' => 'form-control', 'rows'=>3, 'cols'=>3, 'required', 'dir'=>'rtl', 'maxlength' => 100]) !!}
 </div>
 
+<!-- Exercise Category Field -->
+<div class="form-group col-sm-3">
+    {!! Form::label('exercise_category_name', 'Exercise Category:', ['class'=>'required']) !!}
+
+    <select name="exercise_category_name" class="form-control" required>
+        <option></option>
+        @foreach ($exerciseCategories as $exerciseCategory)
+            <option value="{{ $exerciseCategory }}"
+                    @if(old('exercise_category_name') == $exerciseCategory || (isset($exercise) && $exercise->exercise_category_name == $exerciseCategory)) selected @endif>{{ __('general.'.$exerciseCategory, [], 'en') }}</option>
+        @endforeach
+    </select>
+</div>
+
+<!-- Exercise Type Field -->
+<div class="form-group col-sm-3">
+    {!! Form::label('exercise_type_name', 'Exercise Type:', ['class'=>'required']) !!}
+
+    <select name="exercise_type_name" class="form-control" required>
+        <option></option>
+        @foreach ($exerciseTypes as $exerciseType)
+            <option value="{{ $exerciseType }}"
+                    @if(old('exercise_type_name') == $exerciseType || (isset($exercise) && $exercise->exercise_type_name == $exerciseType)) selected @endif>{{ __('general.'.$exerciseType, [], 'en') }}</option>
+        @endforeach
+    </select>
+</div>
+
 <!-- Body Part Id Field -->
 <div class="form-group col-sm-3">
     {!! Form::label('body_part_id', 'Body Part:', ['class'=>'required']) !!}
@@ -86,6 +112,7 @@
 
 </div>
 
+<div class="offset-6"></div>
 
 <!-- video Field -->
 @if(isset($exercise))
@@ -108,6 +135,32 @@
 
 @push('page_scripts')
     <script>
+        let exerciseTypeLabel = $('label[for=exercise_type_name]');
+        let selectedExerciseCategoryElement = $('select[name=exercise_category_name]');
+
+        let selectedExerciseTypeElement = {
+            elem: $('select[name=exercise_type_name]'),
+            toggleDisable(status = false) {
+                this.elem.prop('disabled', status);
+                status == true && this.elem.val(null);
+                return this;
+            },
+            toggleRequired(status = true) {
+                this.elem.prop('required', status);
+                status == true ? exerciseTypeLabel.addClass('required') : exerciseTypeLabel.removeClass('required');
+                return this;
+            }
+        };
+
+        selectedExerciseCategoryElement.on('change', function (e) {
+            e.preventDefault();
+            let selectedExerciseCategory = $(e.target).val();
+
+            selectedExerciseCategory == 'major_lift' 
+                ? selectedExerciseTypeElement.toggleRequired(true).toggleDisable(false) 
+                : selectedExerciseTypeElement.toggleRequired(false).toggleDisable(true);
+        });
+
         function allowOnlyNumbers(input, maxLength, allowDecimal) {
             input.addEventListener('input', function () {
                 // Store the current cursor position and value length

@@ -75,8 +75,8 @@ class WorkoutPlanRepository extends BaseRepository
         $workoutPlan = WorkoutPlan::create([
             'user_id'    => \Auth::id(),
             'name'       => 'Workout Plan',
-            'start_date' => $randomDates[0],
-            'end_date'   => $randomDates[count($randomDates) - 1],
+            'start_date' => $planStartDate, // $randomDates[0],
+            'end_date'   => $planEndDate, // $randomDates[count($randomDates) - 1],
             'status'     => WorkoutPlan::STATUS_TODO
         ]);
 

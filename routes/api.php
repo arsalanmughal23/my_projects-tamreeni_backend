@@ -29,12 +29,6 @@ Route::post('social-login', [App\Http\Controllers\API\AuthAPIController::class, 
 
 // Route::post('verify-password-reset-code', [App\Http\Controllers\API\AuthAPIController::class, 'verifyPasswordResetCode'])->name('verify_password_reset_code');
 
-Route::get('run_new_migration_with_seeders', function (Request $request) {
-    Artisan::call('migrate');
-    Artisan::call('db:seed --class=RecipeWithRelationalDataSeeder');
-    return Artisan::call('db:seed --class=MealBreakdownSeeder');
-});
-
 Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () {
     Route::resource('user-list', App\Http\Controllers\API\UserAPIController::class);
     Route::get('my-profile', [App\Http\Controllers\API\UserAPIController::class, 'myProfile']);

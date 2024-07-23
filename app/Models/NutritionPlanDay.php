@@ -98,6 +98,14 @@ class NutritionPlanDay extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      **/
+    public function nutritionPlanDayRecipes()
+    {
+        return $this->hasMany(\App\Models\NutritionPlanDayRecipe::class, 'nutrition_plan_day_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     **/
     public function nutritionPlanDayMeals()
     {
         return $this->hasMany(\App\Models\NutritionPlanDayMeal::class, 'nutrition_plan_day_id')->with(['mealType', 'meal']);

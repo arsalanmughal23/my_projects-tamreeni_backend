@@ -24,7 +24,8 @@ class NutritionPlanDayResource extends JsonResource
             'day_take_in_calories'      => $this->day_take_in_calories,
             'status'                   => $this->status,
             'created_at'               => $this->created_at,
-            'nutrition_plan_day_meals' => NutritionPlanDayMealResource::collection($this->whenLoaded('nutritionPlanDayMeals'))
+            'nutrition_plan_day_meals' => NutritionPlanDayMealResource::collection($this->whenLoaded('nutritionPlanDayMeals')),
+            'nutrition_plan_day_recipes' => NutritionPlanDayRecipeResource::collection($this->whenLoaded('nutritionPlanDayRecipes'))
         ];
     }
 

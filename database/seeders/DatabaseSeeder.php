@@ -29,7 +29,9 @@ class DatabaseSeeder extends Seeder
             ExerciseSeeder::class,
             QuestionAndOptionSeeder::class,
             PageSeeder::class,
-            PackagesTableSeeder::class
+            PackagesTableSeeder::class,
+            RecipeWithRelationalDataSeeder::class,
+            MealBreakdownSeeder::class
         ]);
         // \App\Models\User::factory(10)->create();
     }

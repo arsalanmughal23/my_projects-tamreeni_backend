@@ -33,7 +33,9 @@ class CreateNutritionPlanDayTable extends Migration
     public function down()
     {
         Schema::table('nutrition_plan_days', function (Blueprint $table) {
-            //
+            $table->dropForeign(['nutrition_plan_id']);
         });
+
+        Schema::dropIfExists('nutrition_plan_days');
     }
 }

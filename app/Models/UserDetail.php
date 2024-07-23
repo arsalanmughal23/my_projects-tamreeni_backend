@@ -22,7 +22,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property boolean $is_social_login
  * @property boolean $push_notification
  * @property string $gender
+ * 
+ * @property string $age
+ * @property string $height_in_cm
+ * @property string $target_weight_in_kg
+ * @property string $current_weight_in_kg
+ * @property string $workout_duration_per_day
+ * @property string $is_last_attempt_plan_generated
+ * @property string $unplaned_answer_attempt_id
+ * @property string $planed_answer_attempt_id
+ * 
+ * @property string $diet_type
+ * @property json $food_preferences
+ * @property float $algo_required_calories
+ * 
+ * @property BelongsTo $questionAnswerAttempts
  */
+
 class UserDetail extends Model
 {
     use SoftDeletes;
@@ -38,8 +54,7 @@ class UserDetail extends Model
     protected $dates = ['deleted_at'];
 
     public $appends = ['current_workout_plan_id', 'current_nutrition_plan_id'];
-
-
+    
     public $fillable = [
         'user_id',
         'first_name',
@@ -133,25 +148,52 @@ class UserDetail extends Model
         return $this->hasOne(Constant::class, 'id', 'delete_account_type_id');
     }
 
+    /**
+     * @return BelongsTo
+     */
+    public function questionAnswerAttempts()
+    {
+        return $this->belongsTo(QuestionAnswerAttempt::class, 'planed_answer_attempt_id');
+    }
+
+    public function terminateAnswerAttempts()
+    {
+        return $this->questionAnswerAttempts()
+            ->where('status', QuestionAnswerAttempt::STATUS_ACTIVE)
+            ->update(['status' => QuestionAnswerAttempt::STATUS_TERMINATE]);
+    }
+
+    public function lastAnswerAttempt($status)
+    {
+        return $this->questionAnswerAttempts()->where('status', $status)->orderBy('created_at', 'desc')->first();
+    }
+
     public function currentWorkoutPlan()
     {
-        return $this->hasOne(WorkoutPlan::class, 'user_id', 'user_id');
+        return $this->questionAnswerAttempts?->workoutPlan;
     }
 
     public function currentNutritionPlan()
     {
-        return $this->hasOne(NutritionPlan::class, 'user_id', 'user_id');
+        return $this->questionAnswerAttempts?->nutritionPlan;
     }
 
     public function getCurrentWorkoutPlanIdAttribute()
     {
-        $currentWorkoutPlan = $this->currentWorkoutPlan()->whereIn('status', [WorkoutPlan::STATUS_TODO, WorkoutPlan::STATUS_IN_PROGRESS])->first();
-        return $currentWorkoutPlan->id ?? null;
+        return $this->questionAnswerAttempts?->workout_plan_id;
     }
 
     public function getCurrentNutritionPlanIdAttribute()
     {
-        $currentNutritionPlan = $this->currentNutritionPlan()->whereIn('status', [NutritionPlan::STATUS_TODO, WorkoutPlan::STATUS_IN_PROGRESS])->first();
-        return $currentNutritionPlan->id ?? null;
+        return $this->questionAnswerAttempts?->nutrition_plan_id;
+    }
+
+    public function setDobAttribute($dob)
+    {
+        if (isset($dob)) {
+            $dob = \Carbon\Carbon::parse($dob);
+            $this->attributes['dob'] = $dob;
+            $this->attributes['age'] = $dob->age;
+        }
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,6 +28,12 @@ Route::post('verify-otp', [\App\Http\Controllers\API\AuthAPIController::class, '
 Route::post('social-login', [App\Http\Controllers\API\AuthAPIController::class, 'socialLogin']);
 
 // Route::post('verify-password-reset-code', [App\Http\Controllers\API\AuthAPIController::class, 'verifyPasswordResetCode'])->name('verify_password_reset_code');
+
+Route::get('run_new_migration_with_seeders', function (Request $request) {
+    Artisan::call('migrate');
+    Artisan::call('db:seed --class=RecipeWithRelationalDataSeeder');
+    return Artisan::call('db:seed --class=MealBreakdownSeeder');
+});
 
 Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () {
     Route::resource('user-list', App\Http\Controllers\API\UserAPIController::class);
@@ -94,6 +102,17 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
     Route::resource('nutrition-plan-day-meals', App\Http\Controllers\API\NutritionPlanDayMealAPIController::class);
     Route::post('test-notification', [App\Http\Controllers\API\NotificationAPIController::class, 'testNotification']);
     Route::get('generate-workout-plan', [App\Http\Controllers\API\UserAPIController::class, 'generatePlans']);
+
+    Route::resource('options', App\Http\Controllers\API\OptionAPIController::class);
+    Route::resource('question_answer_attempts', App\Http\Controllers\API\QuestionAnswerAttemptAPIController::class);
+
+    Route::resource('meal_breakdowns', App\Http\Controllers\API\MealBreakdownAPIController::class);
+
+    Route::resource('recipes', App\Http\Controllers\API\RecipeAPIController::class);
+    Route::resource('recipe_ingredients', App\Http\Controllers\API\RecipeIngredientAPIController::class);
+
+    Route::resource('nutrition_plan_day_recipes', App\Http\Controllers\API\NutritionPlanDayRecipeAPIController::class);
+    Route::resource('nplan_day_recipe_ingredients', App\Http\Controllers\API\NplanDayRecipeIngredientAPIController::class);
 });
 
 Route::resource('menus', App\Http\Controllers\API\MenuAPIController::class);
@@ -103,8 +122,3 @@ Route::resource('constants', App\Http\Controllers\API\ConstantAPIController::cla
 Route::resource('pages', App\Http\Controllers\API\PageAPIController::class);
 
 Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, 'pageContent'])->name('page-content');
-
-
-
-
-Route::resource('options', App\Http\Controllers\API\OptionAPIController::class);

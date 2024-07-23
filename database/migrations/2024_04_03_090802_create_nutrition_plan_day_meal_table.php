@@ -17,8 +17,8 @@ class CreateNutritionPlanDayMealTable extends Migration
             $table->id();
             $table->unsignedBigInteger('nutrition_plan_day_id');
             $table->unsignedInteger('meal_id')->nullable();
-            $table->bigInteger('meal_type_id')->unsigned();
-            $table->unsignedInteger('meal_category_id'); //'breakfast', 'lunch', 'dinner'
+            $table->bigInteger('meal_type_id')->unsigned(); // 'breakfast', 'lunch', 'dinner', 'fruit', 'snack'
+            $table->unsignedInteger('meal_category_id'); // 'veggies', 'shrimp', 'sea_food', 'fish', 'eggs', 'dairy'
 
             $table->text('name');
             $table->text('description')->nullable();
@@ -49,9 +49,12 @@ class CreateNutritionPlanDayMealTable extends Migration
     public function down()
     {
         Schema::table('nutrition_plan_day_meals', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('nutrition_plan_day_id');
-            $table->dropConstrainedForeignId('meal_id');
-            $table->dropConstrainedForeignId('meal_type_id');
+            $table->dropForeign(['nutrition_plan_day_id']);
+            $table->dropForeign(['meal_id']);
+            $table->dropForeign(['meal_type_id']);
+            $table->dropForeign(['meal_category_id']);
         });
+
+        Schema::dropIfExists('nutrition_plan_day_meals');
     }
 }

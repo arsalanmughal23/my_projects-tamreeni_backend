@@ -14,6 +14,7 @@ use App\Models\NutritionPlan;
 use App\Models\UserDetail;
 use App\Models\WorkoutPlan;
 use App\Models\Exercise;
+use App\Models\QuestionAnswerAttempt;
 use App\Repositories\ExerciseRepository;
 use App\Repositories\MealRepository;
 use App\Repositories\UserDetailRepository;
@@ -221,9 +222,20 @@ class UserAPIController extends AppBaseController
             if($workoutPlan)
                 $workoutPlan = new WorkoutPlanResource(WorkoutPlan::with('workoutPlanDays.workoutDayExercises')->find($workoutPlan->id));
             if($nutritionPlan)
-                $nutritionPlan = new NutritionPlanResource(NutritionPlan::with('nutritionPlanDays.nutritionPlanDayMeals')->find($nutritionPlan->id));
+                $nutritionPlan = new NutritionPlanResource(NutritionPlan::with(['nutritionPlanDays.nutritionPlanDayMeals','nutritionPlanDays.nutritionPlanDayRecipes.nPlanDayRecipeIngredients'])->find($nutritionPlan->id));
 
-            $this->userDetailRepository->updatedStatusPlanIsGenerated($userDetails, 1);
+            $this->userDetailRepository->updatedStatusPlanIsGenerated($userDetails);
+
+            $userDetails->terminateAnswerAttempts();
+            $userAnswerAttempt = $userDetails->lastAnswerAttempt(QuestionAnswerAttempt::STATUS_PENDING);
+            $userAnswerAttempt?->update([ 
+                'workout_plan_id' => $workoutPlan->id, 
+                'nutrition_plan_id' => $nutritionPlan->id, 
+                'status' => QuestionAnswerAttempt::STATUS_ACTIVE 
+            ]);
+
+            $userDetails->planed_answer_attempt_id = $userDetails->unplaned_answer_attempt_id;
+            $userDetails->save();
 
             $message = ($workoutPlan || $nutritionPlan) ? 'Your plan is generated successfully' : 'Sorry, your plan is not generated';
 

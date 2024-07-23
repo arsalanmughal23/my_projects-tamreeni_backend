@@ -33,8 +33,9 @@ class SubmitAnswersAPIRequest extends BaseAPIRequest
             'height_unit'           => 'required|string|exists:constants,key,group,' . Constant::CONST_SIZE_UNIT,
             'current_weight'        => 'required|numeric|'.$this->getConditionalWeightRule('current_weight'),
             'current_weight_unit'   => 'required|string|exists:constants,key,group,' . Constant::CONST_WEIGHT_UNIT,
+            'target_weight_unit'    => 'required|string|same:current_weight_unit',
+            // 'target_weight_unit'    => 'required|string|exists:constants,key,group,' . Constant::CONST_WEIGHT_UNIT,
             'target_weight'         => 'required|numeric|'.$this->getConditionalWeightRule('target_weight'),
-            'target_weight_unit'    => 'required|string|exists:constants,key,group,' . Constant::CONST_WEIGHT_UNIT,
 
             'workout_days_in_a_week'   => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q7_WORKOUT_DAYS_IN_A_WEEK,
             // 'workout_duration_per_day' => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q8_WORKOUT_DURATION_PER_DAY,
@@ -91,6 +92,7 @@ class SubmitAnswersAPIRequest extends BaseAPIRequest
             $rules .= match ($this->input('goal')){
                 'lose_weight' => '|max:'.$this->input('current_weight'),
                 'gain_weight' => '|min:'.$this->input('current_weight'),
+                default => '|min:1'
                 // 'build_muscle' => '|min:'.$this->input('current_weight'),
                 // 'get_fit' => '|min:'.$this->input('current_weight')
             };

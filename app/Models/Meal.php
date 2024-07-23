@@ -37,6 +37,7 @@ class Meal extends Model
     const DIET_TYPE_TRADITION_AR = "تقليدي";
     const DIET_TYPE_KETO_EN      = "keto";
     const DIET_TYPE_KETO_AR      = "كيتو";
+    const COSNT_DIET_TYPES = ['traditional', 'keto'];
 
     protected $dates = [
         'created_at',

@@ -10,6 +10,7 @@ use App\Models\WorkoutDayExercise;
 use App\Models\WorkoutPlan;
 use App\Repositories\BaseRepository;
 use Carbon\Carbon;
+use Error;
 
 /**
  * Class WorkoutPlanRepository
@@ -133,6 +134,53 @@ class WorkoutPlanRepository extends BaseRepository
         $exerciseDetails = Exercise::EXERCISE_FACTORS[$exerciseIntensityLevel];
         return $exerciseDetails;
     }
+
+    public function makeCategorizeExercises($majorLift, $singleJoint, $multiJoint, $cardio)
+    {
+        return [
+            Exercise::CATEGORY_MAJOR_LIFT => $majorLift,
+            Exercise::CATEGORY_SINGLE_JOINT => $singleJoint,
+            Exercise::CATEGORY_MULTI_JOINT => $multiJoint,
+            Exercise::CATEGORY_CARDIO => $cardio
+        ];
+    }
+
+    public function makeExercisesGrouping($goal, $howLongTimeToWorkout)
+    {
+        return match ($goal) {
+
+            Option::Q1_OPT1__LOSE_WEIGHT => match ($howLongTimeToWorkout) {
+                Option::Q12_OPT1__30_MINS => $this->makeCategorizeExercises(1, 0, 0, 1),
+                Option::Q12_OPT2__45_MINS => $this->makeCategorizeExercises(1, 1, 0, 1),
+                Option::Q12_OPT3__1_HOUR => $this->makeCategorizeExercises(1, 1, 1, 1),
+                Option::Q12_OPT4__MORE_THAN_1_HOUR => $this->makeCategorizeExercises(1, 2, 2, 1),
+                default => $this->makeCategorizeExercises(1, 0, 0, 1)
+            },
+            Option::Q1_OPT2__GAIN_WEIGHT => match ($howLongTimeToWorkout) {
+                Option::Q12_OPT1__30_MINS => $this->makeCategorizeExercises(1, 0, 1, 1),
+                Option::Q12_OPT2__45_MINS => $this->makeCategorizeExercises(1, 1, 1, 1),
+                Option::Q12_OPT3__1_HOUR => $this->makeCategorizeExercises(1, 2, 1, 1),
+                Option::Q12_OPT4__MORE_THAN_1_HOUR => $this->makeCategorizeExercises(1, 2, 2, 1),
+                default => $this->makeCategorizeExercises(1, 0, 1, 1)
+            },
+            Option::Q1_OPT3__BUILD_MUSCLE => match ($howLongTimeToWorkout) {
+                Option::Q12_OPT1__30_MINS => $this->makeCategorizeExercises(1, 1, 0, 1),
+                Option::Q12_OPT2__45_MINS => $this->makeCategorizeExercises(1, 1, 1, 1),
+                Option::Q12_OPT3__1_HOUR => $this->makeCategorizeExercises(1, 2, 1, 1),
+                Option::Q12_OPT4__MORE_THAN_1_HOUR => $this->makeCategorizeExercises(1, 3, 2, 1),
+                default => $this->makeCategorizeExercises(1, 1, 0, 1)
+            },
+            Option::Q1_OPT4__GET_FIT => match ($howLongTimeToWorkout) {
+                Option::Q12_OPT1__30_MINS => $this->makeCategorizeExercises(1, 0, 0, 1),
+                Option::Q12_OPT2__45_MINS => $this->makeCategorizeExercises(1, 0, 1, 1),
+                Option::Q12_OPT3__1_HOUR => $this->makeCategorizeExercises(1, 1, 1, 1),
+                Option::Q12_OPT4__MORE_THAN_1_HOUR => $this->makeCategorizeExercises(1, 2, 2, 1),
+                default => $this->makeCategorizeExercises(1, 0, 0, 1)
+            },
+            default => throw new Error('Invalid Goal')
+        };
+    }
+
     public function assignWorkoutDayExercises(UserDetail $userDetails, $workoutDayId)
     {
         $workoutPlanDayExercises = [];
@@ -140,13 +188,19 @@ class WorkoutPlanRepository extends BaseRepository
         $exercise = $this->exerciseRepository->getExercises(['body_parts' => $userDetails->body_parts, 'equipment_type' => $userDetails->equipment_type]);
 
         $majorLiftExercises = clone $exercise;
-        $accessoryMovementExercises = clone $exercise;
+        $singleJointExercises = clone $exercise;
+        $multiJointExercises = clone $exercise;
         $cardioExercises = clone $exercise;
 
-        $majorLiftExercises = $majorLiftExercises->where(['exercise_category_name' => Exercise::CATEGORY_MAJOR_LIFT])->inRandomOrder()->take(1)->get();
-        $accessoryMovementExercises = $accessoryMovementExercises->whereIn('exercise_category_name', Exercise::CATEGORY_ACCESSORY_MOVEMENT_CATEGORIES)->inRandomOrder()->take(2)->get();
-        $cardioExercises = $cardioExercises->where(['exercise_category_name' => Exercise::CATEGORY_CARDIO])->inRandomOrder()->take(1)->get();
-        $exercises = array_merge($majorLiftExercises->toArray(), $accessoryMovementExercises->toArray(), $cardioExercises->toArray());
+        $exercisesCounts = $this->makeExercisesGrouping($userDetails->goal, $userDetails->how_long_time_to_workout);
+
+        $majorLiftExercises = $majorLiftExercises->where(['exercise_category_name' => Exercise::CATEGORY_MAJOR_LIFT])->inRandomOrder()->take($exercisesCounts[Exercise::CATEGORY_MAJOR_LIFT])->get();
+        $singleJointExercises = $singleJointExercises->where('exercise_category_name', Exercise::CATEGORY_SINGLE_JOINT)->inRandomOrder()->take($exercisesCounts[Exercise::CATEGORY_SINGLE_JOINT])->get();
+        $multiJointExercises = $multiJointExercises->where('exercise_category_name', Exercise::CATEGORY_MULTI_JOINT)->inRandomOrder()->take($exercisesCounts[Exercise::CATEGORY_MULTI_JOINT])->get();
+        $accessoryMovementExercises = array_merge($singleJointExercises->toArray(), $multiJointExercises->toArray());
+
+        $cardioExercises = $cardioExercises->where(['exercise_category_name' => Exercise::CATEGORY_CARDIO])->inRandomOrder()->take($exercisesCounts[Exercise::CATEGORY_CARDIO])->get();
+        $exercises = array_merge($majorLiftExercises->toArray(), $accessoryMovementExercises, $cardioExercises->toArray());
 
         $exerciseGeneralFactors = $this->getExerciseGeneralFactors();
         foreach ($exercises as $exercise) {

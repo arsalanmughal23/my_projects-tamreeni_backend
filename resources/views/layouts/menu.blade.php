@@ -330,3 +330,13 @@
         </a>
     </li>
 @endcan
+@canany(['promo_codes.index', 'promo_codes.create', 'promo_codes.show', 'promo_codes.edit', 'promo_codes.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('promo_codes.index') }}"
+        class="nav-link {{ Request::is('promo_codes*') ? 'active' : '' }}">
+            <p>Promo Codes</p>
+        </a>
+    </li>
+@endcan
+
+

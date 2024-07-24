@@ -1,0 +1,74 @@
+<?php
+
+namespace App\Models;
+
+use Eloquent as Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+/**
+ * Class PromoCode
+ * @package App\Models
+ * @version July 24, 2024, 5:01 pm UTC
+ *
+ * @property string $code
+ * @property number $value
+ * @property string $type
+ * @property string $status
+ */
+class PromoCode extends Model
+{
+    use SoftDeletes;
+
+    use HasFactory;
+
+    public $table = 'promo_codes';
+    
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = 'updated_at';
+
+
+    protected $dates = ['deleted_at'];
+
+    const CONST_TYPE = ['flat', 'percent'];
+    const CONST_STATUS = ['active', 'inactive'];
+
+
+
+    public $fillable = [
+        'code',
+        'value',
+        'type',
+        'status'
+    ];
+
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'id' => 'integer',
+        'code' => 'string',
+        'value' => 'decimal:2',
+        'type' => 'string',
+        'status' => 'string'
+    ];
+
+    /**
+     * Validation rules
+     *
+     * @var array
+     */
+    public static $rules = [
+        'code' => 'required|string|max:191',
+        'value' => 'required|numeric',
+        'type' => 'required|string',
+        'status' => 'required|string',
+        'created_at' => 'nullable',
+        'updated_at' => 'nullable',
+        'deleted_at' => 'nullable'
+    ];
+
+    
+}

@@ -90,6 +90,7 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
 
     Route::resource('nutrition-plan-days', App\Http\Controllers\API\NutritionPlanDayAPIController::class);
     Route::put('user-meal-consumed/{nutritionPlanDayMealId}', [App\Http\Controllers\API\NutritionPlanDayMealAPIController::class, 'userMealConsumed']);
+    Route::put('user-recipe-consumed/{nutritionPlanDayRecipeId}', [App\Http\Controllers\API\NutritionPlanDayMealAPIController::class, 'userRecipeConsumed']);
     Route::post('user-additional-meal-consumed', [App\Http\Controllers\API\NutritionPlanDayMealAPIController::class, 'userAdditionalMealConsumed']);
 
 

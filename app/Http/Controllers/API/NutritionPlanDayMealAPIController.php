@@ -10,8 +10,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\API\UserAdditionalMealConsumedAPIRequest;
 use App\Http\Resources\NutritionPlanDayMealResource;
+use App\Http\Resources\NutritionPlanDayRecipeResource;
 use App\Models\NutritionPlan;
 use App\Models\NutritionPlanDay;
+use App\Models\NutritionPlanDayRecipe;
+use App\Repositories\NutritionPlanDayRecipeRepository;
 use App\Repositories\NutritionPlanDayRepository;
 use App\Repositories\NutritionPlanRepository;
 use Response;
@@ -27,6 +30,7 @@ class NutritionPlanDayMealAPIController extends AppBaseController
 
     public function __construct(
         private NutritionPlanDayMealRepository $nutritionPlanDayMealRepository,
+        private NutritionPlanDayRecipeRepository $nutritionPlanDayRecipeRepository,
         private NutritionPlanDayRepository $nutritionPlanDayRepository,
         private NutritionPlanRepository $nutritionPlanRepository,
     ){}
@@ -162,6 +166,34 @@ class NutritionPlanDayMealAPIController extends AppBaseController
         $userDetails->save();
 
         return $this->sendResponse($nutritionPlanDayMeal->toArray(), 'Meal consumed successfully');
+    }
+
+    public function userRecipeConsumed($nutritionPlanDayRecipeId, Request $request) 
+    {
+        $user = $request->user();
+        $userDetails = $user?->details;
+
+        /** @var NutritionPlanDayRecipe $nutritionPlanDayRecipe */
+        $nutritionPlanDayRecipe = $this->nutritionPlanDayRecipeRepository->findWithoutFail($nutritionPlanDayRecipeId);
+        $recipeNutritionPlan = $nutritionPlanDayRecipe?->nutritionPlanDay?->nutritionPlan;
+
+        if (!$nutritionPlanDayRecipe || $recipeNutritionPlan?->user_id != $user->id)
+            return $this->sendError('Your nutrition plan doesn`t have this recipe');
+
+        // Need to Change when Cron Is Applying
+        // User should not consume their recipe that's not have STATUS_IN_PROGRESS
+        if ($nutritionPlanDayRecipe->status != NutritionPlanDayRecipe::STATUS_IN_PROGRESS)
+            return $this->sendError('This recipe is already consumed', 403);
+
+        // Increase user intake calories
+        $userDetails->calories += $nutritionPlanDayRecipe->calories ?? 0;
+        if($userDetails->calories > 999999)
+            return $this->sendError('You have maximum of calories', 403);
+
+        $nutritionPlanDayRecipe = $this->nutritionPlanDayRecipeRepository->update([ 'status' => NutritionPlanDayRecipe::STATUS_COMPLETED ], $nutritionPlanDayRecipeId);
+        $userDetails->save();
+
+        return $this->sendResponse(new NutritionPlanDayRecipeResource($nutritionPlanDayRecipe), 'Recipe consumed successfully');
     }
 
     public function userAdditionalMealConsumed(UserAdditionalMealConsumedAPIRequest $request)

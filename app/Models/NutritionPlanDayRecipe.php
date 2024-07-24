@@ -32,6 +32,7 @@ use Spatie\Translatable\HasTranslations;
  * @property number $carbs
  * @property number $fats
  * @property number $protein
+ * @property integer $status
  */
 class NutritionPlanDayRecipe extends Model
 {
@@ -48,6 +49,9 @@ class NutritionPlanDayRecipe extends Model
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
+    const STATUS_TODO        = 10;
+    const STATUS_IN_PROGRESS = 20;
+    const STATUS_COMPLETED   = 30;
 
     protected $dates = ['deleted_at'];
 
@@ -69,7 +73,8 @@ class NutritionPlanDayRecipe extends Model
         'calories',
         'carbs',
         'fats',
-        'protein'
+        'protein',
+        'status'
     ];
 
     /**
@@ -94,7 +99,8 @@ class NutritionPlanDayRecipe extends Model
         'calories' => 'integer',
         'carbs' => 'float',
         'fats' => 'float',
-        'protein' => 'float'
+        'protein' => 'float',
+        'status' => 'integer'
     ];
 
     /**
@@ -119,6 +125,7 @@ class NutritionPlanDayRecipe extends Model
         'carbs' => 'required|numeric',
         'fats' => 'required|numeric',
         'protein' => 'required|numeric',
+        'status' => 'required|integer',
         'created_at' => 'nullable',
         'updated_at' => 'nullable',
         'deleted_at' => 'nullable'

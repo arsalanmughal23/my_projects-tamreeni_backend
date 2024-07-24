@@ -34,6 +34,7 @@ class CreateNutritionPlanDayRecipesTable extends Migration
             $table->double('carbs', 8, 2)->default(0);
             $table->double('fats', 8, 2)->default(0);
             $table->double('protein', 8, 2)->default(0);
+            $table->integer('status')->default(10)->nullable(false);
 
             $table->timestamps();
             $table->softDeletes();

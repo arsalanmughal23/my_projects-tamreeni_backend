@@ -52,4 +52,9 @@ class NutritionPlanDayRecipeRepository extends BaseRepository
     {
         return NutritionPlanDayRecipe::class;
     }
+
+    public function all($params = [])
+    {
+        return NutritionPlanDayRecipe::with('nPlanDayRecipeIngredients')->where($params)->get();
+    }
 }

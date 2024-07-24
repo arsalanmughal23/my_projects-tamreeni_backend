@@ -8,6 +8,7 @@ use App\Models\NutritionPlanDayRecipe;
 use App\Repositories\NutritionPlanDayRecipeRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\NutritionPlanDayRecipeResource;
 use Response;
 
 /**
@@ -35,13 +36,8 @@ class NutritionPlanDayRecipeAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $nutrition_plan_day_recipes = $this->nutritionPlanDayRecipeRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
-
-        return $this->sendResponse($nutrition_plan_day_recipes->toArray(), 'Nutrition Plan Day Recipes retrieved successfully');
+        $nutrition_plan_day_recipes = $this->nutritionPlanDayRecipeRepository->all($request->only('nutrition_plan_day_id', 'status'));
+        return $this->sendResponse(NutritionPlanDayRecipeResource::collection($nutrition_plan_day_recipes), 'Nutrition Plan Day Recipes retrieved successfully');
     }
 
     /**
@@ -74,13 +70,13 @@ class NutritionPlanDayRecipeAPIController extends AppBaseController
     public function show($id)
     {
         /** @var NutritionPlanDayRecipe $nutritionPlanDayRecipe */
-        $nutritionPlanDayRecipe = $this->nutritionPlanDayRecipeRepository->find($id);
+        $nutritionPlanDayRecipe = $this->nutritionPlanDayRecipeRepository->with('nPlanDayRecipeIngredients')->find($id);
 
         if (empty($nutritionPlanDayRecipe)) {
             return $this->sendError('Nutrition Plan Day Recipe not found');
         }
 
-        return $this->sendResponse($nutritionPlanDayRecipe->toArray(), 'Nutrition Plan Day Recipe retrieved successfully');
+        return $this->sendResponse(new NutritionPlanDayRecipeResource($nutritionPlanDayRecipe), 'Nutrition Plan Day Recipe retrieved successfully');
     }
 
     /**

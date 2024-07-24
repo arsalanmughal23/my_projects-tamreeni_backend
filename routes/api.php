@@ -93,7 +93,9 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
     Route::post('user-additional-meal-consumed', [App\Http\Controllers\API\NutritionPlanDayMealAPIController::class, 'userAdditionalMealConsumed']);
 
 
-    Route::resource('nutrition-plan-day-meals', App\Http\Controllers\API\NutritionPlanDayMealAPIController::class);
+    Route::resource('nutrition-plan-day-meals', App\Http\Controllers\API\NutritionPlanDayMealAPIController::class)->only('index', 'show');
+    Route::resource('nutrition-plan-day-recipes', App\Http\Controllers\API\NutritionPlanDayRecipeAPIController::class)->only('index', 'show');
+
     Route::post('test-notification', [App\Http\Controllers\API\NotificationAPIController::class, 'testNotification']);
     Route::get('generate-workout-plan', [App\Http\Controllers\API\UserAPIController::class, 'generatePlans']);
 

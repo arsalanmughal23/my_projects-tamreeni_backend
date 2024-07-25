@@ -334,7 +334,7 @@
     <li class="nav-item">
         <a href="{{ route('promo_codes.index') }}"
         class="nav-link {{ Request::is('promo_codes*') ? 'active' : '' }}">
-            <p>Promo Codes</p>
+            <i class="fa fa-lock"></i><p>Promo Codes</p>
         </a>
     </li>
 @endcan
@@ -344,7 +344,7 @@
     <li class="nav-item">
         <a href="{{ route('used_promo_codes.index') }}"
         class="nav-link {{ Request::is('used_promo_codes*') ? 'active' : '' }}">
-            <p>Used Promo Codes</p>
+            <i class="fa fa-unlock"></i><p>Used Promo Codes</p>
         </a>
     </li>
 @endcan

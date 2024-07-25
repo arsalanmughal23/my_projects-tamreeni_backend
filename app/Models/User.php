@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -150,5 +151,13 @@ class User extends Authenticatable implements MustVerifyEmail
     public function transactions()
     {
         return $this->hasMany(Transaction::class, 'user_id');
+    }
+
+    /**
+     * Get all of the user's usedPromoCodes.
+     */
+    public function usedPromoCodes(): MorphMany
+    {
+        return $this->morphMany(UsedPromoCode::class, 'morphable');
     }
 }

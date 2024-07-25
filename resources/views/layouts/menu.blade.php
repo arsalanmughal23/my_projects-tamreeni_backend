@@ -340,3 +340,13 @@
 @endcan
 
 
+@canany(['used_promo_codes.index', 'used_promo_codes.create', 'used_promo_codes.show', 'used_promo_codes.edit', 'used_promo_codes.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('used_promo_codes.index') }}"
+        class="nav-link {{ Request::is('used_promo_codes*') ? 'active' : '' }}">
+            <p>Used Promo Codes</p>
+        </a>
+    </li>
+@endcan
+
+

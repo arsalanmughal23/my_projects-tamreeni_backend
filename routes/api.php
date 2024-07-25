@@ -122,3 +122,6 @@ Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, '
 
 
 Route::resource('promo_codes', App\Http\Controllers\API\PromoCodeAPIController::class);
+
+
+Route::resource('used_promo_codes', App\Http\Controllers\API\UsedPromoCodeAPIController::class);

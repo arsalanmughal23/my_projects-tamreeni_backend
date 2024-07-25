@@ -19,6 +19,7 @@ use Spatie\Translatable\HasTranslations;
  * @property string $description
  * @property integer $duration
  * @property integer $status
+ * @property boolean $is_rest_day
  */
 class WorkoutDay extends Model
 {
@@ -54,6 +55,7 @@ class WorkoutDay extends Model
         'duration',
         'date',
         'image',
+        'is_rest_day',
         'status'
     ];
 
@@ -68,6 +70,7 @@ class WorkoutDay extends Model
         'name'        => 'string',
         'description' => 'string',
         'duration'    => 'integer',
+        'is_rest_day' => 'boolean',
         'status'      => 'integer'
     ];
 
@@ -81,6 +84,7 @@ class WorkoutDay extends Model
         'name'        => 'required|string|max:255',
         'description' => 'nullable|string',
         'duration'    => 'required|integer',
+        'is_rest_day' => 'sometimes|boolean',
         'status'      => 'required|integer',
         'created_at'  => 'nullable',
         'updated_at'  => 'nullable',

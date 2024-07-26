@@ -8,6 +8,9 @@ use App\Models\MembershipDuration;
 use App\Repositories\MembershipDurationRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\MembershipDurationResource;
+use App\Models\PromoCode;
+use App\Repositories\PromoCodeRepository;
 use Response;
 
 /**
@@ -18,12 +21,11 @@ use Response;
 class MembershipDurationAPIController extends AppBaseController
 {
     /** @var  MembershipDurationRepository */
-    private $membershipDurationRepository;
 
-    public function __construct(MembershipDurationRepository $membershipDurationRepo)
-    {
-        $this->membershipDurationRepository = $membershipDurationRepo;
-    }
+    public function __construct(
+        public MembershipDurationRepository $membershipDurationRepository,
+        public PromoCodeRepository $promoCodeRepository,
+    ) {}
 
     /**
      * Display a listing of the MembershipDuration.
@@ -35,13 +37,31 @@ class MembershipDurationAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $membership_durations = $this->membershipDurationRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+        $membership_durations = $this->membershipDurationRepository->getRecords($request)->get();
 
-        return $this->sendResponse($membership_durations->toArray(), 'Membership Durations retrieved successfully');
+        $requestPromoCode = $request->get('code');
+        $promoCode = null;
+        if ($requestPromoCode) {            
+            $promoCodePrams = ['code' => $requestPromoCode, 'status' => 'active'];
+            $promoCode = $this->promoCodeRepository->where($promoCodePrams)->orderBy('created_at', 'desc')->first();
+        }
+
+        if ($promoCode) {
+            $membership_durations->map(function($duration) use ($promoCode) {
+                $discountType = $promoCode->type;
+                $discountValue = $promoCode->value;
+                $discountPrice = $discountType == PromoCode::DISCOUNT_PERCENT 
+                    ? calcualteDiscountPrice($duration->price, $discountType, $discountValue)
+                    : $promoCode->value;
+
+                $duration['discount_price'] = number_format($duration->price - $discountPrice, 2);
+                $duration['promo_code'] = $promoCode;
+
+                return $duration;
+            });
+        }
+
+        return $this->sendResponse(MembershipDurationResource::collection($membership_durations), 'Membership Durations retrieved successfully');
     }
 
     /**

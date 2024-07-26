@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\PromoCode;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -22,6 +23,8 @@ class MembershipDurationResource extends JsonResource
             'duration_in_month' => $this->duration_in_month,
             'price'         => $this->price,
             // 'status'        => $this->status,
+            'discount_price'=> $this->discount_price,
+            'promo_code'    => new PromoCodeResource($this->promo_code)
         ];
     }
 

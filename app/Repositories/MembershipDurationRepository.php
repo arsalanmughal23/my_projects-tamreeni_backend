@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\MembershipDuration;
 use App\Repositories\BaseRepository;
+use Illuminate\Http\Request;
 
 /**
  * Class MembershipDurationRepository
@@ -39,5 +40,20 @@ class MembershipDurationRepository extends BaseRepository
     public function model()
     {
         return MembershipDuration::class;
+    }
+    
+    public function getRecords(Request $request)
+    {
+        $params = $request->only($this->getFieldsSearchable());
+        $generalFilterParams = array_diff_key($params, array_flip(['title']));
+
+        $query = $this->model->query();
+
+        if ($title = $request->get('title')) {
+            $query->where('title', 'like', '%' . $title . '%');
+        }
+
+        $query->where($generalFilterParams);
+        return $query;
     }
 }

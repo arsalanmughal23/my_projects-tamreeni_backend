@@ -350,3 +350,13 @@
 @endcan
 
 
+@canany(['memberships.index', 'memberships.create', 'memberships.show', 'memberships.edit', 'memberships.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('memberships.index') }}"
+        class="nav-link {{ Request::is('memberships*') ? 'active' : '' }}">
+            <p>Memberships</p>
+        </a>
+    </li>
+@endcan
+
+

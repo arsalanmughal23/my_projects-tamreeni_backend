@@ -125,3 +125,6 @@ Route::resource('promo_codes', App\Http\Controllers\API\PromoCodeAPIController::
 
 
 Route::resource('used_promo_codes', App\Http\Controllers\API\UsedPromoCodeAPIController::class);
+
+
+Route::resource('memberships', App\Http\Controllers\API\MembershipAPIController::class);

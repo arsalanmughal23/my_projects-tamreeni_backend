@@ -168,3 +168,6 @@ Route::group(['middleware' => ['auth', 'dynamic_permission']], function () {
     Route::resource('used_promo_codes', App\Http\Controllers\UsedPromoCodeController::class)->only('index', 'show', 'destroy');
 });
 
+
+
+Route::resource('memberships', App\Http\Controllers\MembershipController::class);

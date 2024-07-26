@@ -39,4 +39,9 @@ class MembershipRepository extends BaseRepository
     {
         return Membership::class;
     }
+
+    public function getRecords($params = [])
+    {
+        return $this->model->where($params);
+    }
 }

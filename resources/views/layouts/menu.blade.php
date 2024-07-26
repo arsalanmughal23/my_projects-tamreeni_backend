@@ -360,3 +360,13 @@
 @endcan
 
 
+@canany(['membership_durations.index', 'membership_durations.create', 'membership_durations.show', 'membership_durations.edit', 'membership_durations.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('membership_durations.index') }}"
+        class="nav-link {{ Request::is('membership_durations*') ? 'active' : '' }}">
+            <p>Membership Durations</p>
+        </a>
+    </li>
+@endcan
+
+

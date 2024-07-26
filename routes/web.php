@@ -166,8 +166,7 @@ Route::group(['middleware' => ['auth', 'dynamic_permission']], function () {
 
     Route::resource('promo_codes', App\Http\Controllers\PromoCodeController::class);
     Route::resource('used_promo_codes', App\Http\Controllers\UsedPromoCodeController::class)->only('index', 'show', 'destroy');
+
+    Route::resource('memberships', App\Http\Controllers\MembershipController::class);
+    Route::resource('membership_durations', App\Http\Controllers\MembershipDurationController::class);
 });
-
-
-
-Route::resource('memberships', App\Http\Controllers\MembershipController::class);

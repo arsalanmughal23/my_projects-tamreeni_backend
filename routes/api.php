@@ -120,11 +120,8 @@ Route::resource('pages', App\Http\Controllers\API\PageAPIController::class);
 
 Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, 'pageContent'])->name('page-content');
 
-
 Route::resource('promo_codes', App\Http\Controllers\API\PromoCodeAPIController::class);
-
-
 Route::resource('used_promo_codes', App\Http\Controllers\API\UsedPromoCodeAPIController::class);
 
-
 Route::resource('memberships', App\Http\Controllers\API\MembershipAPIController::class);
+Route::resource('membership_durations', App\Http\Controllers\API\MembershipDurationAPIController::class);

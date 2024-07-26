@@ -42,6 +42,6 @@ class MembershipRepository extends BaseRepository
 
     public function getRecords($params = [])
     {
-        return $this->model->where($params);
+        return $this->model->with('membershipDurations')->where($params);
     }
 }

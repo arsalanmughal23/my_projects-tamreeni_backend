@@ -5,6 +5,8 @@ namespace App\Models;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * Class Membership
@@ -18,17 +20,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Membership extends Model
 {
     use SoftDeletes;
-
     use HasFactory;
+    use HasTranslations;
 
     public $table = 'memberships';
     
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
-    const CONST_STATUSES = ['active', 'inactive'];
+
+    const CONST_STATUS_ACTIVE = 'active';
+    const CONST_STATUS_INACTIVE = 'inactive';
+    const CONST_STATUSES = [self::CONST_STATUS_ACTIVE, self::CONST_STATUS_INACTIVE];
 
 
     protected $dates = ['deleted_at'];
+    public $translatable = ['title'];
 
 
 
@@ -67,5 +73,8 @@ class Membership extends Model
         'deleted_at' => 'nullable'
     ];
 
-    
+    public function membershipDurations(): HasMany
+    {
+        return $this->hasMany(MembershipDuration::class);
+    }
 }

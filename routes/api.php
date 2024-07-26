@@ -110,6 +110,12 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
 
     Route::resource('nutrition_plan_day_recipes', App\Http\Controllers\API\NutritionPlanDayRecipeAPIController::class);
     Route::resource('nplan_day_recipe_ingredients', App\Http\Controllers\API\NplanDayRecipeIngredientAPIController::class);
+
+    // Route::resource('promo_codes', App\Http\Controllers\API\PromoCodeAPIController::class);
+    // Route::resource('used_promo_codes', App\Http\Controllers\API\UsedPromoCodeAPIController::class);
+
+    Route::resource('memberships', App\Http\Controllers\API\MembershipAPIController::class)->only('index');
+    // Route::resource('membership_durations', App\Http\Controllers\API\MembershipDurationAPIController::class);
 });
 
 Route::resource('menus', App\Http\Controllers\API\MenuAPIController::class);
@@ -119,9 +125,3 @@ Route::resource('constants', App\Http\Controllers\API\ConstantAPIController::cla
 Route::resource('pages', App\Http\Controllers\API\PageAPIController::class);
 
 Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, 'pageContent'])->name('page-content');
-
-Route::resource('promo_codes', App\Http\Controllers\API\PromoCodeAPIController::class);
-Route::resource('used_promo_codes', App\Http\Controllers\API\UsedPromoCodeAPIController::class);
-
-Route::resource('memberships', App\Http\Controllers\API\MembershipAPIController::class);
-Route::resource('membership_durations', App\Http\Controllers\API\MembershipDurationAPIController::class);

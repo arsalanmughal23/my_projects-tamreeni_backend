@@ -8,6 +8,7 @@ use App\Models\Membership;
 use App\Repositories\MembershipRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\MembershipResource;
 use Response;
 
 /**
@@ -35,13 +36,11 @@ class MembershipAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $memberships = $this->membershipRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+        $memberships = $this->membershipRepository->getRecords($request->only('title'))
+                            ->where('status', Membership::CONST_STATUS_ACTIVE)
+                            ->get();
 
-        return $this->sendResponse($memberships->toArray(), 'Memberships retrieved successfully');
+        return $this->sendResponse(MembershipResource::collection($memberships), 'Memberships retrieved successfully');
     }
 
     /**

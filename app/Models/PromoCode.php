@@ -29,11 +29,12 @@ class PromoCode extends Model
 
 
     protected $dates = ['deleted_at'];
+    
+    const DISCOUNT_FLAT = 'flat';
+    const DISCOUNT_PERCENT = 'percent';
+    const CONST_TYPE = [self::DISCOUNT_FLAT, self::DISCOUNT_PERCENT];
 
-    const CONST_TYPE = ['flat', 'percent'];
     const CONST_STATUS = ['active', 'inactive'];
-
-
 
     public $fillable = [
         'code',

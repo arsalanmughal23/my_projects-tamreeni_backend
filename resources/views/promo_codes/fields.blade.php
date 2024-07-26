@@ -22,7 +22,10 @@
     <select name="type" id="" class="form-control select2" required=true >
         <option value="">Select Type</option>
         @foreach(App\Models\PromoCode::CONST_TYPE as $type)
-            <option value="{{ $type }}" {{ ($type == $promoCode->type) ? 'selected' : '' }}>{{ $type }}</option>
+            <option value="{{ $type }}" 
+                @if(old('type') == $type || (isset($promoCode) && $promoCode->type == $type)) selected @endif>
+                {{ $type }}
+            </option>
         @endforeach
     </select>
 </div>
@@ -33,7 +36,10 @@
     <select name="status" id="" class="form-control select2" required=true >
         <option value="">Select Status</option>
         @foreach(App\Models\PromoCode::CONST_STATUS as $status)
-            <option value="{{ $status }}" {{ ($status == $promoCode->status) ? 'selected' : '' }}>{{ $status }}</option>
+            <option value="{{ $status }}" 
+                @if(old('status') == $status || (isset($promoCode) && $promoCode->status == $status)) selected @endif>
+                {{ $status }}
+            </option>
         @endforeach
     </select>
 </div>

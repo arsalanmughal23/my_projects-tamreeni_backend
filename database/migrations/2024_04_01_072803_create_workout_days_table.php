@@ -22,6 +22,7 @@ class CreateWorkoutDaysTable extends Migration
             $table->string('image')->nullable();
             $table->date('date')->nullable(false);
             $table->integer('duration')->nullable(false);
+            $table->boolean('is_rest_day')->default(0);
             $table->integer('status')->default(10)->nullable(false);
             $table->timestamps();
             $table->softDeletes();

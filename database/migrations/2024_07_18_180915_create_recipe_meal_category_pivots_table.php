@@ -13,20 +13,22 @@ class CreateRecipeMealCategoryPivotsTable extends Migration
      */
     public function up()
     {
-        Schema::create('recipe_meal_category_pivots', function (Blueprint $table) {
-            $table->id();
+        if (!Schema::hasTable('recipe_meal_category_pivots')) {
+            Schema::create('recipe_meal_category_pivots', function (Blueprint $table) {
+                $table->id();
 
-            $table->unsignedBigInteger('recipe_id')->nullable();
-            $table->foreign('recipe_id')->references('id')->on('recipes')->onDelete('cascade');
+                $table->unsignedBigInteger('recipe_id')->nullable();
+                $table->foreign('recipe_id')->references('id')->on('recipes')->onDelete('cascade');
 
-            $table->unsignedBigInteger('nutrition_plan_day_recipe_id')->nullable();
-            $table->foreign('nutrition_plan_day_recipe_id')->references('id')->on('nutrition_plan_day_recipes')->onDelete('cascade');
+                $table->unsignedBigInteger('nutrition_plan_day_recipe_id')->nullable();
+                $table->foreign('nutrition_plan_day_recipe_id')->references('id')->on('nutrition_plan_day_recipes')->onDelete('cascade');
 
-            $table->unsignedInteger('meal_category_id'); // 'veggies', 'shrimp', 'sea_food', 'fish', 'eggs', 'dairy'
-            $table->foreign('meal_category_id')->references('id')->on('meal_categories')->onDelete('cascade');
+                $table->unsignedInteger('meal_category_id'); // 'veggies', 'shrimp', 'sea_food', 'fish', 'eggs', 'dairy'
+                $table->foreign('meal_category_id')->references('id')->on('meal_categories')->onDelete('cascade');
 
-            $table->timestamps();
-        });
+                $table->timestamps();
+            });
+        }
     }
 
     /**

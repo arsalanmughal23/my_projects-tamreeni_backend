@@ -330,3 +330,43 @@
         </a>
     </li>
 @endcan
+@canany(['promo_codes.index', 'promo_codes.create', 'promo_codes.show', 'promo_codes.edit', 'promo_codes.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('promo_codes.index') }}"
+        class="nav-link {{ Request::is('promo_codes*') ? 'active' : '' }}">
+            <i class="fa fa-lock"></i><p>Promo Codes</p>
+        </a>
+    </li>
+@endcan
+
+
+@canany(['used_promo_codes.index', 'used_promo_codes.create', 'used_promo_codes.show', 'used_promo_codes.edit', 'used_promo_codes.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('used_promo_codes.index') }}"
+        class="nav-link {{ Request::is('used_promo_codes*') ? 'active' : '' }}">
+            <i class="fa fa-unlock"></i><p>Used Promo Codes</p>
+        </a>
+    </li>
+@endcan
+
+
+@canany(['memberships.index', 'memberships.create', 'memberships.show', 'memberships.edit', 'memberships.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('memberships.index') }}"
+        class="nav-link {{ Request::is('memberships*') ? 'active' : '' }}">
+            <i class="fa fa-user-plus"></i><p>Memberships</p>
+        </a>
+    </li>
+@endcan
+
+
+@canany(['membership_durations.index', 'membership_durations.create', 'membership_durations.show', 'membership_durations.edit', 'membership_durations.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('membership_durations.index') }}"
+        class="nav-link {{ Request::is('membership_durations*') ? 'active' : '' }}">
+            <i class="fa fa-user-clock"></i><p>Membership Durations</p>
+        </a>
+    </li>
+@endcan
+
+

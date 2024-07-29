@@ -3,6 +3,7 @@
 use App\Constants\EmailServiceTemplateNames;
 use App\Jobs\SendEmail;
 use App\Models\Option;
+use App\Models\PromoCode;
 use App\Models\UserDetail;
 use App\Models\VerifyEmail;
 use Carbon\Carbon;
@@ -409,6 +410,16 @@ if (!function_exists('calculateByPercentage')) {
         $onePercentValue = $total / 100;
         $result = $onePercentValue * $percent;
         return $result;
+    }
+}
+if (!function_exists('calcualteDiscountPrice')) {
+    function calcualteDiscountPrice($price, $discountType, $discountValue):float
+    {
+        return match ($discountType) {
+            PromoCode::DISCOUNT_PERCENT => ($price / 100) * $discountValue,
+            PromoCode::DISCOUNT_FLAT => 0,
+            default => 0
+        };
     }
 }
 if (!function_exists('pickRandomIndices')) {

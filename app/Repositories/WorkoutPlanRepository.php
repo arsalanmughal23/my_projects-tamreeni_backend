@@ -100,13 +100,14 @@ class WorkoutPlanRepository extends BaseRepository
                 'image'           => null,
             ]);
 
-            if (in_array($generatedDate, $randomDates)) {
+            $isRestDay = !in_array($generatedDate, $randomDates);
+            // if (!$isRestDay) {
                 // TODO : assign workoutday exercises
                 $workoutDayExercises = collect($this->assignWorkoutDayExercises($userDetails, $workoutDay->id));
-                $workoutDay->update(['duration' => $workoutDayExercises->sum('duration_in_m'), 'image' => $workoutDayExercises->first()->image ?? null ]);
+                $workoutDay->update(['is_rest_day' => $isRestDay, 'duration' => $workoutDayExercises->sum('duration_in_m'), 'image' => $workoutDayExercises->first()->image ?? null ]);
                 $workoutDay['workout_day_exercises'] = $workoutDayExercises;
                 $workoutPlanDays[] = $workoutDay;
-            }
+            // }
         }
         $workoutPlan['workout_days'] = $workoutPlanDays;
         return $workoutPlan;

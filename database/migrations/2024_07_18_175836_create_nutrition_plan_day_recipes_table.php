@@ -13,36 +13,38 @@ class CreateNutritionPlanDayRecipesTable extends Migration
      */
     public function up()
     {
-        Schema::create('nutrition_plan_day_recipes', function (Blueprint $table) {
-            $table->id();
-            $table->enum('diet_type', ['traditional', 'keto']);
-            
-            $table->unsignedBigInteger('nutrition_plan_day_id');
-            $table->unsignedBigInteger('recipe_id')->nullable();
-            $table->unsignedBigInteger('meal_type_id'); // 'breakfast', 'lunch', 'dinner', 'fruit', 'snack'
-            $table->json('meal_category_ids'); // 'veggies', 'shrimp', 'sea_food', 'fish', 'eggs', 'dairy'
+        if (!Schema::hasTable('nutrition_plan_day_recipes')) {
+            Schema::create('nutrition_plan_day_recipes', function (Blueprint $table) {
+                $table->id();
+                $table->enum('diet_type', ['traditional', 'keto']);
+                
+                $table->unsignedBigInteger('nutrition_plan_day_id');
+                $table->unsignedBigInteger('recipe_id')->nullable();
+                $table->unsignedBigInteger('meal_type_id'); // 'breakfast', 'lunch', 'dinner', 'fruit', 'snack'
+                $table->json('meal_category_ids'); // 'veggies', 'shrimp', 'sea_food', 'fish', 'eggs', 'dairy'
 
-            $table->text('title');
-            $table->longText('description');
-            $table->text('image')->nullable();
-            $table->longText('instruction');
-            $table->bigInteger('units_in_recipe');
-            $table->bigInteger('divide_recipe_by');
-            $table->bigInteger('number_of_units')->default(1);
+                $table->text('title');
+                $table->longText('description');
+                $table->text('image')->nullable();
+                $table->longText('instruction');
+                $table->bigInteger('units_in_recipe');
+                $table->bigInteger('divide_recipe_by');
+                $table->bigInteger('number_of_units')->default(1);
 
-            $table->bigInteger('calories')->default(0);
-            $table->double('carbs', 8, 2)->default(0);
-            $table->double('fats', 8, 2)->default(0);
-            $table->double('protein', 8, 2)->default(0);
-            $table->integer('status')->default(10)->nullable(false);
+                $table->bigInteger('calories')->default(0);
+                $table->double('carbs', 8, 2)->default(0);
+                $table->double('fats', 8, 2)->default(0);
+                $table->double('protein', 8, 2)->default(0);
+                $table->integer('status')->default(10)->nullable(false);
 
-            $table->timestamps();
-            $table->softDeletes();
-            
-            $table->foreign('nutrition_plan_day_id')->references('id')->on('nutrition_plan_days')->onDelete('cascade');
-            $table->foreign('meal_type_id')->references('id')->on('meal_types')->onDelete('cascade');
-            $table->foreign('recipe_id')->references('id')->on('recipes')->onDelete('cascade');
-        });
+                $table->timestamps();
+                $table->softDeletes();
+                
+                $table->foreign('nutrition_plan_day_id')->references('id')->on('nutrition_plan_days')->onDelete('cascade');
+                $table->foreign('meal_type_id')->references('id')->on('meal_types')->onDelete('cascade');
+                $table->foreign('recipe_id')->references('id')->on('recipes')->onDelete('cascade');
+            });
+        }
     }
 
     /**

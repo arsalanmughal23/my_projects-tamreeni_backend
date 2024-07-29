@@ -23,6 +23,7 @@ class WorkoutDayResource extends JsonResource
             'image'                 => $this->image,
             'date'                  => $this->date,
             'duration'              => $this->duration,
+            'is_rest_day'           => $this->is_rest_day,
             'status'                => $this->status,
             'created_at'            => $this->created_at,
             'workout_day_exercises' => WorkoutDayExerciseResource::collection($this->whenLoaded('workoutDayExercises')),

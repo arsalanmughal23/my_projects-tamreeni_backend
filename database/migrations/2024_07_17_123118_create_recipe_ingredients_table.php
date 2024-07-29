@@ -13,18 +13,20 @@ class CreateRecipeIngredientsTable extends Migration
      */
     public function up()
     {
-        Schema::create('recipe_ingredients', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('recipe_id');
-            $table->enum('type', ['main', 'sub']);
-            $table->text('name');
-            $table->bigInteger('quantity');
-            $table->enum('unit', ['tsp', 'tbsp', 'fl oz', 'cup', 'pt', 'qt', 'gal', 'ml', 'l', 'oz', 'lb', 'g', 'kg']);
-            $table->timestamps();
-            $table->softDeletes();
+        if (!Schema::hasTable('recipe_ingredients')) {
+            Schema::create('recipe_ingredients', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('recipe_id');
+                $table->enum('type', ['main', 'sub']);
+                $table->text('name');
+                $table->bigInteger('quantity');
+                $table->enum('unit', ['tsp', 'tbsp', 'fl oz', 'cup', 'pt', 'qt', 'gal', 'ml', 'l', 'oz', 'lb', 'g', 'kg']);
+                $table->timestamps();
+                $table->softDeletes();
 
-            $table->foreign('recipe_id')->references('id')->on('recipes')->onDelete('cascade');
-        });
+                $table->foreign('recipe_id')->references('id')->on('recipes')->onDelete('cascade');
+            });
+        }
     }
 
     /**

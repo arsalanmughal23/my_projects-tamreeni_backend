@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\MembershipDuration;
+use App\Models\PromoCode;
 use App\Repositories\BaseRepository;
 use Illuminate\Http\Request;
 
@@ -55,5 +56,18 @@ class MembershipDurationRepository extends BaseRepository
 
         $query->where($generalFilterParams);
         return $query;
+    }
+    
+    public function getPriceByPromoCode(PromoCode $promoCode, MembershipDuration $membershipDuration)
+    {
+        $discountType = $promoCode['type'];
+        $discountValue = $promoCode['value'];
+        $discountPrice = $discountType == PromoCode::DISCOUNT_PERCENT 
+            ? calcualteDiscountPrice($membershipDuration['price'], $discountType, $discountValue)
+            : $promoCode['value'];
+
+        $membershipDuration['discount_price'] = number_format($membershipDuration['price'] - $discountPrice, 2);
+        $membershipDuration['promo_code'] = $promoCode;
+        return $membershipDuration;
     }
 }

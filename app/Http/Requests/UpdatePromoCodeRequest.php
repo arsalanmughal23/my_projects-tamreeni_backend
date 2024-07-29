@@ -24,8 +24,10 @@ class UpdatePromoCodeRequest extends FormRequest
      */
     public function rules()
     {
+        $id = $this->route('promo_code');
         $rules = PromoCode::$rules;
-        
+        $rules['code'] = str_replace('{id}', $id, $rules['code']);
+
         return $rules;
     }
 }

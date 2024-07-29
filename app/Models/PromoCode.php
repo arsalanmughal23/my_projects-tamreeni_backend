@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class PromoCode extends Model
 {
-    use SoftDeletes;
+    // use SoftDeletes;
 
     use HasFactory;
 
@@ -34,7 +34,9 @@ class PromoCode extends Model
     const DISCOUNT_PERCENT = 'percent';
     const CONST_TYPE = [self::DISCOUNT_FLAT, self::DISCOUNT_PERCENT];
 
-    const CONST_STATUS = ['active', 'inactive'];
+    const STATUS_ACTIVE = 'active';
+    const STATUS_INACTIVE = 'inactive';
+    const CONST_STATUS = [self::STATUS_ACTIVE, self::STATUS_INACTIVE];
 
     public $fillable = [
         'code',
@@ -62,7 +64,7 @@ class PromoCode extends Model
      * @var array
      */
     public static $rules = [
-        'code' => 'required|string|max:191',
+        'code' => 'required|string|max:191|unique:promo_codes,code,{id},id,deleted_at,NULL',
         'value' => 'required|numeric',
         'type' => 'required|string',
         'status' => 'required|string',

@@ -7,7 +7,7 @@
         @foreach ($memberships as $membership)
             <option value="{{ $membership->id }}"
                 @if(old('membership_id') == $membership->id || (isset($membershipDuration) && $membershipDuration->membership_id == $membership->id)) selected @endif>
-                {{ $membership->title['en'] ?? '#'.$membership->id }}
+                {{ $membership->title ?? '#'.$membership->id }}
             </option>
         @endforeach
     </select>

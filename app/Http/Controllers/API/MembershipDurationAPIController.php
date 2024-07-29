@@ -11,6 +11,7 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\MembershipDurationResource;
 use App\Models\PromoCode;
 use App\Repositories\PromoCodeRepository;
+use App\Repositories\UsedPromoCodeRepository;
 use Response;
 
 /**
@@ -25,6 +26,7 @@ class MembershipDurationAPIController extends AppBaseController
     public function __construct(
         public MembershipDurationRepository $membershipDurationRepository,
         public PromoCodeRepository $promoCodeRepository,
+        public UsedPromoCodeRepository $usedPromoCodeRepository,
     ) {}
 
     /**
@@ -37,28 +39,24 @@ class MembershipDurationAPIController extends AppBaseController
 
     public function index(Request $request)
     {
+        $user = $request->user();
         $membership_durations = $this->membershipDurationRepository->getRecords($request)->get();
 
         $requestPromoCode = $request->get('code');
         $promoCode = null;
-        if ($requestPromoCode) {            
+        if ($requestPromoCode) {
             $promoCodePrams = ['code' => $requestPromoCode, 'status' => 'active'];
             $promoCode = $this->promoCodeRepository->where($promoCodePrams)->orderBy('created_at', 'desc')->first();
         }
 
         if ($promoCode) {
-            $membership_durations->map(function($duration) use ($promoCode) {
-                $discountType = $promoCode->type;
-                $discountValue = $promoCode->value;
-                $discountPrice = $discountType == PromoCode::DISCOUNT_PERCENT 
-                    ? calcualteDiscountPrice($duration->price, $discountType, $discountValue)
-                    : $promoCode->value;
+            $isPromoCodeUsed = $this->usedPromoCodeRepository->where(['user_id' => $user->id, 'code' => $promoCode->code])->exists();
 
-                $duration['discount_price'] = number_format($duration->price - $discountPrice, 2);
-                $duration['promo_code'] = $promoCode;
-
-                return $duration;
-            });
+            if(!$isPromoCodeUsed) {
+                $membership_durations->map(function($duration) use ($promoCode) {
+                    return $this->membershipDurationRepository->getPriceByPromoCode($promoCode, $duration);
+                });
+            }
         }
 
         return $this->sendResponse(MembershipDurationResource::collection($membership_durations), 'Membership Durations retrieved successfully');

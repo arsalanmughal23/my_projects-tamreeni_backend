@@ -114,6 +114,7 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
     // Route::resource('promo_codes', App\Http\Controllers\API\PromoCodeAPIController::class);
     // Route::resource('used_promo_codes', App\Http\Controllers\API\UsedPromoCodeAPIController::class);
 
+    Route::post('check_promo_code', [App\Http\Controllers\API\PromoCodeAPIController::class, 'checkPromoCode']);
     Route::resource('memberships', App\Http\Controllers\API\MembershipAPIController::class)->only('index');
     Route::resource('membership_durations', App\Http\Controllers\API\MembershipDurationAPIController::class);
 });

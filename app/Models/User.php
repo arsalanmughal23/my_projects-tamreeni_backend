@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -53,6 +54,7 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     public $with = ['details'];
+    public $appends = ['active_membership'];
 
     /**
      * The attributes that should be cast.
@@ -159,5 +161,21 @@ class User extends Authenticatable implements MustVerifyEmail
     public function usedPromoCodes(): MorphMany
     {
         return $this->morphMany(UsedPromoCode::class, 'morphable');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     **/
+    public function memberships(): HasMany
+    {
+        return $this->hasMany(\App\Models\UserMembership::class);
+    }
+
+    public function getActiveMembershipAttribute()
+    {
+        return $this->memberships()->where('status', 'active')
+                    ->where('expire_at', '>', now())
+                    ->orderBy('created_at', 'desc')
+                    ->first();
     }
 }

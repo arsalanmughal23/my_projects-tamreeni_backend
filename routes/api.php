@@ -117,6 +117,8 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
     Route::post('check_promo_code', [App\Http\Controllers\API\PromoCodeAPIController::class, 'checkPromoCode']);
     Route::resource('memberships', App\Http\Controllers\API\MembershipAPIController::class)->only('index');
     Route::resource('membership_durations', App\Http\Controllers\API\MembershipDurationAPIController::class);
+
+    Route::resource('user_memberships', App\Http\Controllers\API\UserMembershipAPIController::class);
 });
 
 Route::resource('menus', App\Http\Controllers\API\MenuAPIController::class);
@@ -126,3 +128,5 @@ Route::resource('constants', App\Http\Controllers\API\ConstantAPIController::cla
 Route::resource('pages', App\Http\Controllers\API\PageAPIController::class);
 
 Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, 'pageContent'])->name('page-content');
+
+

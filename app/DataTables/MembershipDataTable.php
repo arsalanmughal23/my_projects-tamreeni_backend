@@ -18,7 +18,7 @@ class MembershipDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
         $dataTable->editColumn('title', function(Membership $model){
-            return $model->title ? $model->title['en'] : '';
+            return $model->getTranslation('title', app()->getLocale()) ?? '';
         });
         $dataTable->editColumn('feature_list', function(Membership $model){
             return is_array($model->feature_list) ? count($model->feature_list) . ' Features' : '';

@@ -16,13 +16,13 @@
 <!-- Title Field -->
 <div class="form-group col-sm-6 col-lg-6">
     {!! Form::label('title', 'Title (English):') !!}
-    {!! Form::text('title[en]', null, ['class' => 'form-control', 'maxLength' => 70, 'required' => true, 'pattern'=>'[a-zA-Z0-9_.\s+\-]{0,70}']) !!}
+    {!! Form::text('title[en]', isset($membershipDuration) ? $membershipDuration->getTranslation('title', 'en') : null, ['class' => 'form-control', 'maxLength' => 70, 'required' => true, 'pattern'=>'[a-zA-Z0-9_.\s+\-]{0,70}']) !!}
 </div>
 
 <!-- Title Field -->
 <div class="form-group col-sm-6 col-lg-6">
     {!! Form::label('title', 'Title (Arabic):') !!}
-    {!! Form::text('title[ar]', null, ['class' => 'form-control', 'maxLength' => 70, 'required' => true, 'pattern' => '[ا-ي0-9_.\s+\-]{0,70}', 'dir' => 'rtl']) !!}
+    {!! Form::text('title[ar]', isset($membershipDuration) ? $membershipDuration->getTranslation('title', 'ar') : null, ['class' => 'form-control', 'maxLength' => 70, 'required' => true, 'pattern' => '[ا-ي0-9_.\s+\-]{0,70}', 'dir' => 'rtl']) !!}
 </div>
 
 <!-- Duration In Month Field -->

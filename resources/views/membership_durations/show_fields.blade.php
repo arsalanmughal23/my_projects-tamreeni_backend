@@ -7,7 +7,7 @@
 <!-- Title Field -->
 <div class="col-sm-12">
     {!! Form::label('title', 'Title:') !!}
-    <p>{{ $membershipDuration->title['en'] ?? '' }}</p>
+    <p>{{ $membershipDuration->title ?? '' }}</p>
 </div>
 
 <!-- Duration In Month Field -->

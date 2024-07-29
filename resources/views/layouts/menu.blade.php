@@ -354,7 +354,7 @@
     <li class="nav-item">
         <a href="{{ route('memberships.index') }}"
         class="nav-link {{ Request::is('memberships*') ? 'active' : '' }}">
-            <p>Memberships</p>
+            <i class="fa fa-user-plus"></i><p>Memberships</p>
         </a>
     </li>
 @endcan
@@ -364,7 +364,7 @@
     <li class="nav-item">
         <a href="{{ route('membership_durations.index') }}"
         class="nav-link {{ Request::is('membership_durations*') ? 'active' : '' }}">
-            <p>Membership Durations</p>
+            <i class="fa fa-user-clock"></i><p>Membership Durations</p>
         </a>
     </li>
 @endcan

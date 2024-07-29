@@ -7,7 +7,20 @@
 <!-- Feature List Field -->
 <div class="col-sm-12">
     {!! Form::label('feature_list', 'Feature List:') !!}
-    <p>{{ $membership->feature_list }}</p>
+    <ul>
+        @forelse($membership->feature_list as $feature)
+            <li>
+                <div class="d-flex justify-content-between">
+                    <div>{{ $feature['en'] }}</div>
+                    <!-- <div>{{ $feature['ar'] }}</div> -->
+                </div>
+            </li>
+        @empty
+            <li>
+                <div>No Features Available</div>
+            </li>
+        @endforelse
+    </ul>
 </div>
 
 <!-- Status Field -->

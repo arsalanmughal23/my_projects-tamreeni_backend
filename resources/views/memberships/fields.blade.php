@@ -1,13 +1,13 @@
 <!-- Title (English): Field -->
 <div class="form-group col-sm-6 col-lg-6">
     {!! Form::label('title', 'Title (English):') !!}
-    {!! Form::text('title[en]', null, ['class' => 'form-control', 'maxlength' => 70, 'required' => true, 'pattern'=>'[a-zA-Z0-9_.\s+\-]{0,70}']) !!}
+    {!! Form::text('title[en]', isset($membership) ? $membership->getTranslation('title', 'en') : null, ['class' => 'form-control', 'maxlength' => 70, 'required' => true, 'pattern'=>'[a-zA-Z0-9_.\s+\-]{0,70}']) !!}
 </div>
 
 <!-- Title (Arabic): Field -->
 <div class="form-group col-sm-6 col-lg-6">
     {!! Form::label('title', 'Title (Arabic):') !!}
-    {!! Form::text('title[ar]', null, ['class' => 'form-control', 'maxlength' => 70, 'required' => true, 'pattern' => '[ا-ي0-9_.\s+\-]{0,70}', 'dir' => 'rtl']) !!}
+    {!! Form::text('title[ar]', isset($membership) ? $membership->getTranslation('title', 'ar') : null, ['class' => 'form-control', 'maxlength' => 70, 'required' => true, 'pattern' => '[ا-ي0-9_.\s+\-]{0,70}', 'dir' => 'rtl']) !!}
 </div>
 
 <!-- Feature List Field -->
@@ -21,7 +21,7 @@
             </div>
             <div class="col-sm-6 col-lg-6">
                 {!! Form::label('feature1', 'Feature 1 (Arabic):') !!}
-                {!! Form::text('feature_list[0][ar]', null, ['class' => 'form-control', 'maxlength' => 70, 'required' => true]) !!}
+                {!! Form::text('feature_list[0][ar]', null, ['class' => 'form-control', 'maxlength' => 70, 'required' => true, 'dir' => 'rtl']) !!}
             </div>
         </div>
         <div class="d-flex">
@@ -31,7 +31,7 @@
             </div>
             <div class="col-sm-6 col-lg-6">
                 {!! Form::label('feature2', 'Feature 2 (Arabic):') !!}
-                {!! Form::text('feature_list[1][ar]', null, ['class' => 'form-control', 'maxlength' => 70, 'required' => true]) !!}
+                {!! Form::text('feature_list[1][ar]', null, ['class' => 'form-control', 'maxlength' => 70, 'required' => true, 'dir' => 'rtl']) !!}
             </div>
         </div>
         <div class="d-flex">
@@ -42,7 +42,7 @@
             </div>
             <div class="col-sm-6 col-lg-6">
                 {!! Form::label('feature3', 'Feature 3 (Arabic):') !!}
-                {!! Form::text('feature_list[2][ar]', null, ['class' => 'form-control', 'maxlength' => 70, 'required' => true]) !!}
+                {!! Form::text('feature_list[2][ar]', null, ['class' => 'form-control', 'maxlength' => 70, 'required' => true, 'dir' => 'rtl']) !!}
             </div>
         </div>
         <div class="d-flex">
@@ -53,7 +53,7 @@
             </div>
             <div class="col-sm-6 col-lg-6">
                 {!! Form::label('feature4', 'Feature 4 (Arabic):') !!}
-                {!! Form::text('feature_list[3][ar]', null, ['class' => 'form-control', 'maxlength' => 70, 'required' => true]) !!}
+                {!! Form::text('feature_list[3][ar]', null, ['class' => 'form-control', 'maxlength' => 70, 'required' => true, 'dir' => 'rtl']) !!}
             </div>
         </div>
     </span>

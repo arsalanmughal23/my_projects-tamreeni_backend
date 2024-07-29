@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\PromoCode;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 

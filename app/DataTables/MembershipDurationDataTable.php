@@ -21,7 +21,7 @@ class MembershipDurationDataTable extends DataTable
             return '<a href="'.route('memberships.show', $model->membership_id).'">'.$model->membership_id.'</a>';
         });
         $dataTable->editColumn('title', function(MembershipDuration $model){
-            return $model->title ? $model->title['en'] : '';
+            return $model->getTranslation('title', app()->getLocale()) ?? '';
         });
         $dataTable->editColumn('price', function(MembershipDuration $model){
             return ($model->price ?? 0) . ' SAR';

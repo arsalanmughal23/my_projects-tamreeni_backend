@@ -97,8 +97,9 @@ class PayTabsController extends AppBaseController
             "cart_currency"    => $data['currency'],
             "cart_amount"      => $data['amount'],
             // "callback"         => "https://webhook.site/bb3f3bc8-ab44-443a-9d9f-f718c9adbd24",
+            "return"           => "https://webhook.site/bb3f3bc8-ab44-443a-9d9f-f718c9adbd24",
             "callback"         => url('/paytabs-callback'),
-            "return"           => url('/paytabs-return'),
+            // "return"           => url('/paytabs-return'),
             "tokenize"         => $data['tokenize'], //for tokenized transaction
         ];
         $response = \Illuminate\Support\Facades\Http::withHeaders([
@@ -155,7 +156,6 @@ class PayTabsController extends AppBaseController
 
     public function payTabs_return(Request $request)
     {
-        return $request->all();
         return view('transactions.payment_return');
     }
 

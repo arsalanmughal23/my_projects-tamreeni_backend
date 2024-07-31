@@ -155,6 +155,7 @@ class PayTabsController extends AppBaseController
 
     public function payTabs_return(Request $request)
     {
+        return $request->all();
         return view('transactions.payment_return');
     }
 

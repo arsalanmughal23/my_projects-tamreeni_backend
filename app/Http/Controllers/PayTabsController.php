@@ -89,7 +89,7 @@ class PayTabsController extends AppBaseController
     public function createTransaction($data)
     {
         $fields   = [
-            "profile_id"       => config('constants.paytabs.PAYTABS_PROFILE_ID', 110359),
+            "profile_id"       => $this->payTabsProfileId,
             "tran_type"        => "sale",
             "tran_class"       => $data['tran_class'],//ecom | recurring
             "cart_id"          => $data['cart_id'],
@@ -103,7 +103,7 @@ class PayTabsController extends AppBaseController
             "tokenize"         => $data['tokenize'], //for tokenized transaction
         ];
         $response = \Illuminate\Support\Facades\Http::withHeaders([
-            'authorization' => config('constants.paytabs.PAYTABS_SERVER_KEY'),
+            'authorization' => $this->payTabsServerKey,
             'Content-type'  => 'application/json'
         ])->post($this->payTabsServerUrl, $fields);
 

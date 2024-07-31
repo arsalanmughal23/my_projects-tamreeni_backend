@@ -169,4 +169,5 @@ Route::group(['middleware' => ['auth', 'dynamic_permission']], function () {
 
     Route::resource('memberships', App\Http\Controllers\MembershipController::class);
     Route::resource('membership_durations', App\Http\Controllers\MembershipDurationController::class);
+    Route::resource('user_memberships', App\Http\Controllers\UserMembershipController::class)->only('index', 'show', 'destroy');
 });

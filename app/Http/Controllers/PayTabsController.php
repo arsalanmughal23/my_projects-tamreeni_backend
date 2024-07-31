@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use App\Models\Package;
 use App\Models\Transaction;
+use App\Models\UserMembership;
 use Flash;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -17,43 +19,54 @@ class PayTabsController extends AppBaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    private $payTabsProfileId;
+    private $payTabsServerKey;
+    private $payTabsServerUrl;
+
+    public function __construct() {
+        $this->payTabsProfileId = config('constants.paytabs.PAYTABS_PROFILE_ID');
+        $this->payTabsServerKey = config('constants.paytabs.PAYTABS_SERVER_KEY');
+        $this->payTabsServerUrl = config('constants.paytabs.PAYTABS_SERVER_URL');
+    }
+
     function create_payment_page()
     {
         $fields   = [
-            "profile_id"       => env('PAYTABS_PROFILE_ID', 110359),
+            "profile_id"       => $this->payTabsProfileId,
             "tran_type"        => "sale",
             "tran_class"       => "ecom",//ecom | recurring
             "cart_id"          => "Bsaray Sample Payment",
             "cart_description" => "Dummy Order 35925502061445345",
             "cart_currency"    => "SAR",
             "cart_amount"      => 46.17,
+            // "callback"         => "https://webhook.site/bb3f3bc8-ab44-443a-9d9f-f718c9adbd24",
             "callback"         => url('/paytabs-callback'),
             "return"           => url('/paytabs-return'),
             "tokenize"         => "2", //for tokenized transaction
-//            "customer_details" => [
-//                "name"    => "John Smith",
-//                "email"   => "jsmith@gmail.com",
-//                "street1" => "404, 11th st, void",
-//                "city"    => "dubai",
-//                "country" => "AE",
-//                "ip"      => "94.204.129.89"
-//            ],
-//            "shipping_details" => [
-//                "name"    => "name1 last1",
-//                "email"   => "email1@domain.com",
-//                "phone"   => "971555555555",
-//                "street1" => "street2",
-//                "city"    => "dubai",
-//                "state"   => "dubai",
-//                "country" => "AE",
-//                "zip"     => "54321",
-//                "ip"      => "2.2.2.2"
-//            ],
+            // "customer_details" => [
+            //     "name"    => "John Smith",
+            //     "email"   => "jsmith@gmail.com",
+            //     "street1" => "404, 11th st, void",
+            //     "city"    => "dubai",
+            //     "country" => "AE",
+            //     "ip"      => "94.204.129.89"
+            // ],
+            // "shipping_details" => [
+            //     "name"    => "name1 last1",
+            //     "email"   => "email1@domain.com",
+            //     "phone"   => "971555555555",
+            //     "street1" => "street2",
+            //     "city"    => "dubai",
+            //     "state"   => "dubai",
+            //     "country" => "AE",
+            //     "zip"     => "54321",
+            //     "ip"      => "2.2.2.2"
+            // ],
         ];
         $response = \Illuminate\Support\Facades\Http::withHeaders([
-            'authorization' => env('PAYTABS_SERVER_KEY', 'S6JNJBK9H2-JJDKTGLM6T-T6LMRMGBH9'),
+            'authorization' => $this->payTabsServerKey,
             'Content-type'  => 'application/json'
-        ])->post('https://secure.paytabs.sa/payment/request', $fields);
+        ])->post($this->payTabsServerUrl, $fields);
 
         return $response->json();
 
@@ -62,11 +75,11 @@ class PayTabsController extends AppBaseController
     function query_transaction(Request $request)
     {
         $fields   = [
-            "profile_id" => env('PAYTABS_PROFILE_ID', 110359),
+            "profile_id" => $this->payTabsProfileId,
             'tran_ref'   => $request->input('tran_ref') // example
         ];
         $response = \Illuminate\Support\Facades\Http::withHeaders([
-            'authorization' => env('PAYTABS_SERVER_KEY', 'S6JNJBK9H2-JJDKTGLM6T-T6LMRMGBH9'),
+            'authorization' => $this->payTabsServerKey,
             'Content-type'  => 'application/json'
         ])->post('https://secure.paytabs.sa/payment/query', $fields);
 
@@ -83,14 +96,15 @@ class PayTabsController extends AppBaseController
             "cart_description" => $data['description'],
             "cart_currency"    => $data['currency'],
             "cart_amount"      => $data['amount'],
-            "callback"         => url('/paytabs-callback'),//"https://webhook.site/8b9635dd-d2f9-4f0f-8133-2f9d66af3793"
+            // "callback"         => "https://webhook.site/bb3f3bc8-ab44-443a-9d9f-f718c9adbd24",
+            "callback"         => url('/paytabs-callback'),
             "return"           => url('/paytabs-return'),
             "tokenize"         => $data['tokenize'], //for tokenized transaction
         ];
         $response = \Illuminate\Support\Facades\Http::withHeaders([
-            'authorization' => env('PAYTABS_SERVER_KEY', 'S6JNJBK9H2-JJDKTGLM6T-T6LMRMGBH9'),
+            'authorization' => config('constants.paytabs.PAYTABS_SERVER_KEY'),
             'Content-type'  => 'application/json'
-        ])->post('https://secure.paytabs.sa/payment/request', $fields);
+        ])->post($this->payTabsServerUrl, $fields);
 
         return $response->json();
     }
@@ -99,19 +113,31 @@ class PayTabsController extends AppBaseController
     {
         try{        
             DB::beginTransaction();
-            $transaction = Transaction::where(['payment_charge_id' => $request->tran_ref, 'status' => Transaction::STATUS_HOLD])->first();
+            $transaction = Transaction::where(['payment_charge_id' => $request->tran_ref, 'status' => Transaction::STATUS_HOLD])
+                                ->orderBy('created_at', 'desc')->first();
 
             if(!$transaction)
                 throw new \Error('Transaction is not found, Webhook Payload is: '.json_encode($request->all()));
 
+            $transactionable = $transaction->transactionable;
+
             if ($request->payment_result['response_status'] == Transaction::PAY_TABS_SUCCESS_STATUS) {
                 $transaction->update(['status' => Transaction::STATUS_COMPLETE]);
-                $transaction->appointments()->update(['status' => Appointment::STATUS_PAYMENT_PAID]);
+                
+                if($transactionable instanceof UserMembership) {
+                    $transactionable->paymentSuccess();
+                } else {
+                    $transaction->appointments()->update(['status' => Appointment::STATUS_PAYMENT_PAID]);
+                }
 
             } else {
                 $transaction->update(['status' => Transaction::STATUS_CANCEL]);
-                $transaction->appointments()->update(['status' => Appointment::STATUS_PAYMENT_REJECT]);
-                // Appointment::where('transaction_id', $transaction->id)->delete();
+
+                if($transactionable instanceof UserMembership) {
+                    $transactionable->paymentReject();
+                } else {
+                    $transaction->appointments()->update(['status' => Appointment::STATUS_PAYMENT_REJECT]);
+                }
             }
             DB::commit();
             return $this->sendResponse(null, 'Weebhook Success');
@@ -130,5 +156,28 @@ class PayTabsController extends AppBaseController
     public function payTabs_return(Request $request)
     {
         return view('transactions.payment_return');
+    }
+
+    public function createTransactionWithPayTab(UserMembership | Appointment | Package $transactionable, $user, $amountInSAR, $description, $card_id)
+    {
+        $currencySymbol= getCurrencySymbol();
+        $paymentCharge = $this->createTransaction([
+            'tran_class'  => "ecom",
+            'cart_id'     => json_encode($card_id),
+            'description' => $description,
+            'currency'    => $currencySymbol,
+            'amount'      => $amountInSAR,
+            'tokenize'    => time(),
+        ]);
+
+        $transaction = $transactionable->transactions()->create([
+            'payment_charge_id' => $paymentCharge['tran_ref'],
+            'amount'            => $amountInSAR,
+            'description'       => $description,
+            'user_id'           => $user->id,
+            'currency'          => $currencySymbol,
+            'status'            => Transaction::STATUS_HOLD,
+        ]);
+        return ['paymentCharge' => $paymentCharge, 'transaction' => $transaction];
     }
 }

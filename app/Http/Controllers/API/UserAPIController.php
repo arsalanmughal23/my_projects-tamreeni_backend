@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\API\UpdateUserAPIRequest;
 use App\Http\Resources\NutritionPlanResource;
+use App\Http\Resources\UserResource;
 use App\Http\Resources\WorkoutPlanResource;
 use App\Models\NutritionPlan;
 use App\Models\UserDetail;
@@ -46,7 +47,7 @@ class UserAPIController extends AppBaseController
             /** @var User $user */
             $user = $request->user();
 
-            return $this->sendResponse($user->toArray(), 'User profile data');
+            return $this->sendResponse(new UserResource($user), 'User profile data');
 
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 500);

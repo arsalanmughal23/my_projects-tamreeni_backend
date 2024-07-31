@@ -413,11 +413,11 @@ if (!function_exists('calculateByPercentage')) {
     }
 }
 if (!function_exists('calcualteDiscountPrice')) {
-    function calcualteDiscountPrice($price, $discountType, $discountValue):float
+    function calcualteDiscountPrice($price, $discountType = PromoCode::DISCOUNT_FLAT, $discountValue = 0):float
     {
         return match ($discountType) {
             PromoCode::DISCOUNT_PERCENT => ($price / 100) * $discountValue,
-            PromoCode::DISCOUNT_FLAT => 0,
+            PromoCode::DISCOUNT_FLAT => $discountValue,
             default => 0
         };
     }

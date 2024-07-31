@@ -370,3 +370,11 @@
 @endcan
 
 
+@canany(['user_memberships.index', 'user_memberships.create', 'user_memberships.show', 'user_memberships.edit', 'user_memberships.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('user_memberships.index') }}"
+        class="nav-link {{ Request::is('user_memberships*') ? 'active' : '' }}">
+            <i class="fa fa-user-plus"></i><p>User Memberships</p>
+        </a>
+    </li>
+@endcan

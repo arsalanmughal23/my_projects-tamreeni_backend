@@ -17,7 +17,7 @@ class CreateMembershipsTable extends Migration
             $table->id();
             $table->text('title');
             $table->json('feature_list');
-            $table->enum('status', ['active', 'inactive']);            
+            $table->enum('status', ['active', 'inactive']);
             $table->timestamps();
             $table->softDeletes();
         });

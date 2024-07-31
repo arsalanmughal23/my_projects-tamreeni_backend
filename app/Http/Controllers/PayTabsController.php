@@ -156,7 +156,20 @@ class PayTabsController extends AppBaseController
 
     public function payTabs_return(Request $request)
     {
-        return view('transactions.payment_return');
+        $data = $request->all();
+        // {
+        //     "acquirerMessage": null,
+        //     "acquirerRRN": null,
+        //     "cartId": "35",
+        //     "customerEmail": "test@yopmail.com",
+        //     "respCode": "G38393",
+        //     "respMessage": "Authorised",
+        //     "respStatus": "A",
+        //     "signature": "544dc80168a6861defcd36db4bbb6229516dd65539dbab899e2d40e8c0c19db6",
+        //     "token": null,
+        //     "tranRef": "TST2421300915609"
+        // }
+        return view('transactions.payment_return', compact('data'));
     }
 
     public function createTransactionWithPayTab(UserMembership | Appointment | Package $transactionable, $user, $amountInSAR, $description, $card_id)

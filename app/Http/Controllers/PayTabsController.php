@@ -19,10 +19,20 @@ class PayTabsController extends AppBaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    private $payTabsProfileId;
+    private $payTabsServerKey;
+    private $payTabsServerUrl;
+
+    public function __construct() {
+        $this->payTabsProfileId = config('constants.paytabs.PAYTABS_PROFILE_ID');
+        $this->payTabsServerKey = config('constants.paytabs.PAYTABS_SERVER_KEY');
+        $this->payTabsServerUrl = config('constants.paytabs.PAYTABS_SERVER_URL');
+    }
+
     function create_payment_page()
     {
         $fields   = [
-            "profile_id"       => env('PAYTABS_PROFILE_ID', 110359),
+            "profile_id"       => $this->payTabsProfileId,
             "tran_type"        => "sale",
             "tran_class"       => "ecom",//ecom | recurring
             "cart_id"          => "Bsaray Sample Payment",
@@ -32,30 +42,30 @@ class PayTabsController extends AppBaseController
             "callback"         => url('/paytabs-callback'),
             "return"           => url('/paytabs-return'),
             "tokenize"         => "2", //for tokenized transaction
-//            "customer_details" => [
-//                "name"    => "John Smith",
-//                "email"   => "jsmith@gmail.com",
-//                "street1" => "404, 11th st, void",
-//                "city"    => "dubai",
-//                "country" => "AE",
-//                "ip"      => "94.204.129.89"
-//            ],
-//            "shipping_details" => [
-//                "name"    => "name1 last1",
-//                "email"   => "email1@domain.com",
-//                "phone"   => "971555555555",
-//                "street1" => "street2",
-//                "city"    => "dubai",
-//                "state"   => "dubai",
-//                "country" => "AE",
-//                "zip"     => "54321",
-//                "ip"      => "2.2.2.2"
-//            ],
+            // "customer_details" => [
+            //     "name"    => "John Smith",
+            //     "email"   => "jsmith@gmail.com",
+            //     "street1" => "404, 11th st, void",
+            //     "city"    => "dubai",
+            //     "country" => "AE",
+            //     "ip"      => "94.204.129.89"
+            // ],
+            // "shipping_details" => [
+            //     "name"    => "name1 last1",
+            //     "email"   => "email1@domain.com",
+            //     "phone"   => "971555555555",
+            //     "street1" => "street2",
+            //     "city"    => "dubai",
+            //     "state"   => "dubai",
+            //     "country" => "AE",
+            //     "zip"     => "54321",
+            //     "ip"      => "2.2.2.2"
+            // ],
         ];
         $response = \Illuminate\Support\Facades\Http::withHeaders([
-            'authorization' => env('PAYTABS_SERVER_KEY', 'S6JNJBK9H2-JJDKTGLM6T-T6LMRMGBH9'),
+            'authorization' => $this->payTabsServerKey,
             'Content-type'  => 'application/json'
-        ])->post('https://secure.paytabs.sa/payment/request', $fields);
+        ])->post($this->payTabsServerUrl, $fields);
 
         return $response->json();
 
@@ -64,11 +74,11 @@ class PayTabsController extends AppBaseController
     function query_transaction(Request $request)
     {
         $fields   = [
-            "profile_id" => env('PAYTABS_PROFILE_ID', 110359),
+            "profile_id" => $this->payTabsProfileId,
             'tran_ref'   => $request->input('tran_ref') // example
         ];
         $response = \Illuminate\Support\Facades\Http::withHeaders([
-            'authorization' => env('PAYTABS_SERVER_KEY', 'S6JNJBK9H2-JJDKTGLM6T-T6LMRMGBH9'),
+            'authorization' => $this->payTabsServerKey,
             'Content-type'  => 'application/json'
         ])->post('https://secure.paytabs.sa/payment/query', $fields);
 
@@ -85,14 +95,15 @@ class PayTabsController extends AppBaseController
             "cart_description" => $data['description'],
             "cart_currency"    => $data['currency'],
             "cart_amount"      => $data['amount'],
-            "callback"         => url('/paytabs-callback'),//"https://webhook.site/8b9635dd-d2f9-4f0f-8133-2f9d66af3793"
+            // "callback"         => url('/paytabs-callback'),
+            "callback"         => "https://webhook.site/bb3f3bc8-ab44-443a-9d9f-f718c9adbd24",
             "return"           => url('/paytabs-return'),
             "tokenize"         => $data['tokenize'], //for tokenized transaction
         ];
         $response = \Illuminate\Support\Facades\Http::withHeaders([
-            'authorization' => env('PAYTABS_SERVER_KEY', 'S6JNJBK9H2-JJDKTGLM6T-T6LMRMGBH9'),
+            'authorization' => config('constants.paytabs.PAYTABS_SERVER_KEY'),
             'Content-type'  => 'application/json'
-        ])->post('https://secure.paytabs.sa/payment/request', $fields);
+        ])->post($this->payTabsServerUrl, $fields);
 
         return $response->json();
     }

@@ -41,5 +41,8 @@ return [
         'PAYTABS_PROFILE_ID' => env('PAYTABS_PROFILE_ID'),
         'PAYTABS_SERVER_KEY' => env('PAYTABS_SERVER_KEY'),
         'PAYTABS_SERVER_URL' => env('PAYTABS_SERVER_URL'),
+    ],
+    'trail' => [
+        'days' => 14
     ]
 ];

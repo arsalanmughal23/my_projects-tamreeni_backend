@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
                 $table->string('password');
                 $table->timestamp('email_verified_at')->nullable();
                 $table->enum('status', ['pending', 'active', 'in-active'])->default('pending'); // CONSTANT: pending, active, in-active
+                $table->timestamp('trail_expire_at')->nullable();
 
                 $table->rememberToken();
 

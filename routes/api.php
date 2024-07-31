@@ -120,6 +120,7 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
 
     Route::resource('user_memberships', App\Http\Controllers\API\UserMembershipAPIController::class);
     Route::post('purchase_memberships', [App\Http\Controllers\API\UserMembershipAPIController::class, 'purchaseMembership']);
+    Route::post('use_trail', [App\Http\Controllers\API\UserMembershipAPIController::class, 'useMembershipTrail']);
 });
 
 Route::resource('menus', App\Http\Controllers\API\MenuAPIController::class);

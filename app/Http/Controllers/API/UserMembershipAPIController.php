@@ -12,6 +12,7 @@ use App\Http\Controllers\PayTabsController;
 use App\Http\Requests\API\PurchaseMembershipAPIRequest;
 use App\Http\Resources\MembershipResource;
 use App\Http\Resources\UserMembershipResource;
+use App\Http\Resources\UserResource;
 use App\Models\Membership;
 use App\Models\PromoCode;
 use App\Repositories\MembershipDurationRepository;
@@ -121,6 +122,25 @@ class UserMembershipAPIController extends AppBaseController
         }
     }
     
+    public function useMembershipTrail(Request $request)
+    {
+        try {
+
+            $user = $request->user();
+            if($user->trail_expire_at)
+                throw new Error('You already avail your trail');
+
+            $trailDays = config('constants.trail.days');
+            $user->update(['trail_expire_at' => now()->addDays($trailDays)]);
+
+            return $this->sendResponse(new UserResource($user), 'Your trail is started');
+
+        } catch (\Error $e) {
+            return $this->sendError($e->getMessage(), 403);
+        } catch (\Exception $e) {
+            return $this->sendError($e->getMessage(), 500);
+        }
+    }
 
     /**
      * Display a listing of the UserMembership.

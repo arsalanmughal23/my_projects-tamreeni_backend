@@ -42,7 +42,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'stripe_customer_id',
         'email',
         'password',
-        'remember_token'
+        'remember_token',
+        'trail_expire_at'
     ];
 
     /**

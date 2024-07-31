@@ -69,6 +69,9 @@ class AppointmentAPIController extends AppBaseController
             $amountInSAR           = 0;
             $paymentIntentRequired = $input['payment_intent_required'] ?? false;
 
+            if(!$user->stripe_customer_id)
+                $user->createStripeCustomer();
+
             $transactionable       = null;
             $redirect_url          = null;
             $createdAppointmentIds = [];
@@ -144,10 +147,11 @@ class AppointmentAPIController extends AppBaseController
                 ]);
             } else {
                 // $transaction = $this->createTransaction($transactionable, $user, $amountInSAR, $input['payment_method_id'], $description);
-                $payTabs = $this->createTransactionWithPayTab($transactionable, $user, $amountInSAR, $description, $createdAppointmentIds);
-                $paymentCharge = $payTabs['paymentCharge'];
+                $payTabController = new PayTabsController();
+                $payTabsResponse = $payTabController->createTransactionWithPayTab($transactionable, $user, $amountInSAR, $description, $createdAppointmentIds);
+                $paymentCharge = $payTabsResponse['paymentCharge'];
                 $redirect_url  = $paymentCharge['redirect_url'];
-                $transaction   = $payTabs['transaction'];
+                $transaction   = $payTabsResponse['transaction'];
             }
 
             $createdAppointments = $this->appointmentRepository->whereIn('id', $createdAppointmentIds);

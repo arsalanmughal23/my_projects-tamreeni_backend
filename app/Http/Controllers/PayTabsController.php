@@ -39,6 +39,7 @@ class PayTabsController extends AppBaseController
             "cart_description" => "Dummy Order 35925502061445345",
             "cart_currency"    => "SAR",
             "cart_amount"      => 46.17,
+            // "callback"         => "https://webhook.site/bb3f3bc8-ab44-443a-9d9f-f718c9adbd24",
             "callback"         => url('/paytabs-callback'),
             "return"           => url('/paytabs-return'),
             "tokenize"         => "2", //for tokenized transaction
@@ -112,19 +113,31 @@ class PayTabsController extends AppBaseController
     {
         try{        
             DB::beginTransaction();
-            $transaction = Transaction::where(['payment_charge_id' => $request->tran_ref, 'status' => Transaction::STATUS_HOLD])->first();
+            $transaction = Transaction::where(['payment_charge_id' => $request->tran_ref, 'status' => Transaction::STATUS_HOLD])
+                                ->orderBy('created_at', 'desc')->first();
 
             if(!$transaction)
                 throw new \Error('Transaction is not found, Webhook Payload is: '.json_encode($request->all()));
 
+            $transactionable = $transaction->transactionable;
+
             if ($request->payment_result['response_status'] == Transaction::PAY_TABS_SUCCESS_STATUS) {
                 $transaction->update(['status' => Transaction::STATUS_COMPLETE]);
-                $transaction->appointments()->update(['status' => Appointment::STATUS_PAYMENT_PAID]);
+                
+                if($transactionable instanceof UserMembership) {
+                    $transactionable->paymentSuccess();
+                } else {
+                    $transaction->appointments()->update(['status' => Appointment::STATUS_PAYMENT_PAID]);
+                }
 
             } else {
                 $transaction->update(['status' => Transaction::STATUS_CANCEL]);
-                $transaction->appointments()->update(['status' => Appointment::STATUS_PAYMENT_REJECT]);
-                // Appointment::where('transaction_id', $transaction->id)->delete();
+
+                if($transactionable instanceof UserMembership) {
+                    $transactionable->paymentReject();
+                } else {
+                    $transaction->appointments()->update(['status' => Appointment::STATUS_PAYMENT_REJECT]);
+                }
             }
             DB::commit();
             return $this->sendResponse(null, 'Weebhook Success');

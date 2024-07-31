@@ -135,4 +135,16 @@ class UserMembership extends Model
     {
         return $this->morphMany(Transaction::class, 'transactionable');
     }
+
+    public function paymentSuccess()
+    {
+        $this->update(['status' => self::STATUS_ACTIVE]);
+        return $this;
+    }
+    
+    public function paymentReject()
+    {
+        $this->update(['status' => self::STATUS_REJECT]);
+        return $this;
+    }
 }

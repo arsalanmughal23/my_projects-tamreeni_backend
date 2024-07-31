@@ -96,8 +96,8 @@ class PayTabsController extends AppBaseController
             "cart_description" => $data['description'],
             "cart_currency"    => $data['currency'],
             "cart_amount"      => $data['amount'],
-            // "callback"         => url('/paytabs-callback'),
-            "callback"         => "https://webhook.site/bb3f3bc8-ab44-443a-9d9f-f718c9adbd24",
+            // "callback"         => "https://webhook.site/bb3f3bc8-ab44-443a-9d9f-f718c9adbd24",
+            "callback"         => url('/paytabs-callback'),
             "return"           => url('/paytabs-return'),
             "tokenize"         => $data['tokenize'], //for tokenized transaction
         ];

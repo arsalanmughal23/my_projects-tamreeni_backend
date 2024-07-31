@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\API\PaymentController;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
@@ -166,16 +168,28 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      **/
-    public function memberships(): HasMany
+    public function userMemberships(): HasMany
     {
         return $this->hasMany(\App\Models\UserMembership::class);
     }
 
     public function getActiveMembershipAttribute()
     {
-        return $this->memberships()->where('status', 'active')
+        return $this->userMemberships()->where('status', 'active')
                     ->where('expire_at', '>', now())
                     ->orderBy('created_at', 'desc')
                     ->first();
+    }
+
+    public function createStripeCustomer()
+    {
+        $stripe_customer_id = $this->stripe_customer_id;
+        if (!$stripe_customer_id) {
+            $emailRequest       = new Request(['email' => $this->email]);
+            $stripe_customer    = PaymentController::post($emailRequest, 'create.customer');
+            $stripe_customer_id = $stripe_customer['data']['id'];
+            $this->update(['stripe_customer_id' => $stripe_customer_id]);
+        }
+        return $this;
     }
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * Class UserMembership
@@ -14,7 +15,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property \App\Models\MembershipDuration $membershipDuration
  * @property \App\Models\Membership $membership
  * @property \App\Models\User $user
- * @property string $title
+ * @property json $title
  * @property integer $user_id
  * @property integer $membership_id
  * @property integer $membership_duration_id
@@ -25,18 +26,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class UserMembership extends Model
 {
     use SoftDeletes;
-
     use HasFactory;
+    use HasTranslations;
 
     public $table = 'user_memberships';
     
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
-
     protected $dates = ['deleted_at'];
+    public $translatable = ['title'];
 
 
+    const STATUS_HOLD = 'hold';
+    const STATUS_ACTIVE = 'active';
+    const STATUS_INACTIVE = 'inactive';
+    const STATUS_REJECT = 'reject';
+    const CONST_STATUSES = [self::STATUS_HOLD, self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_REJECT];
 
     public $fillable = [
         'title',
@@ -45,7 +51,13 @@ class UserMembership extends Model
         'membership_duration_id',
         'duration_in_month',
         'expire_at',
-        'status'
+        'status',
+
+        'promo_code_id',
+        'promo_code',
+        'original_price',
+        'discount',
+        'charge_amount'
     ];
 
     /**
@@ -55,13 +67,19 @@ class UserMembership extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'title' => 'string',
+        'title' => 'json',
         'user_id' => 'integer',
         'membership_id' => 'integer',
         'membership_duration_id' => 'integer',
         'duration_in_month' => 'integer',
         'expire_at' => 'datetime',
-        'status' => 'string'
+        'status' => 'string',
+
+        'promo_code_id' => 'integer',
+        'promo_code' => 'string',
+        'original_price' => 'float',
+        'discount' => 'float',
+        'charge_amount' => 'float',
     ];
 
     /**
@@ -70,7 +88,8 @@ class UserMembership extends Model
      * @var array
      */
     public static $rules = [
-        'title' => 'required|string',
+        'title' => 'required|array',
+        'title.*' => 'required|string',
         'user_id' => 'required',
         'membership_id' => 'required',
         'membership_duration_id' => 'required',
@@ -79,7 +98,13 @@ class UserMembership extends Model
         'status' => 'required|string',
         'created_at' => 'nullable',
         'updated_at' => 'nullable',
-        'deleted_at' => 'nullable'
+        'deleted_at' => 'nullable',
+
+        'promo_code_id' => 'sometimes|integer',
+        'promo_code' => 'sometimes|string',
+        'original_price' => 'required|float',
+        'discount' => 'sometimes|float',
+        'charge_amount' => 'required|float',
     ];
 
     /**
@@ -104,5 +129,10 @@ class UserMembership extends Model
     public function user()
     {
         return $this->belongsTo(\App\Models\User::class, 'user_id');
+    }
+
+    public function transactions()
+    {
+        return $this->morphMany(Transaction::class, 'transactionable');
     }
 }

@@ -20,11 +20,17 @@ class CreateUserMembershipsTable extends Migration
             $table->unsignedBigInteger('membership_id');
             $table->unsignedBigInteger('membership_duration_id');
             $table->unsignedBigInteger('duration_in_month');
+            $table->unsignedBigInteger('promo_code_id')->nullable();
+            $table->string('promo_code')->nullable();
+            $table->decimal('original_price', 8, 2, true);
+            $table->decimal('discount', 8, 2, true)->nullable();
+            $table->decimal('charge_amount', 8, 2, true);
             $table->timestamp('expire_at')->nullable();
-            $table->enum('status', ['active', 'inactive']);
+            $table->enum('status', ['hold', 'active', 'inactive', 'reject'])->default('hold');
             $table->timestamps();
             $table->softDeletes();
 
+            $table->foreign('promo_code_id')->references('id')->on('promo_codes')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('membership_id')->references('id')->on('memberships')->onDelete('cascade');
             $table->foreign('membership_duration_id')->references('id')->on('membership_durations')->onDelete('cascade');

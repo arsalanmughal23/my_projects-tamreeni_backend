@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use App\Models\Package;
 use App\Models\Transaction;
+use App\Models\UserMembership;
 use Flash;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -130,5 +132,28 @@ class PayTabsController extends AppBaseController
     public function payTabs_return(Request $request)
     {
         return view('transactions.payment_return');
+    }
+
+    public function createTransactionWithPayTab(UserMembership | Appointment | Package $transactionable, $user, $amountInSAR, $description, $card_id)
+    {
+        $currencySymbol= getCurrencySymbol();
+        $paymentCharge = $this->createTransaction([
+            'tran_class'  => "ecom",
+            'cart_id'     => json_encode($card_id),
+            'description' => $description,
+            'currency'    => $currencySymbol,
+            'amount'      => $amountInSAR,
+            'tokenize'    => time(),
+        ]);
+
+        $transaction = $transactionable->transactions()->create([
+            'payment_charge_id' => $paymentCharge['tran_ref'],
+            'amount'            => $amountInSAR,
+            'description'       => $description,
+            'user_id'           => $user->id,
+            'currency'          => $currencySymbol,
+            'status'            => Transaction::STATUS_HOLD,
+        ]);
+        return ['paymentCharge' => $paymentCharge, 'transaction' => $transaction];
     }
 }

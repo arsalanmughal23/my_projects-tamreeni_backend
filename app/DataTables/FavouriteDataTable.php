@@ -66,8 +66,8 @@ class FavouriteDataTable extends DataTable
     {
         return [
             'user_id',
-            'instance_id',
-            'instance_type'
+            'favouritable_id',
+            'favouritable_type'
         ];
     }
 

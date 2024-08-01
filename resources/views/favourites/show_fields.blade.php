@@ -4,15 +4,14 @@
     <p>{{ $favourite->user_id }}</p>
 </div>
 
-<!-- Instance Id Field -->
+<!-- Favouritable Id Field -->
 <div class="col-sm-12">
-    {!! Form::label('instance_id', 'Instance Id:') !!}
-    <p>{{ $favourite->instance_id }}</p>
+    {!! Form::label('favouritable_id', 'Favouritable Id:') !!}
+    <p>{{ $favourite->favouritable_id }}</p>
 </div>
 
-<!-- Instance Type Field -->
+<!-- Favouritable Type Field -->
 <div class="col-sm-12">
-    {!! Form::label('instance_type', 'Instance Type:') !!}
-    <p>{{ $favourite->instance_type }}</p>
+    {!! Form::label('favouritable_type', 'Favouritable Type:') !!}
+    <p>{{ $favourite->favouritable_type }}</p>
 </div>
-

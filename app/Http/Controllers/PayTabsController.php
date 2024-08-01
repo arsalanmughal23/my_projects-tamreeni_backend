@@ -23,6 +23,14 @@ class PayTabsController extends AppBaseController
     private $payTabsServerKey;
     private $payTabsServerUrl;
 
+    const Authorized = 'A';
+    const Hold = 'H';
+    const Pending = 'P';
+    const Voided = 'V';
+    const Error = 'E';
+    const Declined = 'D';
+    const Expired = 'X';
+
     public function __construct() {
         $this->payTabsProfileId = config('constants.paytabs.PAYTABS_PROFILE_ID');
         $this->payTabsServerKey = config('constants.paytabs.PAYTABS_SERVER_KEY');
@@ -169,7 +177,11 @@ class PayTabsController extends AppBaseController
         //     "token": null,
         //     "tranRef": "TST2421300915609"
         // }
-        return view('transactions.payment_return', compact('data'));
+        $transactionReturnViewName = match ($data['respStatus']) {
+            self::Authorized => 'payment_success',
+            default => 'payment_reject'
+        };
+        return view('transactions.'.$transactionReturnViewName, compact('data'));
     }
 
     public function createTransactionWithPayTab(UserMembership | Appointment | Package $transactionable, $user, $amountInSAR, $description, $card_id)

@@ -9,16 +9,25 @@ use App\Http\Requests\UpdateAppointmentRequest;
 use App\Repositories\AppointmentRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
+use App\Models\Role;
+use App\Repositories\UsersRepository;
 use Response;
 
 class AppointmentController extends AppBaseController
 {
     /** @var AppointmentRepository $appointmentRepository*/
-    private $appointmentRepository;
 
-    public function __construct(AppointmentRepository $appointmentRepo)
+    public function __construct(
+        private AppointmentRepository $appointmentRepository,
+        private UsersRepository $userRepository,
+    ) {}
+
+    public function getSelectOptionData()
     {
-        $this->appointmentRepository = $appointmentRepo;
+        return [
+            'users' => $this->userRepository->getUsers(['role_slugs' => Role::SLUGS_MENTOR])->get(),
+            'customers' => $this->userRepository->getUsers(['role_slugs' => [Role::SLUG_API_USER]])->get(),
+        ];
     }
 
     /**
@@ -40,7 +49,8 @@ class AppointmentController extends AppBaseController
      */
     public function create()
     {
-        return view('appointments.create');
+        $users = $this->getSelectOptionData();
+        return view('appointments.create', compact('users'));
     }
 
     /**
@@ -98,7 +108,8 @@ class AppointmentController extends AppBaseController
             return redirect(route('appointments.index'));
         }
 
-        return view('appointments.edit')->with('appointment', $appointment);
+        $users = $this->getSelectOptionData();
+        return view('appointments.edit', compact('appointment', 'users'));
     }
 
     /**

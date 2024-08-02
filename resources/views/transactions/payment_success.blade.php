@@ -79,7 +79,7 @@
         $("#trigger-android").on('click', function (e) {
             e.preventDefault();
 
-            window?.TamreeniApp.postMessage(JSON.stringify(data));
+            window?.postMessage(JSON.stringify(data));
         });
     })
 </script>

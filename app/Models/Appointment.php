@@ -49,8 +49,12 @@ class Appointment extends Model
     const STATUS_PAYMENT_PAID   = 3;
     const STATUS_PAYMENT_REJECT = 4;
 
+    const TYPES = [self::TYPE_SESSION, self::TYPE_PACKAGE];
+    const PROFESSION_TYPES = [self::PROFESSION_TYPE_COACH, self::PROFESSION_TYPE_DIETITIAN, self::PROFESSION_TYPE_THERAPIST];
+    const STATUSES = [self::STATUS_PENDING, self::STATUS_START, self::STATUS_END, self::STATUS_PAYMENT_PAID, self::STATUS_PAYMENT_REJECT];
 
     protected $dates = ['deleted_at'];
+    public $appends = ['status_label','type_label', 'profession_type_label'];
 
 
     public $fillable = [
@@ -109,6 +113,24 @@ class Appointment extends Model
         'appointments.*.start_time' => 'required|string|required_if:appointments.*.type,20',
         'appointments.*.end_time'   => 'required|string|required_if:appointments.*.type,20',
     ];
+    
+    public static $web_update_rules = [
+        'payment_intent_required'   => 'boolean',
+        'user_id'                   => 'sometimes|exists:users,id',
+        // 'card_id'                   => 'required',
+        'slot_id'                   => 'required_if:type,10',
+        'package_id'                => 'required_if:type,20|exists:packages,id',
+        'date'                      => 'string|required_if:type,10',
+        'start_time'                => 'string|required_if:type,10',
+        'end_time'                  => 'string|required_if:type,10',
+        'type'                      => 'sometimes|integer|in:10,20',
+        'profession_type'           => 'sometimes|integer|in:10,20,30',
+        'appointments'              => 'required_if:type,20|array', // appointments array required when type is 20
+        'appointments.*.slot_id'    => 'required|required_if:appointments.*.type,20',
+        'appointments.*.date'       => 'required|string|max:191|required_if:appointments.*.type,20',
+        'appointments.*.start_time' => 'required|string|required_if:appointments.*.type,20',
+        'appointments.*.end_time'   => 'required|string|required_if:appointments.*.type,20',
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -145,5 +167,20 @@ class Appointment extends Model
     public function transactions()
     {
         return $this->morphMany(Transaction::class, 'transactionable');
+    }
+
+    public function getStatusLabelAttribute()
+    {
+        return __('appointment.status.'.$this->status, [], 'en');
+    }
+    
+    public function getTypeLabelAttribute()
+    {
+        return __('appointment.type.'.$this->type, [], 'en');
+    }
+    
+    public function getProfessionTypeLabelAttribute()
+    {
+        return __('appointment.profession_type.'.$this->profession_type, [], 'en');
     }
 }

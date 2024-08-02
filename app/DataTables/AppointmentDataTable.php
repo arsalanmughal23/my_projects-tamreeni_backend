@@ -17,8 +17,23 @@ class AppointmentDataTable extends DataTable
     public function dataTable($query)
     {
         $dataTable = new EloquentDataTable($query);
-
-        return $dataTable->addColumn('action', 'appointments.datatables_actions');
+        $dataTable->editColumn('customer_id', function(Appointment $model){
+            return '<a href="'.route('users.show', $model->customer_id).'">'.$model->customer->name.'</a>';
+        });
+        $dataTable->editColumn('user_id', function(Appointment $model){
+            return '<a href="'.route('users.show', $model->user_id).'">'.$model->user->name.'</a>';
+        });
+        $dataTable->editColumn('status', function(Appointment $model){
+            return $model->status_label ?? null;
+        });
+        $dataTable->editColumn('type', function(Appointment $model){
+            return $model->type_label ?? null;
+        });
+        $dataTable->editColumn('profession_type', function(Appointment $model){
+            return $model->profession_type_label ?? null;
+        });
+        return $dataTable->addColumn('action', 'appointments.datatables_actions')
+                        ->rawColumns(['customer_id', 'user_id', 'action']);
     }
 
     /**
@@ -65,16 +80,14 @@ class AppointmentDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'customer_id',
-            'user_id',
-            'slot_id',
-            'package_id',
-            'transaction_id',
+            'customer_id' => ['title' => 'Customer'],
+            'user_id' => ['title' => 'User'],
+            // 'slot_id',
+            // 'package_id',
+            // 'transaction_id',
             'date',
             'start_time',
             'end_time',
-            'currency',
-            'amount',
             'type',
             'profession_type',
             'status'

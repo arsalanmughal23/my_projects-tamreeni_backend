@@ -7,14 +7,16 @@
                 <div class="col-sm-6">
                     <h1>Favourites</h1>
                 </div>
-                @can('favourites.create')
-                    <div class="col-sm-6">
-                        <a class="btn btn-primary float-right"
-                        href="{{ route('favourites.create') }}">
-                            Add New
-                        </a>
-                    </div>
-                @endcan
+                @if(false)
+                    @can('favourites.create')
+                        <div class="col-sm-6">
+                            <a class="btn btn-primary float-right"
+                            href="{{ route('favourites.create') }}">
+                                Add New
+                            </a>
+                        </div>
+                    @endcan
+                @endif
             </div>
         </div>
     </section>
@@ -28,12 +30,6 @@
         <div class="card">
             <div class="card-body">
                 @include('favourites.table')
-
-                <div class="card-footer clearfix">
-                    <div class="float-right">
-                        
-                    </div>
-                </div>
             </div>
 
         </div>

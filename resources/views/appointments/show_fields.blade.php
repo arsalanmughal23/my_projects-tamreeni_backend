@@ -1,31 +1,41 @@
-<!-- Customer Id Field -->
+<!-- Customer Field -->
 <div class="col-sm-12">
-    {!! Form::label('customer_id', 'Customer Id:') !!}
-    <p>{{ $appointment->customer_id }}</p>
+    {!! Form::label('customer_id', 'Customer:') !!}
+    <p>
+        <a href="{{ route('users.show', $appointment->customer_id) }}">{{ $appointment->customer?->name ?? '#'.$appointment->customer_id }}</a>
+    </p>
 </div>
 
-<!-- User Id Field -->
+<!-- User Field -->
 <div class="col-sm-12">
-    {!! Form::label('user_id', 'User Id:') !!}
-    <p>{{ $appointment->user_id }}</p>
+    {!! Form::label('user_id', 'User:') !!}
+    <p>
+        <a href="{{ route('users.show', $appointment->user_id) }}">{{ $appointment->user?->name ?? '#'.$appointment->user_id }}</a>
+    </p>
 </div>
 
 <!-- Slot Id Field -->
 <div class="col-sm-12">
     {!! Form::label('slot_id', 'Slot Id:') !!}
-    <p>{{ $appointment->slot_id }}</p>
+    <p>
+        <a href="{{ route('slots.show', $appointment->slot_id) }}">{{ '#'.$appointment->slot_id }}</a>
+    </p>
 </div>
 
 <!-- Package Id Field -->
 <div class="col-sm-12">
     {!! Form::label('package_id', 'Package Id:') !!}
-    <p>{{ $appointment->package_id }}</p>
+    <p>
+        <a href="{{ route('packages.show', $appointment->package_id) }}">{{ '#'.$appointment->package_id }}</a>
+    </p>
 </div>
 
 <!-- Transaction Id Field -->
 <div class="col-sm-12">
     {!! Form::label('transaction_id', 'Transaction Id:') !!}
-    <p>{{ $appointment->transaction_id }}</p>
+    <p>
+        <a href="{{ route('transactions.show', $appointment->transaction_id) }}">{{ '#'.$appointment->transaction_id }}</a>
+    </p>
 </div>
 
 <!-- Date Field -->
@@ -46,33 +56,21 @@
     <p>{{ $appointment->end_time }}</p>
 </div>
 
-<!-- Currency Field -->
-<div class="col-sm-12">
-    {!! Form::label('currency', 'Currency:') !!}
-    <p>{{ $appointment->currency }}</p>
-</div>
-
-<!-- Amount Field -->
-<div class="col-sm-12">
-    {!! Form::label('amount', 'Amount:') !!}
-    <p>{{ $appointment->amount }}</p>
-</div>
-
 <!-- Type Field -->
 <div class="col-sm-12">
     {!! Form::label('type', 'Type:') !!}
-    <p>{{ $appointment->type }}</p>
+    <p>{{ $appointment->type_label }}</p>
 </div>
 
 <!-- Profession Type Field -->
 <div class="col-sm-12">
     {!! Form::label('profession_type', 'Profession Type:') !!}
-    <p>{{ $appointment->profession_type }}</p>
+    <p>{{ $appointment->profession_type_label }}</p>
 </div>
 
 <!-- Status Field -->
 <div class="col-sm-12">
     {!! Form::label('status', 'Status:') !!}
-    <p>{{ $appointment->status }}</p>
+    <p>{{ $appointment->status_label }}</p>
 </div>
 

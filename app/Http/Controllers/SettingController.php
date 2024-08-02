@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\SettingDataTable;
+use App\Helper\FileHelper;
 use App\Http\Requests;
 use App\Http\Requests\CreateSettingRequest;
 use App\Http\Requests\UpdateSettingRequest;
@@ -53,7 +54,7 @@ class SettingController extends AppBaseController
      */
     public function store(CreateSettingRequest $request)
     {
-        $input = $request->all();
+        $input = $request->validated();
 
         $setting = $this->settingRepository->create($input);
 
@@ -112,6 +113,7 @@ class SettingController extends AppBaseController
      */
     public function update($id, UpdateSettingRequest $request)
     {
+        $input = $request->validated();
         $setting = $this->settingRepository->find($id);
 
         if (empty($setting)) {
@@ -120,7 +122,11 @@ class SettingController extends AppBaseController
             return redirect(route('settings.index'));
         }
 
-        $setting = $this->settingRepository->update($request->all(), $id);
+        if ($request->hasFile('logo')) {
+            $input['logo'] = FileHelper::s3Upload($input['logo']);
+        }
+
+        $setting = $this->settingRepository->update($input, $id);
 
         Flash::success('Setting updated successfully.');
 

@@ -7,14 +7,16 @@
                 <div class="col-sm-6">
                     <h1>Settings</h1>
                 </div>
-                @can('settings.create')
-                    <div class="col-sm-6">
-                        <a class="btn btn-primary float-right"
-                           href="{{ route('settings.create') }}">
-                            Add New
-                        </a>
-                    </div>
-                @endcan
+                @if(false)
+                    @can('settings.create')
+                        <div class="col-sm-6">
+                            <a class="btn btn-primary float-right"
+                            href="{{ route('settings.create') }}">
+                                Add New
+                            </a>
+                        </div>
+                    @endcan
+                @endif
             </div>
         </div>
     </section>

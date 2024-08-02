@@ -37,14 +37,7 @@ class Role extends SpatieRole
     const DIETITIAN = 'Dietitian';
     const THERAPIST = 'Therapist';
 
-    const SLUG_SUPER_ADMIN = 'super_admin';
-    const SLUG_ADMIN = 'admin';
-    const SLUG_API_USER = 'user';
-    const SLUG_COACH = 'coach';
-    const SLUG_DIETITIAN = 'dietitian';
-    const SLUG_THERAPIST = 'therapist';
-
-    const SLUGS_MENTOR = [self::SLUG_COACH, self::SLUG_DIETITIAN, self::SLUG_THERAPIST];
+    const MENTOR = [self::COACH, self::DIETITIAN, self::THERAPIST];
 
     protected $dates = ['deleted_at'];
 

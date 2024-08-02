@@ -74,17 +74,17 @@ class Setting extends Model
      * @var array
      */
     public static $rules = [
-        'title'          => 'required|string|max:255',
-        'welcome_title'  => 'required|string|max:255',
-        'url'            => 'required|max:255',
-        'logo'           => 'required',
-        'email'          => 'required|string|max:255',
-        'contact_number' => 'required',
-        'language'       => 'required|string|max:255',
-        'service_fee'    => 'required',
-        'coach_fee'      => 'required',
-        'dietitian_fee'  => 'required',
-        'therapist_fee'  => 'required',
+        'title'          => 'sometimes|string|max:255',
+        'welcome_title'  => 'sometimes|string|max:255',
+        'url'            => 'sometimes|url|max:255',
+        'logo'           => 'sometimes|file',
+        'email'          => 'sometimes|string|email|max:255',
+        'contact_number' => 'sometimes|max:255',
+        'language'       => 'sometimes|string|max:255',
+        'service_fee'    => 'required|numeric|min:0.1',
+        'coach_fee'      => 'required|numeric|min:0.1',
+        'dietitian_fee'  => 'required|numeric|min:0.1',
+        'therapist_fee'  => 'required|numeric|min:0.1',
     ];
 
     public function setLogoAttribute($value)

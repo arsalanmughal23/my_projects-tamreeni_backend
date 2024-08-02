@@ -14,7 +14,9 @@ use App\Repositories\AppointmentRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\AppointmentResource;
+use App\Models\Role;
 use App\Repositories\PackageRepository;
+use App\Repositories\UsersRepository;
 use Response;
 use Illuminate\Support\Facades\DB;
 
@@ -27,6 +29,7 @@ class AppointmentAPIController extends AppBaseController
     public function __construct(
         private PackageRepository $packageRepository,
         private AppointmentRepository $appointmentRepository,
+        private UsersRepository $userRepository,
     ) {
     }
 
@@ -68,6 +71,18 @@ class AppointmentAPIController extends AppBaseController
             $profession_type       = intval($input['profession_type']);
             $amountInSAR           = 0;
             $paymentIntentRequired = $input['payment_intent_required'] ?? false;
+
+            $customerUser = $request->user();
+            if(!$customerUser->hasRole(Role::API_USER))
+                throw new \Error('Only Application User able to make an appointment');
+
+            $mentorUser = $this->userRepository->find($request->user_id);
+            if(!$mentorUser->hasRole(Role::MENTOR))
+                throw new \Error('Selected user is not coach, dietitian or therapist');
+
+            $appointmentProfessionTypeRole = Appointment::getRoleByProfessionType($profession_type);
+            if(!$mentorUser->hasRole($appointmentProfessionTypeRole))
+                throw new \Error('Selected profession type is not associated with the selected user');
 
             if(!$user->stripe_customer_id)
                 $user->createStripeCustomer();

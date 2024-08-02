@@ -17,7 +17,18 @@ class SettingDataTable extends DataTable
     public function dataTable($query)
     {
         $dataTable = new EloquentDataTable($query);
-
+        $dataTable->editColumn('service_fee', function(Setting $model){
+            return ($model->service_fee ?? 0).' SAR';
+        });
+        $dataTable->editColumn('coach_fee', function(Setting $model){
+            return ($model->coach_fee ?? 0).' SAR';
+        });
+        $dataTable->editColumn('dietitian_fee', function(Setting $model){
+            return ($model->dietitian_fee ?? 0).' SAR';
+        });
+        $dataTable->editColumn('therapist_fee', function(Setting $model){
+            return ($model->therapist_fee ?? 0).' SAR';
+        });
         return $dataTable->addColumn('action', 'settings.datatables_actions');
     }
 
@@ -65,13 +76,17 @@ class SettingDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'title',
-            'welcome_title',
-            'url',
-            'logo',
-            'email',
-            'contact_number',
-            'language'
+            // 'title',
+            // 'welcome_title',
+            // 'url',
+            // 'logo',
+            // 'email',
+            // 'contact_number',
+            // 'language'
+            'service_fee',
+            'coach_fee',
+            'dietitian_fee',
+            'therapist_fee',
         ];
     }
 

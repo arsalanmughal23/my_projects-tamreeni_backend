@@ -61,6 +61,13 @@ class UsersRepository extends BaseRepository
                 $q->where('id', $role);
             });
         }
+        
+        if (isset($params['role_slugs']) && is_array($params['role_slugs'])) {
+            $roleSlugs = $params['role_slugs'];
+            $query = $query->whereHas('roles', function ($q) use ($roleSlugs) {
+                return $q->whereIn('slug', $roleSlugs);
+            });
+        }
 
         if (isset($params['search'])) {
             $search = $params['search'];

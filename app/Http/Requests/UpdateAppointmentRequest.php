@@ -24,7 +24,7 @@ class UpdateAppointmentRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = Appointment::$rules;
+        $rules = Appointment::$web_update_rules;
         
         return $rules;
     }

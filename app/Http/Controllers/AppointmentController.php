@@ -25,8 +25,8 @@ class AppointmentController extends AppBaseController
     public function getSelectOptionData()
     {
         return [
-            'users' => $this->userRepository->getUsers(['role_slugs' => Role::SLUGS_MENTOR])->get(),
-            'customers' => $this->userRepository->getUsers(['role_slugs' => [Role::SLUG_API_USER]])->get(),
+            'users' => $this->userRepository->getUsers(['role_names' => Role::MENTOR])->get(),
+            'customers' => $this->userRepository->getUsers(['role_names' => [Role::API_USER]])->get(),
         ];
     }
 

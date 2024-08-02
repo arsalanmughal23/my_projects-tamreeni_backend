@@ -169,6 +169,16 @@ class Appointment extends Model
         return $this->morphMany(Transaction::class, 'transactionable');
     }
 
+    public static function getRoleByProfessionType($professionType)
+    {
+        return match ($professionType) {
+            self::PROFESSION_TYPE_COACH => Role::COACH,
+            self::PROFESSION_TYPE_DIETITIAN => Role::DIETITIAN,
+            self::PROFESSION_TYPE_THERAPIST => Role::THERAPIST,
+            default => null
+        };
+    }
+
     public function getStatusLabelAttribute()
     {
         return __('appointment.status.'.$this->status, [], 'en');

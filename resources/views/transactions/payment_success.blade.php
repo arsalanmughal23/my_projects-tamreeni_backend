@@ -60,8 +60,7 @@
         to us, just like you do! We really appreciate you giving us a moment of your time today. Thanks for being
         you.</p>
     <br>
-    <a href="#" class="button button5" style="color: #fff;" id="trigger-android">Continue
-        to App</a>
+    <a href="#" class="button button5" style="color: #fff;" id="trigger-android">Continue to App</a>
 </div>
 
 <footer class="site-footer" id="footer">
@@ -76,10 +75,20 @@
             // user_id,
         }
 
+        function mobileCallBack(redirectUrl = "{{ env('APP_URL') }}"){
+            if (!redirectUrl && typeof MessageInvoker !== "undefined") {
+                alert('MessageInvoker.postMessage');
+                MessageInvoker.postMessage(redirectUrl);
+            } else {
+                alert('redirect');
+                location.href = redirectUrl
+            }
+        }
+
         $("#trigger-android").on('click', function (e) {
             e.preventDefault();
-
-            window?.postMessage(JSON.stringify(data));
+            mobileCallBack();
+            // window?.postMessage(JSON.stringify(data));
         });
     })
 </script>

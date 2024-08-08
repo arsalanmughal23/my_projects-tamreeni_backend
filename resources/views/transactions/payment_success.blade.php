@@ -68,29 +68,21 @@
 </footer>
 
 <script type="text/javascript">
-    $(function () {
-        // const urlParams = new URLSearchParams(window.location.search);
-        // const user_id = urlParams.get('user_id');
-        let data = {
-            // user_id,
-        }
+    // const urlParams = new URLSearchParams(window.location.search);
+    // const user_id = urlParams.get('user_id');
 
-        function mobileCallBack(redirectUrl = "{{ env('APP_URL') }}"){
-            if (!redirectUrl && typeof MessageInvoker !== "undefined") {
-                alert('MessageInvoker.postMessage');
-                MessageInvoker.postMessage(redirectUrl);
-            } else {
-                alert('redirect');
-                location.href = redirectUrl
-            }
-        }
+    let data = '{{ json_encode($data) }}';
+    // data = data ? JSON.parse(data) : null;
+    // data = JSON.stringify(data)
 
-        $("#trigger-android").on('click', function (e) {
-            e.preventDefault();
-            mobileCallBack();
-            // window?.postMessage(JSON.stringify(data));
-        });
-    })
+    function sendMessageToWebView() {
+        window.ReactNativeWebView.postMessage(data);
+    }
+
+    // Send message after page load
+    window.onload = function() {
+        sendMessageToWebView();
+    };
 </script>
 </body>
 

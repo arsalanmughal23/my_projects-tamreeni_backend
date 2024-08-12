@@ -68,21 +68,20 @@
 </footer>
 
 <script type="text/javascript">
-    // const urlParams = new URLSearchParams(window.location.search);
-    // const user_id = urlParams.get('user_id');
 
     let data = '{{ json_encode($data) }}';
     // data = data ? JSON.parse(data) : null;
     // data = JSON.stringify(data)
 
-    function sendMessageToWebView() {
-        window.ReactNativeWebView.postMessage(data);
-    }
-
-    // Send message after page load
-    window.onload = function() {
+    $("#trigger-android").on('click', function (e) {
+        e.preventDefault();
         sendMessageToWebView();
-    };
+    });
+
+    function sendMessageToWebView() {
+        window.ReactNativeWebView?.postMessage(data);
+        alert('postMessage triggered');
+    }
 </script>
 </body>
 

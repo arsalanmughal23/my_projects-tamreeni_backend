@@ -120,7 +120,7 @@ class PayTabsController extends AppBaseController
 
     public function callBackFunction(Request $request)
     {
-        try{        
+        try{
             DB::beginTransaction();
             $transaction = Transaction::where(['payment_charge_id' => $request->tran_ref, 'status' => Transaction::STATUS_HOLD])
                                 ->orderBy('created_at', 'desc')->first();
@@ -132,7 +132,7 @@ class PayTabsController extends AppBaseController
 
             if ($request->payment_result['response_status'] == Transaction::PAY_TABS_SUCCESS_STATUS) {
                 $transaction->update(['status' => Transaction::STATUS_COMPLETE]);
-                
+
                 if($transactionable instanceof UserMembership) {
                     $transactionable->paymentSuccess();
                 } else {
@@ -164,7 +164,7 @@ class PayTabsController extends AppBaseController
 
     public function payTabs_return(Request $request)
     {
-        $data = $request->all();
+        // request-payload:
         // {
         //     "acquirerMessage": null,
         //     "acquirerRRN": null,
@@ -177,6 +177,11 @@ class PayTabsController extends AppBaseController
         //     "token": null,
         //     "tranRef": "TST2421300915609"
         // }
+
+        $data = $request->all();
+        if (!isset($data['respStatus']))
+            return $this->sendError('Response data missing', 422);
+
         $transactionReturnViewName = match ($data['respStatus']) {
             self::Authorized => 'payment_success',
             default => 'payment_reject'

@@ -66,19 +66,16 @@
 </footer>
 
 <script type="text/javascript">
-    $(function () {
-        // const urlParams = new URLSearchParams(window.location.search);
-        // const user_id = urlParams.get('user_id');
-        let data = {
-            // user_id,
-        }
+    let data = '{!! json_encode($data) !!}';
 
-        $("#trigger-android").on('click', function (e) {
-            e.preventDefault();
+    $("#trigger-android").on('click', function (e) {
+        e.preventDefault();
+        sendPostMessage();
+    });
 
-            window?.postMessage(JSON.stringify(data));
-        });
-    })
+    function sendPostMessage() {
+        window.ReactNativeWebView?.postMessage(data);
+    }
 </script>
 </body>
 

@@ -69,18 +69,15 @@
 
 <script type="text/javascript">
 
-    let data = '{{ json_encode($data) }}';
-    // data = data ? JSON.parse(data) : null;
-    // data = JSON.stringify(data)
+    let data = '{!! json_encode($data) !!}';
 
     $("#trigger-android").on('click', function (e) {
         e.preventDefault();
-        sendMessageToWebView();
+        sendPostMessage();
     });
 
-    function sendMessageToWebView() {
+    function sendPostMessage() {
         window.ReactNativeWebView?.postMessage(data);
-        alert('postMessage triggered');
     }
 </script>
 </body>

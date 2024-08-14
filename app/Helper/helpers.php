@@ -271,7 +271,7 @@ if (!function_exists('calculateRequiredCalories')) {
             break;
             default:
                 // throw new Error('Invalid Gender');
-            break;    
+            break;
         }
 
         $IBW        = ($heightInCm -100)-(($heightInCm -150)/$CONST_FOR_IBW_IS_HALF_OR_QUARTER)+(($age-20)/4);
@@ -284,7 +284,7 @@ if (!function_exists('calculateRequiredCalories')) {
         $REE_obese  = $CONST_FOR_BEE + ($CONST_FOR_EE_R_BM * $Adj_BW) + $FACTOR_WEIGHT - $FACTOR_AGE;
         $TEE        = $REE * $PA;
         $TEE_obese  = $REE_obese * $PA;
-        
+
         $caloriesForMeal = 0;
         $TEE_ACCORDING_TO_BMI = $userDetails->bmi < 30 ? $TEE : $TEE_obese;
         switch ($goal) {
@@ -304,7 +304,7 @@ if (!function_exists('calculateRequiredCalories')) {
                 // throw new Error('Invalid Goal');
             break;
         }
-        
+
         $caloriesForMeal < 1000 && $caloriesForMeal = 1000;
         $caloriesBreakoutModulusValue = $caloriesForMeal % 100;
         $breakdownCalories  = intval($caloriesForMeal - $caloriesBreakoutModulusValue);
@@ -351,7 +351,7 @@ if (!function_exists('generateDatesByWeek')) {
     //         // Generate Dates of Each Week from Sunday to Satruday
     //         while ($start <= $end) {
     //             $weekDates[] = $start->format('Y-m-d');
-    //             // Here we check date is reach end of the week, this loop is break 
+    //             // Here we check date is reach end of the week, this loop is break
     //             // because next week dates are generate in next week Index
     //             if($start->format('N') == now()->endOfWeek()->format('N'))
     //                 break;
@@ -367,7 +367,7 @@ if (!function_exists('generateDatesByWeek')) {
 
     //     return $weeks;
     // }
-    
+
     function generateDatesByWeek(Carbon $startDate, Carbon $endDate)
     {
         $startAt = clone $startDate;
@@ -388,7 +388,7 @@ if (!function_exists('generateDatesByWeek')) {
             while ($startAt <= $endAt) {
                 // $weekDates[] = $startAt->format('Y-m-d');
                 $weekDates[] = $startAt->toISOString();
-                // Here we check date is reach end of the week, this loop is break 
+                // Here we check date is reach end of the week, this loop is break
                 // because next week dates are generate in next week Index
                 if($startAt->format('N') == now()->endOfWeek()->format('N'))
                     break;

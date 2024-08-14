@@ -18,6 +18,14 @@ class SlotDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
+        $dataTable->editColumn('user_id', function (Slot $model) {
+            return ($model->user) ? $model->user?->name : "N/A";
+        });
+
+        $dataTable->editColumn('type', function(Slot $model) {
+            return $model->type_text;
+        });
+
         $dataTable->editColumn('created_at', function (Slot $model) {
             return $model->created_at?->format('Y-m-d H:i:s') ?? 'N/A';
         });
@@ -69,8 +77,9 @@ class SlotDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'user_id',
+            'user_id' => ['title' => 'User'],
             'day',
+            'type',
             'start_time',
             'end_time',
             'created_at'

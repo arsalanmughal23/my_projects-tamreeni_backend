@@ -17,8 +17,8 @@ class CreateSlotsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('start_time');
-            $table->string('end_time');
+            $table->time('start_time');
+            $table->time('end_time');
             $table->string('day');
             $table->integer('type')->comment("10 => morning, 20 =>afternoon, 30 => evening");
             $table->timestamps();

@@ -9,17 +9,20 @@ use App\Http\Requests\UpdateSlotRequest;
 use App\Repositories\SlotRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
+use App\Models\Role;
+use App\Models\Slot;
+use App\Repositories\UsersRepository;
+use Carbon\Carbon;
+use Error;
 use Response;
 
 class SlotController extends AppBaseController
 {
     /** @var SlotRepository $slotRepository*/
-    private $slotRepository;
-
-    public function __construct(SlotRepository $slotRepo)
-    {
-        $this->slotRepository = $slotRepo;
-    }
+    public function __construct(
+        private SlotRepository $slotRepository,
+        private UsersRepository $userRepository
+    ) {}
 
     /**
      * Display a listing of the Slot.
@@ -40,7 +43,10 @@ class SlotController extends AppBaseController
      */
     public function create()
     {
-        return view('slots.create');
+        $users = $this->userRepository->getUsers(['role_names' => Role::MENTOR])->pluck('name', 'id');
+        $daysSelectOptions = $this->slotRepository->getDaysSelectOptions();
+        $slotTypesSelectOptions = $this->slotRepository->getTypeSelectOptions();
+        return view('slots.create', compact('users', 'daysSelectOptions', 'slotTypesSelectOptions'));
     }
 
     /**
@@ -52,13 +58,41 @@ class SlotController extends AppBaseController
      */
     public function store(CreateSlotRequest $request)
     {
-        $input = $request->all();
+        try {
+            $input = $request->all();
 
-        $slot = $this->slotRepository->create($input);
+            $startTime = Carbon::parse($request->start_time);
+            $endTime = Carbon::parse($request->end_time);
 
-        Flash::success('Slot saved successfully.');
+            if(!$startTime->isBefore($endTime))
+                throw new Error('Shift start time should before end time');
 
-        return redirect(route('slots.index'));
+            $shiftTimeLimit = Slot::SHIFT_TIME_LIMITS[$request->type];
+            [$shiftStartAfter, $shiftEndBefore] = $shiftTimeLimit;
+            if (!$startTime->between($shiftStartAfter, $shiftEndBefore) || !$endTime->between($shiftStartAfter, $shiftEndBefore))
+                throw new Error('Shift start & end time must between '.$shiftStartAfter.' - '.$shiftEndBefore);
+
+            $slotExists = $this->slotRepository->getBusySlotsDuringTimeDuration($startTime, $endTime)
+                ->where([
+                    'user_id' => $request->user_id,
+                    'day' => $request->day,
+                    'type' => $request->type
+                ])
+                ->exists();
+
+            if ($slotExists)
+                throw new Error('Slot is already exists during your selected duration');
+
+            $slot = $this->slotRepository->create($input);
+
+            Flash::success('Slot saved successfully.');
+
+            return redirect(route('slots.index'));
+
+        } catch (Error $e) {
+            Flash::error($e->getMessage());
+            return redirect()->back();
+        }
     }
 
     /**
@@ -98,7 +132,11 @@ class SlotController extends AppBaseController
             return redirect(route('slots.index'));
         }
 
-        return view('slots.edit')->with('slot', $slot);
+        $users = $this->userRepository->getUsers(['role_names' => Role::MENTOR])->pluck('name', 'id');
+        $daysSelectOptions = $this->slotRepository->getDaysSelectOptions();
+        $slotTypesSelectOptions = $this->slotRepository->getTypeSelectOptions();
+
+        return view('slots.edit', compact('slot', 'users', 'daysSelectOptions', 'slotTypesSelectOptions'));
     }
 
     /**
@@ -111,19 +149,47 @@ class SlotController extends AppBaseController
      */
     public function update($id, UpdateSlotRequest $request)
     {
-        $slot = $this->slotRepository->find($id);
+        try {
+            $data = $request->validated();
+            $slot = $this->slotRepository->find($id);
 
-        if (empty($slot)) {
-            Flash::error('Slot not found');
+            if (empty($slot)) {
+                Flash::error('Slot not found');
+                return redirect(route('slots.index'));
+            }
+
+            $startTime = Carbon::parse($request->start_time);
+            $endTime = Carbon::parse($request->end_time);
+
+            if(!$startTime->isBefore($endTime))
+                throw new Error('Shift start time should before end time');
+
+            $shiftTimeLimit = Slot::SHIFT_TIME_LIMITS[$request->type];
+            [$shiftStartAfter, $shiftEndBefore] = $shiftTimeLimit;
+            if (!$startTime->between($shiftStartAfter, $shiftEndBefore) || !$endTime->between($shiftStartAfter, $shiftEndBefore))
+                throw new Error('Shift start & end time must between '.$shiftStartAfter.' - '.$shiftEndBefore);
+
+            $slotExists = $this->slotRepository->getBusySlotsDuringTimeDuration($startTime, $endTime)
+                ->where([
+                    'user_id' => $request->user_id,
+                    'day' => $request->day,
+                    'type' => $request->type
+                ])
+                ->whereNotIn('id', [$id])
+                ->exists();
+
+            if ($slotExists)
+                throw new Error('Slot is already exists during your selected duration');
+
+            $slot = $this->slotRepository->update($data, $id);
+            Flash::success('Slot updated successfully.');
 
             return redirect(route('slots.index'));
+
+        } catch (Error $e) {
+            Flash::error($e->getMessage());
+            return redirect()->back();
         }
-
-        $slot = $this->slotRepository->update($request->all(), $id);
-
-        Flash::success('Slot updated successfully.');
-
-        return redirect(route('slots.index'));
     }
 
     /**

@@ -46,6 +46,27 @@ class SlotRepository extends BaseRepository
         return $query;
     }
 
+    public function getBusySlotsDuringTimeDuration($startTime, $endTime)
+    {
+        $model = $this->model()::query();
+
+        $model->where(function($query) use ($startTime, $endTime) {
+            return $query->where(function($q) use ($startTime, $endTime) {
+                return $q->whereBetween('start_time', [
+                    $startTime, $endTime
+                ])
+                ->orWhereBetween('end_time', [
+                    $startTime, $endTime
+                ]);
+            })->orWhere(function($q) use ($startTime, $endTime) {
+                return $q->where('start_time', '<=', $startTime)
+                        ->where('end_time', '>=', $endTime);
+            });
+        });
+
+        return $model;
+    }
+
     public function findByTimeAndType($user_id, $start_time, $end_time, $day, $type)
     {
 
@@ -73,5 +94,17 @@ class SlotRepository extends BaseRepository
             ->orderBy('start_time')
             ->get()
             ->groupBy('type');
+    }
+
+    public function getDaysSelectOptions()
+    {
+        $days = \Carbon\Carbon::getDays();
+        return array_combine($days, $days);
+    }
+
+    public function getTypeSelectOptions()
+    {
+        $model = $this->model();
+        return $model::$typeTexts;
     }
 }

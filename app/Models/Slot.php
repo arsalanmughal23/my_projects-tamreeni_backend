@@ -37,6 +37,12 @@ class Slot extends Model
         self::EVENING   => 'Evening',
     ];
 
+    const SHIFT_TIME_LIMITS = [
+        self::MORNING => ['04:00', '10:00'],
+        self::AFTERNOON => ['11:00', '15:00'],
+        self::EVENING => ['16:00', '20:00'],
+    ];
+
     protected $dates = ['deleted_at'];
 
 
@@ -47,6 +53,8 @@ class Slot extends Model
         'day',
         'type'
     ];
+
+    public $appends = ['type_text'];
 
     /**
      * The attributes that should be casted to native types.
@@ -67,10 +75,10 @@ class Slot extends Model
      * @var array
      */
     public static $rules = [
-        'user_id'    => 'required',
+        'user_id'    => 'required|integer|exists:users,id',
         'start_time' => 'required|string|max:191',
         'end_time'   => 'required|string|max:191',
-        'day'        => 'required|string|in:mon,tue,wed,thus,fri,sat,sun',
+        'day'        => 'required|string|in:Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday',
         'type'       => 'required|integer|in:10,20,30',
     ];
 
@@ -80,5 +88,10 @@ class Slot extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function getTypeTextAttribute()
+    {
+        return self::$typeTexts[$this->type];
     }
 }

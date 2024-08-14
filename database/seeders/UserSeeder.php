@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\PaymentController;
+use Carbon\Carbon;
 
 class UserSeeder extends Seeder
 {
@@ -55,9 +56,9 @@ class UserSeeder extends Seeder
             'password' => 'Demo@123'
         ])->assignRole($coachRole);
         Slot::insert([
-            [ "user_id" => $coachUser->id, "start_time" => "08:00 PM", "end_time" => "09:00 PM", "day" => "Monday", "type" => 10 ],
-            [ "user_id" => $coachUser->id, "start_time" => "09:00 PM", "end_time" => "10:00 PM", "day" => "Monday", "type" => 20 ],
-            [ "user_id" => $coachUser->id, "start_time" => "10:00 PM", "end_time" => "11:00 PM", "day" => "Monday", "type" => 30 ]
+            [ "user_id" => $coachUser->id, "start_time" => Carbon::parse("08:00"), "end_time" => Carbon::parse("09:00"), "day" => "Monday", "type" => 10 ],
+            [ "user_id" => $coachUser->id, "start_time" => Carbon::parse("12:00"), "end_time" => Carbon::parse("13:00"), "day" => "Monday", "type" => 20 ],
+            [ "user_id" => $coachUser->id, "start_time" => Carbon::parse("18:00"), "end_time" => Carbon::parse("19:00"), "day" => "Monday", "type" => 30 ]
         ]);
 
         User::create([
@@ -66,7 +67,7 @@ class UserSeeder extends Seeder
             'email_verified_at' => now(),
             'password' => 'Demo@123'
         ])->assignRole($dietitianRole);
-        
+
         User::create([
             'name' => 'Therapist',
             'email' => 'therapist1@yopmail.com',

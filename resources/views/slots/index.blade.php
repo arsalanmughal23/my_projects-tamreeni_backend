@@ -29,11 +29,6 @@
             <div class="card-body">
                 @include('slots.table')
 
-                <div class="card-footer clearfix">
-                    <div class="float-right">
-                        
-                    </div>
-                </div>
             </div>
 
         </div>

@@ -29,7 +29,7 @@ Route::post('/paytabs-callback', [App\Http\Controllers\PayTabsController::class,
 Route::group(['middleware' => ['auth', 'dynamic_permission']], function () {
 
     Route::resource('users', App\Http\Controllers\UsersController::class);
-    
+
     Route::get('check-user-generatable-plans/{user}', [App\Http\Controllers\API\UserAPIController::class, 'checkUserGeneratablePlans'])->name('check-user-generatable-plans');
 
     Route::post('/generate-crud-from-table', [App\Http\Controllers\GenerateTableController::class, 'generateCrudFromTable'])->name('dbtables.generate_crud_from_table');

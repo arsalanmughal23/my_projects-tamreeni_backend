@@ -21,7 +21,7 @@ class TransactionResource extends JsonResource
             "transactionable_type"  => $this->transactionable_type,
             "transactionable_id"    => $this->transactionable_id,
             // "payment_intent_id"     => $this->payment_intent_id,
-            // "payment_charge_id"     => $this->payment_charge_id,
+            "payment_charge_id"     => $this->payment_charge_id,
             "description"   => $this->description,
             "data"          => $this->data,
             "currency"      => $this->currency,
@@ -32,7 +32,7 @@ class TransactionResource extends JsonResource
             "deleted_at"    => $this->deleted_at
         ];
     }
-    
+
     public static function collection($resource)
     {
         if ($resource instanceof LengthAwarePaginator) {

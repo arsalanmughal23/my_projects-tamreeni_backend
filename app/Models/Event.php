@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -71,10 +72,10 @@ class Event extends Model
      */
     protected $casts = [
         'id'               => 'integer',
-        'title'            => 'string',
+        'title'            => 'json',
         'date'             => 'string',
         'duration'         => 'integer',
-        'description'      => 'string',
+        'description'      => 'json',
         'image'            => 'string',
         'record_video_url' => 'string',
         'user_id'          => 'integer',
@@ -99,10 +100,24 @@ class Event extends Model
         'description'    => 'required|array',
         'description.en' => 'required|string',
         'description.ar' => 'required|string',
-        'image'          => 'nullable|string',
-        'body_part_id'   => 'nullable|integer',
-        'equipment_id'   => 'nullable|integer',
+        'image'          => 'nullable|file|mimes:jpeg,png|max:5000',
+        'body_part_id'   => 'required|integer|exists:body_parts,id',
+        'equipment_id'   => 'required|integer|exists:exercise_equipments,id',
+        'user_id'        => 'required|integer|exists:users,id',
     ];
+
+    public static function booted()
+    {
+        static::creating(function (self $event) {
+            $event->duration = Carbon::parse($event->start_time)->diffInMinutes($event->end_time);
+        });
+
+        static::updating(function (self $event) {
+
+            if ($event->isDirty(['start_time', 'end_time']))
+                $event->duration = Carbon::parse($event->start_time)->diffInMinutes($event->end_time);
+        });
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -151,5 +166,5 @@ class Event extends Model
         }
         return $isFavourite;
     }
-    
+
 }

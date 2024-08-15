@@ -25,7 +25,7 @@
 <!-- Duration Field -->
 <div class="col-sm-12">
     {!! Form::label('duration', 'Duration:') !!}
-    <p>{{ $event->duration }}</p>
+    <p>{{ ($event->duration ?? 0) . ' m' }}</p>
 </div>
 
 <!-- Description Field -->

@@ -17,7 +17,7 @@
 
         <div class="card">
 
-            {!! Form::model($event, ['route' => ['events.update', $event->id], 'method' => 'patch']) !!}
+            {!! Form::model($event, ['route' => ['events.update', $event->id], 'method' => 'patch', 'files' => true]) !!}
 
             <div class="card-body">
                 <div class="row">

@@ -3,23 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\EventDataTable;
+use App\Helper\FileHelper;
 use App\Http\Requests;
 use App\Http\Requests\CreateEventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Repositories\EventRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
+use App\Models\Role;
+use App\Repositories\BodyPartRepository;
+use App\Repositories\ExerciseEquipmentRepository;
+use App\Repositories\UsersRepository;
 use Response;
 
 class EventController extends AppBaseController
 {
     /** @var EventRepository $eventRepository*/
-    private $eventRepository;
 
-    public function __construct(EventRepository $eventRepo)
-    {
-        $this->eventRepository = $eventRepo;
-    }
+    public function __construct(
+        private EventRepository $eventRepository,
+        private UsersRepository $userRepository,
+        private BodyPartRepository $bodyPartRepository,
+        private ExerciseEquipmentRepository $exerciseEquipmentRepository
+    ) {}
 
     /**
      * Display a listing of the Event.
@@ -40,7 +46,12 @@ class EventController extends AppBaseController
      */
     public function create()
     {
-        return view('events.create');
+        $data = $this->getSelectOptionData();
+        $users = $data['users'] ?? [];
+        $bodyParts = $data['bodyParts'] ?? [];
+        $exerciseEquipments = $data['exerciseEquipments'] ?? [];
+
+        return view('events.create', compact('users', 'bodyParts', 'exerciseEquipments'));
     }
 
     /**
@@ -52,9 +63,11 @@ class EventController extends AppBaseController
      */
     public function store(CreateEventRequest $request)
     {
-        $input = $request->all();
+        $input = $request->validated();
 
-        $input['user_id'] = $request->user->id;
+        if ($request->hasFile('image'))
+            $input['image'] = FileHelper::s3Upload($input['image']);
+
         $event = $this->eventRepository->create($input);
 
         Flash::success('Event saved successfully.');
@@ -91,6 +104,11 @@ class EventController extends AppBaseController
      */
     public function edit($id)
     {
+        $data = $this->getSelectOptionData();
+        $users = $data['users'] ?? [];
+        $bodyParts = $data['bodyParts'] ?? [];
+        $exerciseEquipments = $data['exerciseEquipments'] ?? [];
+
         $event = $this->eventRepository->find($id);
 
         if (empty($event)) {
@@ -99,7 +117,7 @@ class EventController extends AppBaseController
             return redirect(route('events.index'));
         }
 
-        return view('events.edit')->with('event', $event);
+        return view('events.edit', compact('event', 'users', 'bodyParts', 'exerciseEquipments'));
     }
 
     /**
@@ -113,6 +131,7 @@ class EventController extends AppBaseController
     public function update($id, UpdateEventRequest $request)
     {
         $event = $this->eventRepository->find($id);
+        $input = $request->validated();
 
         if (empty($event)) {
             Flash::error('Event not found');
@@ -120,7 +139,10 @@ class EventController extends AppBaseController
             return redirect(route('events.index'));
         }
 
-        $event = $this->eventRepository->update($request->all(), $id);
+        if ($request->hasFile('image'))
+            $input['image'] = FileHelper::s3Upload($input['image']);
+
+        $event = $this->eventRepository->update($input, $id);
 
         Flash::success('Event updated successfully.');
 
@@ -149,5 +171,14 @@ class EventController extends AppBaseController
         Flash::success('Event deleted successfully.');
 
         return redirect(route('events.index'));
+    }
+
+    public function getSelectOptionData()
+    {
+        return [
+            'users' => $this->userRepository->getUsers(['role_names' => Role::MENTOR])->pluck('name', 'id'),
+            'bodyParts' => $this->bodyPartRepository->pluck('name', 'id'),
+            'exerciseEquipments' => $this->exerciseEquipmentRepository->pluck('name', 'id'),
+        ];
     }
 }

@@ -18,6 +18,28 @@ class EventDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
+        $dataTable->editColumn('user_id', function(Event $model) {
+            return $model->user?->name ?? '';
+        });
+        $dataTable->editColumn('body_part_id', function(Event $model) {
+            return $model->bodyPart?->name ?? '';
+        });
+        $dataTable->editColumn('equipment_id', function(Event $model) {
+            return $model->equipment?->name ?? '';
+        });
+
+        $dataTable->editColumn('duration', function(Event $model) {
+            return ($model->duration ?? 0) . ' m';
+        });
+
+        $dataTable->editColumn('title', function(Event $model) {
+            return $model->title;
+        });
+
+        $dataTable->editColumn('description', function(Event $model) {
+            return $model->description;
+        });
+
         return $dataTable->addColumn('action', 'events.datatables_actions');
     }
 
@@ -70,11 +92,11 @@ class EventDataTable extends DataTable
             'start_time',
             'end_time',
             'duration',
-            'description',
-            'image',
-            'user_id',
-            'body_part_id',
-            'equipment_id'
+            // 'description',
+            // 'image',
+            'user_id' => [ 'title' => 'User' ],
+            'body_part_id' => [ 'title' => 'Body Part' ],
+            'equipment_id' => [ 'title' => 'Equipment' ]
         ];
     }
 

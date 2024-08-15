@@ -31,7 +31,7 @@ use Config;
  * @package App\Http\Controllers\API
  */
 class UserAPIController extends AppBaseController
-{    
+{
     public function __construct(
         private UsersRepository $userRepository,
         private UserDetailRepository $userDetailRepository,
@@ -229,10 +229,10 @@ class UserAPIController extends AppBaseController
 
             $userDetails->terminateAnswerAttempts();
             $userAnswerAttempt = $userDetails->lastAnswerAttempt(QuestionAnswerAttempt::STATUS_PENDING);
-            $userAnswerAttempt?->update([ 
-                'workout_plan_id' => $workoutPlan->id, 
-                'nutrition_plan_id' => $nutritionPlan->id, 
-                'status' => QuestionAnswerAttempt::STATUS_ACTIVE 
+            $userAnswerAttempt?->update([
+                'workout_plan_id' => $workoutPlan->id,
+                'nutrition_plan_id' => $nutritionPlan->id,
+                'status' => QuestionAnswerAttempt::STATUS_ACTIVE
             ]);
 
             $userDetails->planed_answer_attempt_id = $userDetails->unplaned_answer_attempt_id;
@@ -254,13 +254,13 @@ class UserAPIController extends AppBaseController
     public function checkUserGeneratablePlans(Request $request, User $user)
     {
         $userDetails = $user->details;
-        if (!$userDetails->goal) {
+        if (!$userDetails || !$userDetails->goal) {
             return $this->sendError('Goal not set');
         }
 
         if(!$userDetails->is_last_attempt_plan_generated)
             $userDetails = $this->userDetailRepository->updateRecord(['algo_required_calories' => calculateRequiredCalories($userDetails)], $user);
-            
+
         $exercise = $this->exerciseRepository->getExercises(['body_parts' => $userDetails->body_parts, 'equipment_type' => $userDetails->equipment_type]);
         $majorLiftExercises = clone $exercise;
         $accessoryMovementExercises = clone $exercise;

@@ -1,11 +1,13 @@
 <!-- Name Field -->
 <div class="col-sm-12">
     <p>
-    @if(isset($users))
-        <!-- Image Field -->
+        @if(isset($users))
+            <!-- Image Field -->
+            {!! Form::label('image', 'Image:') !!}
+            <br>
             <img class="user-image"
-                 src="{{ isset($users?->details)? $users?->details->image : asset('public/image/user.png') }}"
-                 width="100" onerror="brokenImageHandler(this);">
+                src="{{ isset($users?->details)? $users?->details->image : asset('public/image/user.png') }}"
+                width="100" onerror="brokenImageHandler(this);">
         @endif
     </p>
 </div>
@@ -38,6 +40,12 @@
 <div class="col-sm-12">
     {!! Form::label('created_at', 'Created At:') !!}
     <p>{{ $users->created_at }}</p>
+</div>
+
+<div class="col-sm-12">
+    <a href="{{ route('user_details.show', $users?->details?->id ?? 0) }}" class="btn btn-primary my-2">
+        View Details
+    </a>
 </div>
 
 @if(auth()->user()->hasRole('Super-Admin'))

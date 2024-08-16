@@ -3,10 +3,6 @@
         <div class="card">
             <div class="card-body">
 
-                <!-- User Id Field -->
-                {!! Form::label('user_id', 'User Id:') !!}
-                <p>{{ $userDetail->user_id }}</p>
-
                 <!-- First Name Field -->
                 {!! Form::label('first_name', 'First Name:') !!}
                 <p>{{ $userDetail->first_name }}</p>
@@ -58,6 +54,7 @@
     <div class="col-sm-6">
         <div class="card">
             <div class="card-body">
+                <h2>Impactable Details</h2>
 
                 <!-- Gender Field -->
                 {!! Form::label('gender', 'Gender:') !!}

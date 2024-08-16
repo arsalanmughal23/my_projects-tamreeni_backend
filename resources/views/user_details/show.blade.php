@@ -4,8 +4,13 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-6">
+                <div class="col-sm-6 d-flex justify-content-between">
                     <h1>User Detail Details</h1>
+
+                    <!-- User Field -->
+                    <div>
+                        <a href="{{ route('users.show', $userDetail->user_id) }}" class="btn btn-primary">View User</a>
+                    </div>
                 </div>
                 <div class="col-sm-6">
                     <a class="btn btn-default float-right"

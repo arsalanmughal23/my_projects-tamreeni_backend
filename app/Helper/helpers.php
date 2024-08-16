@@ -422,6 +422,12 @@ if (!function_exists('calcualteDiscountPrice')) {
         };
     }
 }
+if (!function_exists('getOptionsLanguage')) {
+    function getOptionsLanguage($array, $lang = 'en')
+    {
+        return array_map(function($data) use($lang) { return __('options.'.$data, [], $lang); }, $array);
+    }
+}
 if (!function_exists('pickRandomIndices')) {
     function pickRandomIndices($array, $count)
     {

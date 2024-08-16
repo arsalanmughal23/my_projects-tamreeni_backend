@@ -42,7 +42,7 @@
 <!-- Dob Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('dob', 'Dob:') !!}
-    {!! Form::date('dob', isset($userDetail) ? $userDetail->dob->format('Y-m-d') : null, ['class' => 'form-control', 'max' => now()->format('Y-m-d'), 'disabled' => true]) !!}
+    {!! Form::date('dob', isset($userDetail) ? $userDetail->dob?->format('Y-m-d') : null, ['class' => 'form-control', 'max' => now()->format('Y-m-d'), 'disabled' => true]) !!}
     <!-- {!! Form::text('dob', null, ['class' => 'form-control','id'=>'dob', 'disabled' => true]) !!} -->
 </div>
 

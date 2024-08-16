@@ -37,7 +37,7 @@
 <!-- Image Field -->
 <div class="col-sm-12">
     {!! Form::label('image', 'Image:') !!}
-    <p>{{ $userDetail->image }}</p>
+    <p><img src="{{ $userDetail->image }}" alt=""></p>
 </div>
 
 <!-- Is Social Login Field -->
@@ -75,4 +75,3 @@
     {!! Form::label('height_in_cm', 'Height In CM:') !!}
     <p>{{ $userDetail->height_in_cm }}</p>
 </div>
-

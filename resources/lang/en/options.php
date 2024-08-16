@@ -9,6 +9,9 @@ return [
     'male'      => 'Male',
     'female'    => 'Female',
 
+    'en' => 'English',
+    'ar' => 'Arabic',
+
     '1_to_2_days_a_week'    => '1 to 2 days a week',
     '2_to_4_days_a_week'    => '2 to 4 days a week',
     '5_days_a_week'         => '5 days a week',

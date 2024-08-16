@@ -20,7 +20,7 @@ class Constant extends Model
     use HasFactory;
 
     public $table = 'constants';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
@@ -32,12 +32,15 @@ class Constant extends Model
 
     const CONST_WEIGHT_UNIT = 'weight_unit';
         const CONST_WEIGHT_OPTS = ['kg', 'lbs'];
-    
+
     const CONST_MEAL_TYPE = 'meal_type';
         const CONST_MT_OPTS = ['breakfast','lunch','dinner'];
 
     const CONST_LANGUAGE = 'language';
         const CONST_LANG_OPTS = ['en', 'ar'];
+
+    const CONST_GENDER = 'gender';
+        const CONST_GENDER_OPTS = ['male', 'female'];
 
     protected $dates = ['deleted_at'];
 
@@ -93,7 +96,7 @@ class Constant extends Model
 
     //     return $this->attributes;
     // }
-    
+
     public function setKeyAttribute($key)
     {
         $this->attributes['key'] = $key;
@@ -104,5 +107,4 @@ class Constant extends Model
         return $this->attributes;
     }
 
-    
 }

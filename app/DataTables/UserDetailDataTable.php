@@ -18,7 +18,18 @@ class UserDetailDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'user_details.datatables_actions');
+        $dataTable->editColumn('user_id', function(UserDetail $model){
+            return '<a href="'.route('users.show', $model->user_id).'">'.$model->user->name.'</a>';
+        });
+        $dataTable->editColumn('is_social_login', function(UserDetail $model){
+            return $model->is_social_login ? 'Yes' : 'No';
+        });
+        $dataTable->editColumn('push_notification', function(UserDetail $model){
+            return $model->push_notification ? 'On' : 'Off';
+        });
+
+        return $dataTable->addColumn('action', 'user_details.datatables_actions')
+                ->rawColumns(['user_id', 'action']);
     }
 
     /**
@@ -65,20 +76,21 @@ class UserDetailDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'user_id',
-            'first_name',
-            'last_name',
-            'address',
-            'phone_number',
-            'dob',
-            'image',
+            'user_id' => [ 'title' => 'User' ],
+            // 'first_name',
+            // 'last_name',
+            // 'address',
+            // 'phone_number',
+            // 'dob',
+            // 'image',
+            // 'language',
             'is_social_login',
             'push_notification',
             'gender',
-            'language',
-            'current_weight_in_kg',
-            'target_weight_in_kg',
-            'height_in_cm'
+            'bmi',
+            // 'current_weight_in_kg',
+            // 'target_weight_in_kg',
+            // 'height_in_cm'
         ];
     }
 

@@ -84,18 +84,18 @@ class UserDetailRepository extends BaseRepository
     public function clearQuestionnaireUserDetails(UserDetail $userDetails)
     {
         $data = [
-            'language' => null,     'goal' => null,         'gender' => null,           'dob' => null, 
-            'height' => null,       'height_unit' => null,  'current_weight' => null,   'current_weight_unit' => null, 
+            'language' => null,     'goal' => null,         'gender' => null,           'dob' => null,
+            'height' => null,       'height_unit' => null,  'current_weight' => null,   'current_weight_unit' => null,
             'target_weight' => null,'target_weight_unit' => null,
 
             'workout_days_in_a_week' => null,'how_long_time_to_workout' => null,
-            'equipment_type' => null,        'reach_goal_target_date' => null, 
-            
+            'equipment_type' => null,        'reach_goal_target_date' => null,
+
             'body_parts' => [], 'physically_active' => null, 'level' => null,
-            
-            'squat__one_rep_max_in_kg' => null, 'deadlift__one_rep_max_in_kg' => null, 
-            'bench__one_rep_max_in_kg' => null, 'overhead__one_rep_max_in_kg' => null, 
-            
+
+            'squat__one_rep_max_in_kg' => null, 'deadlift__one_rep_max_in_kg' => null,
+            'bench__one_rep_max_in_kg' => null, 'overhead__one_rep_max_in_kg' => null,
+
             'health_status' => null,'daily_steps_taken' => null,
             'diet_type' => null,    'food_preferences' => [],
             'calories' => 0,
@@ -122,5 +122,19 @@ class UserDetailRepository extends BaseRepository
         $userDetails->planed_answer_attempt_id = $userDetails->unplaned_answer_attempt_id;
         $userDetails->save();
         return $userDetails->refresh();
+    }
+
+    public function getPersonalStatistics(UserDetail $userDetails)
+    {
+        $calculatedBMI = $userDetails->bmi;
+        return [
+            'bmi'       => $calculatedBMI,
+            'bmi_description' => __('messages.bmi_description', ['bmi' => $calculatedBMI]),
+            // 'user_details'      => $userDetails,
+            'current_day_required_calories' => $userDetails?->algo_required_calories ?? 0,
+            'workout_week_count' => now()->setTime(0,0)->diffInWeeks($userDetails->reach_goal_target_date) ?? 0,
+            'current_week_target_calroies' => ($userDetails?->algo_required_calories ?? 0) * 7,
+            'current_week_consumed_calroies' => $userDetails->calories,
+        ];
     }
 }

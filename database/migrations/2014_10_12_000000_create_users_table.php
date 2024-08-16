@@ -13,7 +13,7 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        
+
         if (!Schema::hasTable('users')) {
             Schema::create('users', function (Blueprint $table) {
                 $table->id();
@@ -31,12 +31,12 @@ class CreateUsersTable extends Migration
                 $table->timestamps();
             });
         }
-        
+
         if (!Schema::hasTable('user_details')) {
             Schema::create('user_details', function (Blueprint $table) {
                 $table->increments('id');
                 $table->unsignedBigInteger('user_id');
-                
+
                 $table->string('first_name')->nullable();
                 $table->string('last_name')->nullable();
                 $table->string('address')->nullable();
@@ -45,7 +45,7 @@ class CreateUsersTable extends Migration
                 $table->date('dob')->nullable();
                 $table->integer('age')->default(0)->nullable();
                 $table->text('image')->nullable();
-                
+
                 $table->tinyInteger('is_social_login')->default(0)->comment('0,1');
                 $table->tinyInteger('push_notification')->default(1)->comment('0,1');
 
@@ -53,12 +53,12 @@ class CreateUsersTable extends Migration
                 $table->enum('language', ['en', 'ar'])->nullable()->comment('en, ar'); // CONSTANT: en, ar
 
                 $table->string('goal')->nullable()->comment('goal'); // CONSTANT: lose_weight, gain_weight, build_muscle, get_fit
-                
+
                 $table->string('workout_days_in_a_week')->nullable()->comment('workout_days_in_a_week');
                 $table->string('how_long_time_to_workout')->nullable()->comment('for making an impact on workout plan for assigning exercises');
                 $table->string('workout_duration_per_day')->nullable()->comment('workout_duration_per_day');
                 $table->string('equipment_type')->nullable()->comment('equipment_type');
-                
+
                 $table->float('height_in_cm')->nullable()->default(0);
                 $table->float('height')->nullable()->default(0);
                 $table->string('height_unit')->nullable()->comment('height_unit'); // CONSTANT: cm, ft
@@ -71,7 +71,7 @@ class CreateUsersTable extends Migration
 
                 $table->date('reach_goal_target_date')->nullable()->comment('reach_goal_target_date');
                 $table->string('body_parts')->default(json_encode([]))->comment('body_parts');
-                
+
                 $table->string('physically_active')->nullable()->comment('physically_active');
 
                 $table->string('level')->nullable()->comment('level');
@@ -79,25 +79,25 @@ class CreateUsersTable extends Migration
                 $table->float('deadlift__one_rep_max_in_kg')->nullable()->default(0);
                 $table->float('bench__one_rep_max_in_kg')->nullable()->default(0);
                 $table->float('overhead__one_rep_max_in_kg')->nullable()->default(0);
-                
+
                 $table->string('health_status')->nullable();
                 $table->string('daily_steps_taken')->nullable();
-                
+
                 $table->string('diet_type')->nullable()->comment('diet_type'); // CONSTANT: traditional, keto
                 $table->string('food_preferences')->default(json_encode([]))->comment('food_preferences');
-                
+
                 $table->float('calories')->default(0.00);
                 $table->float('algo_required_calories')->default(0.00);
                 $table->boolean('is_last_attempt_plan_generated')->default(0);
                 $table->float('bmi')->default(0.00);
-                
+
                 $table->unsignedBigInteger('unplaned_answer_attempt_id')->nullable();
                 $table->unsignedBigInteger('planed_answer_attempt_id')->nullable();
 
                 $table->unsignedBigInteger('delete_account_type_id')->nullable();
                 $table->softDeletes();
                 $table->timestamps();
-                
+
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             });
         }
@@ -108,14 +108,14 @@ class CreateUsersTable extends Migration
                 $table->unsignedBigInteger('user_id');
                 $table->string('device_type')->comment('ios, android, web');
                 $table->text('device_token');
-                
+
                 $table->softDeletes();
                 $table->timestamps();
-                
+
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             });
         }
-        
+
         if (!Schema::hasTable('user_social_accounts')) {
             Schema::create('user_social_accounts', function (Blueprint $table) {
                 $table->increments('id');
@@ -125,10 +125,10 @@ class CreateUsersTable extends Migration
                 $table->text('token');
                 $table->timestamp('expires_at')->nullable();
                 $table->tinyInteger('status')->default(1)->comment('0,1');
-                
+
                 $table->softDeletes();
                 $table->timestamps();
-                
+
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             });
         }
@@ -147,13 +147,13 @@ class CreateUsersTable extends Migration
                 $table->dropForeign(['user_id']);
             });
         }
-        
+
         if(Schema::hasTable('user_devices')){
             Schema::table('user_devices', function (Blueprint $table) {
                 $table->dropForeign(['user_id']);
             });
         }
-        
+
         if(Schema::hasTable('user_social_accounts')){
             Schema::table('user_social_accounts', function (Blueprint $table) {
                 $table->dropForeign(['user_id']);

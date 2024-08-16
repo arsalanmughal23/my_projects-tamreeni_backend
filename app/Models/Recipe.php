@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * Class Recipe
@@ -33,16 +34,19 @@ class Recipe extends Model
 {
     use SoftDeletes;
 
+    use HasTranslations;
+
     use HasFactory;
 
     public $table = 'recipes';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
 
     protected $dates = ['deleted_at'];
     protected $appends = ['meal_type_name', 'meal_category_names'];
+    public $translatable = ['title', 'description', 'instruction'];
 
 
     public $fillable = [
@@ -100,7 +104,7 @@ class Recipe extends Model
         'title'     => 'required|array',
         'title.en'  => 'required|string|max:120',
         'title.ar'  => 'required|string|max:120',
-        
+
         'description'     => 'required|array',
         'description.en'  => 'required|string|max:500',
         'description.ar'  => 'required|string|max:500',
@@ -129,7 +133,7 @@ class Recipe extends Model
     {
         return $this->belongsToMany(MealCategory::class, 'recipe_meal_category_pivots');
     }
-    
+
     public function mealType():BelongsTo
     {
         return $this->belongsTo(MealType::class);

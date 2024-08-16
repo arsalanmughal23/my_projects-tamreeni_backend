@@ -5,6 +5,7 @@ namespace App\Models;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * Class RecipeIngredient
@@ -22,10 +23,12 @@ class RecipeIngredient extends Model
 {
     use SoftDeletes;
 
+    use HasTranslations;
+
     use HasFactory;
 
     public $table = 'recipe_ingredients';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
@@ -34,7 +37,7 @@ class RecipeIngredient extends Model
 
 
     protected $dates = ['deleted_at'];
-
+    public $translatable = ['name'];
 
 
     public $fillable = [

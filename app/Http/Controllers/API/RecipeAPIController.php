@@ -8,6 +8,7 @@ use App\Models\Recipe;
 use App\Repositories\RecipeRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\RecipeResource;
 use Response;
 
 /**
@@ -44,7 +45,7 @@ class RecipeAPIController extends AppBaseController
             $recipes = $recipes->get();
         }
 
-        return $this->sendResponse($recipes->toArray(), 'Recipes retrieved successfully');
+        return $this->sendResponse(RecipeResource::collection($recipes), 'Recipes retrieved successfully');
     }
 
     /**

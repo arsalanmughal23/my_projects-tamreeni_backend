@@ -291,16 +291,8 @@ class UserAPIController extends AppBaseController
     {
         $user = $request->user();
         $userDetails = $user->details;
-        $calculatedBMI = $userDetails->bmi;
-        $responseData = [
-            'bmi'       => $calculatedBMI,
-            'bmi_description' => __('messages.bmi_description', ['bmi' => $calculatedBMI]),
-            'user_details'      => $userDetails,
-            'current_day_required_calories' => $userDetails?->algo_required_calories ?? 0,
-            'workout_week_count' => now()->setTime(0,0)->diffInWeeks($userDetails->reach_goal_target_date) ?? 0,
-            'current_week_target_calroies' => ($userDetails?->algo_required_calories ?? 0) * 7,
-            'current_week_consumed_calroies' => $userDetails->calories,
-        ];
+        $responseData = $this->userDetailRepository->getPersonalStatistics($userDetails);
+        $responseData = array_merge($responseData, ['user_details' => $userDetails]);
 
         return $this->sendResponse($responseData, 'Your personal statistics record');
     }

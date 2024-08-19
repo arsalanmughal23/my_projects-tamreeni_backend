@@ -47,12 +47,13 @@ class TransactionRepository extends BaseRepository
     public function index(Request $request, $params = [])
     {
         $model = $this->model()::query();
+        $params = collect($params)->only($this->getfillable());
 
-        $perPage            = $request->input('per_page', config('constants.PER_PAGE', 10));        
+        $perPage            = $request->input('per_page', config('constants.PER_PAGE', 10));
         $orderableColumns   = ['id','created_at'];
 
         if(count($params) > 0)
-            $model = $model->where($params);
+            $model = $model->where($params->toArray());
 
         if ($request->has('order')){
             $orderBy = $request->order_by;

@@ -36,9 +36,9 @@ class TransactionAPIController extends AppBaseController
 
     public function index(Request $request)
     {
+        $params = $request->all();
         $params['user_id'] = $request->user_id ?? $request->user()->id;
         $model = $this->transactionRepository->index($request, $params);
-
         return $this->sendResponse(TransactionResource::collection($model), 'Transactions retrieved successfully');
     }
 

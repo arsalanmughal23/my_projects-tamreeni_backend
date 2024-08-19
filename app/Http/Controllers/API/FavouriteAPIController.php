@@ -11,6 +11,7 @@ use App\Repositories\FavouriteRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use App\Models\Exercise;
+use App\Models\Recipe;
 use Response;
 use Config;
 use DB;
@@ -162,7 +163,9 @@ public function index(Request $request)
 
         $favouritableObj = match($favouritableType){
             Favourite::MORPH_TYPE_MEAL => Meal::find($favouritableId),
+            Favourite::MORPH_TYPE_RECIPE => Recipe::find($favouritableId),
             Favourite::MORPH_TYPE_EXERCISE => Exercise::find($favouritableId),
+            default => null
         };
 
         if(!$favouritableObj)
@@ -179,7 +182,7 @@ public function index(Request $request)
         if ($existingFavorite) {
             // Meal is already marked as favorite, unmark it
             $existingFavorite->delete();
-            return $this->sendResponse(new \stdClass(), 'Removed from favorites');
+            return $this->sendResponse(new \stdClass(), 'Removed from favourites');
         }
 
         // Meal is not marked as favorite, mark it
@@ -189,6 +192,6 @@ public function index(Request $request)
             'favouritable_type' => $favouritableType,
         ]);
 
-        return $this->sendResponse(new \stdClass(), 'Added to favorites');
+        return $this->sendResponse(new \stdClass(), 'Added to favourites');
     }
 }

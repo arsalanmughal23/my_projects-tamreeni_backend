@@ -140,7 +140,7 @@ class NutritionPlanDayMealAPIController extends AppBaseController
         return $this->sendSuccess('Nutrition Plan Day Meal deleted successfully');
     }
 
-    public function userMealConsumed($nutritionPlanDayMealId, Request $request) 
+    public function userMealConsumed($nutritionPlanDayMealId, Request $request)
     {
         $user = $request->user();
         $userDetails = $user?->details;
@@ -168,7 +168,7 @@ class NutritionPlanDayMealAPIController extends AppBaseController
         return $this->sendResponse($nutritionPlanDayMeal->toArray(), 'Meal consumed successfully');
     }
 
-    public function userRecipeConsumed($nutritionPlanDayRecipeId, Request $request) 
+    public function userRecipeConsumed($nutritionPlanDayRecipeId, Request $request)
     {
         $user = $request->user();
         $userDetails = $user?->details;
@@ -180,10 +180,13 @@ class NutritionPlanDayMealAPIController extends AppBaseController
         if (!$nutritionPlanDayRecipe || $recipeNutritionPlan?->user_id != $user->id)
             return $this->sendError('Your nutrition plan doesn`t have this recipe');
 
+        if ($nutritionPlanDayRecipe->status == NutritionPlanDayRecipe::STATUS_COMPLETED)
+            return $this->sendError('This recipe is already consumed', 403);
+
         // Need to Change when Cron Is Applying
         // User should not consume their recipe that's not have STATUS_IN_PROGRESS
-        if ($nutritionPlanDayRecipe->status != NutritionPlanDayRecipe::STATUS_IN_PROGRESS)
-            return $this->sendError('This recipe is already consumed', 403);
+        // if ($nutritionPlanDayRecipe->status != NutritionPlanDayRecipe::STATUS_IN_PROGRESS)
+        //     return $this->sendError('This recipe is not consumable right now', 403);
 
         // Increase user intake calories
         $userDetails->calories += $nutritionPlanDayRecipe->calories ?? 0;

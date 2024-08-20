@@ -45,7 +45,7 @@ class Recipe extends Model
 
 
     protected $dates = ['deleted_at'];
-    protected $appends = ['meal_type_name', 'meal_category_names'];
+    protected $appends = ['meal_type_name', 'meal_category_names', 'is_favourite'];
     public $translatable = ['title', 'description', 'instruction'];
 
 
@@ -151,5 +151,21 @@ class Recipe extends Model
     public function getMealTypeNameAttribute()
     {
         return $this->mealType->name;
+    }
+
+    public function favourites()
+    {
+        return $this->morphMany(Favourite::class, 'favouritable');
+    }
+
+    public function getIsFavouriteAttribute()
+    {
+        $userId      = auth()->user()->id ?? null;
+        $isFavourite = false;
+
+        if ($userId)
+            $isFavourite = $this->favourites()->where('user_id', $userId)->exists();
+
+        return $isFavourite;
     }
 }

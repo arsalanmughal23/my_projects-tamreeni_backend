@@ -19,9 +19,6 @@ class NutritionPlanDayRecipeResource extends JsonResource
             'id'                    => $this->id,
             'diet_type'             => $this->diet_type,
             'nutrition_plan_day_id' => $this->nutrition_plan_day_id,
-            'meal_type_id'          => $this->meal_type_id,
-            'recipe_id'             => $this->recipe_id,
-            // 'meal_category_ids'     => $this->meal_category_ids,
             'title'                 => $this->getTranslation('title', app()->getLocale()),
             'description'           => $this->getTranslation('description', app()->getLocale()),
             'instruction'           => $this->getTranslation('instruction', app()->getLocale()),
@@ -34,8 +31,12 @@ class NutritionPlanDayRecipeResource extends JsonResource
             'fats'                  => $this->fats,
             'protein'               => $this->protein,
             'status'                => $this->status,
+            'is_favourite'          => $this->is_favourite,
             'created_at'            => $this->created_at,
-            'meal_type_name'        => $this->meal_type_name, 
+            'recipe_id'             => $this->recipe_id,
+            'meal_type_id'          => $this->meal_type_id,
+            'meal_type_name'        => $this->meal_type_name,
+            // 'meal_category_ids'     => $this->meal_category_ids,
             'meal_category_names'   => $this->meal_category_names,
             'recipe_ingredients'    => NplanDayRecipeIngredientResource::collection($this->whenLoaded('nPlanDayRecipeIngredients'))
         ];

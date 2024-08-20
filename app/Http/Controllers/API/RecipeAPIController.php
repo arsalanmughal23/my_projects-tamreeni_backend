@@ -63,7 +63,7 @@ class RecipeAPIController extends AppBaseController
 
         $recipe = $this->recipeRepository->create($input);
 
-        return $this->sendResponse($recipe->toArray(), 'Recipe saved successfully');
+        return $this->sendResponse(new RecipeResource($recipe), 'Recipe saved successfully');
     }
 
     /**
@@ -84,7 +84,7 @@ class RecipeAPIController extends AppBaseController
             return $this->sendError('Recipe not found');
         }
 
-        return $this->sendResponse($recipe->toArray(), 'Recipe retrieved successfully');
+        return $this->sendResponse(new RecipeResource($recipe), 'Recipe retrieved successfully');
     }
 
     /**
@@ -110,7 +110,7 @@ class RecipeAPIController extends AppBaseController
 
         $recipe = $this->recipeRepository->update($input, $id);
 
-        return $this->sendResponse($recipe->toArray(), 'Recipe updated successfully');
+        return $this->sendResponse(new RecipeResource($recipe), 'Recipe updated successfully');
     }
 
     /**

@@ -44,7 +44,7 @@ class NutritionPlanDayRecipe extends Model
     public $table = 'nutrition_plan_day_recipes';
 
     public $translatable = ['title', 'description', 'instruction'];
-    protected $appends = ['meal_type_name', 'meal_category_names'];
+    protected $appends = ['meal_type_name', 'meal_category_names', 'is_favourite'];
 
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
@@ -138,7 +138,7 @@ class NutritionPlanDayRecipe extends Model
     {
         return $this->belongsTo(\App\Models\MealType::class, 'meal_type_id');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      **/
@@ -172,5 +172,10 @@ class NutritionPlanDayRecipe extends Model
     public function getMealTypeNameAttribute()
     {
         return $this->mealType->name;
+    }
+
+    public function getIsFavouriteAttribute()
+    {
+        return $this->recipe?->is_favourite ?? false;
     }
 }

@@ -21,14 +21,15 @@ class Favourite extends Model
     use HasFactory;
 
     public $table = 'favourites';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
     const MORPH_TYPE_MEAL = 'meal';
+    const MORPH_TYPE_RECIPE = 'recipe';
     const MORPH_TYPE_EXERCISE = 'exercise';
     const MORPH_TYPE_EVENT = 'event';
-    const MORPH_TYPES = self::MORPH_TYPE_MEAL.','.self::MORPH_TYPE_EXERCISE.','.self::MORPH_TYPE_EVENT;
+    const MORPH_TYPES = self::MORPH_TYPE_MEAL.','.self::MORPH_TYPE_RECIPE.','.self::MORPH_TYPE_EXERCISE.','.self::MORPH_TYPE_EVENT;
 
 
     public $fillable = [

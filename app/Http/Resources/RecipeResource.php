@@ -32,6 +32,7 @@ class RecipeResource extends JsonResource
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at,
             "deleted_at" => $this->deleted_at,
+            "is_favourite" => $this->is_favourite,
             "meal_type_id" => $this->meal_type_id,
             "meal_type_name" => $this->meal_type_name,
             "meal_category_ids" => $this->meal_category_ids,

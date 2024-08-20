@@ -19,12 +19,6 @@ class AppointmentResource extends JsonResource
             'id'              => $this->id,
             // 'customer_id'     => $this->customer_id,
             // 'customer'        => $this->customer,
-            'user_id'         => $this->user_id,
-            'user'            => $this->user,
-            'slot_id'         => $this->slot_id,
-            'slot'            => $this->slot,
-            'package_id'      => $this->package_id,
-            'package'         => $this->package,
             'date'            => $this->date,
             'start_time'      => $this->start_time,
             'end_time'        => $this->end_time,
@@ -35,6 +29,12 @@ class AppointmentResource extends JsonResource
             'status'          => $this->status,
             'created_at'      => $this->created_at,
             'updated_at'      => $this->updated_at,
+            'user_id'         => $this->user_id,
+            'slot_id'         => $this->slot_id,
+            'package_id'      => $this->package_id,
+            'user'            => $this->user,
+            'slot'            => $this->slot,
+            'package'         => $this->package,
             'transaction' => new TransactionResource($this->transaction)
         ];
     }

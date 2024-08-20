@@ -38,7 +38,10 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
     Route::post('logout', [App\Http\Controllers\API\AuthAPIController::class, 'logout'])->name('logout');
     Route::delete('delete-account', [App\Http\Controllers\API\AuthAPIController::class, 'deleteAccount']);
 
-    Route::resource('faqs', App\Http\Controllers\API\FaqAPIController::class);
+    Route::middleware(['userMembership'])->group(function () {
+        Route::resource('faqs', App\Http\Controllers\API\FaqAPIController::class);
+    });
+
     Route::get('profile', [App\Http\Controllers\API\UserDetailAPIController::class, 'getUserProfile']);
     Route::put('update-language', [App\Http\Controllers\API\UserDetailAPIController::class, 'updateLanguage']);
     Route::resource('wellness_tips', App\Http\Controllers\API\WellnessTipAPIController::class);

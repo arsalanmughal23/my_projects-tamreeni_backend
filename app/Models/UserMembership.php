@@ -30,7 +30,7 @@ class UserMembership extends Model
     use HasTranslations;
 
     public $table = 'user_memberships';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
@@ -42,7 +42,8 @@ class UserMembership extends Model
     const STATUS_ACTIVE = 'active';
     const STATUS_INACTIVE = 'inactive';
     const STATUS_REJECT = 'reject';
-    const CONST_STATUSES = [self::STATUS_HOLD, self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_REJECT];
+    const STATUS_EXPIRE = 'expire';
+    const CONST_STATUSES = [self::STATUS_HOLD, self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_REJECT, self::STATUS_EXPIRE];
 
     public $fillable = [
         'title',
@@ -141,7 +142,7 @@ class UserMembership extends Model
         $this->update(['status' => self::STATUS_ACTIVE]);
         return $this;
     }
-    
+
     public function paymentReject()
     {
         $this->update(['status' => self::STATUS_REJECT]);

@@ -69,6 +69,7 @@ class Kernel extends HttpKernel
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
         'dynamic_permission' => \App\Http\Middleware\DynamicPermissionMiddleware::class,
         'setLocale' => \App\Http\Middleware\SetLocale::class,
+        'userMembership' => \App\Http\Middleware\UserMembershipMiddleware::class
 
     ];
 }

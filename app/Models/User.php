@@ -176,7 +176,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getActiveMembershipAttribute()
     {
-        return $this->userMemberships()->where('status', 'active')
+        return $this->userMemberships()
+                    ->where('status', 'active')
                     ->where('expire_at', '>', now())
                     ->orderBy('created_at', 'desc')
                     ->first();

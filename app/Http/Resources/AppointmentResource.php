@@ -27,6 +27,7 @@ class AppointmentResource extends JsonResource
             'type'            => $this->type,
             'profession_type' => $this->profession_type,
             'status'          => $this->status,
+            'payment_status'  => $this->payment_status,
             'created_at'      => $this->created_at,
             'updated_at'      => $this->updated_at,
             'user_id'         => $this->user_id,

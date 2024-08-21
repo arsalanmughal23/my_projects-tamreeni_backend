@@ -13,7 +13,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @property \App\Models\User $user
  * @property integer $user_id
- * @property string $slot_time
+ * @property string $start_time
+ * @property string $end_time
  * @property integer $type
  */
 class Slot extends Model

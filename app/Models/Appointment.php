@@ -49,6 +49,10 @@ class Appointment extends Model
     const STATUS_PAYMENT_PAID   = 3;
     const STATUS_PAYMENT_REJECT = 4;
 
+    const PAYMENT_STATUS_UNPAID = 'unpaid';
+    const PAYMENT_STATUS_PAID = 'paid';
+    const PAYMENT_STATUS_REJECT = 'reject';
+
     const TYPES = [self::TYPE_SESSION, self::TYPE_PACKAGE];
     const PROFESSION_TYPES = [self::PROFESSION_TYPE_COACH, self::PROFESSION_TYPE_DIETITIAN, self::PROFESSION_TYPE_THERAPIST];
     const STATUSES = [self::STATUS_PENDING, self::STATUS_START, self::STATUS_END, self::STATUS_PAYMENT_PAID, self::STATUS_PAYMENT_REJECT];
@@ -68,7 +72,8 @@ class Appointment extends Model
         'end_time',
         'type',
         'profession_type',
-        'status'
+        'status',
+        'payment_status'
     ];
 
     /**
@@ -88,7 +93,8 @@ class Appointment extends Model
         'end_time'        => 'string',
         'type'            => 'integer',
         'profession_type' => 'integer',
-        'status'          => 'integer'
+        'status'          => 'integer',
+        'payment_status'  => 'string'
     ];
 
     /**
@@ -97,23 +103,23 @@ class Appointment extends Model
      * @var array
      */
     public static $rules = [
-        'payment_intent_required'   => 'boolean',
-        'user_id'                   => 'required',
+        // 'user_id'                   => 'required',
         // 'card_id'                   => 'required',
-        'slot_id'                   => 'required_if:type,10',
+        // 'start_time'                => 'string|required_if:type,10',
+        // 'end_time'                  => 'string|required_if:type,10',
+        'payment_intent_required'   => 'boolean',
+        'slot_id'                   => 'required_if:type,10|exists:slots,id',
         'package_id'                => 'required_if:type,20|exists:packages,id',
         'date'                      => 'string|required_if:type,10',
-        'start_time'                => 'string|required_if:type,10',
-        'end_time'                  => 'string|required_if:type,10',
         'type'                      => 'required|integer|in:10,20',
         'profession_type'           => 'required|integer|in:10,20,30',
-        'appointments'              => 'required_if:type,20|array', // appointments array required when type is 20
-        'appointments.*.slot_id'    => 'required|required_if:appointments.*.type,20',
-        'appointments.*.date'       => 'required|string|max:191|required_if:appointments.*.type,20',
-        'appointments.*.start_time' => 'required|string|required_if:appointments.*.type,20',
-        'appointments.*.end_time'   => 'required|string|required_if:appointments.*.type,20',
+        'appointments'              => 'required_if:type,20|array|min:1', // appointments array required when type is 20
+        'appointments.*.slot_id'    => 'required|required_if:type,20|exists:slots,id',
+        'appointments.*.date'       => 'required|string|max:191|required_if:type,20',
+        'appointments.*.start_time' => 'required|string|required_if:type,20',
+        'appointments.*.end_time'   => 'required|string|required_if:type,20',
     ];
-    
+
     public static $web_update_rules = [
         'payment_intent_required'   => 'boolean',
         'user_id'                   => 'sometimes|exists:users,id',
@@ -138,6 +144,14 @@ class Appointment extends Model
     public function customer()
     {
         return $this->belongsTo(\App\Models\User::class, 'customer_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function package()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'package_id');
     }
 
     /**
@@ -183,12 +197,12 @@ class Appointment extends Model
     {
         return __('appointment.status.'.$this->status, [], 'en');
     }
-    
+
     public function getTypeLabelAttribute()
     {
         return __('appointment.type.'.$this->type, [], 'en');
     }
-    
+
     public function getProfessionTypeLabelAttribute()
     {
         return __('appointment.profession_type.'.$this->profession_type, [], 'en');

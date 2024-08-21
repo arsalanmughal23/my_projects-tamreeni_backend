@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Appointment;
+use App\Models\Slot;
 use App\Repositories\BaseRepository;
 
 /**
@@ -100,8 +101,47 @@ class AppointmentRepository extends BaseRepository
     }
 
     public function checkUserAppointment($customer_id, $user_id, $date){
-        return Appointment::where('user_id', $user_id)->where('customer_id', $customer_id)->whereDate('date', $date)
+        return Appointment::where('payment_status', Appointment::PAYMENT_STATUS_PAID)
+            ->where(['user_id' => $user_id, 'customer_id' => $customer_id])
+            ->whereDate('date', $date)
             ->whereIn('status', [Appointment::STATUS_PENDING,Appointment::STATUS_START])
             ->exists();
+    }
+
+    public function getBookedAppointments(Slot $slot, $date, $customer_id){
+        $slotUserId = $slot->user_id;
+        $startTime = $slot->start_time;
+        $endTime = $slot->end_time;
+
+        return Appointment::where('payment_status', Appointment::PAYMENT_STATUS_PAID)
+            ->whereDate('date', $date)
+
+            ->where(function($subQuery) use ($startTime, $endTime) {
+
+                $subQuery->where(function($query) use ($startTime, $endTime) {
+                    return $query->where(function($q) use ($startTime, $endTime) {
+                        return $q->whereBetween('start_time', [
+                            $startTime, $endTime
+                        ])
+                        ->orWhereBetween('end_time', [
+                            $startTime, $endTime
+                        ]);
+                    });
+                })
+                ->orWhere(function($query) use ($startTime, $endTime) {
+                    return $query
+                        ->where('start_time', '<=', $startTime)
+                        ->where('end_time', '>=', $endTime);
+                })
+                ->orWhere(function($query) use ($startTime, $endTime) {
+                    return $query->where('start_time', '>=', $startTime)
+                        ->where('end_time', '<=', $endTime);
+                });
+            })
+            ->where(function($q) use($customer_id, $slotUserId) {
+                return $q->where('customer_id', $customer_id)
+                    ->orWhere('user_id', $slotUserId);
+            })
+            ->whereIn('status', [Appointment::STATUS_PENDING,Appointment::STATUS_START]);
     }
 }

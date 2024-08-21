@@ -136,7 +136,7 @@ class PayTabsController extends AppBaseController
                 if($transactionable instanceof UserMembership) {
                     $transactionable->paymentSuccess();
                 } else {
-                    $transaction->appointments()->update(['status' => Appointment::STATUS_PAYMENT_PAID]);
+                    $transaction->appointments()->update(['payment_status' => Appointment::PAYMENT_STATUS_PAID]);
                 }
 
             } else {
@@ -145,7 +145,7 @@ class PayTabsController extends AppBaseController
                 if($transactionable instanceof UserMembership) {
                     $transactionable->paymentReject();
                 } else {
-                    $transaction->appointments()->update(['status' => Appointment::STATUS_PAYMENT_REJECT]);
+                    $transaction->appointments()->update(['payment_status' => Appointment::PAYMENT_STATUS_REJECT]);
                 }
             }
             DB::commit();

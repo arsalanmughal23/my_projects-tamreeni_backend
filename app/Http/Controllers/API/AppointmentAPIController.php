@@ -15,8 +15,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\AppointmentResource;
 use App\Models\Role;
+use App\Models\User;
 use App\Repositories\PackageRepository;
+use App\Repositories\SlotRepository;
 use App\Repositories\UsersRepository;
+use Error;
 use Response;
 use Illuminate\Support\Facades\DB;
 
@@ -29,6 +32,7 @@ class AppointmentAPIController extends AppBaseController
     public function __construct(
         private PackageRepository $packageRepository,
         private AppointmentRepository $appointmentRepository,
+        private SlotRepository $slotRepository,
         private UsersRepository $userRepository,
     ) {
     }
@@ -71,18 +75,66 @@ class AppointmentAPIController extends AppBaseController
             $profession_type       = intval($input['profession_type']);
             $amountInSAR           = 0;
             $paymentIntentRequired = $input['payment_intent_required'] ?? false;
+            $slot = null;
+            $slots = [];
 
             $customerUser = $request->user();
             if(!$customerUser->hasRole(Role::API_USER))
                 throw new \Error('Only Application User able to make an appointment');
 
-            $mentorUser = $this->userRepository->find($request->user_id);
-            if(!$mentorUser->hasRole(Role::MENTOR))
-                throw new \Error('Selected user is not coach, dietitian or therapist');
+            // Implement Pre-Requisites checks
+            switch ($type) {
+                case Appointment::TYPE_SESSION:
+                    $slot = $this->slotRepository->find($input['slot_id']);
+                    if (!$slot)
+                        return $this->sendError('Slot is not Found', 404);
 
-            $appointmentProfessionTypeRole = Appointment::getRoleByProfessionType($profession_type);
-            if(!$mentorUser->hasRole($appointmentProfessionTypeRole))
-                throw new \Error('Selected profession type is not associated with the selected user');
+                    $slotUser = $slot->user;
+
+                    if (!$this->checkUserHasProfessionTypeRole($slotUser, $profession_type))
+                        throw new \Error('Selected profession type is not associated with the slot user');
+
+                    $appointmentDay = \Carbon\Carbon::parse($input['date'])->format('l');
+                    if ($slot->day != $appointmentDay)
+                        throw new \Error('Selected slot is only for '.$slot->day);
+
+                    $appointmentExist = $this->appointmentRepository
+                                        ->getBookedAppointments($slot, $input['date'], $user->id)
+                                        ->exists();
+
+                    if ($appointmentExist)
+                        throw new \Error('Appointment is already booked for ' . $input['date'] .' '. $slot->start_time .' to '. $slot->end_time);
+                    break;
+                case Appointment::TYPE_PACKAGE:
+                    $slotsIds = collect($request->appointments)->pluck('slot_id');
+                    $slots = $this->slotRepository->whereIn('id', $slotsIds)->get();
+                    if (count($slotsIds) > count($slots))
+                        throw new Error('Some selected slot is not found');
+
+                    foreach ($input['appointments'] as $key => $appointment) {
+                        $eachSlot = $slots->find($appointment['slot_id']);
+
+                        $slotUser = $eachSlot->user;
+                        if (!$this->checkUserHasProfessionTypeRole($slotUser, $profession_type))
+                            throw new \Error('Selected profession type is not associated with the slot user');
+
+                        $appointmentDay = \Carbon\Carbon::parse($appointment['date'])->format('l');
+                        if ($eachSlot->day != $appointmentDay)
+                            throw new \Error('Selected slot is only for '.$eachSlot->day);
+
+                        $appointmentExist = $this->appointmentRepository
+                                            ->getBookedAppointments($eachSlot, $appointment['date'], $user->id)
+                                            ->exists();
+
+                        if ($appointmentExist)
+                            throw new \Error('Appointment is already booked for ' . $appointment['date'] .' '. $eachSlot->start_time .' to '. $eachSlot->end_time);
+                    }
+
+                    break;
+                default :
+                    throw new Error('Invalid Type');
+                    break;
+            }
 
             if(!$user->stripe_customer_id)
                 $user->createStripeCustomer();
@@ -94,7 +146,8 @@ class AppointmentAPIController extends AppBaseController
                 case Appointment::TYPE_SESSION:
                     // Create transaction if it's a session appointment
                     $checkUserAppointment = $this->appointmentRepository
-                        ->checkUserAppointment($user->id, $input['user_id'], $input['date']);
+                        ->getBookedAppointments($slot, $input['date'], $user->id)
+                        ->exists();
 
                     if ($checkUserAppointment)
                         return $this->sendError('Already book appointment', 422);
@@ -102,28 +155,24 @@ class AppointmentAPIController extends AppBaseController
                     $description             = "1-1 Session - Appointment Payment";
                     $amountInSAR             = $this->calculateSessionFee($profession_type);
                     $input['customer_id']    = $user->id;
+                    $input = array_merge($input, $slot->only('user_id', 'start_time', 'end_time'));
                     $transactionable         = $this->appointmentRepository->create($input);
                     $createdAppointmentIds[] = $transactionable->id;
                     break;
 
                 case Appointment::TYPE_PACKAGE:
-                    foreach ($input['appointments'] as $appointment) {
-                        $appointmentExist = $this->appointmentRepository->checkUserAppointment($user->id, $input['user_id'], $appointment['date']);
-                        if ($appointmentExist)
-                            throw new \Error('Your appointment is already booked on ' . $appointment['date']);
-                    }
 
                     $package     = $transactionable = $this->packageRepository->findWithoutFail($input['package_id']);
                     $amountInSAR = $package->amount;
                     $description = $package->description . ' ' . ' Package Purchase';
 
-                    $appointments = $input['appointments'];
-                    foreach ($appointments as $key => $appointment) {
-                        $appointment['user_id']         = $input['user_id'];
+                    // $appointments = $input['appointments'];
+                    foreach ($slots as $key => $slot) {
                         $appointment['customer_id']     = $user->id;
                         $appointment['package_id']      = $input['package_id'];
                         $appointment['type']            = $type;
                         $appointment['profession_type'] = $profession_type;
+                        $appointment = array_merge($appointment, $slot->only('user_id', 'start_time', 'end_time'));
                         $createdAppointment             = $this->appointmentRepository->create($appointment);
                         $createdAppointmentIds[]        = $createdAppointment->id;
                     }
@@ -191,6 +240,12 @@ class AppointmentAPIController extends AppBaseController
         }
     }
 
+    public function checkUserHasProfessionTypeRole(User $user, $profession_type) {
+        $appointmentProfessionTypeRole = Appointment::getRoleByProfessionType($profession_type);
+        if($user->hasRole($appointmentProfessionTypeRole))
+            return true;
+        return false;
+    }
     /**
      * Display the specified Appointment.
      * GET|HEAD /appointments/{id}

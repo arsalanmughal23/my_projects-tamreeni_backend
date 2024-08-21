@@ -26,6 +26,7 @@ class CreateAppointmentsTable extends Migration
             $table->integer('type')->comment("10 => 1-1 session, 20 => package");
             $table->integer('profession_type')->comment("10 => coach, 20 => dietitian, 30 => Therapist");
             $table->integer('status')->default(0)->comment("0 => pending, 1 => start, 2 => end");
+            $table->enum('payment_status', ['unpaid', 'paid', 'reject'])->default('unpaid');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('customer_id')->references('id')->on('users')->onDelete('cascade');

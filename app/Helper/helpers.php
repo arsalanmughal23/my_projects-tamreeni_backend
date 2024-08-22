@@ -428,6 +428,30 @@ if (!function_exists('getOptionsLanguage')) {
         return array_map(function($data) use($lang) { return __('options.'.$data, [], $lang); }, $array);
     }
 }
+if (!function_exists('generateWeekDates')) {
+    function generateWeekDates($array, $count)
+    {
+        $numberOfDaysPerWeek = $count;
+        $skipableDayCount = match ($numberOfDaysPerWeek) {
+            2 => 3,
+            4 => 1,
+            5 => 0,
+            default => 3
+        };
+        $randomDates = [];
+
+        for($i = 0; $i < count($array); $i += ($skipableDayCount+1)) {
+            if(isset($array[$i]))
+                $randomDates[] = $array[$i];
+        }
+
+        if($numberOfDaysPerWeek == 5 && count($randomDates) > $numberOfDaysPerWeek) {
+            $randomDates = collect($randomDates)->filter(function($date, $index){ return in_array($index, [0,1,3,5,6]);});
+            $randomDates = $randomDates->values()->toArray();
+        }
+        return $randomDates;
+    }
+}
 if (!function_exists('pickRandomIndices')) {
     function pickRandomIndices($array, $count)
     {

@@ -68,7 +68,8 @@ class WorkoutPlanRepository extends BaseRepository
         $randomDates         = [];
         foreach ($weekWiseDates as $key => $weekDates) {
             if (count($weekDates) >= $numberOfDaysPerWeek) {
-                $randomDates = array_merge($randomDates, pickRandomIndices($weekDates, $numberOfDaysPerWeek));
+                // $randomDates = array_merge($randomDates, pickRandomIndices($weekDates, $numberOfDaysPerWeek));
+                $randomDates = array_merge($randomDates, generateWeekDates($weekDates, $numberOfDaysPerWeek));
             }
         }
 
@@ -131,7 +132,7 @@ class WorkoutPlanRepository extends BaseRepository
 
         if(!$exerciseIntensityLevel)
             $exerciseIntensityLevel = collect(Exercise::EXERCISE_INTENSITY_LEVELS)->random();
-    
+
         $exerciseDetails = Exercise::EXERCISE_FACTORS[$exerciseIntensityLevel];
         return $exerciseDetails;
     }
@@ -244,7 +245,7 @@ class WorkoutPlanRepository extends BaseRepository
                     Exercise::CATEGORY_MAJOR_LIFT => $this->makeExerciseDetails($exerciseFactors, 16),
                     Exercise::CATEGORY_SINGLE_JOINT, Exercise::CATEGORY_MULTI_JOINT => $this->makeExerciseDetails($exerciseFactors, 16),
                     Exercise::CATEGORY_CARDIO => $this->makeExerciseDetails($exerciseFactors, 16),
-                    default => null // TODO : Need to fix when match case falls in default it return null 
+                    default => null // TODO : Need to fix when match case falls in default it return null
                     // and it will return error on assignWorkoutDayExercises function (WorkoutDayExercise creation)
                 };
                 break;

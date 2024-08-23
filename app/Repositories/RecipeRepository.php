@@ -62,12 +62,12 @@ class RecipeRepository extends BaseRepository
         $query = Recipe::query()->with('recipeIngredients');
 
         if(isset($params['is_favourite'])){
-            if($params['is_favourite'] == 'true'){
-                $query->whereHas('favourites', function($q) use($userId) {
+            if($params['is_favourite'] == 'false'){
+                $query->whereDoesntHave('favourites', function($q) use($userId) {
                     return $q->where('user_id', $userId);
                 });
             } else {
-                $query->whereDoesntHave('favourites', function($q) use($userId) {
+                $query->whereHas('favourites', function($q) use($userId) {
                     return $q->where('user_id', $userId);
                 });
             }

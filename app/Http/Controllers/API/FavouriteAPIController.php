@@ -161,6 +161,8 @@ public function index(Request $request)
         $favouritableId = $request->input('favouritable_id');
         $favouritableType = $request->input('favouritable_type');
 
+        $is_favourite = null;
+
         $favouritableObj = match($favouritableType){
             Favourite::MORPH_TYPE_MEAL => Meal::find($favouritableId),
             Favourite::MORPH_TYPE_RECIPE => Recipe::find($favouritableId),
@@ -182,7 +184,8 @@ public function index(Request $request)
         if ($existingFavorite) {
             // Meal is already marked as favorite, unmark it
             $existingFavorite->delete();
-            return $this->sendResponse(new \stdClass(), 'Removed from favourites');
+            $is_favourite = false;
+            return $this->sendResponse(['is_favourite' => $is_favourite], 'Removed from favourites');
         }
 
         // Meal is not marked as favorite, mark it
@@ -191,7 +194,8 @@ public function index(Request $request)
             'favouritable_id' => $favouritableId,
             'favouritable_type' => $favouritableType,
         ]);
+        $is_favourite = true;
 
-        return $this->sendResponse(new \stdClass(), 'Added to favourites');
+        return $this->sendResponse(['is_favourite' => $is_favourite], 'Added to favourites');
     }
 }

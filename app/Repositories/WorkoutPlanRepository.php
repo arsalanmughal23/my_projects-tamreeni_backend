@@ -65,11 +65,13 @@ class WorkoutPlanRepository extends BaseRepository
             'status' => WorkoutPlan::STATUS_COMPLETED
         ]);
 
-        $randomDates         = [];
+        $randomDates        = [];
+        $generatedWeekDates = [];
         foreach ($weekWiseDates as $key => $weekDates) {
             if (count($weekDates) >= $numberOfDaysPerWeek) {
                 // $randomDates = array_merge($randomDates, pickRandomIndices($weekDates, $numberOfDaysPerWeek));
-                $randomDates = array_merge($randomDates, generateWeekDates($weekDates, $numberOfDaysPerWeek));
+                $generatedWeekDates = generateWeekDates($generatedWeekDates, $weekDates, $numberOfDaysPerWeek);
+                $randomDates = array_merge($randomDates, $generatedWeekDates);
             }
         }
 

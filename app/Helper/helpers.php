@@ -428,29 +428,207 @@ if (!function_exists('getOptionsLanguage')) {
         return array_map(function($data) use($lang) { return __('options.'.$data, [], $lang); }, $array);
     }
 }
-if (!function_exists('generateWeekDates')) {
-    function generateWeekDates($array, $count)
+if (!function_exists('getPreviousDays')) {
+
+    function getPreviousDays($day, $count = 3)
     {
-        $numberOfDaysPerWeek = $count;
-        $skipableDayCount = match ($numberOfDaysPerWeek) {
-            2 => 3,
-            4 => 1,
-            5 => 0,
-            default => 3
-        };
-        $randomDates = [];
+        // Create a Carbon instance from the given day name
+        $currentDay = Carbon::parse($day);
 
-        for($i = 0; $i < count($array); $i += ($skipableDayCount+1)) {
-            if(isset($array[$i]))
-                $randomDates[] = $array[$i];
+        // Get the previous days
+        $previousDays = [];
+        for ($i = 1; $i <= $count; $i++) {
+            $previousDays[] = $currentDay->copy()->subDays($i)->format('l');
         }
 
-        if($numberOfDaysPerWeek == 5 && count($randomDates) > $numberOfDaysPerWeek) {
-            $randomDates = collect($randomDates)->filter(function($date, $index){ return in_array($index, [0,1,3,5,6]);});
-            $randomDates = $randomDates->values()->toArray();
-        }
-        return $randomDates;
+        return $previousDays;
     }
+}
+if (!function_exists('generateWeekDates')) {
+
+    function generateWeekDates($previousWeekDates, $array, $count)
+    {
+        $previousWeekDates = collect($previousWeekDates)->sort()->reverse();
+        $previousWeekDays = $previousWeekDates->map(function($date) { return Carbon::parse($date)->format('l');})->toArray();
+        $previousWeekDates = $previousWeekDates->toArray();
+        $weekDatesTemplate = [];
+
+        if($count > 2){
+            if($count == 5){
+                $weekDaysTemplate1 = ['Sunday', 'Monday', 'Wednesday', 'Thursday', 'Friday'];
+                $weekDaysTemplate2 = ['Monday', 'Tuesday', 'Wednesday', 'Friday', 'Saturday'];
+
+                $weekDatesTemplate = in_array('Friday', $previousWeekDays) && in_array('Saturday', $previousWeekDays)
+                    ? $weekDaysTemplate1
+                    : $weekDaysTemplate2;
+
+            } else if($count == 4){
+                $weekDaysTemplate1 = ['Sunday', 'Tuesday', 'Thursday', 'Friday'];
+                $weekDaysTemplate2 = ['Sunday', 'Wednesday', 'Friday', 'Saturday'];
+                $weekDaysTemplate3 = ['Monday', 'Tuesday', 'Thursday', 'Saturday'];
+
+                if(count(array_diff($weekDaysTemplate1, $previousWeekDays)) < 1)
+                    $weekDatesTemplate = $weekDaysTemplate2;
+
+                else if(count(array_diff($weekDaysTemplate2, $previousWeekDays)) < 1)
+                    $weekDatesTemplate = $weekDaysTemplate3;
+
+                else if(count(array_diff($weekDaysTemplate3, $previousWeekDays)) < 1)
+                    $weekDatesTemplate = $weekDaysTemplate1;
+
+                if(!count($weekDatesTemplate))
+                    $weekDatesTemplate = $weekDaysTemplate1;
+
+            }
+
+            $array = collect($array)->filter(function($date) use ($weekDatesTemplate) {
+                return in_array(Carbon::parse($date)->format('l'), $weekDatesTemplate);
+            })->toArray();
+
+        } else {
+            $weekDayCount = (count($array) / 2) > ($count / 2) ? 2 : 1;
+            $array = collect($array)->random($weekDayCount)->toArray();
+        }
+        return $array;
+    }
+    // function generateWeekDates($allDates, $array, $count)
+    // {
+    //     $maxDateOfWeek = collect($array)->max();
+    //     $randomDates = [];
+
+    //     // $array = [1,2,3,4,5,6,7];$count = 5;
+    //     // $array = [1,2];$count = 4;
+    //     $weekDaysCount = count($array) > $count ? $count : count($array) - 1;
+
+    //     foreach($array as $key => $date) {
+    //         if(count($randomDates) >= $weekDaysCount)
+    //             break;
+
+    //         $lastThreeDates = collect($allDates)->sort()->reverse()->take(3)->values();
+    //         $last4DaysDatesCount = 0;
+    //         foreach($lastThreeDates as $lastEachDate){
+    //             if(Carbon::parse($date)->diff($lastEachDate)->days > 2){
+    //                 continue;
+    //             }
+
+    //             $last4DaysDatesCount += 1;
+    //         }
+
+    //         $remainingDatesCount = Carbon::parse($date)->diff($maxDateOfWeek)->days+1;//6
+    //         $remainingAssignableDatesCount = $weekDaysCount - count($randomDates);//4
+
+    //         $ratioOfDates = $remainingDatesCount / $remainingAssignableDatesCount;
+    //         if($ratioOfDates < 2)
+    //         {
+    //             if($count > 4 && $last4DaysDatesCount > 3)
+    //                 continue;
+    //             if($count > 2 && $last4DaysDatesCount > 2)
+    //                 continue;
+    //             if($count <= 2 && $last4DaysDatesCount > 1)
+    //                 continue;
+    //         } else {
+    //             continue;
+    //         }
+
+    //         // if($key == 0) {
+    //         //     if($count > 4 && $last4DaysDatesCount > 3)
+    //         //         continue;
+
+    //         //     else if($count > 2 && $last4DaysDatesCount > 2)
+    //         //         continue;
+
+    //         //     else if($count <= 2 && $last4DaysDatesCount > 1)
+    //         //         continue;
+    //         // } else {
+
+    //         //     if($count > 4 && $last4DaysDatesCount > 1)
+    //         //         continue;
+
+    //         //     // else if($count > 2 && $last4DaysDatesCount > 1)
+    //         //     //     continue;
+
+    //         //     // else if($count <= 2 && $last4DaysDatesCount > 0)
+    //         //     //     continue;
+    //         // }
+
+
+    //         $allDates[] = $date;
+    //         $randomDates[] = $date;
+    //     }
+
+    //     return collect($randomDates)->sort()->toArray();
+    // }
+    // function generateWeekDates($allDates, $array, $count)
+    // {
+    //     $skipableDaysCount = match ($count) {
+    //         2 => 3,
+    //         4 => 1,
+    //         5 => 2,
+    //         default => 1
+    //     };
+
+    //     $randomDates = [];
+    //     $skipMinDays = $skipableDaysCount > 1 ? $skipableDaysCount - 1 : $skipableDaysCount;
+
+    //     foreach($array as $date) {
+    //         if(count($randomDates) >= $count)
+    //             break;
+
+    //         $diffFromLastGenerateDate = Carbon::parse(collect($allDates)->max())->diff($date)->days;
+
+    //         // $maxDate = collect($array)->max();
+    //         // $remainingDatesCount = Carbon::parse($date)->diff($maxDate)->days+1;
+    //         // $remainingAssignableDatesCount = $count - count($randomDates);
+
+    //         if ($count < 5) {
+
+    //             if(count($randomDates) > 0 && Carbon::parse(collect($randomDates)->max())->diff($date)->days < $skipableDaysCount+1)
+    //                 continue;
+
+    //             if($diffFromLastGenerateDate < $skipMinDays+1)
+    //                 continue;
+
+    //         } else {
+    //             $skipMinDays -= 1;
+    //             $lastThreeDates = collect($allDates)->sort()->reverse()->take(3)->values();
+    //             if(count($lastThreeDates) > 2){
+    //                 // $last2DaysGap = Carbon::parse($lastThreeDates[0])->diff($lastThreeDates[1])->days;
+    //                 $secondLast2DaysGap = Carbon::parse($lastThreeDates[1])->diff($lastThreeDates[0])->days;
+    //                 if($diffFromLastGenerateDate < 2 && $secondLast2DaysGap < 2) {
+    //                     continue;
+    //                 }
+    //             }
+    //         }
+
+    //         $allDates[] = $date;
+    //         $randomDates[] = $date;
+    //     }
+
+    //     return collect($randomDates)->sort()->toArray();
+    // }
+
+    // function generateWeekDates($array, $count)
+    // {
+    //     $numberOfDaysPerWeek = $count;
+    //     $skipableDayCount = match ($numberOfDaysPerWeek) {
+    //         2 => 3,
+    //         4 => 1,
+    //         5 => 0,
+    //         default => 3
+    //     };
+    //     $randomDates = [];
+
+    //     for($i = 0; $i < count($array); $i += ($skipableDayCount+1)) {
+    //         if(isset($array[$i]))
+    //             $randomDates[] = $array[$i];
+    //     }
+
+    //     if($numberOfDaysPerWeek == 5 && count($randomDates) > $numberOfDaysPerWeek) {
+    //         $randomDates = collect($randomDates)->filter(function($date, $index){ return in_array($index, [0,1,3,5,6]);});
+    //         $randomDates = $randomDates->values()->toArray();
+    //     }
+    //     return $randomDates;
+    // }
 }
 if (!function_exists('pickRandomIndices')) {
     function pickRandomIndices($array, $count)

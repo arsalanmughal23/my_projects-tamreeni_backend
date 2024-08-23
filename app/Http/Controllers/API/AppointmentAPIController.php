@@ -47,7 +47,7 @@ class AppointmentAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $params = $request->only('user_id', 'customer_id', 'type', 'profession_type', 'status', 'start_date', 'date', 'order_by', 'order');
+        $params = $request->only('user_id', 'customer_id', 'type', 'profession_type', 'status', 'payment_status', 'start_date', 'date', 'order_by', 'order');
 
         $appointments = $this->appointmentRepository->pushCriteria(new AppointmentCriteria($params))->all();
         return $this->sendResponse(AppointmentResource::collection($appointments), 'Appointments retrieved successfully');

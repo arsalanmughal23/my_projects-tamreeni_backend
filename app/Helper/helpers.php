@@ -429,27 +429,51 @@ if (!function_exists('getOptionsLanguage')) {
     }
 }
 if (!function_exists('generateWeekDates')) {
-    function generateWeekDates($array, $count)
+
+    function generateWeekDates($previousWeekDates, $array, $count)
     {
-        $numberOfDaysPerWeek = $count;
-        $skipableDayCount = match ($numberOfDaysPerWeek) {
-            2 => 3,
-            4 => 1,
-            5 => 0,
-            default => 3
-        };
-        $randomDates = [];
+        $previousWeekDates = collect($previousWeekDates)->sort()->reverse();
+        $previousWeekDays = $previousWeekDates->map(function($date) { return Carbon::parse($date)->format('l');})->toArray();
+        $previousWeekDates = $previousWeekDates->toArray();
+        $weekDatesTemplate = [];
 
-        for($i = 0; $i < count($array); $i += ($skipableDayCount+1)) {
-            if(isset($array[$i]))
-                $randomDates[] = $array[$i];
-        }
+        if($count > 2){
+            if($count == 5){
+                $weekDaysTemplate1 = ['Sunday', 'Monday', 'Wednesday', 'Thursday', 'Friday'];
+                $weekDaysTemplate2 = ['Monday', 'Tuesday', 'Wednesday', 'Friday', 'Saturday'];
 
-        if($numberOfDaysPerWeek == 5 && count($randomDates) > $numberOfDaysPerWeek) {
-            $randomDates = collect($randomDates)->filter(function($date, $index){ return in_array($index, [0,1,3,5,6]);});
-            $randomDates = $randomDates->values()->toArray();
+                $weekDatesTemplate = in_array('Friday', $previousWeekDays) && in_array('Saturday', $previousWeekDays)
+                    ? $weekDaysTemplate1
+                    : $weekDaysTemplate2;
+
+            } else if($count == 4){
+                $weekDaysTemplate1 = ['Sunday', 'Tuesday', 'Thursday', 'Friday'];
+                $weekDaysTemplate2 = ['Sunday', 'Wednesday', 'Friday', 'Saturday'];
+                $weekDaysTemplate3 = ['Monday', 'Tuesday', 'Thursday', 'Saturday'];
+
+                if(count(array_diff($weekDaysTemplate1, $previousWeekDays)) < 1)
+                    $weekDatesTemplate = $weekDaysTemplate2;
+
+                else if(count(array_diff($weekDaysTemplate2, $previousWeekDays)) < 1)
+                    $weekDatesTemplate = $weekDaysTemplate3;
+
+                else if(count(array_diff($weekDaysTemplate3, $previousWeekDays)) < 1)
+                    $weekDatesTemplate = $weekDaysTemplate1;
+
+                if(!count($weekDatesTemplate))
+                    $weekDatesTemplate = $weekDaysTemplate1;
+
+            }
+
+            $array = collect($array)->filter(function($date) use ($weekDatesTemplate) {
+                return in_array(Carbon::parse($date)->format('l'), $weekDatesTemplate);
+            })->toArray();
+
+        } else {
+            $weekDayCount = (count($array) / 2) > ($count / 2) ? 2 : 1;
+            $array = collect($array)->random($weekDayCount)->toArray();
         }
-        return $randomDates;
+        return $array;
     }
 }
 if (!function_exists('pickRandomIndices')) {

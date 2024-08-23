@@ -178,6 +178,7 @@ class SlotAPIController extends AppBaseController
 
     public function userSlots(Request $request)
     {
+        $user = $request->user();
         $date  = Carbon::parse($request->input('date'));
         $day   = $date->format('l');
         $slots = $this->slotRepository->userSlots($request->input('user_id'), $day);
@@ -192,15 +193,15 @@ class SlotAPIController extends AppBaseController
             // Sort slot times within each type
             foreach ($typeSlots as $key => $slot) {
                 $checkAppointment = $this->appointmentRepository
-                    ->checkSlotAvailable($request->input('user_id'), $slot->id, $date);
+                    ->getBookedAppointments($slot, $date, $user->id)->exists();
+                    // ->checkSlotAvailable($request->input('user_id'), $user->id, $slot->id, $date);
                 $isAvailable      = $checkAppointment ? false : true;
-//                if (!$checkAppointment) {
+
                 $sortedSlotTimes[$key]['id']           = $slot->id;
                 $sortedSlotTimes[$key]['start_time']   = $slot->start_time;
                 $sortedSlotTimes[$key]['end_time']     = $slot->end_time;
                 $sortedSlotTimes[$key]['day']          = $slot->day;
                 $sortedSlotTimes[$key]['is_available'] = $isAvailable;
-//                }
             }
 
             // Store sorted slot times under each type

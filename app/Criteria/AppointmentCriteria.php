@@ -26,6 +26,7 @@ class AppointmentCriteria extends BaseCriteria implements CriteriaInterface
     protected $type = null;
     protected $profession_type = null;
     protected $status = null;
+    protected $payment_status = null;
     protected $start_date = null;
     protected $date = null;
     protected $order_by = null;
@@ -40,19 +41,22 @@ class AppointmentCriteria extends BaseCriteria implements CriteriaInterface
 
         if ($this->isset('customer_id'))
             $model = $model->where('customer_id', $this->customer_id);
-    
+
         if ($this->isset('type'))
             $model = $model->where('type', $this->type);
-        
+
         if ($this->isset('profession_type'))
             $model = $model->where('profession_type', $this->profession_type);
 
         if ($this->isset('status'))
             $model = $model->where('status', $this->status);
 
+        if ($this->isset('payment_status'))
+            $model = $model->where('payment_status', $this->payment_status);
+
         if ($this->isset('start_date'))
             $model = $model->where('date', '>=', $this->start_date);
-        
+
         if ($this->isset('date'))
             $model = $model->whereDate('date', $this->date);
 

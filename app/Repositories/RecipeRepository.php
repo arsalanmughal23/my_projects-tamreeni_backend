@@ -49,16 +49,29 @@ class RecipeRepository extends BaseRepository
         return Recipe::class;
     }
 
-    public function getRecipeSelectOptions() 
+    public function getRecipeSelectOptions()
     {
         return $this->model()::pluck('title', 'id');
     }
 
-    // Filters Implemented: 'diet_type', 'meal_category_ids', 'meal_category_slugs', 'keyword', 'min_calories', 'max_calories', 'calories', 'meal_type', 'title', 
+    // Filters Implemented: 'diet_type', 'meal_category_ids', 'meal_category_slugs', 'keyword', 'min_calories', 'max_calories', 'calories', 'meal_type', 'title',
     // Filters UnAvailable: 'units_in_recipe', 'divide_recipe_by', 'number_of_units', 'carbs','fats','protein'
     public function getRecipes($params = [])
     {
+        $userId = auth()->id();
         $query = Recipe::query()->with('recipeIngredients');
+
+        if(isset($params['is_favourite'])){
+            if($params['is_favourite'] == 'false'){
+                $query->whereDoesntHave('favourites', function($q) use($userId) {
+                    return $q->where('user_id', $userId);
+                });
+            } else {
+                $query->whereHas('favourites', function($q) use($userId) {
+                    return $q->where('user_id', $userId);
+                });
+            }
+        }
 
         if(isset($params['diet_type'])){
             $query->where('diet_type', $params['diet_type']);
@@ -72,7 +85,7 @@ class RecipeRepository extends BaseRepository
                 return $mealCategory->whereIn('id', $mealCategoryIds);
             });
         }
-        
+
         if(isset($params['meal_category_slugs'])){
             $mealCategorySlugs = $params['meal_category_slugs'];
             $query->whereHas('mealCategories', function ($mealCategory) use ($mealCategorySlugs) {
@@ -102,7 +115,7 @@ class RecipeRepository extends BaseRepository
             $maxCalorie = floatval($params['max_calories']);
             $query->where('calories', '<=', $maxCalorie);
         }
-        
+
         if(isset($params['calories'])){
             $query->where('calories', $params['calories']);
         }

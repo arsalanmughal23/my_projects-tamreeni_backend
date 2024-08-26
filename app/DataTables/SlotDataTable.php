@@ -82,7 +82,7 @@ class SlotDataTable extends DataTable
             'type',
             'start_time',
             'end_time',
-            'created_at'
+            // 'created_at'
         ];
     }
 

@@ -19,11 +19,11 @@
 <!-- Start Time Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('start_time', 'Start Time:') !!}
-    {!! Form::time('start_time', null, ['class' => 'form-control','maxlength' => 191,'maxlength' => 191,'maxlength' => 191]) !!}
+    {!! Form::time('start_time', null, ['class' => 'form-control', 'step' => '3600']) !!}
 </div>
 
 <!-- End Time Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('end_time', 'End Time:') !!}
-    {!! Form::time('end_time', null, ['class' => 'form-control','maxlength' => 191,'maxlength' => 191,'maxlength' => 191]) !!}
+    {!! Form::time('end_time', null, ['class' => 'form-control', 'step' => '3600']) !!}
 </div>

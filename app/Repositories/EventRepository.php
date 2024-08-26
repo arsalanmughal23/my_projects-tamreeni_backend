@@ -108,4 +108,10 @@ class EventRepository extends BaseRepository
             ->first();
     }
 
+    public function getUpcommingEvents()
+    {
+        return Event::where('date', '>', now())
+            ->whereIn('status', [Event::UPCOMING_EVENT]);
+    }
+
 }

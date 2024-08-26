@@ -10,6 +10,9 @@
 
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 
+    <!-- Ion Icon -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
 
@@ -276,6 +279,10 @@
         /* Additional styling for icons if needed */
         .fa {
             width: 20px; /* Adjust icon size as needed */
+        }
+
+        .container-fluid .small-box>.icon>.fa{
+            direction: rtl;
         }
 
 

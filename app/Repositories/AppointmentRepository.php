@@ -109,6 +109,12 @@ class AppointmentRepository extends BaseRepository
             ->exists();
     }
 
+    public function getUpcommingAppointments(){
+        return Appointment::where('payment_status', Appointment::PAYMENT_STATUS_PAID)
+            ->where('date', '>', now())
+            ->whereIn('status', [Appointment::STATUS_PENDING]);
+    }
+
     public function getBookedAppointments(Slot $slot, $date, $customer_id){
         $slotUserId = $slot->user_id;
         $startTime = $slot->start_time;

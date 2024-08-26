@@ -1,12 +1,16 @@
 <?php
 
 use App\Constants\EmailServiceTemplateNames;
+use App\Constants\NotificationServiceTemplateNames;
 use App\Jobs\SendEmail;
 use App\Models\Option;
 use App\Models\PromoCode;
+use App\Models\User;
 use App\Models\UserDetail;
 use App\Models\VerifyEmail;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Queue;
 
@@ -115,6 +119,71 @@ if (!function_exists('saveVerifyEmailOTP')) {
     function saveVerifyEmailOTP($user_id, $code)
     {
         return VerifyEmail::updateOrCreate(['user_id' => $user_id], ['code' => $code]);
+    }
+}
+
+if (!function_exists('sendNotification')) {
+    function sendNotification(User $user, $NOTIFICATION_TYPE, $refId, $title = [], $message = [])
+    {
+        if (!is_array($title) || count($title) < 2)
+            $title = ['Title', 'عنوان'];
+
+        if (!is_array($message) || count($message) < 2)
+            $message = ['Message', 'رسالة'];
+
+        $userDeviceTokens = $user->devices->pluck('device_token');
+        $userWithDeviceTokens = [
+            "_id" => strval($user->id),
+            "device_tokens" => $userDeviceTokens
+        ];
+        $payload = [
+            "users" => [
+                $userWithDeviceTokens
+            ],
+            "template_name" => $NOTIFICATION_TYPE,
+            "data" => [
+                "title" => json_encode([
+                    'en' => is_string($title[0]) ? $title[0] : 'title',
+                    'ar' => is_string($title[1]) ? $title[1] : 'عنوان',
+                ]),
+                "message" => json_encode([
+                    'en' => is_string($message[0]) ? $message[0] : 'body',
+                    'ar' => is_string($message[1]) ? $message[1] : 'هيئة',
+                ]),
+                "ref_id" => $refId,
+                "notification_type" => $NOTIFICATION_TYPE,
+                "user_name" => $user->name
+            ]
+        ];
+        $notificationRequest = new Request($payload);
+        $sendNotificationResponse = post($notificationRequest);
+
+        if (!$sendNotificationResponse['status'])
+            \Log::warning('Notification (' . $NOTIFICATION_TYPE . ') ' . $sendNotificationResponse['message']);
+
+        return $sendNotificationResponse;
+    }
+}
+
+if (!function_exists('post')) {
+    function post(Request $request)
+    {
+        $token   = config('services.notification.token');
+        $baseUrl = config('services.notification.base_url');
+        $endpoint = config('services.notification.endpoints.post');
+
+        $headers = [
+            'Content-Type'   => 'application/json',
+            'x-access-token' => $token
+        ];
+
+        try {
+            $response = Http::withHeaders($headers)->post($baseUrl . '/' . $endpoint, $request->all());
+            return $response->json();
+        } catch (\Exception $e) {
+            \Log::error('Post Request Error: ' . $e->getMessage());
+            throw new \Exception($e->getMessage());
+        }
     }
 }
 

@@ -1,5 +1,5 @@
 <aside class="main-sidebar sidebar-dark-primary">
-    <a href="{{ url('/home') }}" class="brand-link">
+    <a href="{{ route('home') }}" class="brand-link">
         <img src="{{ asset('public/image/logo.png') }}" alt="{{ config('app.name') }} Logo"
              class="brand-image" onerror="brokenImageHandler(this);"/>
 

@@ -30,9 +30,9 @@ class UserMembershipMiddleware
         if($user->trail_expire_at && Carbon::parse($user->trail_expire_at)->isFuture())
             $isTrailAvailable = true;
 
-        if(!$userActiveMembership || ($userActiveMembership && Carbon::parse($userActiveMembership?->expire_at)->isPast())) {
+        // if(!$userActiveMembership || ($userActiveMembership && Carbon::parse($userActiveMembership?->expire_at)->isPast())) {
+        if($userActiveMembership?->status == UserMembership::STATUS_ACTIVE) {
             if(!$isTrailAvailable) {
-                // $userActiveMembership->update(['status' => UserMembership::STATUS_EXPIRE]);
                 return self::makeResponse(false, 'You need to purchase membership', 402);
             }
         }

@@ -26,7 +26,7 @@ class CreateUserMembershipsTable extends Migration
             $table->decimal('discount', 8, 2, true)->nullable();
             $table->decimal('charge_amount', 8, 2, true);
             $table->timestamp('expire_at')->nullable();
-            $table->enum('status', ['hold', 'active', 'inactive', 'reject'])->default('hold');
+            $table->enum('status', ['hold', 'active', 'inactive', 'reject', 'expire'])->default('hold');
             $table->timestamps();
             $table->softDeletes();
 

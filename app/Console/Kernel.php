@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('appointment:notification')->hourlyAt(0);
+        $schedule->command('usermembership:verify')->dailyAt(0);
     }
 
     /**

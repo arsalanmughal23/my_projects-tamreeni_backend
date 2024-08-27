@@ -18,7 +18,7 @@ return [
         '4' => 'Payment Reject', // PAYMENT_REJECT
     ],
     'notification' => [
-        'title' => 'Your Appointment with :name is scheduled on :time UTC',
-        'message' => 'This is a reminder for your appointment'
+        'title' => 'موعدك مع :name تمت جدولته في :time UTC',
+        'message' => 'هذا تذكير لموعدك'
     ]
 ];

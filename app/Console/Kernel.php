@@ -15,7 +15,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('appointment:notification')->hourlyAt(0);
+        $schedule->command('usermembership:verify')->dailyAt(0);
+        $schedule->command('workout:reminder')->dailyAt(0);
     }
 
     /**

@@ -99,7 +99,15 @@ class WorkoutDay extends Model
      **/
     public function user()
     {
-        return $this->belongsTo(\App\Models\User::class, 'user_id');
+        return $this->workoutPlan?->user ?? null;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function workoutPlan()
+    {
+        return $this->belongsTo(\App\Models\WorkoutPlan::class, 'workout_plan_id');
     }
 
     /**
@@ -125,7 +133,7 @@ class WorkoutDay extends Model
         return $equipments;
     }
 
-    
+
     // public function getEquipmentTypesAttribute()
     // {
     //     /* TODO: need to improve this code */

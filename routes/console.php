@@ -22,4 +22,5 @@ Artisan::command('inspire', function () {
 
 Artisan::command('test:command', function () {
     Log::alert('test:command | '. now()->format('d-M H:i:s'));
+    $this->comment('Test Command is Successfully Run');
 })->purpose('test command for testing purpose');

@@ -38,11 +38,14 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
     Route::resource('memberships', App\Http\Controllers\API\MembershipAPIController::class)->only('index');
     Route::resource('membership_durations', App\Http\Controllers\API\MembershipDurationAPIController::class);
     Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, 'pageContent'])->name('page-content');
+    Route::get('my-profile', [App\Http\Controllers\API\UserAPIController::class, 'myProfile']);
+    Route::resource('user_memberships', App\Http\Controllers\API\UserMembershipAPIController::class);
+    Route::post('test-notification', [App\Http\Controllers\API\NotificationAPIController::class, 'testNotification']);
+
 
 
     Route::middleware(['userMembership'])->group(function () {
         Route::resource('user-list', App\Http\Controllers\API\UserAPIController::class);
-        Route::get('my-profile', [App\Http\Controllers\API\UserAPIController::class, 'myProfile']);
         Route::put('update-profile', [App\Http\Controllers\API\UserAPIController::class, 'updateProfile']);
 
         Route::post('change-password', [App\Http\Controllers\API\AuthAPIController::class, 'changePassword'])->name('change_password');
@@ -109,7 +112,6 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
         Route::resource('nutrition-plan-day-meals', App\Http\Controllers\API\NutritionPlanDayMealAPIController::class)->only('index', 'show');
         Route::resource('nutrition-plan-day-recipes', App\Http\Controllers\API\NutritionPlanDayRecipeAPIController::class)->only('index', 'show');
 
-        Route::post('test-notification', [App\Http\Controllers\API\NotificationAPIController::class, 'testNotification']);
         Route::get('generate-workout-plan', [App\Http\Controllers\API\UserAPIController::class, 'generatePlans']);
 
         Route::resource('options', App\Http\Controllers\API\OptionAPIController::class);
@@ -125,8 +127,6 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
 
         // Route::resource('promo_codes', App\Http\Controllers\API\PromoCodeAPIController::class);
         // Route::resource('used_promo_codes', App\Http\Controllers\API\UsedPromoCodeAPIController::class);
-
-        Route::resource('user_memberships', App\Http\Controllers\API\UserMembershipAPIController::class);
 
 
         Route::resource('menus', App\Http\Controllers\API\MenuAPIController::class);

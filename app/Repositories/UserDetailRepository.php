@@ -127,14 +127,33 @@ class UserDetailRepository extends BaseRepository
     public function getPersonalStatistics(UserDetail $userDetails)
     {
         $calculatedBMI = $userDetails->bmi;
+        $weightCategory = 'normal';
+
+        if ($calculatedBMI < 18.5)
+            $weightCategory = 'underweight';
+        else if ($calculatedBMI >= 18.5 && $calculatedBMI < 25)
+            $weightCategory = 'normal';
+        else if ($calculatedBMI >= 25 && $calculatedBMI < 30)
+            $weightCategory = 'overweight';
+        else if ($calculatedBMI >= 30 && $calculatedBMI < 40)
+            $weightCategory = 'severe_obesity';
+        else if ($calculatedBMI >= 40 && $calculatedBMI < 45)
+            $weightCategory = 'morbid_obesity';
+        else if ($calculatedBMI >= 45)
+            $weightCategory = 'super_obesity';
+        else
+            $weightCategory = 'normal';
+
+            
         return [
             'bmi'       => $calculatedBMI,
-            'bmi_description' => __('messages.bmi_description', ['bmi' => $calculatedBMI]),
+            'bmi_description' => __('messages.bmi_description', ['bmi' => $calculatedBMI, 'weight_category' => $weightCategory]),
             // 'user_details'      => $userDetails,
             'current_day_required_calories' => $userDetails?->algo_required_calories ?? 0,
             'workout_week_count' => now()->setTime(0,0)->diffInWeeks($userDetails->reach_goal_target_date) ?? 0,
             'current_week_target_calroies' => ($userDetails?->algo_required_calories ?? 0) * 7,
             'current_week_consumed_calroies' => $userDetails->calories,
+            'weight_category' => $weightCategory
         ];
     }
 }

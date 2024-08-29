@@ -47,63 +47,64 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
     Route::post('test-notification', [App\Http\Controllers\API\NotificationAPIController::class, 'testNotification']);
 
 
+    Route::post('change-password', [App\Http\Controllers\API\AuthAPIController::class, 'changePassword'])->name('change_password');
+    Route::post('logout', [App\Http\Controllers\API\AuthAPIController::class, 'logout'])->name('logout');
+    Route::get('profile', [App\Http\Controllers\API\UserDetailAPIController::class, 'getUserProfile']);
+    Route::resource('faqs', App\Http\Controllers\API\FaqAPIController::class);
+    Route::put('update-language', [App\Http\Controllers\API\UserDetailAPIController::class, 'updateLanguage']);
+    Route::resource('wellness_tips', App\Http\Controllers\API\WellnessTipAPIController::class);
+    Route::resource('settings', App\Http\Controllers\API\SettingAPIController::class);
+    Route::resource('favourites', App\Http\Controllers\API\FavouriteAPIController::class);
+    Route::post('favorite', [App\Http\Controllers\API\FavouriteAPIController::class, 'markAsFavorite']);
+    Route::post('mark-interested', [App\Http\Controllers\API\EventAPIController::class, 'markInterested']);
+    Route::get('search', [App\Http\Controllers\API\MealAPIController::class, 'search']);
+    Route::resource('meal_categories', App\Http\Controllers\API\MealCategoryAPIController::class);
+    Route::resource('meals', App\Http\Controllers\API\MealAPIController::class);
+    Route::resource('events', App\Http\Controllers\API\EventAPIController::class);
+    Route::resource('slots', App\Http\Controllers\API\SlotAPIController::class);
+    Route::get('user-slots', [App\Http\Controllers\API\SlotAPIController::class, 'userSlots']);
+    Route::resource('user_events', App\Http\Controllers\API\UserEventAPIController::class);
+    Route::resource('exercises', App\Http\Controllers\API\ExerciseAPIController::class);
+    Route::resource('body_parts', App\Http\Controllers\API\BodyPartAPIController::class);
+    Route::resource('exercise_equipments', App\Http\Controllers\API\ExerciseEquipmentAPIController::class);
+    Route::resource('exercise_equipment_pivots', App\Http\Controllers\API\ExerciseEquipmentPivotAPIController::class);
+
+    Route::resource('questions', App\Http\Controllers\API\QuestionAPIController::class)->only('index');
+    Route::post('submit_answers', [App\Http\Controllers\API\QuestionAPIController::class, 'submitAnswers']);
+    Route::get('personal_statistics', [App\Http\Controllers\API\UserAPIController::class, 'getPersonalStatistics']);
+
+    Route::resource('contact_requests', App\Http\Controllers\API\ContactRequestAPIController::class);
+    Route::resource('transactions', App\Http\Controllers\API\TransactionAPIController::class);
+    Route::resource('user_subscriptions', App\Http\Controllers\API\UserSubscriptionAPIController::class);
+    Route::get('generate-workout-plan', [App\Http\Controllers\API\UserAPIController::class, 'generatePlans']);
+    Route::resource('question_answer_attempts', App\Http\Controllers\API\QuestionAnswerAttemptAPIController::class);
+
+
+    Route::resource('recipes', App\Http\Controllers\API\RecipeAPIController::class);
+    Route::resource('recipe_ingredients', App\Http\Controllers\API\RecipeIngredientAPIController::class);
+
+    Route::resource('nutrition_plan_day_recipes', App\Http\Controllers\API\NutritionPlanDayRecipeAPIController::class);
+    Route::resource('nplan_day_recipe_ingredients', App\Http\Controllers\API\NplanDayRecipeIngredientAPIController::class);
+
 
     Route::middleware(['userMembership'])->group(function () {
         Route::resource('user-list', App\Http\Controllers\API\UserAPIController::class);
 
-        Route::post('change-password', [App\Http\Controllers\API\AuthAPIController::class, 'changePassword'])->name('change_password');
-        Route::post('logout', [App\Http\Controllers\API\AuthAPIController::class, 'logout'])->name('logout');
-
-        Route::resource('faqs', App\Http\Controllers\API\FaqAPIController::class);
-
-        Route::get('profile', [App\Http\Controllers\API\UserDetailAPIController::class, 'getUserProfile']);
-        Route::put('update-language', [App\Http\Controllers\API\UserDetailAPIController::class, 'updateLanguage']);
-        Route::resource('wellness_tips', App\Http\Controllers\API\WellnessTipAPIController::class);
-        Route::resource('settings', App\Http\Controllers\API\SettingAPIController::class);
-
-        Route::resource('favourites', App\Http\Controllers\API\FavouriteAPIController::class);
-        Route::post('favorite', [App\Http\Controllers\API\FavouriteAPIController::class, 'markAsFavorite']);
-        Route::post('mark-interested', [App\Http\Controllers\API\EventAPIController::class, 'markInterested']);
-        Route::get('search', [App\Http\Controllers\API\MealAPIController::class, 'search']);
-        Route::resource('meal_categories', App\Http\Controllers\API\MealCategoryAPIController::class);
-        Route::resource('meals', App\Http\Controllers\API\MealAPIController::class);
-        Route::resource('events', App\Http\Controllers\API\EventAPIController::class);
-        Route::resource('slots', App\Http\Controllers\API\SlotAPIController::class);
-        Route::get('user-slots', [App\Http\Controllers\API\SlotAPIController::class, 'userSlots']);
-        Route::resource('user_events', App\Http\Controllers\API\UserEventAPIController::class);
-        Route::resource('exercises', App\Http\Controllers\API\ExerciseAPIController::class);
-        Route::resource('body_parts', App\Http\Controllers\API\BodyPartAPIController::class);
-        Route::resource('exercise_equipments', App\Http\Controllers\API\ExerciseEquipmentAPIController::class);
-        Route::resource('exercise_equipment_pivots', App\Http\Controllers\API\ExerciseEquipmentPivotAPIController::class);
-
-        Route::resource('questions', App\Http\Controllers\API\QuestionAPIController::class)->only('index');
-        Route::post('submit_answers', [App\Http\Controllers\API\QuestionAPIController::class, 'submitAnswers']);
-        Route::get('personal_statistics', [App\Http\Controllers\API\UserAPIController::class, 'getPersonalStatistics']);
-
-        Route::resource('contact_requests', App\Http\Controllers\API\ContactRequestAPIController::class);
-
         Route::resource('appointments', App\Http\Controllers\API\AppointmentAPIController::class);
-
         Route::resource('packages', App\Http\Controllers\API\PackageAPIController::class);
 
-        Route::resource('transactions', App\Http\Controllers\API\TransactionAPIController::class);
 
         Route::get('user-current-package', [App\Http\Controllers\API\UserSubscriptionAPIController::class, 'userCurrentPackage']);
-        Route::resource('user_subscriptions', App\Http\Controllers\API\UserSubscriptionAPIController::class);
 
         Route::post('payments/create-customer', [App\Http\Controllers\API\PaymentController::class, 'createCustomer']);
 
+
         Route::resource('meal_types', App\Http\Controllers\API\MealTypeAPIController::class);
-
         Route::resource('workout-days', App\Http\Controllers\API\WorkoutDayAPIController::class);
-
         Route::resource('workout-day-exercises', App\Http\Controllers\API\WorkoutDayExerciseAPIController::class);
-
         Route::resource('workout-plans', App\Http\Controllers\API\WorkoutPlanAPIController::class);
 
-
         Route::resource('nutrition-plans', App\Http\Controllers\API\NutritionPlanAPIController::class);
-
 
         Route::resource('nutrition-plan-days', App\Http\Controllers\API\NutritionPlanDayAPIController::class);
         Route::put('user-meal-consumed/{nutritionPlanDayMealId}', [App\Http\Controllers\API\NutritionPlanDayMealAPIController::class, 'userMealConsumed']);
@@ -114,18 +115,11 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
         Route::resource('nutrition-plan-day-meals', App\Http\Controllers\API\NutritionPlanDayMealAPIController::class)->only('index', 'show');
         Route::resource('nutrition-plan-day-recipes', App\Http\Controllers\API\NutritionPlanDayRecipeAPIController::class)->only('index', 'show');
 
-        Route::get('generate-workout-plan', [App\Http\Controllers\API\UserAPIController::class, 'generatePlans']);
 
         Route::resource('options', App\Http\Controllers\API\OptionAPIController::class);
-        Route::resource('question_answer_attempts', App\Http\Controllers\API\QuestionAnswerAttemptAPIController::class);
 
         Route::resource('meal_breakdowns', App\Http\Controllers\API\MealBreakdownAPIController::class);
 
-        Route::resource('recipes', App\Http\Controllers\API\RecipeAPIController::class);
-        Route::resource('recipe_ingredients', App\Http\Controllers\API\RecipeIngredientAPIController::class);
-
-        Route::resource('nutrition_plan_day_recipes', App\Http\Controllers\API\NutritionPlanDayRecipeAPIController::class);
-        Route::resource('nplan_day_recipe_ingredients', App\Http\Controllers\API\NplanDayRecipeIngredientAPIController::class);
 
         // Route::resource('promo_codes', App\Http\Controllers\API\PromoCodeAPIController::class);
         // Route::resource('used_promo_codes', App\Http\Controllers\API\UsedPromoCodeAPIController::class);

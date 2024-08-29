@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +20,12 @@ Route::get('/', function () {
 // Auth::routes();
 Auth::routes(['register' => false]);
 // Auth::routes();
+
+Route::get('/cache-clear', function(){
+    Artisan::call('route:clear');
+    Artisan::call('cache:clear');
+    return 'done';
+});
 
 Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/payment-page', [App\Http\Controllers\PayTabsController::class, 'create_payment_page'])->name('payment-page');

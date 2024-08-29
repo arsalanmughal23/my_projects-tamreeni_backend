@@ -127,24 +127,8 @@ class UserDetailRepository extends BaseRepository
     public function getPersonalStatistics(UserDetail $userDetails)
     {
         $calculatedBMI = $userDetails->bmi;
-        $weightCategory = 'normal';
+        $weightCategory = $this->getWeightCategory($calculatedBMI);
 
-        if ($calculatedBMI < 18.5)
-            $weightCategory = 'underweight';
-        else if ($calculatedBMI >= 18.5 && $calculatedBMI < 25)
-            $weightCategory = 'normal';
-        else if ($calculatedBMI >= 25 && $calculatedBMI < 30)
-            $weightCategory = 'overweight';
-        else if ($calculatedBMI >= 30 && $calculatedBMI < 40)
-            $weightCategory = 'severe_obesity';
-        else if ($calculatedBMI >= 40 && $calculatedBMI < 45)
-            $weightCategory = 'morbid_obesity';
-        else if ($calculatedBMI >= 45)
-            $weightCategory = 'super_obesity';
-        else
-            $weightCategory = 'normal';
-
-            
         return [
             'bmi'       => $calculatedBMI,
             'bmi_description' => __('messages.bmi_description', ['bmi' => $calculatedBMI, 'weight_category' => $weightCategory]),
@@ -155,5 +139,27 @@ class UserDetailRepository extends BaseRepository
             'current_week_consumed_calroies' => $userDetails->calories,
             'weight_category' => $weightCategory
         ];
+    }
+
+    public function getWeightCategory($bmi = 0)
+    {
+        $weightCategory = 'normal';
+
+        if ($bmi < 18.5)
+            $weightCategory = 'underweight';
+        else if ($bmi >= 18.5 && $bmi < 25)
+            $weightCategory = 'normal';
+        else if ($bmi >= 25 && $bmi < 30)
+            $weightCategory = 'overweight';
+        else if ($bmi >= 30 && $bmi < 40)
+            $weightCategory = 'severe_obesity';
+        else if ($bmi >= 40 && $bmi < 45)
+            $weightCategory = 'morbid_obesity';
+        else if ($bmi >= 45)
+            $weightCategory = 'super_obesity';
+        else
+            $weightCategory = 'normal';
+
+        return $weightCategory;
     }
 }

@@ -65,9 +65,13 @@ class QuestionAPIController extends AppBaseController
             $userDetails->unplaned_answer_attempt_id = $userAnswerAttempt->id;
             $userDetails->save();
 
+            $userAnswerAttemptCalculatedBMI = $userAnswerAttempt->bmi;
+            $weightCategory = $this->userDetailRepository->getWeightCategory($userAnswerAttemptCalculatedBMI);
+
             $responseData = [
-                'bmi'    => $userAnswerAttempt->bmi,
-                'bmi_description' => __('messages.bmi_description', ['bmi' => $userAnswerAttempt->bmi])
+                'bmi'    => $userAnswerAttemptCalculatedBMI,
+                'bmi_description' => __('messages.bmi_description', ['bmi' => $userAnswerAttemptCalculatedBMI, 'weight_category' => $weightCategory]),
+                'weight_category' => $weightCategory
             ];
 
             return $this->sendResponse($responseData, 'Answers are saved successfully');

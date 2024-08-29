@@ -33,6 +33,7 @@ Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, '
 
 Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () {
 
+    Route::put('update-profile', [App\Http\Controllers\API\UserAPIController::class, 'updateProfile']);
     Route::post('check_promo_code', [App\Http\Controllers\API\PromoCodeAPIController::class, 'checkPromoCode']);
     Route::post('purchase_memberships', [App\Http\Controllers\API\UserMembershipAPIController::class, 'purchaseMembership']);
     Route::post('use_trail', [App\Http\Controllers\API\UserMembershipAPIController::class, 'useMembershipTrail']);
@@ -49,7 +50,6 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
 
     Route::middleware(['userMembership'])->group(function () {
         Route::resource('user-list', App\Http\Controllers\API\UserAPIController::class);
-        Route::put('update-profile', [App\Http\Controllers\API\UserAPIController::class, 'updateProfile']);
 
         Route::post('change-password', [App\Http\Controllers\API\AuthAPIController::class, 'changePassword'])->name('change_password');
         Route::post('logout', [App\Http\Controllers\API\AuthAPIController::class, 'logout'])->name('logout');

@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class AppointmentNotification extends Command
+class AppointmentNotificationCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -42,7 +42,7 @@ class AppointmentNotification extends Command
     public function handle()
     {
         Log::alert('appointment:notification | '. now()->format('d-M H:i:s'));
-        $date = Carbon::now();
+        $date = Carbon::now()->setSecond();
         $dateTimeStartOfHour = $date->startOfHour();
 
         // Pick a reminder Date Time for pick the appointments and notify users for their appointment

@@ -40,6 +40,8 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
     Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, 'pageContent'])->name('page-content');
     Route::get('my-profile', [App\Http\Controllers\API\UserAPIController::class, 'myProfile']);
     Route::resource('user_memberships', App\Http\Controllers\API\UserMembershipAPIController::class);
+    Route::delete('delete-account', [App\Http\Controllers\API\AuthAPIController::class, 'deleteAccount']);
+
     Route::post('test-notification', [App\Http\Controllers\API\NotificationAPIController::class, 'testNotification']);
 
 
@@ -50,7 +52,6 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
 
         Route::post('change-password', [App\Http\Controllers\API\AuthAPIController::class, 'changePassword'])->name('change_password');
         Route::post('logout', [App\Http\Controllers\API\AuthAPIController::class, 'logout'])->name('logout');
-        Route::delete('delete-account', [App\Http\Controllers\API\AuthAPIController::class, 'deleteAccount']);
 
         Route::resource('faqs', App\Http\Controllers\API\FaqAPIController::class);
 

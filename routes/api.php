@@ -28,6 +28,8 @@ Route::post('verify-otp', [\App\Http\Controllers\API\AuthAPIController::class, '
 Route::post('social-login', [App\Http\Controllers\API\AuthAPIController::class, 'socialLogin']);
 
 // Route::post('verify-password-reset-code', [App\Http\Controllers\API\AuthAPIController::class, 'verifyPasswordResetCode'])->name('verify_password_reset_code');
+Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, 'pageContent'])->name('page-content');
+
 
 Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () {
 
@@ -37,7 +39,6 @@ Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () 
 
     Route::resource('memberships', App\Http\Controllers\API\MembershipAPIController::class)->only('index');
     Route::resource('membership_durations', App\Http\Controllers\API\MembershipDurationAPIController::class);
-    Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, 'pageContent'])->name('page-content');
     Route::get('my-profile', [App\Http\Controllers\API\UserAPIController::class, 'myProfile']);
     Route::resource('user_memberships', App\Http\Controllers\API\UserMembershipAPIController::class);
     Route::delete('delete-account', [App\Http\Controllers\API\AuthAPIController::class, 'deleteAccount']);

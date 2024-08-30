@@ -73,6 +73,17 @@ class Role extends SpatieRole
         ];
     }
 
+
+    public static function updateRules()
+    {
+        return [
+            'name' => 'sometimes|string|max:'.config('constants.validation.role.name.size_max'),
+            // 'guard_name' => 'nullable|string|max:255',
+            'created_at' => 'nullable',
+            'updated_at' => 'nullable'
+        ];
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      **/

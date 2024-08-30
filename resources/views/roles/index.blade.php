@@ -7,12 +7,16 @@
                 <div class="col-sm-6">
                     <h1>Roles</h1>
                 </div>
-                <div class="col-sm-6">
-                    <a class="btn btn-primary float-right"
-                       href="{{ route('roles.create') }}">
-                        Add New
-                    </a>
-                </div>
+
+                @if(false)
+                    <div class="col-sm-6">
+                        <a class="btn btn-primary float-right"
+                            href="{{ route('roles.create') }}">
+                            Add New
+                        </a>
+                    </div>
+                @endif
+
             </div>
         </div>
     </section>

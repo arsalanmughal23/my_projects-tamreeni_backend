@@ -75,7 +75,7 @@ Route::group(['middleware' => ['auth', 'dynamic_permission']], function () {
 
     Route::resource('menus', App\Http\Controllers\MenuController::class);
 
-    Route::resource('roles', App\Http\Controllers\RolesController::class);
+    Route::resource('roles', App\Http\Controllers\RolesController::class)->only('index', 'edit', 'update', 'show');
 
     Route::resource('permissions', App\Http\Controllers\PermissionsController::class);
 

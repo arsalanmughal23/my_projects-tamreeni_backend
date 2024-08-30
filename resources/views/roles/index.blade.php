@@ -8,7 +8,7 @@
                     <h1>Roles</h1>
                 </div>
 
-                @if(false)
+                @if(Route::has('roles.create'))
                     <div class="col-sm-6">
                         <a class="btn btn-primary float-right"
                             href="{{ route('roles.create') }}">

@@ -27,7 +27,7 @@ class UsedPromoCode extends Model
     use HasFactory;
 
     public $table = 'used_promo_codes';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
@@ -39,11 +39,13 @@ class UsedPromoCode extends Model
 
     public $fillable = [
         'user_id',
+        'email',
         'morphable_type',
         'morphable_id',
         'code',
         'value',
-        'type'
+        'type',
+        'is_used'
     ];
 
     /**
@@ -53,12 +55,14 @@ class UsedPromoCode extends Model
      */
     protected $casts = [
         'id' => 'integer',
+        'email' => 'string',
         'user_id' => 'integer',
         'morphable_type' => 'string',
         'morphable_id' => 'integer',
         'code' => 'string',
         'value' => 'decimal:2',
-        'type' => 'string'
+        'type' => 'string',
+        'is_used' => 'boolean'
     ];
 
     /**
@@ -68,6 +72,7 @@ class UsedPromoCode extends Model
      */
     public static $rules = [
         'user_id' => 'required',
+        'email' => 'required|string',
         'morphable_type' => 'required|string|max:191',
         'morphable_id' => 'required',
         'code' => 'required|string|max:191',
@@ -85,7 +90,7 @@ class UsedPromoCode extends Model
     {
         return $this->belongsTo(\App\Models\User::class, 'user_id');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      **/

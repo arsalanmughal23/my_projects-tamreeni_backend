@@ -16,10 +16,12 @@ class CreateUsedPromoCodesTable extends Migration
         Schema::create('used_promo_codes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            $table->string('email');
             $table->morphs('morphable');
             $table->string('code');
             $table->decimal('value', 8, 2, true);
             $table->enum('type', ['flat', 'percent'])->nullable(false);
+            $table->boolean('is_used')->default(false);
             $table->softDeletes();
             $table->timestamps();
 

@@ -5,6 +5,7 @@ namespace App\Models;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Spatie\Translatable\HasTranslations;
 
 /**
@@ -108,6 +109,23 @@ class UserMembership extends Model
         'charge_amount' => 'required|float',
     ];
 
+
+    /**
+     * Get all of the user's usedPromoCodes.
+     */
+    public function usedPromoCodes(): MorphMany
+    {
+        return $this->morphMany(UsedPromoCode::class, 'morphable');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     **/
+    public function promoCode()
+    {
+        return $this->belongsTo(PromoCode::class, 'promo_code_id');
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      **/
@@ -140,6 +158,8 @@ class UserMembership extends Model
     public function paymentSuccess()
     {
         $this->update(['status' => self::STATUS_ACTIVE]);
+        if($this->usedPromoCodes->count())
+            $this->usedPromoCodes()->update(['is_used' => 1]);
         return $this;
     }
 

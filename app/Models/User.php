@@ -161,9 +161,9 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Get all of the user's usedPromoCodes.
      */
-    public function usedPromoCodes(): MorphMany
+    public function usedPromoCodes(): HasMany
     {
-        return $this->morphMany(UsedPromoCode::class, 'morphable');
+        return $this->hasMany(\App\Models\UsedPromoCode::class);
     }
 
     /**

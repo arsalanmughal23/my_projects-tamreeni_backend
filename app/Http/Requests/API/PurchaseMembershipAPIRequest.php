@@ -28,7 +28,7 @@ class PurchaseMembershipAPIRequest extends BaseAPIRequest
 
         return [
             'membership_duration_id' => 'required|exists:membership_durations,id',
-            'code' => 'exists:promo_codes,code|unique:used_promo_codes,code,NULL,id,user_id,'.$user->id,
+            'code' => 'exists:promo_codes,code',
         ];
     }
 

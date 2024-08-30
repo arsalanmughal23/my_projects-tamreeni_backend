@@ -26,7 +26,7 @@ class CheckPromoCodeAPIRequest extends BaseAPIRequest
     {
         $user = $this->user();
         return [
-            'code' => 'required|exists:promo_codes,code|unique:used_promo_codes,code,NULL,id,user_id,'.$user->id,
+            'code' => 'required|exists:promo_codes,code',
             'membership_id' => 'required|exists:memberships,id'
         ];
     }

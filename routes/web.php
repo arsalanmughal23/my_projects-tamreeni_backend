@@ -168,7 +168,7 @@ Route::group(['middleware' => ['auth', 'dynamic_permission']], function () {
     Route::resource('recipes', App\Http\Controllers\RecipeController::class);
     Route::resource('recipe_ingredients', App\Http\Controllers\RecipeIngredientController::class);
 
-    Route::resource('nutrition_plan_day_recipes', App\Http\Controllers\NutritionPlanDayRecipeController::class);
+    Route::resource('nutrition_plan_day_recipes', App\Http\Controllers\NutritionPlanDayRecipeController::class)->only('index', 'show', 'edit', 'update');
     Route::resource('nplan_day_recipe_ingredients', App\Http\Controllers\NplanDayRecipeIngredientController::class);
 
     Route::resource('promo_codes', App\Http\Controllers\PromoCodeController::class);

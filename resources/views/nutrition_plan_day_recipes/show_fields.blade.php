@@ -13,19 +13,19 @@
 <!-- Meal Type Id Field -->
 <div class="col-sm-12">
     {!! Form::label('meal_type_id', 'Meal Type Id:') !!}
-    <p>{{ $nutritionPlanDayRecipe->meal_type_id }}</p>
+    <p>{{ $nutritionPlanDayRecipe->mealType->name }}</p>
 </div>
 
 <!-- Recipe Id Field -->
 <div class="col-sm-12">
     {!! Form::label('recipe_id', 'Recipe Id:') !!}
-    <p>{{ $nutritionPlanDayRecipe->recipe_id }}</p>
+    <a href="{{ route('recipes.show', $nutritionPlanDayRecipe->recipe_id) }}">{{ $nutritionPlanDayRecipe?->recipe?->title }}</a>
 </div>
 
 <!-- Meal Category Ids Field -->
 <div class="col-sm-12">
     {!! Form::label('meal_category_ids', 'Meal Category Ids:') !!}
-    <p>{{ $nutritionPlanDayRecipe->meal_category_ids }}</p>
+    <p>{{ implode(', ', $nutritionPlanDayRecipe?->mealCategories?->pluck('name')?->toArray() ?? []) }}</p>
 </div>
 
 <!-- Title Field -->
@@ -43,7 +43,7 @@
 <!-- Image Field -->
 <div class="col-sm-12">
     {!! Form::label('image', 'Image:') !!}
-    <p>{{ $nutritionPlanDayRecipe->image }}</p>
+    <img src="{{ $nutritionPlanDayRecipe->image }}" width="200" alt="">
 </div>
 
 <!-- Instruction Field -->

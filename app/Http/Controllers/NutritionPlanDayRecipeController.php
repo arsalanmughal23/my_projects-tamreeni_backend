@@ -9,17 +9,22 @@ use App\Http\Requests\UpdateNutritionPlanDayRecipeRequest;
 use App\Repositories\NutritionPlanDayRecipeRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
+use App\Models\Meal;
+use App\Repositories\MealCategoryRepository;
+use App\Repositories\MealTypeRepository;
+use App\Repositories\RecipeRepository;
 use Response;
 
 class NutritionPlanDayRecipeController extends AppBaseController
 {
     /** @var NutritionPlanDayRecipeRepository $nutritionPlanDayRecipeRepository*/
-    private $nutritionPlanDayRecipeRepository;
 
-    public function __construct(NutritionPlanDayRecipeRepository $nutritionPlanDayRecipeRepo)
-    {
-        $this->nutritionPlanDayRecipeRepository = $nutritionPlanDayRecipeRepo;
-    }
+    public function __construct(
+        private NutritionPlanDayRecipeRepository $nutritionPlanDayRecipeRepository,
+        private RecipeRepository $recipeRepo,
+        private MealTypeRepository $mealTypeRepo,
+        private MealCategoryRepository $mealCategoryRepo,
+    ) {}
 
     /**
      * Display a listing of the NutritionPlanDayRecipe.
@@ -40,7 +45,12 @@ class NutritionPlanDayRecipeController extends AppBaseController
      */
     public function create()
     {
-        return view('nutrition_plan_day_recipes.create');
+        $dietTypeSelectOptions = Meal::COSNT_DIET_TYPES;
+        $mealTypeSelectOptions = $this->mealTypeRepo->pluck('name', 'id');
+        $mealCategorySelectOptions = $this->mealCategoryRepo->pluck('name', 'id');
+        $recipeSelectOptions = $this->recipeRepo->pluck('title', 'id');
+
+        return view('nutrition_plan_day_recipes.create', compact('dietTypeSelectOptions','mealTypeSelectOptions','mealCategorySelectOptions','recipeSelectOptions'));
     }
 
     /**
@@ -98,7 +108,14 @@ class NutritionPlanDayRecipeController extends AppBaseController
             return redirect(route('nutrition_plan_day_recipes.index'));
         }
 
-        return view('nutrition_plan_day_recipes.edit')->with('nutritionPlanDayRecipe', $nutritionPlanDayRecipe);
+        $dietTypeSelectOptions = Meal::COSNT_DIET_TYPES;
+        $mealTypeSelectOptions = $this->mealTypeRepo->pluck('name', 'id');
+        $mealCategorySelectOptions = $this->mealCategoryRepo->pluck('name', 'id');
+        $recipeSelectOptions = $this->recipeRepo->pluck('title', 'id');
+
+        $selectedMealCategory = $nutritionPlanDayRecipe->mealCategories->pluck('id')->toArray();
+
+        return view('nutrition_plan_day_recipes.edit', compact('nutritionPlanDayRecipe','dietTypeSelectOptions','mealTypeSelectOptions','mealCategorySelectOptions','selectedMealCategory','recipeSelectOptions'));
     }
 
     /**

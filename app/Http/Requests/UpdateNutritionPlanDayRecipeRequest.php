@@ -24,8 +24,7 @@ class UpdateNutritionPlanDayRecipeRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = NutritionPlanDayRecipe::$rules;
-        
+        $rules = NutritionPlanDayRecipe::$update_rules;
         return $rules;
     }
 }

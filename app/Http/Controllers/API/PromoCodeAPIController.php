@@ -14,6 +14,7 @@ use App\Models\Membership;
 use App\Models\MembershipDuration;
 use App\Repositories\MembershipDurationRepository;
 use App\Repositories\MembershipRepository;
+use App\Repositories\UsedPromoCodeRepository;
 use Error;
 use Response;
 
@@ -28,13 +29,15 @@ class PromoCodeAPIController extends AppBaseController
 
     public function __construct(
         private PromoCodeRepository $promoCodeRepository,
+        private UsedPromoCodeRepository $usedPromoCodeRepository,
         private MembershipRepository $membershipRepository,
-        private MembershipDurationRepository $membershipDurationRepository
+        private MembershipDurationRepository $membershipDurationRepository,
     ) {}
 
     public function checkPromoCode(CheckPromoCodeAPIRequest $request)
     {
         try {
+            $user   = $request->user();
             $promoCode = $this->promoCodeRepository->where('code', $request->code)->orderBy('created_at', 'desc')->first();
             // $membershipDurationId = $request->get('membership_duration_id', null);
 
@@ -43,6 +46,10 @@ class PromoCodeAPIController extends AppBaseController
 
             if($promoCode->status != PromoCode::STATUS_ACTIVE)
                 throw new Error('Promo code is inactive');
+
+            $usedPromoCode = $this->usedPromoCodeRepository->where(['email' => $user->email, 'code' => $promoCode->code, 'is_used' => 1])->exists();
+            if($usedPromoCode)
+                throw new Error('You already used this promo code');
 
             $membership = $this->membershipRepository->with('membershipDurations')->find($request->membership_id);
             if(!$membership)
@@ -60,7 +67,7 @@ class PromoCodeAPIController extends AppBaseController
             return $this->sendResponse(new MembershipResource($membership), 'Promo code is valid');
 
         } catch (\Error $e) {
-            return $this->sendError($e->getMessage(), 500);
+            return $this->sendError($e->getMessage(), 403);
         }
     }
 

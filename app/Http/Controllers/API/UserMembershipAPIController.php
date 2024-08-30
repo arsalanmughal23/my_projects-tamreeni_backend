@@ -64,18 +64,18 @@ class UserMembershipAPIController extends AppBaseController
                 $promoCode = $this->promoCodeRepository->where('code', $promoCode)->orderBy('created_at', 'desc')->first();
                 if(!$promoCode)
                     throw new Error('Promo code is not found');
-                
+
                 if($promoCode->status != PromoCode::STATUS_ACTIVE)
                    throw new Error('Promo code is inactive');
-                
-                $usedPromoCode = $this->usedPromoCodeRepository->where(['user_id' => $user->id, 'code' => $promoCode])->orderBy('created_at', 'desc')->exists();
-                if($usedPromoCode)
+
+                $usedPromoCodeExists = $this->usedPromoCodeRepository->where(['email' => $user->email, 'code' => $promoCode->code, 'is_used' => 1])->exists();
+                if($usedPromoCodeExists)
                    throw new Error('You already used this promo code');
             }
 
             if(!$user->stripe_customer_id)
                 $user->createStripeCustomer();
-        
+
             $discount = $promoCode ? calcualteDiscountPrice($membershipDuration->price, $promoCode->type ?? null, $promoCode->value ?? null) : 0;
             $amountInSAR = number_format($membershipDuration->price - $discount, 2);
 
@@ -99,6 +99,11 @@ class UserMembershipAPIController extends AppBaseController
                 'status' => UserMembership::STATUS_HOLD,
             ]);
 
+            if ($promoCode) {
+                $transactionable->usedPromoCodes()
+                    ->create(['user_id' => $user->id, 'email' => $user->email, 'code' => $promoCode->code, 'value' => $promoCode->value, 'type' => $promoCode->type]);
+            }
+
             $payTabController = new PayTabsController();
             $payTabsResponse = $payTabController->createTransactionWithPayTab($transactionable, $user, $amountInSAR, $description, $transactionable->id);
             $paymentCharge = $payTabsResponse['paymentCharge'];
@@ -115,13 +120,13 @@ class UserMembershipAPIController extends AppBaseController
             return $this->sendResponse($data, 'Membership request is created');
         } catch (\Error $e) {
             DB::rollback();
-            return $this->sendError([$e->getMessage(), $e->getLine()], 403);
+            return $this->sendError([$e->getMessage()], 403);
         } catch (\Exception $e) {
             DB::rollback();
-            return $this->sendError([$e->getMessage(), $e->getLine(), $e->getTrace()], 422);
+            return $this->sendError([$e->getMessage()], 422);
         }
     }
-    
+
     public function useMembershipTrail(Request $request)
     {
         try {

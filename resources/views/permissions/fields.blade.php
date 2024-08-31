@@ -65,8 +65,6 @@
         let permissionElementId = selectPermissionElement.attr('id');
         let moduleName = permissionElementId.split('.').shift();
 
-        console.log(`checked: ${$(`input.permission.module-${moduleName}:checked`).length}`)
-        console.log(`all: ${$(`input.permission.module-${moduleName}`).length}`)
         let isModuleAllPermissionsChecked = $(`input.permission.module-${moduleName}:checked`).length >= $(`input.permission.module-${moduleName}`).length;
         $('.selectAllPermissions').prop('checked', isModuleAllPermissionsChecked);
     });

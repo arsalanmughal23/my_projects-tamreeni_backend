@@ -9,6 +9,8 @@ use App\Http\Requests\UpdatePermissionsRequest;
 use App\Repositories\PermissionsRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
+use App\Models\Permission;
+use Illuminate\Support\Facades\DB;
 use Response;
 
 class PermissionsController extends AppBaseController
@@ -40,7 +42,25 @@ class PermissionsController extends AppBaseController
      */
     public function create()
     {
-        return view('permissions.create');
+        $moduleNamesThatPermissionisExists = $this->getModuleNamesThatPermissionExists();
+        $modules = array_diff(Permission::MODULES, $moduleNamesThatPermissionisExists->toArray());
+        $moduleName = null;
+        $permissions = collect();
+        return view('permissions.create', compact('moduleName','modules','permissions'));
+    }
+
+    public function getModuleNamesThatPermissionExists()
+    {
+        // Subquery that selects distinct module names
+        $subQuery = DB::table('permissions')
+            ->select(DB::raw('DISTINCT SUBSTRING_INDEX(name, ".", 1) as module_name'));
+
+        // Wrapping the subquery and returning pluck values of 'module_name'
+        return Permission::query()
+            ->from(DB::raw("({$subQuery->toSql()}) as sub"))
+            ->mergeBindings($subQuery)
+            ->whereIn('module_name', Permission::MODULES)
+            ->pluck('module_name');
     }
 
     /**
@@ -54,7 +74,16 @@ class PermissionsController extends AppBaseController
     {
         $input = $request->all();
 
-        $permissions = $this->permissionsRepository->create($input);
+        $modulePermissions = [];
+        foreach($input['permissions'] as $module => $permissions) {
+            foreach($permissions as $action => $permission) {
+                $modulePermissions[] = $this->permissionsRepository->updateOrCreate(['name' => $permission], ['name' => $permission]);
+            }
+        }
+
+        $this->permissionsRepository->where('name', 'like', $input['name'].'%')
+            ->whereNotIn('name', collect($modulePermissions)->pluck('name'))
+            ->delete();
 
         Flash::success('Permissions saved successfully.');
 
@@ -88,17 +117,18 @@ class PermissionsController extends AppBaseController
      *
      * @return Response
      */
-    public function edit($id)
+    public function edit($moduleName)
     {
-        $permissions = $this->permissionsRepository->find($id);
+        $permissions = $this->permissionsRepository->where('name', 'like', "$moduleName.%")->pluck('name');
 
-        if (empty($permissions)) {
-            Flash::error('Permissions not found');
-
+        if (!$permissions->count()) {
+            Flash::error('Module not found');
             return redirect(route('permissions.index'));
         }
 
-        return view('permissions.edit')->with('permissions', $permissions);
+        $moduleNamesThatPermissionisExists = $this->getModuleNamesThatPermissionExists();
+        $modules = array_intersect(Permission::MODULES, $moduleNamesThatPermissionisExists->toArray());
+        return view('permissions.edit', compact('permissions', 'modules', 'moduleName'));
     }
 
     /**
@@ -111,17 +141,20 @@ class PermissionsController extends AppBaseController
      */
     public function update($id, UpdatePermissionsRequest $request)
     {
-        $permissions = $this->permissionsRepository->find($id);
+        $input = $request->all();
 
-        if (empty($permissions)) {
-            Flash::error('Permissions not found');
-
-            return redirect(route('permissions.index'));
+        $modulePermissions = [];
+        foreach($input['permissions'] as $module => $permissions) {
+            foreach($permissions as $action => $permission) {
+                $modulePermissions[] = $this->permissionsRepository->updateOrCreate(['name' => $permission], ['name' => $permission]);
+            }
         }
 
-        $permissions = $this->permissionsRepository->update($request->all(), $id);
+        $this->permissionsRepository->where('name', 'like', $input['name'].'%')
+            ->whereNotIn('name', collect($modulePermissions)->pluck('name'))
+            ->delete();
 
-        Flash::success('Permissions updated successfully.');
+        Flash::success('Permissions saved successfully.');
 
         return redirect(route('permissions.index'));
     }
@@ -133,17 +166,9 @@ class PermissionsController extends AppBaseController
      *
      * @return Response
      */
-    public function destroy($id)
+    public function destroy($moduleName)
     {
-        $permissions = $this->permissionsRepository->find($id);
-
-        if (empty($permissions)) {
-            Flash::error('Permissions not found');
-
-            return redirect(route('permissions.index'));
-        }
-
-        $this->permissionsRepository->delete($id);
+        $this->permissionsRepository->where('name', 'like', "$moduleName.%")->delete();
 
         Flash::success('Permissions deleted successfully.');
 

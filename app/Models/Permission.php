@@ -34,6 +34,9 @@ class Permission extends SpatiePermission
 
     const ROUTES = ['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'];
 
+    const MODULES = ['users', 'meals', 'recipes', 'exercises', 'exercise_equipments', 'appointments'];
+    // users,transactions,settings,questions,pages,packages,options,meals,meal_types,meal_categories,exercises,exercise_equipments,body_parts
+
     public $fillable = [
         'name',
         'guard_name'
@@ -59,6 +62,19 @@ class Permission extends SpatiePermission
     {
         return [
             'name' => 'required|string|max:'.config('constants.validation.permissions.name.size_max'),
+            'permissions' => 'required|array',
+            'permissions.*.*' => 'required|string|max:'.config('constants.validation.permissions.name.size_max'),
+            // 'guard_name' => 'required|string|max:255',
+            'created_at' => 'nullable',
+            'updated_at' => 'nullable'
+        ];
+    }
+    public static function update_rules()
+    {
+        return [
+            'name' => 'required|string|max:'.config('constants.validation.permissions.name.size_max'),
+            'permissions' => 'required|array',
+            'permissions.*.*' => 'required|string|max:'.config('constants.validation.permissions.name.size_max'),
             // 'guard_name' => 'required|string|max:255',
             'created_at' => 'nullable',
             'updated_at' => 'nullable'

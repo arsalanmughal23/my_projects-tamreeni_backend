@@ -1,15 +1,18 @@
-{!! Form::open(['route' => ['permissions.destroy', $id], 'method' => 'delete']) !!}
 <div class='btn-group'>
-    <a href="{{ route('permissions.show', $id) }}" class='btn btn-default btn-xs'>
+    <a href="{{ route('permissions.show', $module_name) }}" class='btn btn-default btn-xs'>
         <i class="fa fa-eye"></i>
     </a>
-    <a href="{{ route('permissions.edit', $id) }}" class='btn btn-default btn-xs'>
+    <a href="{{ route('permissions.edit', $module_name) }}" class='btn btn-default btn-xs'>
         <i class="fa fa-edit"></i>
     </a>
-    {!! Form::button('<i class="fa fa-trash"></i>', [
-        'type' => 'submit',
-        'class' => 'btn btn-danger btn-xs',
-        'onclick' => "return submitForm(this.form);"
-    ]) !!}
+
+    @if(Route::has('permissions.destroy'))
+        {!! Form::open(['route' => ['permissions.destroy', $module_name], 'method' => 'delete']) !!}
+            {!! Form::button('<i class="fa fa-trash"></i>', [
+                'type' => 'submit',
+                'class' => 'btn btn-danger btn-xs',
+                'onclick' => "return submitForm(this.form);"
+            ]) !!}
+        {!! Form::close() !!}
+    @endif
 </div>
-{!! Form::close() !!}

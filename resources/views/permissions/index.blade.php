@@ -7,12 +7,14 @@
                 <div class="col-sm-6">
                     <h1>Permissions</h1>
                 </div>
-                <div class="col-sm-6">
-                    <a class="btn btn-primary float-right"
-                       href="{{ route('permissions.create') }}">
-                        Add New
-                    </a>
-                </div>
+                @if(Route::has('permissions.create'))
+                    <div class="col-sm-6">
+                        <a class="btn btn-primary float-right"
+                        href="{{ route('permissions.create') }}">
+                            Add New
+                        </a>
+                    </div>
+                @endif
             </div>
         </div>
     </section>

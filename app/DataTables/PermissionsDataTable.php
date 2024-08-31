@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use App\Models\Permission;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 
@@ -29,9 +30,18 @@ class PermissionsDataTable extends DataTable
      */
     public function query(Permission $model)
     {
-        return $model->newQuery();
-    }
+        // Subquery that selects distinct module names
+        $subQuery = DB::table('permissions')
+            ->select(DB::raw('DISTINCT SUBSTRING_INDEX(name, ".", 1) as module_name'));
 
+        // Wrapping the subquery and returning plucked values of module_name
+        return $model
+            ->newQuery()
+            ->from(DB::raw("({$subQuery->toSql()}) as sub"))
+            ->mergeBindings($subQuery)
+            ->whereIn('module_name', \App\Models\Permission::MODULES)
+            ->select('module_name');
+    }
     /**
      * Optional method if you want to use html builder.
      *
@@ -65,7 +75,7 @@ class PermissionsDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'name',
+            'module_name',
         ];
     }
 

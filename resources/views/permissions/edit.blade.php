@@ -17,7 +17,7 @@
 
         <div class="card">
 
-            {!! Form::model($permissions, ['route' => ['permissions.update', $permissions->id], 'method' => 'patch']) !!}
+            {!! Form::model($moduleName, ['route' => ['permissions.update', $moduleName], 'method' => 'patch']) !!}
 
             <div class="card-body">
                 <div class="row">

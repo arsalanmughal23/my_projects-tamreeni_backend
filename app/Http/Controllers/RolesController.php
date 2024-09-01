@@ -10,8 +10,8 @@ use App\Repositories\RolesRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
 use Response;
-use Spatie\Permission\Models\Role as Role;
-use Spatie\Permission\Models\Permission as Permission;
+use App\Models\Role;
+use App\Models\Permission;
 
 class RolesController extends AppBaseController
 {

@@ -13,7 +13,7 @@ use Flash;
 use App\Repositories\RolesRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role as Role;
+use App\Models\Role;
 use App\Models\User as User;
 use App\Models\Role as UserRole;
 use App\Repositories\UserDetailRepository;
@@ -53,10 +53,18 @@ class UsersController extends AppBaseController
      */
     public function create()
     {
-        $roles = $this->rolesRepository->whereNotIn('id', [1,2])->get();
+        $roles = $this->getPossibleRoles(auth()->user());
         return view('users.create')->with('roles', $roles);
     }
 
+    public function getPossibleRoles($user)
+    {
+        $isSuperAdmin = $user->hasRole(Role::SUPER_ADMIN);
+
+        $roles = Role::MENTOR;
+        $isSuperAdmin ? array_push($roles, Role::ADMIN) : null;
+        return $this->rolesRepository->whereIn('name', $roles)->get();
+    }
     /**
      * Store a newly created User in storage.
      *
@@ -76,7 +84,9 @@ class UsersController extends AppBaseController
             $input['stripe_customer_id'] = $stripe_customer['data']['id'];
         }
 
-        $user       = $this->userRepository->create($input);
+        $user = $this->userRepository->create($input);
+        $user->syncRoles($request->roles);
+
         $userDetail = ['user_id' => $user->id];
 
         if ($request->hasFile('image')) {
@@ -85,9 +95,6 @@ class UsersController extends AppBaseController
         $this->userDetailRepository->create($userDetail);
 
 //        $roleIds  = array_keys(request()->role);
-        $userRole = Role::whereIn('id', [request()->role])->get();
-
-        $user->syncRoles($userRole);
 
         sendRegisterUserEmail($user, 'Welcome to Our Platform - Your Account Details', $request->email, $request->password);
         $user->markEmailAsVerified();
@@ -126,14 +133,15 @@ class UsersController extends AppBaseController
     public function edit($id)
     {
         $user  = $this->userRepository->find($id);
-        $roles = $this->rolesRepository->whereNotIn('id', [1,2])->get();
 
         if (empty($user)) {
             Flash::error('User not found');
             return redirect(route('users.index'));
         }
 
-        return view('users.edit')->with(['users' => $user, 'roles' => $roles,]);
+        $roles = $this->getPossibleRoles(auth()->user());
+
+        return view('users.edit')->with(['users' => $user, 'roles' => $roles]);
     }
 
     /**
@@ -155,7 +163,7 @@ class UsersController extends AppBaseController
         }
 
         $user = $this->userRepository->updateRecord($request, $id);
-
+        $user->syncRoles($request->roles);
 
         $userDetail = ['user_id' => $user->id];
 

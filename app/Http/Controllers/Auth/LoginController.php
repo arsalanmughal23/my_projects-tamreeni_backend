@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
+use Flash;
 
 class LoginController extends Controller
 {
@@ -44,20 +46,24 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-//        dd($user->hasAnyRole(['Super-Admin', 'Admin']));
-        if ($user->hasAnyRole(['Super-Admin', 'Admin', 'Coach', 'Dietitian', 'Therapist'])) {
-            // Redirect the user to a specific route for users with these roles
-            return redirect()->route('home');
-//            return redirect()->intended($this->redirectPath());
-
-        } else {
+        if(!$user) {
             $this->logout($request);
             throw ValidationException::withMessages([
                 $this->username() => [trans('auth.failed')],
             ]);
         }
 
+        if (!$user->hasAnyRole([Role::SUPER_ADMIN, Role::ADMIN, ...Role::MENTOR])) {
+            $this->logout($request);
+            return abort(403, 'User does not have the right role.');
+            // $this->logout($request);
+            // Flash::error('User does not have the right role.');
+            // return redirect('/login');
+        }
 
+        // Redirect the user to a specific route for users with these roles
+        // return redirect()->route('home');
+        return redirect()->intended($this->redirectPath());
     }
 
     /**

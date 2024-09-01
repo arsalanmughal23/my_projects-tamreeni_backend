@@ -67,13 +67,18 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [];
 
     public static $rules = [
+        'roles'          => 'required|array',
+        'roles.*'        => 'required|exists:roles,name',
         'name'           => 'nullable|string|max:30',
         'email'          => 'required|email|max:250|unique:users,email,NULL,id,deleted_at,NULL',
-        'password'       => 'required|confirmed|min:6',
+        'password'       => 'required|confirmed|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]+$/',
         'remember_token' => 'nullable|string|max:100'
     ];
 
     public static $update_rules = [
+        'password'     => 'nullable|confirmed|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]+$/',
+        'roles'        => 'required|array',
+        'roles.*'      => 'required|exists:roles,name',
         'first_name'   => 'nullable|string|max:250',
         'last_name'    => 'nullable|string|max:250',
         'address'      => 'nullable|string|max:250',
@@ -85,8 +90,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public static $api_rules = [
         'email'                     => 'required|email|max:250|unique:users,email,NULL,id,deleted_at,NULL',
-        'password'                  => 'min:8|required|same:password_confirmation|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]+$/',
-        'password_confirmation'     => 'min:8|required_with:password',
+        // 'password'                  => 'min:8|required|same:password_confirmation|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]+$/',
+        // 'password_confirmation'     => 'min:8|required_with:password',
+        'password'                  => 'required|confirmed|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]+$/',
         'device_token'              => 'required',
         'device_type'               => 'required|string|in:ios,android,web',
         'phone_number'              => 'nullable|string|max:250|unique:user_details,phone_number,NULL,id,deleted_at,NULL',

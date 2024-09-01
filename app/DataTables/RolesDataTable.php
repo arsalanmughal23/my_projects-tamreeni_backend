@@ -29,7 +29,13 @@ class RolesDataTable extends DataTable
      */
     public function query(Role $model)
     {
-        return $model->where('name','!=','Super-Admin')->newQuery();
+        $user = auth()->user();
+        $isSuperAdmin = $user->hasRole(Role::SUPER_ADMIN);
+
+        $roles = Role::MENTOR;
+        $isSuperAdmin ? array_push($roles, Role::ADMIN) : null;
+
+        return $model->newQuery()->whereIn('name', $roles);
     }
 
     /**
@@ -48,7 +54,7 @@ class RolesDataTable extends DataTable
                 'stateSave' => true,
                 'order'     => [[0, 'desc']],
                 'buttons'   => [
-                    ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner',],
+                    // ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner',],
                     ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner',],
                     ['extend' => 'print', 'className' => 'btn btn-default btn-sm no-corner',],
                     // ['extend' => 'reset', 'className' => 'btn btn-default btn-sm no-corner',],

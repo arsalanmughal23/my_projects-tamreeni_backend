@@ -10,53 +10,6 @@
     {!! Form::email('email', null, ['class' => 'form-control', isset($users)?'readonly':'', !isset($users)?'required':'']) !!}
 </div>
 
-<!-- Image Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('image', 'Image:', ['class'=>'required']) !!}
-    {!! Form::file('image', ['class' => 'form-control', (isset($users)) ? '' : 'required' => 'required', 'accept' => 'image/jpeg,image/png']) !!}
-</div>
-
-@if(isset($users))
-
-    <div class="form-group col-sm-6">
-
-        <!-- Image Field -->
-        <img class="user-image img-circle imag-placeholder"
-             src="{{ isset($users?->details)? $users?->details->image : asset('public/image/user.png') }}" width="100"
-             onerror="brokenImageHandler(this);">
-    </div>
-@endif
-
-@if(\App\Models\Role::SUPER_ADMIN || \App\Models\Role::ADMIN)
-    @if(!isset($users))
-        {{--<div class="col-sm-12">--}}
-        {{--{!! Form::label('roles', 'Roles:') !!}--}}
-        {{--<div class="form-group">--}}
-
-        {{--@foreach($roles as $role)--}}
-        {{--<label class="control-label col-2">--}}
-        {{--<input class="checkbox-inline" type="checkbox" name="role[{{$role->id}}]"--}}
-        {{--@if(isset($users) && $users->hasRole($role->name)) checked @endif >--}}
-        {{--{{ \Str::replace('-', ' ',  $role->name) }}</label>--}}
-        {{--@endforeach--}}
-        {{--</div>--}}
-        {{--</div>--}}
-
-        <div class="form-group col-md-6">
-            {!! Form::label('roles', 'Roles:') !!}
-            <select name="role" class="form-control select2" required>
-                <option></option>
-                @foreach ($roles as $role)
-                    <option value="{{ $role->id }}"
-                            @if(isset($users) && $users->hasRole($role->name)) selected @endif>{{ $role->name }}</option>
-                @endforeach
-            </select>
-        </div>
-    @endif
-@endif
-
-
-<hr>
 <!-- Password Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('password', 'Password:', [ 'class' => !isset($users)?'required':'']) !!}
@@ -76,16 +29,50 @@
     {!! Form::label('password_confirmation', 'Confirm Password:', [ 'class' => !isset($users)?'required':'']) !!}
     <div class="input-group">
         {!! Form::password('password_confirmation', ['class' => 'form-control', 'id' => 'password_confirmation', 'maxlength' => 60, !isset($users)?'required':'']) !!}
-        <div class="input-group-append">
+        <!-- <div class="input-group-append">
             <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPasswordVisibility">
                 <i class="fas fa-eye" id="toggleConfirmPasswordIcon"></i>
             </button>
-        </div>
+        </div> -->
     </div>
     <span class="text-danger" id="password-error" style="display: none;">
         <strong>Passwords do not match.</strong>
     </span>
 </div>
+
+@if(\App\Models\Role::SUPER_ADMIN || \App\Models\Role::ADMIN)
+    <div class="form-group col-md-6">
+        {!! Form::label('roles', 'Roles:') !!}
+        <select name="roles[]" class="form-control select2">
+            <option value="" disabled selected>Select Role</option>
+            @foreach ($roles as $role)
+                <option value="{{ $role->name }}"
+                        @if(isset($users) && $users->hasRole($role->name)) selected @endif>{{ $role->name }}</option>
+            @endforeach
+        </select>
+    </div>
+@endif
+
+<!-- App User Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('api_user', 'App User:', [ 'class' => '' ]) !!}
+    {!! Form::checkbox('roles[]', \App\Models\Role::API_USER, isset($users) && $users->hasRole(\App\Models\Role::API_USER) ? true : false, ['class' => 'form-control w-25']) !!}
+</div>
+
+<!-- Image Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('image', 'Image:', ['class'=>'']) !!}
+    {!! Form::file('image', ['class' => 'form-control', 'accept' => 'image/jpeg,image/png']) !!}
+</div>
+
+@if(isset($users))
+    <div class="form-group col-sm-2">
+        <!-- Image Field -->
+        <img class="user-image imag-placeholder"
+             src="{{ isset($users?->details)? $users?->details->image : asset('public/image/user.png') }}" width="100"
+             onerror="brokenImageHandler(this);">
+    </div>
+@endif
 
 
 @push('page_scripts')
@@ -93,6 +80,10 @@
 
         $(document).ready(function () {
             $('input').attr('autocomplete', 'off');
+
+            setTimeout(function(){
+                $('input[type=password]').val(null)
+            })
         });
 
         // Function to toggle password visibility
@@ -134,11 +125,12 @@
         // Event listeners to toggle password visibility
         document.getElementById('togglePasswordVisibility').addEventListener('click', function () {
             togglePasswordVisibility('password', 'togglePasswordIcon');
-        });
-
-        document.getElementById('toggleConfirmPasswordVisibility').addEventListener('click', function () {
             togglePasswordVisibility('password_confirmation', 'toggleConfirmPasswordIcon');
         });
+
+        // document.getElementById('toggleConfirmPasswordVisibility').addEventListener('click', function () {
+        //     togglePasswordVisibility('password_confirmation', 'toggleConfirmPasswordIcon');
+        // });
 
         // Event listener to trigger password check when either password field changes
         document.getElementById('password').addEventListener('input', checkPasswords);

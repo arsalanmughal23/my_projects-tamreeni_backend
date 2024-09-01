@@ -10,6 +10,7 @@ use App\Repositories\PermissionsRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
 use App\Models\Permission;
+use App\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Response;
 
@@ -168,6 +169,13 @@ class PermissionsController extends AppBaseController
      */
     public function destroy($moduleName)
     {
+        $modulePermissions = $this->permissionsRepository->where('name', 'like', "$moduleName.%")->get();
+
+        $roles = Role::all();
+        foreach ($roles as $role) {
+            $role->revokePermissionTo($modulePermissions);
+        }
+
         $this->permissionsRepository->where('name', 'like', "$moduleName.%")->delete();
 
         Flash::success('Permissions deleted successfully.');

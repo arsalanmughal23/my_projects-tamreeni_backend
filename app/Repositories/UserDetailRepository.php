@@ -65,7 +65,7 @@ class UserDetailRepository extends BaseRepository
         if(isset($data['target_weight']) && isset($data['target_weight_unit']))
             $userDetail->target_weight_in_kg = convertWeightToKG($data['target_weight'], $data['target_weight_unit']);
 
-        if($userDetail->current_weight_in_kg && $userDetail->height_in_cm){
+        if($userDetail?->current_weight_in_kg && $userDetail?->height_in_cm){
             $calculatedBMI = calculateBMI($userDetail->current_weight_in_kg, $userDetail->height_in_cm);
             $calculatedBMI = number_format($calculatedBMI, 2);
             $userDetail->bmi = $calculatedBMI;
@@ -77,8 +77,11 @@ class UserDetailRepository extends BaseRepository
         if(isset($data['planed_answer_attempt_id']))
             $userDetail->planed_answer_attempt_id = $data['planed_answer_attempt_id'];
 
-        $userDetail->save();
-        return $this->update($data, $userDetail->id);
+        if($userDetail) {
+            $userDetail->save();
+            $userDetail = $this->update($data, $userDetail->id);
+        }
+        return $userDetail;
     }
 
     public function clearQuestionnaireUserDetails(UserDetail $userDetails)

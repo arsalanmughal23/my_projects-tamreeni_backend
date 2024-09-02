@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('appointment:notification')->everyThirtyMinutes();
         $schedule->command('usermembership:verify')->dailyAt(0);
         $schedule->command('workout:reminder')->dailyAt(0);
+        $schedule->command('meal:reminder')->hourly();
     }
 
     /**

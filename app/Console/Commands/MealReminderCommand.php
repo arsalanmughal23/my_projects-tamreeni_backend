@@ -89,8 +89,11 @@ class MealReminderCommand extends Command
         if(!$mealTypes->count())
             return 0;
 
+        $previousMealType = $mealTypes->first();
+        $currentMealType = $mealTypes->last();
+
         // GET: Current Meal End Time
-        $mealTypeEndTime = match ($mealTypes->first()) {
+        $mealTypeEndTime = match ($previousMealType) {
             MealType::NAME_BREAKFAST=> $breakfastEndTime,
             MealType::NAME_LUNCH    => $lunchEndTime,
             MealType::NAME_DINNER   => $dinnerEndTime,
@@ -114,8 +117,8 @@ class MealReminderCommand extends Command
             // Mark In-Progress Status as Completed of the NutritionPlanDayRecipe
             $nPlanDayRecipeProgressStatusQuery = clone $nPlanDayRecipeQuery;
             $nPlanDayRecipeProgressStatusQuery
-                ->whereHas('mealType', function($subQuery) use ($mealTypes) {
-                    return $subQuery->where('slug', $mealTypes->first());
+                ->whereHas('mealType', function($subQuery) use ($previousMealType) {
+                    return $subQuery->where('slug', $previousMealType);
                 })
                 ->where('status', NutritionPlanDayRecipe::STATUS_IN_PROGRESS)
                 ->update(['status' => NutritionPlanDayRecipe::STATUS_COMPLETED]);
@@ -124,8 +127,8 @@ class MealReminderCommand extends Command
         // Mark Todo Status as In-Progress of the NutritionPlanDayRecipe
         $nPlanDayRecipeTodoStatusQuery = clone $nPlanDayRecipeQuery;
         $nPlanDayRecipeTodoStatusQuery
-            ->whereHas('mealType', function($subQuery) use ($mealTypes) {
-                return $subQuery->where('slug', $mealTypes->last());
+            ->whereHas('mealType', function($subQuery) use ($currentMealType) {
+                return $subQuery->where('slug', $currentMealType);
             })
             ->where('status', NutritionPlanDayRecipe::STATUS_TODO)
             ->update(['status' => NutritionPlanDayRecipe::STATUS_IN_PROGRESS]);
@@ -145,11 +148,14 @@ class MealReminderCommand extends Command
 
             $notificationType = NotificationServiceTemplateNames::MEAL;
 
-            $message = [__('nutritionPlanRecipe.notification.message', [], 'en'), __('nutritionPlanRecipe.notification.message', [], 'ar')];
+            $message = [
+                __('nutritionPlanRecipe.notification.message', ['mealType' => $currentMealType], 'en'),
+                __('nutritionPlanRecipe.notification.message', ['mealType' => $currentMealType], 'ar')
+            ];
 
             $title = [
-                __('nutritionPlanRecipe.notification.title', [], 'en'),
-                __('nutritionPlanRecipe.notification.title', [], 'ar')
+                __('nutritionPlanRecipe.notification.title', ['mealType' => $currentMealType], 'en'),
+                __('nutritionPlanRecipe.notification.title', ['mealType' => $currentMealType], 'ar')
             ];
 
             sendNotification($user, $notificationType, $nPlanDayRecipe->id, $title, $message);

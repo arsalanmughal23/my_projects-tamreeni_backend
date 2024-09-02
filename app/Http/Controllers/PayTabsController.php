@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\NotificationServiceTemplateNames;
 use App\Models\Appointment;
 use App\Models\Package;
 use App\Models\Transaction;
@@ -128,13 +129,30 @@ class PayTabsController extends AppBaseController
             if(!$transaction)
                 throw new \Error('Transaction is not found, Webhook Payload is: '.json_encode($request->all()));
 
-            $transactionable = $transaction->transactionable;
+            $transactionable = $transaction?->transactionable;
+            $user = $transactionable?->user;
 
             if ($request->payment_result['response_status'] == Transaction::PAY_TABS_SUCCESS_STATUS) {
                 $transaction->update(['status' => Transaction::STATUS_COMPLETE]);
 
                 if($transactionable instanceof UserMembership) {
                     $transactionable->paymentSuccess();
+
+                    if ($user) {
+                        $notificationType = NotificationServiceTemplateNames::PAYMENT;
+
+                        $message = [
+                            __('payment.notification.message', ['moduleName' => 'User Membership'], 'en'),
+                            __('payment.notification.message', ['moduleName' => 'User Membership'], 'ar')
+                        ];
+
+                        $title = [
+                            __('payment.notification.title', ['moduleName' => 'User Membership'], 'en'),
+                            __('payment.notification.title', ['moduleName' => 'User Membership'], 'ar')
+                        ];
+
+                        sendNotification($user, $notificationType, $transaction->id, $title, $message);
+                    }
                 } else {
                     $transaction->appointments()->update(['payment_status' => Appointment::PAYMENT_STATUS_PAID]);
                 }

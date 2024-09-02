@@ -132,11 +132,11 @@ class UserMembershipAPIController extends AppBaseController
         try {
 
             $user = $request->user();
-            if($user->trail_expire_at)
+            if($user->trail_expire_at || !$user->is_trail_available)
                 throw new Error('You already avail your trail');
 
             $trailDays = config('constants.trail.days');
-            $user->update(['trail_expire_at' => now()->addDays($trailDays)]);
+            $user->update(['is_trail_available' => false, 'trail_expire_at' => now()->addDays($trailDays)]);
 
             return $this->sendResponse(new UserResource($user), 'Your trail is started');
 

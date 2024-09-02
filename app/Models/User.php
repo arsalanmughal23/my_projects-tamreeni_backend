@@ -43,7 +43,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'remember_token',
-        'trail_expire_at'
+        'trail_expire_at',
+        'is_trail_available'
     ];
 
     /**

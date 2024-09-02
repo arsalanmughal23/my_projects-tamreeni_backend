@@ -139,6 +139,7 @@ class PayTabsController extends AppBaseController
                     $transactionable->paymentSuccess();
 
                     if ($user) {
+                        $user->update(['is_trail_available' => false]);
                         $notificationType = NotificationServiceTemplateNames::PAYMENT;
 
                         $message = [

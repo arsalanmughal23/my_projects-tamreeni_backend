@@ -1,3 +1,20 @@
+@canany(['roles.index', 'roles.create', 'roles.show', 'roles.edit', 'roles.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('roles.index') }}" class="nav-link {{ Request::is('roles*') ? 'active' : '' }}">
+            <i class="fa fa-tasks"></i> <span>Roles</span>
+        </a>
+    </li>
+@endcan
+
+@canany(['permissions.index', 'permissions.create', 'permissions.show', 'permissions.edit', 'permissions.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('permissions.index') }}"
+        class="nav-link {{ Request::is('permissions*') ? 'active' : '' }}">
+            <i class="fa fa-lock"></i> <span>Permissions</span>
+        </a>
+    </li>
+@endcan
+
 @canany(['pages.index', 'pages.create', 'pages.show', 'pages.edit', 'pages.destroy'])
     <li class="nav-item">
         <a href="{{ route('pages.index') }}"

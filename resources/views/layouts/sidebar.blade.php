@@ -18,21 +18,6 @@
                         </a>
                     </li>
 
-
-                    <li class="nav-item">
-                        <a href="{{ route('roles.index') }}" class="nav-link {{ Request::is('roles*') ? 'active' : '' }}">
-                            <i class="fa fa-tasks"></i> <span>Roles</span>
-                        </a>
-                    </li>
-
-
-                    <li class="nav-item">
-                        <a href="{{ route('permissions.index') }}"
-                        class="nav-link {{ Request::is('permissions*') ? 'active' : '' }}">
-                            <i class="fa fa-lock"></i> <span>Permissions</span>
-                        </a>
-                    </li>
-
                     @if(false)
                         <li class="nav-item">
                             <a href="{{ route('menus.index') }}" class="nav-link {{ Request::is('menus*') ? 'active' : '' }}">

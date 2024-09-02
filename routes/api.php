@@ -31,7 +31,7 @@ Route::post('social-login', [App\Http\Controllers\API\AuthAPIController::class, 
 Route::get('page-content', [App\Http\Controllers\API\PageAPIController::class, 'pageContent'])->name('page-content');
 
 
-Route::middleware(['auth:sanctum', 'verified', 'setLocale'])->group(function () {
+Route::middleware(['auth:sanctum', 'verified:api', 'setLocale'])->group(function () {
 
     Route::put('update-profile', [App\Http\Controllers\API\UserAPIController::class, 'updateProfile']);
     Route::post('check_promo_code', [App\Http\Controllers\API\PromoCodeAPIController::class, 'checkPromoCode']);

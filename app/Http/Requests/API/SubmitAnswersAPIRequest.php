@@ -43,7 +43,7 @@ class SubmitAnswersAPIRequest extends BaseAPIRequest
             'equipment_type'           => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q10_EQUIPMENT_TYPE,
             'have_a_scale'             => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q11_HAVE_A_SCALE,
             'how_long_time_to_workout' => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q12_HOW_LONG_TIME_TO_WORKOUT,
-            'reach_goal_target_date'   => 'required|date|date_format:"d-m-Y"|after:' . \Carbon\Carbon::yesterday()->addWeek(1)->format('d-m-Y') . '|before:' . \Carbon\Carbon::tomorrow()->addWeek(6)->format('d-m-Y'),
+            'reach_goal_target_date'   => 'required|date|date_format:"d-m-Y"|after:' . \Carbon\Carbon::yesterday()->addWeek(1)->format('d-m-Y') . '|before:' . \Carbon\Carbon::tomorrow()->addWeek(8)->format('d-m-Y'),
             'body_parts'               => 'required|array',
             'body_parts.*'             => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q14_BODY_PARTS,
             'diet_type'                => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q15_DIET_TYPE,

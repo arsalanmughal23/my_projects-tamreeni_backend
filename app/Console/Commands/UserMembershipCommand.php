@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Constants\NotificationServiceTemplateNames;
 use App\Models\UserMembership;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -46,6 +47,29 @@ class UserMembershipCommand extends Command
         UserMembership::where('expire_at', '<=', $date)
             ->update(['status' => UserMembership::STATUS_EXPIRE]);
 
+        // GET: UserMembership those exipry date is equal to next 3rd day
+        $userMemberships = UserMembership::where('status', UserMembership::STATUS_ACTIVE)
+            ->whereDate('expire_at', Carbon::now()->addDay(3))->get();
+
+        foreach($userMemberships as $userMembership)
+        {
+            $user = $userMembership?->user;
+            if(!$user)
+                continue;
+
+            $notificationType = NotificationServiceTemplateNames::BILLING_REMINDER;
+
+            $message = [
+                __('payment.notification.billing_reminder.message', [], 'en'),
+                __('payment.notification.billing_reminder.message', [], 'ar')
+            ];
+            $title = [
+                __('payment.notification.billing_reminder.title', [], 'en'),
+                __('payment.notification.billing_reminder.title', [], 'ar')
+            ];
+
+            sendNotification($user, $notificationType, $user->id, $title, $message);
+        }
         return 0;
     }
 }

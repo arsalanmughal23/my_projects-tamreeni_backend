@@ -297,6 +297,14 @@ if (!function_exists('sendEmail')) {
     }
 }
 
+if (!function_exists('getPermissionModuleSlug')) {
+    function getPermissionModuleSlug($value)
+    {
+        if (isset($value))
+            return explode(".", $value)[0];
+    }
+}
+
 if (!function_exists('getPermissionModelName')) {
     function getPermissionModelName($value)
     {

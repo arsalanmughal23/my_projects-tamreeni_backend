@@ -66,10 +66,10 @@ class NotificationAPIController extends AppBaseController
     }
 
     public static function sendNotification(User $user, $NOTIFICATION_TYPE, $refId, $title = [], $message = [])
-    {        
+    {
         if (!is_array($title) || count($title) < 2)
             $title = ['Title', 'عنوان'];
-        
+
         if (!is_array($message) || count($message) < 2)
             $message = ['Message', 'رسالة'];
 
@@ -101,9 +101,14 @@ class NotificationAPIController extends AppBaseController
         $sendNotificationResponse = self::post($notificationRequest, 'post.messaging');
 
         if (!$sendNotificationResponse['status'])
-            \Log::warning('Notification (' . $NOTIFICATION_TYPE . ') ' . $sendNotificationResponse['message']);
+            \Log::warning('Notification (' . $NOTIFICATION_TYPE . ') ' . json_encode($sendNotificationResponse['error'] ?? []));
 
-        return $sendNotificationResponse;
+        // return $sendNotificationResponse;
+        return [
+            'status' => $sendNotificationResponse['status'],
+            'response' => $sendNotificationResponse,
+            'payload' => $payload
+        ];
     }
 
     public function testNotification(Request $request)
@@ -121,52 +126,82 @@ class NotificationAPIController extends AppBaseController
                 throw new Error('User not found');
 
             $user = $user ?? $request->user();
+            $notificationResponse = NotificationAPIController::sendNotification($user, $request->type, 1);
 
-            $notificationResponse   = null;
-            $notificationRefModule  = null;
-            $notificationType       = null;
-            $title = [];
-            $message = [];
+            if (!$notificationResponse['status'])
+                $responseMessage = json_encode($notificationResponse['response']['error']);
+            else
+                $responseMessage = $notificationResponse['response']['message'];
 
-            switch ($request->type) {
-                case NotificationServiceTemplateNames::APPOINTMENT:
-                    $notificationType = NotificationServiceTemplateNames::APPOINTMENT;
-                    // TODO :: Make Title & Body multi-lingual content through using singleton
-                    // Multi-Language title & body must have en & ar langauges
-                    $title = ['Appointment Reminder', 'منبه مواعيد'];
-                    $message = ['This is a reminder for your appointment', 'هذا تذكير لموعدك'];
-                    $notificationRefModule = Appointment::where('customer_id', $user->id)->first();
-                    if (!$notificationRefModule)
-                        throw new Error('No Appointment Found');
-                    break;
-
-                case NotificationServiceTemplateNames::MEAL:
-                    $notificationType = NotificationServiceTemplateNames::MEAL;
-                    $title = ['Meal Reminder', 'تذكير وجبة'];
-                    $message = ['This is a reminder for your meal', 'هذا تذكير لوجبتك'];
-
-                    $nutritionPlanId = $user->details?->current_nutrition_plan_id;
-                    if (!$nutritionPlanId)
-                        throw new Error('Nutrition Plan is not available');
-
-                    $notificationRefModule = NutritionPlanDayMeal::whereHas('nutritionPlanDay', function ($nutritionPlanDay) use ($nutritionPlanId) {
-                        return $nutritionPlanDay->where('nutrition_plan_id', $nutritionPlanId);
-                    })->first();
-
-                    if (!$notificationRefModule)
-                        throw new Error('Nutrition Plan Day Meal is not available');
-
-                    break;
-                default :
-                    throw new Error('Other Test Notifications is not available');
-            }
-
-            $notificationResponse = NotificationAPIController::sendNotification($user, $notificationType, $notificationRefModule->id, $title, $message);
-            return $this->sendResponse($notificationRefModule, $notificationResponse['message']);
+            return $this->sendResponse($notificationResponse, $responseMessage ?? null);
         } catch (\Error $e) {
             return $this->sendError($e->getMessage(), 403);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 422);
         }
     }
+
+    // public function testNotification(Request $request)
+    // {
+    //     try {
+    //         if (!in_array($request->type, NotificationServiceTemplateNames::All_TEMPLATES))
+    //             throw new Error('Type is Invalid');
+
+    //         $user_id = $request->get('user_id', null);
+    //         $user = null;
+    //         if($user_id)
+    //             $user = User::find($user_id);
+
+    //         if($user_id && !$user)
+    //             throw new Error('User not found');
+
+    //         $user = $user ?? $request->user();
+
+    //         $notificationResponse   = null;
+    //         $notificationRefModule  = null;
+    //         $notificationType       = null;
+    //         $title = [];
+    //         $message = [];
+
+    //         switch ($request->type) {
+    //             case NotificationServiceTemplateNames::APPOINTMENT:
+    //                 $notificationType = NotificationServiceTemplateNames::APPOINTMENT;
+    //                 // TODO :: Make Title & Body multi-lingual content through using singleton
+    //                 // Multi-Language title & body must have en & ar langauges
+    //                 $title = ['Appointment Reminder', 'منبه مواعيد'];
+    //                 $message = ['This is a reminder for your appointment', 'هذا تذكير لموعدك'];
+    //                 $notificationRefModule = Appointment::where('customer_id', $user->id)->first();
+    //                 if (!$notificationRefModule)
+    //                     throw new Error('No Appointment Found');
+    //                 break;
+
+    //             case NotificationServiceTemplateNames::MEAL:
+    //                 $notificationType = NotificationServiceTemplateNames::MEAL;
+    //                 $title = ['Meal Reminder', 'تذكير وجبة'];
+    //                 $message = ['This is a reminder for your meal', 'هذا تذكير لوجبتك'];
+
+    //                 $nutritionPlanId = $user->details?->current_nutrition_plan_id;
+    //                 if (!$nutritionPlanId)
+    //                     throw new Error('Nutrition Plan is not available');
+
+    //                 $notificationRefModule = NutritionPlanDayMeal::whereHas('nutritionPlanDay', function ($nutritionPlanDay) use ($nutritionPlanId) {
+    //                     return $nutritionPlanDay->where('nutrition_plan_id', $nutritionPlanId);
+    //                 })->first();
+
+    //                 if (!$notificationRefModule)
+    //                     throw new Error('Nutrition Plan Day Meal is not available');
+
+    //                 break;
+    //             default :
+    //                 throw new Error('Other Test Notifications is not available');
+    //         }
+
+    //         $notificationResponse = NotificationAPIController::sendNotification($user, $notificationType, $notificationRefModule->id, $title, $message);
+    //         return $this->sendResponse($notificationRefModule, $notificationResponse['message']);
+    //     } catch (\Error $e) {
+    //         return $this->sendError($e->getMessage(), 403);
+    //     } catch (\Exception $e) {
+    //         return $this->sendError($e->getMessage(), 422);
+    //     }
+    // }
 }

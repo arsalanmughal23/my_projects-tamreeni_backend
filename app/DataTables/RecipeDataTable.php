@@ -19,9 +19,9 @@ class RecipeDataTable extends DataTable
         $dataTable = new EloquentDataTable($query);
 
         $dataTable->editColumn('title', function(Recipe $model) {
-            return ($model->title) ? $model->title['en'] : '';
+            return $model->getTranslation('title', 'en') ?? '';
         });
-        
+
         $dataTable->editColumn('meal_type_id', function(Recipe $model) {
             return $model->mealType?->slug ?? '';
         });
@@ -89,7 +89,7 @@ class RecipeDataTable extends DataTable
             'title',
             // 'description',
             // 'instruction',
-            'image',
+            // 'image',
             'units_in_recipe',
             'divide_recipe_by',
             'number_of_units',

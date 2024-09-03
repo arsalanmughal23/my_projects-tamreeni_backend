@@ -86,34 +86,34 @@
 <!-- Title (English) Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('title', 'Title (English):') !!}
-    {!! Form::text('title[en]', null, ['class' => 'form-control', 'maxlength' => 70, 'required' => true, 'pattern'=>'[a-zA-Z0-9_.\s+\-]{0,70}']) !!}
+    {!! Form::text('title[en]', isset($recipe) ? $recipe->getTranslation('title', 'en') ?? null : null, ['class' => 'form-control', 'maxlength' => 70, 'required' => true, 'pattern'=>'[a-zA-Z0-9_.\s+\-]{0,70}']) !!}
 </div>
 <!-- Title (Arabic) Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('title', 'Title (Arabic):') !!}
-    {!! Form::text('title[ar]', null, ['class' => 'form-control', 'maxlength' => 70, 'required' => true, 'pattern' => '[ا-ي0-9_.\s+\-]{0,70}', 'dir' => 'rtl']) !!}
+    {!! Form::text('title[ar]', isset($recipe) ? $recipe->getTranslation('title', 'ar') ?? null : null, ['class' => 'form-control', 'maxlength' => 70, 'required' => true, 'pattern' => '[ا-ي0-9_.\s+\-]{0,70}', 'dir' => 'rtl']) !!}
 </div>
 
 <!-- Description Field -->
 <div class="form-group col-sm-6 col-lg-6">
     {!! Form::label('description', 'Description (English):') !!}
-    {!! Form::textarea('description[en]', null, ['class' => 'form-control', 'required' => true, 'rows' => 5]) !!}
+    {!! Form::textarea('description[en]', isset($recipe) ? $recipe->getTranslation('description', 'en') ?? null : null, ['class' => 'form-control', 'required' => true, 'rows' => 5]) !!}
 </div>
 
 <!-- Description Field -->
 <div class="form-group col-sm-6 col-lg-6">
     {!! Form::label('description', 'Description (Arabic):') !!}
-    {!! Form::textarea('description[ar]', null, ['class' => 'form-control', 'required' => true, 'rows' => 5, 'dir' => 'rtl']) !!}
+    {!! Form::textarea('description[ar]', isset($recipe) ? $recipe->getTranslation('description', 'ar') ?? null : null, ['class' => 'form-control', 'required' => true, 'rows' => 5, 'dir' => 'rtl']) !!}
 </div>
 
 <!-- Instruction Field -->
 <div class="form-group col-sm-6 col-lg-6">
     {!! Form::label('instruction', 'Instruction (English):') !!}
-    {!! Form::textarea('instruction[en]', null, ['class' => 'form-control', 'required' => true, 'rows' => 5]) !!}
+    {!! Form::textarea('instruction[en]', isset($recipe) ? $recipe->getTranslation('instruction', 'en') ?? null : null, ['class' => 'form-control', 'required' => true, 'rows' => 5]) !!}
 </div>
 
 <!-- Instruction Field -->
 <div class="form-group col-sm-6 col-lg-6">
     {!! Form::label('instruction', 'Instruction (Arabic):') !!}
-    {!! Form::textarea('instruction[ar]', null, ['class' => 'form-control', 'required' => true, 'rows' => 5, 'dir' => 'rtl']) !!}
+    {!! Form::textarea('instruction[ar]', isset($recipe) ? $recipe->getTranslation('instruction', 'ar') ?? null : null, ['class' => 'form-control', 'required' => true, 'rows' => 5, 'dir' => 'rtl']) !!}
 </div>

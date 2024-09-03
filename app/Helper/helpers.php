@@ -122,6 +122,79 @@ if (!function_exists('saveVerifyEmailOTP')) {
     }
 }
 
+if (!function_exists('getUsersWithDevicesForNotification')) {
+    function getUsersWithDevicesForNotification($userIds = []) {
+
+        return User::with(['devices' => function ($query) {
+            $query->select('user_id', 'device_token', 'device_type');
+        }])
+        ->whereIn('id', $userIds)
+        ->whereHas('devices')
+        ->get()
+        ->map(function ($user) {
+            return [
+                "_id" => strval($user->id),
+                "user_name" => $user->name,
+                "device_tokens" => $user->devices->pluck('device_token')->toArray()
+            ];
+        });
+    }
+}
+
+if (!function_exists('sendNotificationToAllUsers')) {
+    function sendNotificationToAllUsers($usersWithDeviceTokens, $NOTIFICATION_TYPE, $refId, $title = [], $message = [])
+    {
+        $allNotificationResponses = [];
+
+        if (!is_array($title) || count($title) < 2)
+            $title = ['Title', 'عنوان'];
+
+        if (!is_array($message) || count($message) < 2)
+            $message = ['Message', 'رسالة'];
+
+        foreach($usersWithDeviceTokens as $userWithDeviceTokens)
+        {
+            $payload = [
+                "users" => [
+                    $userWithDeviceTokens
+                ],
+                "template_name" => $NOTIFICATION_TYPE,
+                "data" => [
+                    "title" => json_encode([
+                        'en' => is_string($title[0]) ? $title[0] : 'title',
+                        'ar' => is_string($title[1]) ? $title[1] : 'عنوان',
+                    ]),
+                    "message" => json_encode([
+                        'en' => is_string($message[0]) ? $message[0] : 'body',
+                        'ar' => is_string($message[1]) ? $message[1] : 'هيئة',
+                    ]),
+                    "ref_id" => $refId,
+                    "notification_type" => $NOTIFICATION_TYPE,
+                    "user_name" => $userWithDeviceTokens['name'] ?? 'App User'
+                ]
+            ];
+
+            $notificationRequest = new Request($payload);
+            $sendNotificationResponse = post($notificationRequest);
+            array_push($allNotificationResponses, $sendNotificationResponse);
+
+            // Check if request status is fail then log error details
+            if (!$sendNotificationResponse['status'])
+                Log::warning('Notification (' . $NOTIFICATION_TYPE . ') '
+                    . ($sendNotificationResponse['error'] ? json_encode($sendNotificationResponse['error']) : null ))
+                    . ' USER:' . ($userWithDeviceTokens ? json_encode($userWithDeviceTokens) : null);
+
+            // LOG: Message & Error Both
+            // Log::warning('Notification (' . $NOTIFICATION_TYPE . ') '
+            //     . ' response:' . ($sendNotificationResponse['message'] ??
+            //         ($sendNotificationResponse['error'] ? json_encode($sendNotificationResponse['error']) : null ))
+            //     . ' USER:' . ($userWithDeviceTokens ? json_encode($userWithDeviceTokens) : null));
+        }
+
+        return $allNotificationResponses;
+    }
+}
+
 if (!function_exists('sendNotification')) {
     function sendNotification(User $user, $NOTIFICATION_TYPE, $refId, $title = [], $message = [])
     {

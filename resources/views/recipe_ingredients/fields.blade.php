@@ -5,7 +5,7 @@
     <select name="recipe_id" id="" class="form-control" required=true >
         <option value="">Select Recipe</option>
         @foreach($recipeSelectOptions as $key => $value)
-            <option value="{{ $key }}" {{ isset($recipeIngredient) ? ($recipeIngredient->recipe_id == $key ? 'selected' : '') : '' }}>{{ $value['en'] ?? '' }}</option>
+            <option value="{{ $key }}" {{ isset($recipeIngredient) ? ($recipeIngredient->recipe_id == $key ? 'selected' : '') : '' }}>{{ $value ?? '' }}</option>
         @endforeach
     </select>
 </div>
@@ -25,13 +25,13 @@
 <!-- Name (English) Field -->
 <div class="form-group col-sm-6 col-lg-6">
     {!! Form::label('name', 'Name (English):') !!}
-    {!! Form::text('name[en]', null, ['class' => 'form-control', 'required' => true, 'pattern'=>'[a-zA-Z0-9_.\s+\-]{0,70}']) !!}
+    {!! Form::text('name[en]', isset($recipeIngredient) ? $recipeIngredient->getTranslation('name', 'en') ?? null : null, ['class' => 'form-control', 'required' => true, 'pattern'=>'[a-zA-Z0-9_.\s+\-]{0,70}']) !!}
 </div>
 
 <!-- Name (Arabic) Field -->
 <div class="form-group col-sm-6 col-lg-6">
     {!! Form::label('name', 'Name (Arabic):') !!}
-    {!! Form::text('name[ar]', null, ['class' => 'form-control', 'required' => true, 'pattern' => '[ا-ي0-9_.\s+\-]{0,70}', 'dir' => 'rtl']) !!}
+    {!! Form::text('name[ar]', isset($recipeIngredient) ? $recipeIngredient->getTranslation('name', 'ar') ?? null : null, ['class' => 'form-control', 'required' => true, 'pattern' => '[ا-ي0-9_.\s+\-]{0,70}', 'dir' => 'rtl']) !!}
 </div>
 
 <!-- Quantity Field -->

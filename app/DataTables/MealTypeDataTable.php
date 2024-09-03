@@ -81,8 +81,8 @@ class MealTypeDataTable extends DataTable
     {
         return [
             'name',
-            'status',
-            'created_at'
+            'created_at',
+            // 'status',
         ];
     }
 

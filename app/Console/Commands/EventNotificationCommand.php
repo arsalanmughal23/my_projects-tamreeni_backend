@@ -79,7 +79,7 @@ class EventNotificationCommand extends Command
                 __('event.notification.title', [], 'ar')
             ];
 
-            return sendNotificationToAllUsers($usersWithDevices, $notificationType, $event->id, $title, $message);
+            sendNotificationToAllUsers($usersWithDevices, $notificationType, $event->id, $title, $message);
         }
 
         return 0;

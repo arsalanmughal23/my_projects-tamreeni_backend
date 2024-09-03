@@ -7,14 +7,16 @@
                 <div class="col-sm-6">
                     <h1>Meal Categories</h1>
                 </div>
-                @can('meal_categories.create')
-                    <div class="col-sm-6">
-                        <a class="btn btn-primary float-right"
-                        href="{{ route('meal_categories.create') }}">
-                            Add New
-                        </a>
-                    </div>
-                @endcan
+                @if(Route::has('meal_categories.create'))
+                    @can('meal_categories.create')
+                        <div class="col-sm-6">
+                            <a class="btn btn-primary float-right"
+                            href="{{ route('meal_categories.create') }}">
+                                Add New
+                            </a>
+                        </div>
+                    @endcan
+                @endif
             </div>
         </div>
     </section>

@@ -1,8 +1,8 @@
 <!-- Diet Type Field -->
-<div class="col-sm-12">
+<!-- <div class="col-sm-12">
     {!! Form::label('diet_type', 'Diet Type:') !!}
     <p>{{ $mealCategory->diet_type }}</p>
-</div>
+</div> -->
 
 <!-- Name Field -->
 <div class="col-sm-12">

@@ -209,20 +209,30 @@ if (!function_exists('sendNotification')) {
             "_id" => strval($user->id),
             "device_tokens" => $userDeviceTokens
         ];
+
+        $dataTitle = [
+            'en' => is_string($title[0]) ? $title[0] : 'title',
+            'ar' => is_string($title[1]) ? $title[1] : 'عنوان',
+        ];
+        $dataMessage = [
+            'en' => is_string($message[0]) ? $message[0] : 'message',
+            'ar' => is_string($message[1]) ? $message[1] : 'رسالة',
+        ];
+
+        $language = $user?->details?->language ?? 'en';
+        $title = $dataTitle[$language] ?? $dataTitle;
+        $message = $dataMessage[$language] ?? $dataMessage;
+
         $payload = [
             "users" => [
                 $userWithDeviceTokens
             ],
             "template_name" => $NOTIFICATION_TYPE,
+            "title" => $title,
+            "message" => $message,
             "data" => [
-                "title" => json_encode([
-                    'en' => is_string($title[0]) ? $title[0] : 'title',
-                    'ar' => is_string($title[1]) ? $title[1] : 'عنوان',
-                ]),
-                "message" => json_encode([
-                    'en' => is_string($message[0]) ? $message[0] : 'body',
-                    'ar' => is_string($message[1]) ? $message[1] : 'هيئة',
-                ]),
+                "title" => json_encode($dataTitle),
+                "message" => json_encode($dataMessage),
                 "ref_id" => $refId,
                 "notification_type" => $NOTIFICATION_TYPE,
                 "user_name" => $user->name

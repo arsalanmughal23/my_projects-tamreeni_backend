@@ -16,8 +16,8 @@ class NotificationAPIController extends AppBaseController
 {
 
     public static $endPoints = [
-        'get.messages'   => 'v2/messaging',
-        'post.messaging'    => 'v2/messaging/send/notification'
+        'get.messages'   => 'v4/messaging',
+        'post.messaging'    => 'v4/messaging/send/notification'
     ];
 
     public static function get(Request $request, $endPoint)
@@ -74,25 +74,35 @@ class NotificationAPIController extends AppBaseController
         if (!is_array($message) || count($message) < 2)
             $message = ['Message', 'رسالة'];
 
-        $userDeviceTokens = $user->devices->pluck('device_token');
+        $userDeviceTokens = $user?->devices?->pluck('device_token');
         $userWithDeviceTokens = [
             "_id" => strval($user->id),
             "device_tokens" => $userDeviceTokens
         ];
+
+        $dataTitle = [
+            'en' => is_string($title[0]) ? $title[0] : 'title',
+            'ar' => is_string($title[1]) ? $title[1] : 'عنوان',
+        ];
+        $dataMessage = [
+            'en' => is_string($message[0]) ? $message[0] : 'message',
+            'ar' => is_string($message[1]) ? $message[1] : 'رسالة',
+        ];
+
+        $language = $user?->details?->language ?? 'en';
+        $title = $dataTitle[$language] ?? $dataTitle;
+        $message = $dataMessage[$language] ?? $dataMessage;
+
         $payload = [
             "users" => [
                 $userWithDeviceTokens
             ],
             "template_name" => $NOTIFICATION_TYPE,
+            "title" => $title,
+            "message" => $message,
             "data" => [
-                "title" => json_encode([
-                    'en' => is_string($title[0]) ? $title[0] : 'title',
-                    'ar' => is_string($title[1]) ? $title[1] : 'عنوان',
-                ]),
-                "message" => json_encode([
-                    'en' => is_string($message[0]) ? $message[0] : 'body',
-                    'ar' => is_string($message[1]) ? $message[1] : 'هيئة',
-                ]),
+                "title" => json_encode($dataTitle),
+                "message" => json_encode($dataMessage),
                 "ref_id" => $refId,
                 "notification_type" => $NOTIFICATION_TYPE,
                 "user_name" => $user->name

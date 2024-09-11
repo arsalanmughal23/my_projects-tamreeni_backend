@@ -35,7 +35,7 @@ return [
         'base_url' => env('SERVICE_NOTIFICATION_BASE_URL'),
         'endpoints' => [
             'get' => 'v2/messaging',
-            'post'    => 'v2/messaging/send/notification'
+            'post'    => 'v4/messaging/send/notification'
         ]
     ]
 

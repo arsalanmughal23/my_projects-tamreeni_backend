@@ -24,7 +24,7 @@ class RecipeIngredientDataTable extends DataTable
         });
 
         $dataTable->editColumn('name', function(RecipeIngredient $model) {
-            return ($model->name) ? $model->name['en'] : '';
+            return $model->getTranslation('name', 'en') ?? '';
         });
 
         return $dataTable->addColumn('action', 'recipe_ingredients.datatables_actions')

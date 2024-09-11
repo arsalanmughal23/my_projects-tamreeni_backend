@@ -82,9 +82,9 @@ Route::group(['middleware' => ['auth', 'verified:web']], function () {
 
         Route::resource('meals', App\Http\Controllers\MealController::class);
 
-        Route::resource('meal_types', App\Http\Controllers\MealTypeController::class);
+        Route::resource('meal_types', App\Http\Controllers\MealTypeController::class)->only('index', 'edit', 'update', 'show');
 
-        Route::resource('meal_categories', App\Http\Controllers\MealCategoryController::class);
+        Route::resource('meal_categories', App\Http\Controllers\MealCategoryController::class)->only('index', 'edit', 'update', 'show');
 
         Route::resource('transactions', App\Http\Controllers\TransactionController::class);
 

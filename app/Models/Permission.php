@@ -34,7 +34,7 @@ class Permission extends SpatiePermission
 
     const ROUTES = ['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'];
 
-    const MODULES = ['roles', 'users', 'meals', 'recipes', 'exercises', 'exercise_equipments', 'appointments'];
+    const MODULES = ['users', 'meals', 'meal_types', 'meal_categories', 'meal_breakdowns', 'recipes', 'recipe_ingredients', 'exercises', 'exercise_equipments', 'appointments'];
     // users,transactions,settings,questions,pages,packages,options,meals,meal_types,meal_categories,exercises,exercise_equipments,body_parts
 
     public $fillable = [

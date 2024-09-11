@@ -33,7 +33,7 @@ class MealCategory extends Model
 
 
     public $fillable = [
-        'diet_type',
+        // 'diet_type',
         'slug',
         'name'
     ];
@@ -58,8 +58,20 @@ class MealCategory extends Model
         'name'      => 'required|array',
         'name.en'   => 'required|string|max:70',
         'name.ar'   => 'required|string|max:70',
-        'diet_type' => 'required',
+        'diet_type' => 'nullable|string|max:70',
     ];
+
+    public static function booted()
+    {
+        static::creating(function (self $mealCategory) {
+            $mealCategory->slug = \Str::slug($mealCategory->name);
+        });
+
+        static::updating(function (self $mealCategory) {
+            if ($mealCategory->isDirty(['name']))
+                $mealCategory->slug = \Str::slug($mealCategory->name);
+        });
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

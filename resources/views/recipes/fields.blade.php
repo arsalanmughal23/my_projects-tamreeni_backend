@@ -13,8 +13,12 @@
 <!-- Image Field -->
 <div class="form-group col-sm-12 col-lg-6">
     {!! Form::label('image', 'Image:') !!}
-    <br/>
-    {!! Form::file('image', null, ['class' => 'form-control', 'required' => true]) !!}
+    <div class="d-flex justify-content-between">
+        {!! Form::file('image', null, ['class' => 'form-control', 'required' => true]) !!}
+        @if(isset($recipe) && $recipe?->image)
+            <img src="{{ $recipe->image }}" alt="" height="50">
+        @endif
+    </div>
 </div>
 
 <!-- Meal Type Field -->

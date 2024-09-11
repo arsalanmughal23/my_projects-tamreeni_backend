@@ -6,6 +6,7 @@ use App\Constants\NotificationServiceTemplateNames;
 use App\Http\Controllers\AppBaseController;
 use App\Models\Appointment;
 use App\Models\NutritionPlanDayMeal;
+use App\Models\Role;
 use App\Models\User;
 use Error;
 use Illuminate\Support\Facades\Http;
@@ -109,6 +110,38 @@ class NotificationAPIController extends AppBaseController
             'response' => $sendNotificationResponse,
             'payload' => $payload
         ];
+    }
+
+    public function testAppointmentNotification(Request $request)
+    {
+        try {
+            $user = User::find($request->user_id ?? null);
+            if(!$user)
+                throw new Error('User not found');
+
+            $notificationType = NotificationServiceTemplateNames::APPOINTMENT;
+
+            $message = [__('appointment.notification.message', [], 'en'), __('appointment.notification.message', [], 'ar')];
+
+            $title = [
+                __('appointment.notification.title', ['name' => $user->name, 'time' => now()->format('d-M H:i')], 'en'),
+                __('appointment.notification.title', ['name' => $user->name, 'time' => now()->format('d-M H:i')], 'ar')
+            ];
+
+            $notificationResponse = sendNotification($user, $notificationType, 1, $title, $message);
+            $responseMessage = null;
+
+            if (!$notificationResponse['status'])
+                return $this->sendError($notificationResponse['error'], 403);
+            else
+                $responseMessage = $notificationResponse['message'];
+
+            return $this->sendResponse(null, $responseMessage ?? null);
+        } catch (\Error $e) {
+            return $this->sendError($e->getMessage(), 403);
+        } catch (\Exception $e) {
+            return $this->sendError($e->getMessage(), 422);
+        }
     }
 
     public function testNotification(Request $request)

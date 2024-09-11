@@ -45,6 +45,7 @@ Route::middleware(['auth:sanctum', 'verified:api', 'setLocale'])->group(function
     Route::delete('delete-account', [App\Http\Controllers\API\AuthAPIController::class, 'deleteAccount']);
 
     Route::post('test-notification', [App\Http\Controllers\API\NotificationAPIController::class, 'testNotification']);
+    Route::post('test-notification1', [App\Http\Controllers\API\NotificationAPIController::class, 'testAppointmentNotification']);
 
 
     Route::post('change-password', [App\Http\Controllers\API\AuthAPIController::class, 'changePassword'])->name('change_password');

@@ -232,7 +232,7 @@ if (!function_exists('sendNotification')) {
         $sendNotificationResponse = post($notificationRequest);
 
         if (!$sendNotificationResponse['status'])
-            \Log::warning('Notification (' . $NOTIFICATION_TYPE . ') ' . $sendNotificationResponse['message']);
+            \Log::warning('Notification (' . $NOTIFICATION_TYPE . ') ' . json_encode($sendNotificationResponse['error']));
 
         return $sendNotificationResponse;
     }

@@ -17,7 +17,7 @@ class RoleSeeder extends Seeder
         Role::insert([
             [ 'name' => Role::SUPER_ADMIN, 'guard_name' => 'web' ],
             [ 'name' => Role::ADMIN, 'guard_name' => 'web' ],
-            [ 'name' => Role::API_USER, 'guard_name' => 'api' ],
+            [ 'name' => Role::API_USER, 'guard_name' => 'web' ],
             [ 'name' => Role::COACH, 'guard_name' => 'web' ],
             [ 'name' => Role::DIETITIAN, 'guard_name' => 'web' ],
             [ 'name' => Role::THERAPIST, 'guard_name' => 'web' ]

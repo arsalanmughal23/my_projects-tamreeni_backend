@@ -232,7 +232,7 @@ if (!function_exists('sendNotification')) {
         $sendNotificationResponse = post($notificationRequest);
 
         if (!$sendNotificationResponse['status'])
-            \Log::warning('Notification (' . $NOTIFICATION_TYPE . ') ' . $sendNotificationResponse['message']);
+            \Log::warning('Notification (' . $NOTIFICATION_TYPE . ') ' . json_encode($sendNotificationResponse['error']));
 
         return $sendNotificationResponse;
     }
@@ -294,6 +294,14 @@ if (!function_exists('sendEmail')) {
         } else {
             return "Failed to send message";
         }
+    }
+}
+
+if (!function_exists('getPermissionModuleSlug')) {
+    function getPermissionModuleSlug($value)
+    {
+        if (isset($value))
+            return explode(".", $value)[0];
     }
 }
 

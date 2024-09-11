@@ -7,19 +7,19 @@
 <!-- Title Field -->
 <div class="col-sm-12">
     {!! Form::label('title', 'Title:') !!}
-    <p>{{ $recipe->title['en'] ?? '' }}</p>
+    <p>{{ $recipe->getTranslation('title', 'en') ?? '' }}</p>
 </div>
 
 <!-- Description Field -->
 <div class="col-sm-12">
     {!! Form::label('description', 'Description:') !!}
-    <p>{{ $recipe->description['en'] ?? '' }}</p>
+    <p>{{ $recipe->getTranslation('description', 'en') ?? '' }}</p>
 </div>
 
 <!-- Instruction Field -->
 <div class="col-sm-12">
     {!! Form::label('instruction', 'Instruction:') !!}
-    <p>{{ $recipe->instruction['en'] ?? '' }}</p>
+    <p>{{ $recipe->getTranslation('instruction', 'en') ?? '' }}</p>
 </div>
 
 <!-- Image Field -->

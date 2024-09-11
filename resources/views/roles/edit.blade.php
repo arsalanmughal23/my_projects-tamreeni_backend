@@ -30,28 +30,29 @@
                         @php $moduleNames = []; @endphp
                         @foreach ($permissions as $key => $permission)
                             @php
-                                $data = getPermissionModelName($permission->name);
+                                $moduleName = getPermissionModelName($permission->name);
+                                $moduleSlug = getPermissionModuleSlug($permission->name);
                                 $action = explode('.', $permission->name);
                                 $action = end($action);
                             @endphp
 
-                            @if(!in_array($data, $moduleNames))
+                            @if(!in_array($moduleName, $moduleNames))
 
-                                @php array_push($moduleNames, $data); @endphp
+                                @php array_push($moduleNames, $moduleName); @endphp
                                 <div class="row"></br></div>
 
-                                <h6>{{ $data }} Permissions </h6>
+                                <h6>{{ $moduleName }} Permissions </h6>
                                 <label class="control-label mt-2 col-md-3" style="font-weight: normal !important;">
                                     <input class="checkbox-inline selectAllPermissions" type="checkbox"
-                                    data-module_name="{{ $data }}" value="{{ $data }}">
+                                    data-module_name="{{ $moduleSlug }}" value="{{ $moduleSlug }}">
                                     Select All
                                 </label>
                                 <div class="row"></div>
                             @endif
                             <label class="control-label mt-2 col-2" style="font-weight: normal !important;">
-                                <input class="checkbox-inline permission module-{{ $data }} {{ $data }}-checked"
+                                <input class="checkbox-inline permission module-{{ $moduleSlug }} {{ $moduleSlug }}-checked"
                                     type="checkbox" name="permission[{{ $permission->id }}]"
-                                    id="{{ $data.'.'.$action }}"
+                                    id="{{ $moduleSlug.'.'.$action }}"
                                     @if ($permission_role->getAllPermissions()->contains($permission)) checked @endif>
                                 {{ getPermissionName($permission->name) }}
                             </label>
@@ -76,6 +77,14 @@
 
 @push('page_scripts')
 <script>
+    $('.selectAllPermissions').map(function(index, elem) {
+        let moduleName = $(elem).data('module_name');
+        let modulePermissionSelector = `.permission.module-${moduleName}`;
+        let isAllPermissionChecked = $(modulePermissionSelector).length == $(`${modulePermissionSelector}:checked`).length;
+
+        $(elem).prop('checked', isAllPermissionChecked);
+    })
+
     $('.selectAllPermissions').on('click', function(e) {
         let selectAllPermissionsElement = $(e.target);
         let moduleName = selectAllPermissionsElement.data('module_name');

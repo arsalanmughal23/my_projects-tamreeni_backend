@@ -70,7 +70,7 @@ class MealCategoryDataTable extends DataTable
     {
         return [
             'name',
-            'diet_type'
+            // 'diet_type'
         ];
     }
 

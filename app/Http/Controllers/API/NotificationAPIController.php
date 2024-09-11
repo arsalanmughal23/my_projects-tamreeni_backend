@@ -16,8 +16,8 @@ class NotificationAPIController extends AppBaseController
 {
 
     public static $endPoints = [
-        'get.messages'   => 'v2/messaging',
-        'post.messaging'    => 'v2/messaging/send/notification'
+        'get.messages'   => 'v4/messaging',
+        'post.messaging'    => 'v4/messaging/send/notification'
     ];
 
     public static function get(Request $request, $endPoint)

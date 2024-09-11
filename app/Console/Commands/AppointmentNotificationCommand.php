@@ -41,7 +41,7 @@ class AppointmentNotificationCommand extends Command
      */
     public function handle()
     {
-        Log::alert('appointment:notification | '. now()->format('d-M H:i:s'));
+        Log::alert($this->signature . ' | '. now()->format('d-M H:i:s'));
         $date = Carbon::now()->setSecond();
         $dateTimeStartOfHour = $date->startOfHour();
 

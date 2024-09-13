@@ -18,7 +18,7 @@
 
 <!-- Active Field -->
 <div class="col-sm-12">
-    {!! Form::label('active', 'Active:') !!}
-    <p>{{ $page->active }}</p>
+    {!! Form::label('active', 'Status:') !!}
+    <p>{{ $page->active ? 'Active' : 'In-Active'; }}</p>
 </div>
 

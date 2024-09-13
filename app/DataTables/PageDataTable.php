@@ -18,6 +18,10 @@ class PageDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
+        $dataTable->editColumn('active', function($query) {
+            return $query->active ? 'Active' : 'In-Active';
+        });
+
         return $dataTable->addColumn('action', 'pages.datatables_actions');
     }
 
@@ -68,7 +72,7 @@ class PageDataTable extends DataTable
             'title',
             'slug',
             // 'content',
-            'active'
+            'active' => ['title' => 'Status']
         ];
     }
 

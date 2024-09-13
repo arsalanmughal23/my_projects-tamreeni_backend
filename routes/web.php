@@ -88,7 +88,7 @@ Route::group(['middleware' => ['auth', 'verified:web']], function () {
 
         Route::resource('transactions', App\Http\Controllers\TransactionController::class);
 
-        Route::resource('pages', App\Http\Controllers\PageController::class);
+        Route::resource('pages', App\Http\Controllers\PageController::class)->only('index', 'edit', 'update', 'show', 'destroy');
 
         Route::resource('settings', App\Http\Controllers\SettingController::class);
 

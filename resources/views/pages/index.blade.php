@@ -7,14 +7,18 @@
                 <div class="col-sm-6">
                     <h1>Pages</h1>
                 </div>
-                @can('pages.create')
-                    <div class="col-sm-6">
-                        <a class="btn btn-primary float-right"
-                        href="{{ route('pages.create') }}">
-                            Add New
-                        </a>
-                    </div>
+
+                @if(Route::has('pages.create'))
+                    @can('pages.create')
+                        <div class="col-sm-6">
+                            <a class="btn btn-primary float-right"
+                            href="{{ route('pages.create') }}">
+                                Add New
+                            </a>
+                        </div>
+                    @endcan
                 @endcan
+
             </div>
         </div>
     </section>
@@ -31,7 +35,7 @@
 
                 <div class="card-footer clearfix">
                     <div class="float-right">
-                        
+
                     </div>
                 </div>
             </div>

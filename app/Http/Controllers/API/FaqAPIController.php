@@ -41,7 +41,7 @@ class FaqAPIController extends AppBaseController
     {
 
         $perPage = $request->input('per_page', Config::get('constants.PER_PAGE', 10));
-        $faqsQuery = $this->faqRepository->faqsQuery();
+        $faqsQuery = $this->faqRepository->faqsQuery()->where('status', 1);
 
         // Paginate the results
         $perPage = $request->get('per_page', config('constants.PER_PAGE'));

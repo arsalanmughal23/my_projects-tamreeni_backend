@@ -87,11 +87,14 @@ class WorkoutPlanRepository extends BaseRepository
         $workoutPlanDays = [];
         foreach ($generatedDates as $key => $generatedDate) {
 
+            $dayCount = $key + 1;
+            $dayNumber = str_pad($dayCount, 2, '0', STR_PAD_LEFT);
+
             $workoutDay = WorkoutDay::create([
                 'workout_plan_id' => $workoutPlan->id,
                 'name'            => [
-                    'en' => 'Day 0' . $key + 1,
-                    'ar' => 'اليوم 0' . $key + 1
+                    'en' => 'Day ' . $dayNumber,
+                    'ar' => 'اليوم ' . $dayNumber
                 ],
                 'description'     => [
                     'en' => WorkoutDay::DESCRIPTION_EN,

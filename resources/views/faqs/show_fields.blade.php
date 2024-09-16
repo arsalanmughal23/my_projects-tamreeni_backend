@@ -13,6 +13,6 @@
 <!-- Status Field -->
 <div class="col-sm-12">
     {!! Form::label('status', 'Status:') !!}
-    <p>{{ $faq->status }}</p>
+    <p>{{ $faq->status_text ?? '' }}</p>
 </div>
 

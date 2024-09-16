@@ -5,6 +5,7 @@ namespace App\Models;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * Class Faq
@@ -19,16 +20,19 @@ class Faq extends Model
 {
     use SoftDeletes;
 
+    use HasTranslations;
+
     use HasFactory;
 
     public $table = 'faqs';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
 
     protected $dates = ['deleted_at'];
-
+    public $translatable = ['question', 'answer'];
+    public $appends = ['status_text'];
 
 
     public $fillable = [
@@ -55,13 +59,23 @@ class Faq extends Model
      * @var array
      */
     public static $rules = [
-        'question' => 'required|string|no_zeros_whitespace_or_numeric',
-        'answer' => 'required|string|no_zeros_whitespace_or_numeric_in_editor',
+        'question' => 'required|array',
+        'question.en' => 'required|string',
+        'question.ar' => 'required|string',
+
+        'answer' => 'required|array',
+        'answer.en' => 'required|string',
+        'answer.ar' => 'required|string',
+
         'status' => 'nullable|integer',
         'created_at' => 'nullable',
         'updated_at' => 'nullable',
         'deleted_at' => 'nullable'
     ];
 
-    
+
+    public function getStatusTextAttribute()
+    {
+        return $this->status ? 'Active' : 'In Active';
+    }
 }

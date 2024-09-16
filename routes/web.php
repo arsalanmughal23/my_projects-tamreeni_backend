@@ -138,7 +138,7 @@ Route::group(['middleware' => ['auth', 'verified:web']], function () {
         Route::resource('packages', App\Http\Controllers\PackageController::class);
 
 
-        Route::resource('user_subscriptions', App\Http\Controllers\UserSubscriptionController::class);
+        // Route::resource('user_subscriptions', App\Http\Controllers\UserSubscriptionController::class);
 
 
         Route::resource('workout_days', App\Http\Controllers\WorkoutDayController::class);

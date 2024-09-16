@@ -13,7 +13,7 @@
                 <div class="icon">
                     <i class="ion ion-person"></i>
                 </div>
-                <a href="{{ route('users.index') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{ route('users.index') }}?userRole=Mentor" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -27,7 +27,7 @@
                 <div class="icon">
                     <i class="ion ion-person-stalker"></i>
                 </div>
-                <a href="{{ route('users.index') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{ route('users.index') }}?userRole=User" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
 

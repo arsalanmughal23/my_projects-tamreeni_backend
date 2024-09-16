@@ -2,6 +2,7 @@
 
 namespace App\DataTables;
 
+use App\Models\Role;
 use App\Models\User;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
@@ -36,8 +37,16 @@ class UsersDataTable extends DataTable
      */
     public function query(User $model)
     {
-        return $model->newQuery()->whereNotIn('id', [1, Auth::user()->id]);
+        $model = $model->newQuery()->whereNotIn('id', [1, Auth::user()->id]);
 
+        $selectedRole = $this->request->userRole;
+        if($selectedRole == 'Mentor')
+            $selectedRole = Role::MENTOR;
+
+        if($selectedRole)
+            $model = $model->role($selectedRole);
+
+        return $model;
         // return $model->with('user_details')->select('users.*')->newQuery();
     }
 

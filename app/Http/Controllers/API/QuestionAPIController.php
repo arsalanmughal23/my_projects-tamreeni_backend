@@ -6,6 +6,7 @@ use App\Models\Question;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\API\SubmitAnswersAPIRequest;
+use App\Http\Requests\API\ValidateAnswersAPIRequest;
 use App\Http\Resources\QuestionResource;
 use App\Models\User;
 use App\Models\UserDetail;
@@ -38,6 +39,18 @@ class QuestionAPIController extends AppBaseController
     {
         $question = $this->questionRepository->index($request);
         return $this->sendResponse(QuestionResource::collection($question), 'Questions retrieved successfully');
+    }
+
+    public function validateAnswers(ValidateAnswersAPIRequest $request)
+    {
+        try {
+            $requestData = $request->validated();
+
+            return $this->sendResponse($requestData, 'Answers are validated');
+
+        } catch (\Exception $e) {
+            return $this->sendError($e->getMessage(), 500);
+        }
     }
 
     public function submitAnswers(SubmitAnswersAPIRequest $request)

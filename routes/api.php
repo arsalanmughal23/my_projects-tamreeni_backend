@@ -72,6 +72,7 @@ Route::middleware(['auth:sanctum', 'verified:api', 'setLocale'])->group(function
 
     Route::resource('questions', App\Http\Controllers\API\QuestionAPIController::class)->only('index');
     Route::post('submit_answers', [App\Http\Controllers\API\QuestionAPIController::class, 'submitAnswers']);
+    Route::post('validate_answers', [App\Http\Controllers\API\QuestionAPIController::class, 'validateAnswers']);
     Route::get('personal_statistics', [App\Http\Controllers\API\UserAPIController::class, 'getPersonalStatistics']);
 
     Route::resource('contact_requests', App\Http\Controllers\API\ContactRequestAPIController::class);

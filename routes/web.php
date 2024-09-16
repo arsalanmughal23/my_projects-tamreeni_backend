@@ -78,7 +78,7 @@ Route::group(['middleware' => ['auth', 'verified:web']], function () {
 
         Route::resource('roles', App\Http\Controllers\RolesController::class)->only('index', 'edit', 'update', 'show');
 
-        Route::resource('permissions', App\Http\Controllers\PermissionsController::class)->only('index', 'create', 'store', 'edit', 'update', 'show', 'destroy');
+        Route::resource('permissions', App\Http\Controllers\PermissionsController::class)->only('index', 'create', 'store', 'edit', 'update', 'destroy');
 
         Route::resource('meals', App\Http\Controllers\MealController::class);
 
@@ -88,7 +88,7 @@ Route::group(['middleware' => ['auth', 'verified:web']], function () {
 
         Route::resource('transactions', App\Http\Controllers\TransactionController::class);
 
-        Route::resource('pages', App\Http\Controllers\PageController::class);
+        Route::resource('pages', App\Http\Controllers\PageController::class)->only('index', 'edit', 'update', 'show', 'destroy');
 
         Route::resource('settings', App\Http\Controllers\SettingController::class);
 

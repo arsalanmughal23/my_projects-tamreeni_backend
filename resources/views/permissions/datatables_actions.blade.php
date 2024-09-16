@@ -1,7 +1,11 @@
 <div class='btn-group'>
-    <a href="{{ route('permissions.show', $module_name) }}" class='btn btn-default btn-xs'>
-        <i class="fa fa-eye"></i>
-    </a>
+
+    @if(Route::has('permissions.show'))
+        <a href="{{ route('permissions.show', $module_name) }}" class='btn btn-default btn-xs'>
+            <i class="fa fa-eye"></i>
+        </a>
+    @endif
+
     <a href="{{ route('permissions.edit', $module_name) }}" class='btn btn-default btn-xs'>
         <i class="fa fa-edit"></i>
     </a>

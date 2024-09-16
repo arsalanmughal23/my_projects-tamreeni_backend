@@ -57,7 +57,7 @@ class WellnessTipAPIController extends AppBaseController
 
         $wellnessTip = $this->wellnessTipRepository->create($input);
 
-        return $this->sendResponse($wellnessTip->toArray(), 'Wellness Tip saved successfully');
+        return $this->sendResponse(new WellnessTipResource($wellnessTip), 'Wellness Tip saved successfully');
     }
 
     /**
@@ -104,7 +104,7 @@ class WellnessTipAPIController extends AppBaseController
 
         $wellnessTip = $this->wellnessTipRepository->update($input, $id);
 
-        return $this->sendResponse($wellnessTip->toArray(), 'WellnessTip updated successfully');
+        return $this->sendResponse(new WellnessTipResource($wellnessTip), 'WellnessTip updated successfully');
     }
 
     /**

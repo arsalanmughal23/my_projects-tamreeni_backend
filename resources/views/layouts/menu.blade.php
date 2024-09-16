@@ -33,14 +33,14 @@
     </li>
 @endcan
 
-@canany(['constants.index', 'constants.create', 'constants.show', 'constants.edit', 'constants.destroy'])
+<!-- @canany(['constants.index', 'constants.create', 'constants.show', 'constants.edit', 'constants.destroy'])
     <li class="nav-item">
         <a href="{{ route('constants.index') }}"
         class="nav-link {{ Request::is('constants*') ? 'active' : '' }}">
             <i class="fa fa-key"></i><p>Constants</p>
         </a>
     </li>
-@endcan
+@endcan -->
 
 @canany(['faqs.index', 'faqs.create', 'faqs.show', 'faqs.edit', 'faqs.destroy'])
     <li class="nav-item">

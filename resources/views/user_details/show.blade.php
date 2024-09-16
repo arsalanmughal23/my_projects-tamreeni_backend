@@ -3,20 +3,16 @@
 @section('content')
     <section class="content-header">
         <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6 d-flex justify-content-between">
-                    <h1>User Detail Details</h1>
-
-                    <!-- User Field -->
-                    <div>
-                        <a href="{{ route('users.show', $userDetail->user_id) }}" class="btn btn-primary">View User</a>
-                    </div>
+            <div class="d-flex justify-content-between mb-2">
+                <div>
+                    <h1>User Details</h1>
                 </div>
-                <div class="col-sm-6">
-                    <a class="btn btn-default float-right"
-                       href="{{ route('user_details.index') }}">
+                <div>
+                    <a class="btn btn-default"
+                        href="{{ route('user_details.index') }}">
                         Back
                     </a>
+                    <a href="{{ route('users.show', $userDetail->user_id) }}" class="btn btn-primary">View User</a>
                 </div>
             </div>
         </div>

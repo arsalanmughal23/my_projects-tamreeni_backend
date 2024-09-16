@@ -3,9 +3,14 @@
 @section('content')
     <section class="content-header">
         <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-12">
+            <div class="d-flex justify-content-between mb-2">
+                <div>
                     <h1>Edit User Detail</h1>
+                </div>
+                <div>
+                    <a href="{{ route('users.edit', $userDetail?->user_id ?? 0) }}" class="btn btn-primary">
+                        Edit User
+                    </a>
                 </div>
             </div>
         </div>

@@ -8,6 +8,7 @@ use App\Models\Faq;
 use App\Repositories\FaqRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\FaqResource;
 use Response;
 use Config;
 use DB;
@@ -41,16 +42,17 @@ class FaqAPIController extends AppBaseController
 
         $perPage = $request->input('per_page', Config::get('constants.PER_PAGE', 10));
         $faqsQuery = $this->faqRepository->faqsQuery();
-    
+
         // Paginate the results
-        $faqs = $faqsQuery->paginate($perPage);
-    
-        if ($faqs->isEmpty()) {
-            return $this->sendError('FAQs not found', 200);
+        $perPage = $request->get('per_page', config('constants.PER_PAGE'));
+        if ($request->get('is_paginate')) {
+            $faqsQuery = $faqsQuery->paginate($perPage);
+        } else {
+            $faqsQuery = $faqsQuery->get();
         }
-    
-        return $this->sendResponse($faqs->toArray(), 'FAQs retrieved successfully');
-    
+
+        return $this->sendResponse(FaqResource::collection($faqsQuery), 'FAQs retrieved successfully');
+
     }
 
     /**
@@ -71,7 +73,7 @@ class FaqAPIController extends AppBaseController
         $faq = $this->faqRepository->create($input);
 
         DB::commit();
-        return $this->sendResponse($faq->toArray(), 'Faq saved successfully');
+        return $this->sendResponse(new FaqResource($faq), 'Faq saved successfully');
     } catch (\Exception $e) {
         DB::rollback();
         return $this->sendError($e->getMessage(), 422);
@@ -96,7 +98,7 @@ class FaqAPIController extends AppBaseController
             return $this->sendError($this->faqNotFound, 200);
         }
 
-        return $this->sendResponse($faq->toArray(), 'Faq retrieved successfully');
+        return $this->sendResponse(new FaqResource($faq), 'Faq retrieved successfully');
     }
 
     /**
@@ -125,7 +127,7 @@ class FaqAPIController extends AppBaseController
         $faq = $this->faqRepository->update($input, $id);
 
         DB::commit();
-        return $this->sendResponse($faq->toArray(), 'Faq updated successfully');
+        return $this->sendResponse(new FaqResource($faq), 'Faq updated successfully');
     } catch (\Exception $e) {
         DB::rollback();
         return $this->sendError($e->getMessage(), 422);

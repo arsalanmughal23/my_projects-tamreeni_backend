@@ -18,7 +18,20 @@ class WellnessTipDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'wellness_tips.datatables_actions');
+        $dataTable->editColumn('title', function(WellnessTip $wellnessTip) {
+            return $wellnessTip->getTranslation('title', 'en') ?? '';
+        });
+
+        $dataTable->editColumn('content', function(WellnessTip $wellnessTip) {
+            return $wellnessTip->getTranslation('content', 'en') ?? '';
+        });
+
+        $dataTable->editColumn('cover', function(WellnessTip $wellnessTip) {
+            return '<img src="'.$wellnessTip->cover.'" alt="" height="50">';
+        });
+
+        return $dataTable->addColumn('action', 'wellness_tips.datatables_actions')
+                    ->rawColumns(['cover', 'action']);
     }
 
     /**

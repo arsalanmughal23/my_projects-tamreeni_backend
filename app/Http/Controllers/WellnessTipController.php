@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\WellnessTipDataTable;
+use App\Helper\FileHelper;
 use App\Http\Requests;
 use App\Http\Requests\CreateWellnessTipRequest;
 use App\Http\Requests\UpdateWellnessTipRequest;
@@ -52,7 +53,10 @@ class WellnessTipController extends AppBaseController
      */
     public function store(CreateWellnessTipRequest $request)
     {
-        $input = $request->all();
+        $input = $request->validated();
+
+        if ($request->hasFile('cover'))
+            $input['cover'] = FileHelper::s3Upload($input['cover']);
 
         $wellnessTip = $this->wellnessTipRepository->create($input);
 
@@ -119,7 +123,12 @@ class WellnessTipController extends AppBaseController
             return redirect(route('wellness_tips.index'));
         }
 
-        $wellnessTip = $this->wellnessTipRepository->update($request->all(), $id);
+        $input = $request->validated();
+
+        if ($request->hasFile('cover'))
+            $input['cover'] = FileHelper::s3Upload($input['cover']);
+
+        $wellnessTip = $this->wellnessTipRepository->update($input, $id);
 
         Flash::success('Wellness Tip updated successfully.');
 

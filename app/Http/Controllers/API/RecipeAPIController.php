@@ -36,7 +36,13 @@ class RecipeAPIController extends AppBaseController
 
     public function index(Request $request)
     {
-        $recipes = $this->recipeRepository->getRecipes($request->only('is_favourite', 'diet_type', 'meal_category_ids', 'meal_category_slugs', 'keyword', 'min_calories', 'max_calories', 'calories', 'meal_type', 'title'));
+        $recipes = $this->recipeRepository->getRecipes(
+            $request->only(
+                'is_favourite', 'diet_type', 'meal_category_ids', 'meal_category_slugs',
+                'keyword', 'min_calories', 'max_calories', 'calories', 'meal_type', 'title',
+                'order', 'order_by'
+            )
+        );
 
         $perPage = $request->get('per_page', config('constants.PER_PAGE'));
         if ($request->get('is_paginate')) {

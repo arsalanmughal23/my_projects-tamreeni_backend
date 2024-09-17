@@ -127,6 +127,10 @@ class RecipeRepository extends BaseRepository
             });
         }
 
+        if (isset($params['order']) && isset($params['order_by'])) {
+            $query->orderBy($params['order'], $params['order_by']);
+        }
+
         return $query;
     }
 }

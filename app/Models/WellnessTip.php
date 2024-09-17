@@ -23,7 +23,7 @@ class WellnessTip extends Model
     use HasTranslations;
 
     public $table = 'wellness_tips';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
@@ -56,13 +56,20 @@ class WellnessTip extends Model
      * @var array
      */
     public static $rules = [
-        'title' => 'nullable|string',
-        'content' => 'nullable|string',
-        'cover' => 'nullable|string',
+        'title' => 'required|array',
+        'title.en' => 'required|string',
+        'title.ar' => 'required|string',
+
+        'content' => 'required|array',
+        'content.en' => 'required|string',
+        'content.ar' => 'required|string',
+
+        'cover' => 'nullable|file|mimes:jpeg,png|max:5000',
+
         'created_at' => 'nullable',
         'updated_at' => 'nullable',
         'deleted_at' => 'nullable'
     ];
 
-    
+
 }

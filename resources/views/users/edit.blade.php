@@ -3,13 +3,18 @@
 @section('content')
     <section class="content-header">
         <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-12">
+            <div class="d-flex justify-content-between mb-2">
+                <div>
                     @if($users->id == auth()->user()->id)
                         <h1>Edit Profile</h1>
                     @else
                         <h1>Edit User</h1>
                     @endif
+                </div>
+                <div>
+                    <a href="{{ route('user_details.edit', $users?->details?->id ?? 0) }}" class="btn btn-primary">
+                        Edit User Details
+                    </a>
                 </div>
             </div>
         </div>

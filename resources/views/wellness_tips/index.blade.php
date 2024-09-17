@@ -23,17 +23,9 @@
 
         @include('flash::message')
 
-        <div class="clearfix"></div>
-
         <div class="card">
             <div class="card-body">
                 @include('wellness_tips.table')
-
-                <div class="card-footer clearfix">
-                    <div class="float-right">
-                        
-                    </div>
-                </div>
             </div>
 
         </div>

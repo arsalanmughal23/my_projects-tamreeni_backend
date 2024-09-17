@@ -18,6 +18,18 @@ class FaqDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
+        $dataTable->editColumn('question', function(Faq $faq) {
+            return $faq->getTranslation('question', 'en') ?? '';
+        });
+
+        $dataTable->editColumn('answer', function(Faq $faq) {
+            return $faq->getTranslation('answer', 'en') ?? '';
+        });
+
+        $dataTable->editColumn('status', function(Faq $faq) {
+            return $faq->status_text ?? '';
+        });
+
         return $dataTable->addColumn('action', 'faqs.datatables_actions');
     }
 

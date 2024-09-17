@@ -132,6 +132,12 @@ class Meal extends Model
         return $isFavourite;
     }
 
+    public function setDietTypeAttribute($value)
+    {
+        $this->attributes['diet_type'] = $value;
+        $this->attributes['diet_type_slug'] = $value['en'] ?? $value;
+    }
+
     public function foodPreferences()
     {
         return $this->belongsTo(MealCategory::class, 'meal_category_id');

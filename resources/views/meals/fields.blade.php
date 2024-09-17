@@ -76,19 +76,19 @@
 <!-- Calories Field -->
 <div class="form-group col-sm-3">
     {!! Form::label('calories', 'Calories:', ['class'=>'required']) !!}
-    {!! Form::text('calories', null, ['class' => 'form-control', 'required', 'min'=>0, 'max'=>1000, 'oninput' => 'allowOnlyNumbers(this, 3)']) !!}
+    {!! Form::number('calories', null, ['class' => 'form-control', 'required', 'min'=>0, 'max'=>1000, 'oninput' => 'allowOnlyNumbers(this, 3)']) !!}
 </div>
 
 <!-- protein Field -->
 <div class="form-group col-sm-3">
     {!! Form::label('protein', 'Protein:', ['class'=>'required']) !!}
-    {!! Form::text('protein', null, ['class' => 'form-control', 'required', 'min'=>0, 'max'=>1000, 'oninput' => 'allowOnlyNumbers(this, 3)']) !!}
+    {!! Form::number('protein', null, ['class' => 'form-control', 'required', 'min'=>0, 'max'=>1000, 'oninput' => 'allowOnlyNumbers(this, 3)']) !!}
 </div>
 
 <!-- fats Field -->
 <div class="form-group col-sm-3">
     {!! Form::label('fats', 'Fats:', ['class'=>'required']) !!}
-    {!! Form::text('fats', null, ['class' => 'form-control', 'required', 'min'=>0, 'max'=>1000, 'oninput' => 'allowOnlyNumbers(this, 3)']) !!}
+    {!! Form::number('fats', null, ['class' => 'form-control', 'required', 'min'=>0, 'max'=>1000, 'oninput' => 'allowOnlyNumbers(this, 3)']) !!}
 </div>
 
 <!-- Carbs Field -->

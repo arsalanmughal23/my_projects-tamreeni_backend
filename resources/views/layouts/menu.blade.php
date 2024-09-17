@@ -51,41 +51,23 @@
     </li>
 @endcan
 
-@canany(['users.index', 'users.create', 'users.show', 'users.edit', 'users.destroy'])
+@canany(['users.index', 'users.create', 'users.show', 'users.edit', 'users.destroy', 'user_details.*'])
     <li class="nav-item">
         <a href="{{ route('users.index') }}"
-        class="nav-link {{ Request::is('users*') ? 'active' : '' }}">
+        class="nav-link {{ Request::is('users*') || Request::is('user_details*') ? 'active' : '' }}">
             <i class="fa fa-user"></i><p>Users</p>
         </a>
     </li>
 @endcan
 
-@canany(['user_details.index', 'user_details.create', 'user_details.show', 'user_details.edit', 'user_details.destroy'])
+<!-- @canany(['user_details.index', 'user_details.create', 'user_details.show', 'user_details.edit', 'user_details.destroy'])
     <li class="nav-item">
         <a href="{{ route('user_details.index') }}"
         class="nav-link {{ Request::is('user_details*') ? 'active' : '' }}">
             <i class="fa fa-user-cog"></i><p>User Details</p>
         </a>
     </li>
-@endcan
-
-@canany(['user_subscriptions.index', 'user_subscriptions.create', 'user_subscriptions.show', 'user_subscriptions.edit', 'user_subscriptions.destroy'])
-    <li class="nav-item">
-        <a href="{{ route('user_subscriptions.index') }}"
-        class="nav-link {{ Request::is('user_subscriptions*') ? 'active' : '' }}">
-            <i class="fa fa-user-plus"></i><p>User Subscriptions</p>
-        </a>
-    </li>
-@endcan
-
-@canany(['user_events.index', 'user_events.create', 'user_events.show', 'user_events.edit', 'user_events.destroy'])
-    <li class="nav-item">
-        <a href="{{ route('user_events.index') }}"
-        class="nav-link {{ Request::is('user_events*') ? 'active' : '' }}">
-            <i class="fa fa-calendar-alt"></i><p>User Events</p>
-        </a>
-    </li>
-@endcan
+@endcan -->
 
 @canany(['events.index', 'events.create', 'events.show', 'events.edit', 'events.destroy'])
     <li class="nav-item">
@@ -95,6 +77,15 @@
         </a>
     </li>
 @endcan
+
+<!-- @canany(['user_events.index', 'user_events.create', 'user_events.show', 'user_events.edit', 'user_events.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('user_events.index') }}"
+        class="nav-link {{ Request::is('user_events*') ? 'active' : '' }}">
+            <i class="fa fa-calendar-alt"></i><p>User Events</p>
+        </a>
+    </li>
+@endcan -->
 
 @canany(['slots.index', 'slots.create', 'slots.show', 'slots.edit', 'slots.destroy'])
     <li class="nav-item">

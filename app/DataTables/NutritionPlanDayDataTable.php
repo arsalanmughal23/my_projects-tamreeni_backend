@@ -18,6 +18,10 @@ class NutritionPlanDayDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
+        $dataTable->editColumn('name', function(NutritionPlanDay $nutritionPlanDay) {
+            return $nutritionPlanDay->getTranslation('name', 'en');
+        });
+
         return $dataTable->addColumn('action', 'nutrition_plan_days.datatables_actions');
     }
 
@@ -48,12 +52,27 @@ class NutritionPlanDayDataTable extends DataTable
                 'stateSave' => true,
                 'order'     => [[0, 'desc']],
                 'buttons'   => [
-                    // ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'print', 'className' => 'btn btn-default btn-sm no-corner',],
-                    // ['extend' => 'reset', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'reload', 'className' => 'btn btn-default btn-sm no-corner',],
-                ],
+                    [
+                        'extend' => 'csv',
+                        'className' => 'btn btn-default btn-sm no-corner',
+                        'text' => '<i class="fa fa-file-csv"></i> CSV'
+                    ],
+                    [
+                        'extend' => 'excel',
+                        'className' => 'btn btn-default btn-sm no-corner',
+                        'text' => '<i class="fa fa-file-excel"></i> Excel'
+                    ],
+                    [
+                        'extend' => 'print',
+                        'className' => 'btn btn-default btn-sm no-corner',
+                        'text' => '<i class="fa fa-print"></i> Print'
+                    ],
+                    [
+                        'extend' => 'reload',
+                        'className' => 'btn btn-default btn-sm no-corner',
+                        'text' => '<i class="fa fa-sync"></i> Reload'
+                    ],
+                ]
             ]);
     }
 

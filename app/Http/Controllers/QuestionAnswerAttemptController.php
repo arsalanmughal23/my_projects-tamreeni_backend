@@ -9,17 +9,18 @@ use App\Http\Requests\UpdateQuestionAnswerAttemptRequest;
 use App\Repositories\QuestionAnswerAttemptRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
+use App\Repositories\BodyPartRepository;
+use App\Repositories\MealCategoryRepository;
 use Response;
 
 class QuestionAnswerAttemptController extends AppBaseController
 {
-    /** @var QuestionAnswerAttemptRepository $questionAnswerAttemptRepository*/
-    private $questionAnswerAttemptRepository;
 
-    public function __construct(QuestionAnswerAttemptRepository $questionAnswerAttemptRepo)
-    {
-        $this->questionAnswerAttemptRepository = $questionAnswerAttemptRepo;
-    }
+    public function __construct(
+        private QuestionAnswerAttemptRepository $questionAnswerAttemptRepository,
+        private BodyPartRepository $bodyPartRepository,
+        private MealCategoryRepository $mealCategoryRepository,
+    ) {}
 
     /**
      * Display a listing of the QuestionAnswerAttempt.
@@ -71,10 +72,10 @@ class QuestionAnswerAttemptController extends AppBaseController
     public function show($id)
     {
         $questionAnswerAttempt = $this->questionAnswerAttemptRepository->find($id);
-        
+
         if (empty($questionAnswerAttempt)) {
             Flash::error('Question Answer Attempt not found');
-            
+
             return redirect(route('question_answer_attempts.index'));
         }
 
@@ -90,7 +91,9 @@ class QuestionAnswerAttemptController extends AppBaseController
      */
     public function edit($id)
     {
-        $questionAnswerAttempt = $this->questionAnswerAttemptRepository->find($id);
+        $questionAnswerAttempt  = $this->questionAnswerAttemptRepository->find($id);
+        $bodyParts              = $this->bodyPartRepository->all();
+        $mealCategories         = $this->mealCategoryRepository->all();
 
         if (empty($questionAnswerAttempt)) {
             Flash::error('Question Answer Attempt not found');
@@ -98,7 +101,7 @@ class QuestionAnswerAttemptController extends AppBaseController
             return redirect(route('question_answer_attempts.index'));
         }
 
-        return view('question_answer_attempts.edit')->with('questionAnswerAttempt', $questionAnswerAttempt);
+        return view('question_answer_attempts.edit', compact('questionAnswerAttempt', 'bodyParts', 'mealCategories'));
     }
 
     /**

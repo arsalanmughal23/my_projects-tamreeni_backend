@@ -73,26 +73,26 @@
 
 <!-- Duration In M Field -->
 <div class="form-group col-sm-3">
-    {!! Form::label('duration_in_m', 'Duration In M:') !!}
-    {!! Form::text('duration_in_m', null, ['class' => 'form-control',  'required'=>'required','oninput' => 'allowOnlyNumbers(this, 4)']) !!}
+    {!! Form::label('duration_in_m', 'Duration In M:', ['class' => 'required']) !!}
+    {!! Form::number('duration_in_m', null, ['class' => 'form-control',  'required'=>'required','oninput' => 'allowOnlyNumbers(this, 4)']) !!}
 </div>
 
 <!-- Sets Field -->
 <div class="form-group col-sm-3">
-    {!! Form::label('sets', 'Sets:') !!}
-    {!! Form::text('sets', null, ['class' => 'form-control',  'required'=>'required','oninput' => 'allowOnlyNumbers(this, 3)']) !!}
+    {!! Form::label('sets', 'Sets:', ['class' => 'required']) !!}
+    {!! Form::number('sets', null, ['class' => 'form-control',  'required'=>'required','oninput' => 'allowOnlyNumbers(this, 3)']) !!}
 </div>
 
 <!-- Reps Field -->
 <div class="form-group col-sm-3">
-    {!! Form::label('reps', 'Reps:') !!}
-    {!! Form::text('reps', null, ['class' => 'form-control',  'required'=>'required','oninput' => 'allowOnlyNumbers(this, 3)']) !!}
+    {!! Form::label('reps', 'Reps:', ['class' => 'required']) !!}
+    {!! Form::number('reps', null, ['class' => 'form-control',  'required'=>'required','oninput' => 'allowOnlyNumbers(this, 3)']) !!}
 </div>
 
 <!-- Burn Calories Field -->
 <div class="form-group col-sm-3">
     {!! Form::label('burn_calories', 'Burn Calories:', ['class'=>'required']) !!}
-    {!! Form::text('burn_calories', null, ['class' => 'form-control',  'required'=>'required', 'oninput' => 'allowOnlyNumbers(this, 3)']) !!}
+    {!! Form::number('burn_calories', null, ['class' => 'form-control',  'required'=>'required', 'oninput' => 'allowOnlyNumbers(this, 3)']) !!}
 </div>
 
 <!-- Image Field -->
@@ -135,6 +135,7 @@
 
 @push('page_scripts')
     <script>
+
         let exerciseTypeLabel = $('label[for=exercise_type_name]');
         let selectedExerciseCategoryElement = $('select[name=exercise_category_name]');
 
@@ -156,10 +157,12 @@
             e.preventDefault();
             let selectedExerciseCategory = $(e.target).val();
 
-            selectedExerciseCategory == 'major_lift' 
-                ? selectedExerciseTypeElement.toggleRequired(true).toggleDisable(false) 
+            selectedExerciseCategory == 'major_lift'
+                ? selectedExerciseTypeElement.toggleRequired(true).toggleDisable(false)
                 : selectedExerciseTypeElement.toggleRequired(false).toggleDisable(true);
         });
+
+        selectedExerciseCategoryElement.change();
 
         function allowOnlyNumbers(input, maxLength, allowDecimal) {
             input.addEventListener('input', function () {

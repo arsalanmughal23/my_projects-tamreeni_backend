@@ -34,6 +34,23 @@
     <p>{{ $meal->calories }}</p>
 </div>
 
+<!-- Protein Field -->
+<div class="col-sm-12">
+    {!! Form::label('protein', 'Protein:') !!}
+    <p>{{ $meal->protein }}</p>
+</div>
+
+<!-- Fats Field -->
+<div class="col-sm-12">
+    {!! Form::label('fats', 'Fats:') !!}
+    <p>{{ $meal->fats }}</p>
+</div>
+
+<!-- Carbs Field -->
+<div class="col-sm-12">
+    {!! Form::label('carbs', 'Carbs:') !!}
+    <p>{{ $meal->carbs }}</p>
+</div>
 
 <!-- Diet Type Field -->
 <div class="col-sm-12">

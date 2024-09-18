@@ -18,10 +18,10 @@ class AppointmentDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
         $dataTable->editColumn('customer_id', function(Appointment $model){
-            return '<a href="'.route('users.show', $model->customer_id).'">'.$model->customer->name.'</a>';
+            return '<a href="'.route('users.show', $model->customer_id).'">'.$model->customer?->name ?? null.'</a>';
         });
         $dataTable->editColumn('user_id', function(Appointment $model){
-            return '<a href="'.route('users.show', $model->user_id).'">'.$model->user->name.'</a>';
+            return '<a href="'.route('users.show', $model->user_id).'">'.$model->user?->name ?? null.'</a>';
         });
         $dataTable->editColumn('status', function(Appointment $model){
             return $model->status_label ?? null;

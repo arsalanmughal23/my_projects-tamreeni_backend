@@ -66,12 +66,27 @@ class RecipeDataTable extends DataTable
                 'stateSave' => true,
                 'order'     => [[0, 'desc']],
                 'buttons'   => [
-                    // ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'print', 'className' => 'btn btn-default btn-sm no-corner',],
-                    // ['extend' => 'reset', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'reload', 'className' => 'btn btn-default btn-sm no-corner',],
-                ],
+                    [
+                        'extend' => 'csv',
+                        'className' => 'btn btn-default btn-sm no-corner',
+                        'text' => '<i class="fa fa-file-csv"></i> CSV'
+                    ],
+                    [
+                        'extend' => 'excel',
+                        'className' => 'btn btn-default btn-sm no-corner',
+                        'text' => '<i class="fa fa-file-excel"></i> Excel'
+                    ],
+                    [
+                        'extend' => 'print',
+                        'className' => 'btn btn-default btn-sm no-corner',
+                        'text' => '<i class="fa fa-print"></i> Print'
+                    ],
+                    [
+                        'extend' => 'reload',
+                        'className' => 'btn btn-default btn-sm no-corner',
+                        'text' => '<i class="fa fa-sync"></i> Reload'
+                    ],
+                ]
             ]);
     }
 
@@ -87,12 +102,12 @@ class RecipeDataTable extends DataTable
             'diet_type',
             'calories',
             'title',
+            // 'units_in_recipe',
+            // 'divide_recipe_by',
+            // 'number_of_units',
             // 'description',
             // 'instruction',
             // 'image',
-            'units_in_recipe',
-            'divide_recipe_by',
-            'number_of_units',
             'carbs',
             'fats',
             'protein'

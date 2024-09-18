@@ -126,7 +126,7 @@
 @canany(['contact_requests.index', 'contact_requests.create', 'contact_requests.show', 'contact_requests.edit', 'contact_requests.destroy'])
     <li class="nav-item">
         <a href="{{ route('contact_requests.index') }}"
-        class="nav-link {{ Request::is('cappointmentsontact_requests*') ? 'active' : '' }}">
+        class="nav-link {{ Request::is('contact_requests*') ? 'active' : '' }}">
             <i class="fa fa-contact-book"></i><p>Contact Requests</p>
         </a>
     </li>
@@ -214,12 +214,14 @@
 @endcan
 
 @canany(['exercise_equipment_pivots.index', 'exercise_equipment_pivots.create', 'exercise_equipment_pivots.show', 'exercise_equipment_pivots.edit', 'exercise_equipment_pivots.destroy'])
-    <li class="nav-item">
-        <a href="{{ route('exercise_equipment_pivots.index') }}"
-        class="nav-link {{ Request::is('exercise_equipment_pivots*') ? 'active' : '' }}">
-            <i class="fa fa-table-list"></i><p>Exercise Equipment Pivots</p>
-        </a>
-    </li>
+    @if(Route::has('exercise_equipment_pivots.index'))
+        <li class="nav-item">
+            <a href="{{ route('exercise_equipment_pivots.index') }}"
+            class="nav-link {{ Request::is('exercise_equipment_pivots*') ? 'active' : '' }}">
+                <i class="fa fa-table-list"></i><p>Exercise Equipment Pivots</p>
+            </a>
+        </li>
+    @endif
 @endcan
 
 @canany(['packages.index', 'packages.create', 'packages.show', 'packages.edit', 'packages.destroy'])

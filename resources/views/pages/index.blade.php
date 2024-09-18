@@ -32,12 +32,6 @@
         <div class="card">
             <div class="card-body">
                 @include('pages.table')
-
-                <div class="card-footer clearfix">
-                    <div class="float-right">
-
-                    </div>
-                </div>
             </div>
 
         </div>

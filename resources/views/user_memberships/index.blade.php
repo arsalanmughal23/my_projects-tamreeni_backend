@@ -7,16 +7,16 @@
                 <div class="col-sm-6">
                     <h1>User Memberships</h1>
                 </div>
-                @if(false)
-                    @can('user_memberships.create')
+                @can('user_memberships.create')
+                    @if(Route::has('user_memberships.create'))
                         <div class="col-sm-6">
                             <a class="btn btn-primary float-right"
                             href="{{ route('user_memberships.create') }}">
                                 Add New
                             </a>
                         </div>
-                    @endcan
-                @endif
+                    @endif
+                @endcan
             </div>
         </div>
     </section>
@@ -28,14 +28,8 @@
         <div class="clearfix"></div>
 
         <div class="card">
-            <div class="card-body p-0">
+            <div class="card-body">
                 @include('user_memberships.table')
-
-                <div class="card-footer clearfix">
-                    <div class="float-right">
-                        
-                    </div>
-                </div>
             </div>
 
         </div>

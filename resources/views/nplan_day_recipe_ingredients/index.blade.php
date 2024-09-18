@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Nplan Day Recipe Ingredients</h1>
+                    <h1>Nutrition Plan Day Recipe Ingredients</h1>
                 </div>
                 @if(false)
                     @can('nplan_day_recipe_ingredients.create')
@@ -28,14 +28,8 @@
         <div class="clearfix"></div>
 
         <div class="card">
-            <div class="card-body p-0">
+            <div class="card-body">
                 @include('nplan_day_recipe_ingredients.table')
-
-                <div class="card-footer clearfix">
-                    <div class="float-right">
-                        
-                    </div>
-                </div>
             </div>
 
         </div>

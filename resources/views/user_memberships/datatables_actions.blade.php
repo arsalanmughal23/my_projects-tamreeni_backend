@@ -5,21 +5,23 @@
             <i class="fa fa-eye"></i>
         </a>
     @endcan
-    
-    @if(false)
-        @can('user_memberships.edit')
+
+    @can('user_memberships.edit')
+        @if(Route::has('user_memberships.edit'))
             <a href="{{ route('user_memberships.edit', $id) }}" class='btn btn-default btn-xs'>
                 <i class="fa fa-edit"></i>
             </a>
-        @endcan
-        @can('user_memberships.destroy')
+        @endif
+    @endcan
+    @can('user_memberships.destroy')
+        @if(Route::has('user_memberships.destroy'))
             {!! Form::button('<i class="fa fa-trash"></i>', [
                 'type' => 'submit',
                 'class' => 'btn btn-danger btn-xs',
                 'onclick' => "return submitForm(this.form);"
             ]) !!}
-        @endcan
-    @endif
+        @endif
+    @endcan
 
 </div>
 {!! Form::close() !!}

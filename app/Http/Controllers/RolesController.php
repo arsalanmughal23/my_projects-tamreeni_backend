@@ -102,7 +102,7 @@ class RolesController extends AppBaseController
 
         $permission_role = Role::findOrFail($id);
 
-        $permissions = Permission::all();
+        $permissions = Permission::orderBy('name', 'asc')->get();
 
         return view('roles.edit')->with([
             'roles' => $roles,

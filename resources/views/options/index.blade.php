@@ -8,12 +8,14 @@
                     <h1>Options</h1>
                 </div>
                 @can('options.create')
-                    <div class="col-sm-6">
-                        <a class="btn btn-primary float-right"
-                        href="{{ route('options.create') }}">
-                            Add New
-                        </a>
-                    </div>
+                    @if(Route::has('options.create'))
+                        <div class="col-sm-6">
+                            <a class="btn btn-primary float-right"
+                            href="{{ route('options.create') }}">
+                                Add New
+                            </a>
+                        </div>
+                    @endif
                 @endcan
             </div>
         </div>
@@ -28,12 +30,6 @@
         <div class="card">
             <div class="card-body">
                 @include('options.table')
-
-                <div class="card-footer clearfix">
-                    <div class="float-right">
-                        
-                    </div>
-                </div>
             </div>
 
         </div>

@@ -36,7 +36,12 @@ class ExerciseAPIController extends AppBaseController
     public function index(Request $request)
     {
         $perPage   = $request->get('per_page', config('constants.PER_PAGE'));
-        $exercises = $this->exerciseRepository->getExercises($request->only('keyword', 'body_part_ids', 'is_favourite', 'order', 'order_by', 'exercise_equipment_ids'));
+        $exercises = $this->exerciseRepository->getExercises(
+            $request->only(
+                'keyword', 'body_part_ids', 'is_favourite', 'exercise_equipment_ids',
+                'order', 'order_by'
+            )
+        );
 
         if ($request->get('paginate')) {
             $exercises = $exercises->orderBy('created_at', 'desc')->paginate($perPage);

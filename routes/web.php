@@ -123,7 +123,7 @@ Route::group(['middleware' => ['auth', 'verified:web']], function () {
         Route::resource('exercises', App\Http\Controllers\ExerciseController::class);
 
 
-        Route::resource('exercise_equipment_pivots', App\Http\Controllers\ExerciseEquipmentPivotController::class);
+        // Route::resource('exercise_equipment_pivots', App\Http\Controllers\ExerciseEquipmentPivotController::class);
 
 
         Route::resource('contact_requests', App\Http\Controllers\ContactRequestController::class);
@@ -156,13 +156,13 @@ Route::group(['middleware' => ['auth', 'verified:web']], function () {
         Route::resource('nutrition_plan_days', App\Http\Controllers\NutritionPlanDayController::class);
 
 
-        Route::resource('nutrition_plan_day_meals', App\Http\Controllers\NutritionPlanDayMealController::class);
+        // Route::resource('nutrition_plan_day_meals', App\Http\Controllers\NutritionPlanDayMealController::class);
 
-        Route::resource('questions', App\Http\Controllers\QuestionController::class);
+        Route::resource('questions', App\Http\Controllers\QuestionController::class)->only('index', 'show', 'edit', 'update');
 
-        Route::resource('options', App\Http\Controllers\OptionController::class);
+        Route::resource('options', App\Http\Controllers\OptionController::class)->only('index', 'show', 'edit', 'update');
 
-        Route::resource('question_answer_attempts', App\Http\Controllers\QuestionAnswerAttemptController::class);
+        Route::resource('question_answer_attempts', App\Http\Controllers\QuestionAnswerAttemptController::class)->only('index', 'show');
 
         Route::resource('meal_breakdowns', App\Http\Controllers\MealBreakdownController::class);
 

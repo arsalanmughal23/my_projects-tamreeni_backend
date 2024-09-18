@@ -28,12 +28,6 @@
         <div class="card">
             <div class="card-body">
                 @include('exercise_equipment_pivots.table')
-
-                <div class="card-footer clearfix">
-                    <div class="float-right">
-                        
-                    </div>
-                </div>
             </div>
 
         </div>

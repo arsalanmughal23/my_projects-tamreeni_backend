@@ -156,7 +156,7 @@ Route::group(['middleware' => ['auth', 'verified:web']], function () {
         Route::resource('nutrition_plan_days', App\Http\Controllers\NutritionPlanDayController::class);
 
 
-        Route::resource('nutrition_plan_day_meals', App\Http\Controllers\NutritionPlanDayMealController::class);
+        // Route::resource('nutrition_plan_day_meals', App\Http\Controllers\NutritionPlanDayMealController::class);
 
         Route::resource('questions', App\Http\Controllers\QuestionController::class);
 

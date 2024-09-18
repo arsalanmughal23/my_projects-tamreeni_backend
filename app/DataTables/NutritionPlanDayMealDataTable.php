@@ -48,12 +48,27 @@ class NutritionPlanDayMealDataTable extends DataTable
                 'stateSave' => true,
                 'order'     => [[0, 'desc']],
                 'buttons'   => [
-                    // ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'print', 'className' => 'btn btn-default btn-sm no-corner',],
-                    // ['extend' => 'reset', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'reload', 'className' => 'btn btn-default btn-sm no-corner',],
-                ],
+                    [
+                        'extend' => 'csv',
+                        'className' => 'btn btn-default btn-sm no-corner',
+                        'text' => '<i class="fa fa-file-csv"></i> CSV'
+                    ],
+                    [
+                        'extend' => 'excel',
+                        'className' => 'btn btn-default btn-sm no-corner',
+                        'text' => '<i class="fa fa-file-excel"></i> Excel'
+                    ],
+                    [
+                        'extend' => 'print',
+                        'className' => 'btn btn-default btn-sm no-corner',
+                        'text' => '<i class="fa fa-print"></i> Print'
+                    ],
+                    [
+                        'extend' => 'reload',
+                        'className' => 'btn btn-default btn-sm no-corner',
+                        'text' => '<i class="fa fa-sync"></i> Reload'
+                    ],
+                ]
             ]);
     }
 
@@ -65,9 +80,9 @@ class NutritionPlanDayMealDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'nutrition_plan_day_id',
-            'meal_id',
-            'meal_category_id',
+            // 'nutrition_plan_day_id',
+            // 'meal_id',
+            // 'meal_category_id',
             'name',
             'diet_type',
             'calories',

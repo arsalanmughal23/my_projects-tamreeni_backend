@@ -306,12 +306,14 @@
 @endcan
 
 @canany(['nutrition_plan_day_meals.index', 'nutrition_plan_day_meals.create', 'nutrition_plan_day_meals.show', 'nutrition_plan_day_meals.edit', 'nutrition_plan_day_meals.destroy'])
-    <li class="nav-item">
-        <a href="{{ route('nutrition_plan_day_meals.index') }}"
-        class="nav-link {{ Request::is('nutrition_plan_day_meals*') ? 'active' : '' }}">
-            <i class="fa fa-location-arrow"></i><p>Nutrition Plan Day Meals</p>
-        </a>
-    </li>
+    @if(Route::has('nutrition_plan_day_meals.index'))
+        <li class="nav-item">
+            <a href="{{ route('nutrition_plan_day_meals.index') }}"
+            class="nav-link {{ Request::is('nutrition_plan_day_meals*') ? 'active' : '' }}">
+                <i class="fa fa-location-arrow"></i><p>Nutrition Plan Day Meals</p>
+            </a>
+        </li>
+    @endif
 @endcan
 
 @canany(['questions.index', 'questions.create', 'questions.show', 'questions.edit', 'questions.destroy'])

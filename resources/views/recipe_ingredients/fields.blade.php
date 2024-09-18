@@ -1,8 +1,8 @@
 <!-- Recipe Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('recipe_id', 'Recipe Id:') !!}
+    {!! Form::label('recipe_id', 'Recipe Id:', ['class' => 'required']) !!}
     <!-- {!! Form::select('recipe_id', $recipeSelectOptions, null, ['class' => 'form-control', 'required' => true]) !!} -->
-    <select name="recipe_id" id="" class="form-control" required=true >
+    <select name="recipe_id" id="" class="form-control select2" required=true >
         <option value="">Select Recipe</option>
         @foreach($recipeSelectOptions as $key => $value)
             <option value="{{ $key }}" {{ isset($recipeIngredient) ? ($recipeIngredient->recipe_id == $key ? 'selected' : '') : '' }}>{{ $value ?? '' }}</option>
@@ -12,7 +12,7 @@
 
 <!-- Type Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('type', 'Type:') !!}
+    {!! Form::label('type', 'Type:', ['class' => 'required']) !!}
     <!-- {!! Form::select('type', $typeSelectOptions, null, ['class' => 'form-control', 'required' => true]) !!} -->
     <select name="type" id="" class="form-control" required=true >
         <option value="">Select Type</option>
@@ -24,25 +24,25 @@
 
 <!-- Name (English) Field -->
 <div class="form-group col-sm-6 col-lg-6">
-    {!! Form::label('name', 'Name (English):') !!}
+    {!! Form::label('name', 'Name (English):', ['class' => 'required']) !!}
     {!! Form::text('name[en]', isset($recipeIngredient) ? $recipeIngredient->getTranslation('name', 'en') ?? null : null, ['class' => 'form-control', 'required' => true, 'pattern'=>'[a-zA-Z0-9_.\s+\-]{0,70}']) !!}
 </div>
 
 <!-- Name (Arabic) Field -->
 <div class="form-group col-sm-6 col-lg-6">
-    {!! Form::label('name', 'Name (Arabic):') !!}
+    {!! Form::label('name', 'Name (Arabic):', ['class' => 'required']) !!}
     {!! Form::text('name[ar]', isset($recipeIngredient) ? $recipeIngredient->getTranslation('name', 'ar') ?? null : null, ['class' => 'form-control', 'required' => true, 'pattern' => '[ا-ي0-9_.\s+\-]{0,70}', 'dir' => 'rtl']) !!}
 </div>
 
 <!-- Quantity Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('quantity', 'Quantity:') !!}
+    {!! Form::label('quantity', 'Quantity:', ['class' => 'required']) !!}
     {!! Form::number('quantity', null, ['class' => 'form-control', 'required' => true]) !!}
 </div>
 
 <!-- Unit Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('unit', 'Unit:') !!}
+    {!! Form::label('unit', 'Unit:', ['class' => 'required']) !!}
     <!-- {!! Form::select('unit', $unitSelectOptions, null, ['class' => 'form-control', 'required' => 'required']) !!} -->
     <select name="unit" id="" class="form-control" required=true >
         <option value="">Select Unit</option>

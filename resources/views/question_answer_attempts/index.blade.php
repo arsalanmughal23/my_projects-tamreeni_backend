@@ -8,12 +8,14 @@
                     <h1>Question Answer Attempts</h1>
                 </div>
                 @can('question_answer_attempts.create')
-                    <div class="col-sm-6">
-                        <a class="btn btn-primary float-right"
-                        href="{{ route('question_answer_attempts.create') }}">
-                            Add New
-                        </a>
-                    </div>
+                    @if(Route::has('question_answer_attempts.create'))
+                        <div class="col-sm-6">
+                            <a class="btn btn-primary float-right"
+                            href="{{ route('question_answer_attempts.create') }}">
+                                Add New
+                            </a>
+                        </div>
+                    @endif
                 @endcan
             </div>
         </div>
@@ -26,14 +28,8 @@
         <div class="clearfix"></div>
 
         <div class="card">
-            <div class="card-body p-0">
+            <div class="card-body">
                 @include('question_answer_attempts.table')
-
-                <div class="card-footer clearfix">
-                    <div class="float-right">
-                        
-                    </div>
-                </div>
             </div>
 
         </div>

@@ -1,4 +1,3 @@
-{!! Form::open(['route' => ['options.destroy', $id], 'method' => 'delete']) !!}
 <div class='btn-group'>
     @can('options.show')
         <a href="{{ route('options.show', $id) }}" class='btn btn-default btn-xs'>
@@ -11,11 +10,14 @@
         </a>
     @endcan
     @can('options.destroy')
-        {!! Form::button('<i class="fa fa-trash"></i>', [
-            'type' => 'submit',
-            'class' => 'btn btn-danger btn-xs',
-            'onclick' => "return submitForm(this.form);"
-        ]) !!}
+        @if(Route::has('options.destroy'))
+            {!! Form::open(['route' => ['options.destroy', $id], 'method' => 'delete']) !!}
+                {!! Form::button('<i class="fa fa-trash"></i>', [
+                    'type' => 'submit',
+                    'class' => 'btn btn-danger btn-xs',
+                    'onclick' => "return submitForm(this.form);"
+                ]) !!}
+            {!! Form::close() !!}
+        @endif
     @endcan
 </div>
-{!! Form::close() !!}

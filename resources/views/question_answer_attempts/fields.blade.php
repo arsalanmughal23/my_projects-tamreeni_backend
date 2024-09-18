@@ -10,16 +10,6 @@
     {!! Form::text('dob', null, ['class' => 'form-control','id'=>'dob']) !!}
 </div>
 
-@push('page_scripts')
-    <script type="text/javascript">
-        $('#dob').datetimepicker({
-            format: 'YYYY-MM-DD HH:mm:ss',
-            useCurrent: true,
-            sideBySide: true
-        })
-    </script>
-@endpush
-
 <!-- Age Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('age', 'Age:') !!}
@@ -128,81 +118,85 @@
     {!! Form::text('reach_goal_target_date', null, ['class' => 'form-control','id'=>'reach_goal_target_date']) !!}
 </div>
 
-@push('page_scripts')
-    <script type="text/javascript">
-        $('#reach_goal_target_date').datetimepicker({
-            format: 'YYYY-MM-DD HH:mm:ss',
-            useCurrent: true,
-            sideBySide: true
-        })
-    </script>
-@endpush
+    <!-- Body Parts Field -->
+    <div class="form-group col-sm-6">
+        {!! Form::label('body_parts', 'Body Parts:') !!}
 
-<!-- Body Parts Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('body_parts', 'Body Parts:') !!}
-    {!! Form::text('body_parts', null, ['class' => 'form-control','maxlength' => 191,'maxlength' => 191,'maxlength' => 191]) !!}
-</div>
+        <select name="body_parts[]" class="form-control select2" multiple required>
+            <option></option>
+            @foreach ($bodyParts as $bodyPart)
+                <option value="{{ $bodyPart->id }}"
+                    @if((isset($questionAnswerAttempt) && in_array($bodyPart->id, old('body_parts', [])) || in_array($bodyPart->id, $questionAnswerAttempt->body_parts))) selected @endif>{{ $bodyPart->name }}</option>
+            @endforeach
+        </select>
+    </div>
 
-<!-- Physically Active Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('physically_active', 'Physically Active:') !!}
-    {!! Form::text('physically_active', null, ['class' => 'form-control','maxlength' => 191,'maxlength' => 191,'maxlength' => 191]) !!}
-</div>
+    <!-- Physically Active Field -->
+    <div class="form-group col-sm-6">
+        {!! Form::label('physically_active', 'Physically Active:') !!}
+        {!! Form::text('physically_active', null, ['class' => 'form-control', 'maxlength' => 191]) !!}
+    </div>
 
-<!-- Level Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('level', 'Level:') !!}
-    {!! Form::text('level', null, ['class' => 'form-control','maxlength' => 191,'maxlength' => 191,'maxlength' => 191]) !!}
-</div>
+    <!-- Level Field -->
+    <div class="form-group col-sm-6">
+        {!! Form::label('level', 'Level:') !!}
+        {!! Form::text('level', null, ['class' => 'form-control', 'maxlength' => 191]) !!}
+    </div>
 
-<!-- Squat  One Rep Max In Kg Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('squat__one_rep_max_in_kg', 'Squat  One Rep Max In Kg:') !!}
-    {!! Form::number('squat__one_rep_max_in_kg', null, ['class' => 'form-control']) !!}
-</div>
+    <!-- Squat  One Rep Max In Kg Field -->
+    <div class="form-group col-sm-6">
+        {!! Form::label('squat__one_rep_max_in_kg', 'Squat  One Rep Max In Kg:') !!}
+        {!! Form::number('squat__one_rep_max_in_kg', null, ['class' => 'form-control']) !!}
+    </div>
 
-<!-- Deadlift  One Rep Max In Kg Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('deadlift__one_rep_max_in_kg', 'Deadlift  One Rep Max In Kg:') !!}
-    {!! Form::number('deadlift__one_rep_max_in_kg', null, ['class' => 'form-control']) !!}
-</div>
+    <!-- Deadlift  One Rep Max In Kg Field -->
+    <div class="form-group col-sm-6">
+        {!! Form::label('deadlift__one_rep_max_in_kg', 'Deadlift  One Rep Max In Kg:') !!}
+        {!! Form::number('deadlift__one_rep_max_in_kg', null, ['class' => 'form-control']) !!}
+    </div>
 
-<!-- Bench  One Rep Max In Kg Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('bench__one_rep_max_in_kg', 'Bench  One Rep Max In Kg:') !!}
-    {!! Form::number('bench__one_rep_max_in_kg', null, ['class' => 'form-control']) !!}
-</div>
+    <!-- Bench  One Rep Max In Kg Field -->
+    <div class="form-group col-sm-6">
+        {!! Form::label('bench__one_rep_max_in_kg', 'Bench  One Rep Max In Kg:') !!}
+        {!! Form::number('bench__one_rep_max_in_kg', null, ['class' => 'form-control']) !!}
+    </div>
 
-<!-- Overhead  One Rep Max In Kg Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('overhead__one_rep_max_in_kg', 'Overhead  One Rep Max In Kg:') !!}
-    {!! Form::number('overhead__one_rep_max_in_kg', null, ['class' => 'form-control']) !!}
-</div>
+    <!-- Overhead  One Rep Max In Kg Field -->
+    <div class="form-group col-sm-6">
+        {!! Form::label('overhead__one_rep_max_in_kg', 'Overhead  One Rep Max In Kg:') !!}
+        {!! Form::number('overhead__one_rep_max_in_kg', null, ['class' => 'form-control']) !!}
+    </div>
 
-<!-- Health Status Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('health_status', 'Health Status:') !!}
-    {!! Form::text('health_status', null, ['class' => 'form-control','maxlength' => 191,'maxlength' => 191,'maxlength' => 191]) !!}
-</div>
+    <!-- Health Status Field -->
+    <div class="form-group col-sm-6">
+        {!! Form::label('health_status', 'Health Status:') !!}
+        {!! Form::text('health_status', null, ['class' => 'form-control', 'maxlength' => 191]) !!}
+    </div>
 
-<!-- Daily Steps Taken Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('daily_steps_taken', 'Daily Steps Taken:') !!}
-    {!! Form::text('daily_steps_taken', null, ['class' => 'form-control','maxlength' => 191,'maxlength' => 191,'maxlength' => 191]) !!}
-</div>
+    <!-- Daily Steps Taken Field -->
+    <div class="form-group col-sm-6">
+        {!! Form::label('daily_steps_taken', 'Daily Steps Taken:') !!}
+        {!! Form::text('daily_steps_taken', null, ['class' => 'form-control', 'maxlength' => 191]) !!}
+    </div>
 
-<!-- Diet Type Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('diet_type', 'Diet Type:') !!}
-    {!! Form::text('diet_type', null, ['class' => 'form-control','maxlength' => 191,'maxlength' => 191,'maxlength' => 191]) !!}
-</div>
+    <!-- Diet Type Field -->
+    <div class="form-group col-sm-6">
+        {!! Form::label('diet_type', 'Diet Type:') !!}
+        {!! Form::text('diet_type', null, ['class' => 'form-control', 'maxlength' => 191]) !!}
+    </div>
 
-<!-- Food Preferences Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('food_preferences', 'Food Preferences:') !!}
-    {!! Form::text('food_preferences', null, ['class' => 'form-control','maxlength' => 191,'maxlength' => 191,'maxlength' => 191]) !!}
-</div>
+    <!-- Food Preferences Field -->
+    <div class="form-group col-sm-6">
+        {!! Form::label('food_preferences', 'Food Preferences:') !!}
+
+        <select name="food_preferences[]" id="" class="form-control select2" multiple required=true >
+            <option value="">Select Meal Categories</option>
+            @foreach($mealCategories as $mealCategory)
+                <option value="{{ $mealCategory->id }}"
+                    @if((isset($questionAnswerAttempt) && in_array($mealCategory->id, old('body_parts', [])) || in_array($mealCategory->id, $questionAnswerAttempt->body_parts))) selected @endif>{{ $mealCategory->name }}</option>
+            @endforeach
+        </select>
+    </div>
 
 <!-- Calories Field -->
 <div class="form-group col-sm-6">
@@ -239,3 +233,18 @@
     {!! Form::label('nutrition_plan_id', 'Nutrition Plan Id:') !!}
     {!! Form::number('nutrition_plan_id', null, ['class' => 'form-control']) !!}
 </div>
+
+@push('page_scripts')
+    <script type="text/javascript">
+        $('#dob').datetimepicker({
+            format: 'YYYY-MM-DD HH:mm:ss',
+            useCurrent: true,
+            sideBySide: true
+        })
+        $('#reach_goal_target_date').datetimepicker({
+            format: 'YYYY-MM-DD HH:mm:ss',
+            useCurrent: true,
+            sideBySide: true
+        })
+    </script>
+@endpush

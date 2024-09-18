@@ -28,12 +28,6 @@
         <div class="card">
             <div class="card-body">
                 @include('nutrition_plan_days.table')
-
-                <div class="card-footer clearfix">
-                    <div class="float-right">
-                        
-                    </div>
-                </div>
             </div>
 
         </div>

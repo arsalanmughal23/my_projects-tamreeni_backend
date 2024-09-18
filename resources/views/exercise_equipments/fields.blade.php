@@ -14,21 +14,21 @@
 <div class="form-group col-sm-6">
     {!! Form::label('type', 'Type:', ['class'=>'required']) !!}
 
-    <select name="type" class="form-control" required>
+    <select name="type_slug" class="form-control" required>
         <option value="">Select</option>
-        <option value="All Equipments"
-                @if(isset($exerciseEquipment) && $exerciseEquipment->type == "All Equipments") selected @endif>All
+        <option value="all_equipments"
+                @if(isset($exerciseEquipment) && $exerciseEquipment->type_slug == "all_equipments") selected @endif>All
             Equipments
         </option>
-        <option value="Machines"
-                @if(isset($exerciseEquipment) && $exerciseEquipment->type == "Machines") selected @endif>Machines
+        <option value="machines"
+                @if(isset($exerciseEquipment) && $exerciseEquipment->type_slug == "machines") selected @endif>Machines
         </option>
-        <option value="Free Weights"
-                @if(isset($exerciseEquipment) && $exerciseEquipment->type == "Free Weights") selected @endif>Free
+        <option value="free_weight"
+                @if(isset($exerciseEquipment) && $exerciseEquipment->type_slug == "free_weight") selected @endif>Free
             Weights
         </option>
-        <option value="No Equipment At All"
-                @if(isset($exerciseEquipment) && $exerciseEquipment->type == "No Equipment At All") selected @endif>No
+        <option value="no_equipment_at_all"
+                @if(isset($exerciseEquipment) && $exerciseEquipment->type_slug == "no_equipment_at_all") selected @endif>No
             Equipment At All
         </option>
     </select>

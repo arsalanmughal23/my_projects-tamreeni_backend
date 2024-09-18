@@ -205,7 +205,7 @@
 <!-- Status Field -->
 <div class="col-sm-12">
     {!! Form::label('status', 'Status:') !!}
-    <div class="btn btn-sm btn-{{ $questionAnswerAttempt->status_class }}">{{ $questionAnswerAttempt->status }}</div>
+    <div class="btn btn-sm btn-{{ $questionAnswerAttempt->status_class }}">{{ ucfirst($questionAnswerAttempt->status) }}</div>
 </div>
 
 <!-- Workout Plan Id Field -->

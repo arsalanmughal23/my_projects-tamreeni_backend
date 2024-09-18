@@ -21,7 +21,7 @@ class UsersDataTable extends DataTable
         $query     = $query->orderBy('created_at', 'desc');
         $dataTable = new EloquentDataTable($query);
 
-        $dataTable->addColumn('name', function ($user) {
+        $dataTable->editColumn('name', function ($user) {
             return $user->name ?? "N/A";
         });
         $dataTable->rawColumns(['action']);

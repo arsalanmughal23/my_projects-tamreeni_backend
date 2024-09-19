@@ -64,13 +64,13 @@
 <!-- Description Field -->
 <div class="form-group col-sm-6 col-lg-6">
     {!! Form::label('description', 'Description (English):', ['class'=>'required']) !!}
-    {!! Form::textarea('description[en]', isset($meal)?$meal->getTranslation('description', 'en'):null, ['class' => 'form-control', 'rows'=>3, 'cols'=>3, 'required', 'maxlength' => 100]) !!}
+    {!! Form::textarea('description[en]', isset($meal)?$meal->getTranslation('description', 'en'):null, ['class' => 'form-control', 'rows'=>3, 'cols'=>3, 'required', 'maxlength' => 256]) !!}
 </div>
 
 <!-- Description Field -->
 <div class="form-group col-sm-6 col-lg-6">
     {!! Form::label('description', 'Description (Arabic):', ['class'=>'required']) !!}
-    {!! Form::textarea('description[ar]', isset($meal)?$meal->getTranslation('description', 'ar'):null, ['class' => 'form-control', 'rows'=>3, 'cols'=>3, 'required', 'dir'=>'rtl']) !!}
+    {!! Form::textarea('description[ar]', isset($meal)?$meal->getTranslation('description', 'ar'):null, ['class' => 'form-control', 'rows'=>3, 'cols'=>3, 'required', 'maxlength' => 256, 'dir'=>'rtl']) !!}
 </div>
 
 <!-- Calories Field -->

@@ -41,7 +41,7 @@
 </div>
 
 @if(\App\Models\Role::SUPER_ADMIN || \App\Models\Role::ADMIN)
-    <div class="form-group col-md-6">
+    <div class="form-group col-md-6 {{ auth()?->id() == $users->id ? 'd-none' : '' }}">
         {!! Form::label('roles', 'Roles:') !!}
         <select name="roles[]" class="form-control select2">
             <option value="" disabled selected>Select Role</option>
@@ -54,9 +54,10 @@
 @endif
 
 <!-- App User Field -->
-<div class="form-group col-sm-6">
+<div class="form-group col-sm-6 {{ auth()?->id() == $users->id ? 'd-none' : '' }}">
     {!! Form::label('api_user', 'App User:', [ 'class' => '' ]) !!}
-    {!! Form::checkbox('roles[]', \App\Models\Role::API_USER, isset($users) && $users->hasRole(\App\Models\Role::API_USER) ? true : false, ['class' => 'form-control w-25']) !!}
+    {!! Form::checkbox('roles[]', \App\Models\Role::API_USER, isset($users) && $users->hasRole(\App\Models\Role::API_USER) ? true : false, ['class' => 'form-control w-25', 'style' => 'width:40px !important;', 'disabled' => true]) !!}
+    {!! Form::checkbox('roles[]', \App\Models\Role::API_USER, isset($users) && $users->hasRole(\App\Models\Role::API_USER) ? true : false, ['class' => 'd-none form-control w-25']) !!}
 </div>
 
 <!-- Image Field -->

@@ -9,7 +9,7 @@
     {!! Form::label('value', 'Value:') !!}
     <span class="float-right text-gray">max: <span class="maxValue"></span></span>
     <div class="input-group mb-3">
-        {!! Form::number('value', null, ['class' => 'form-control', 'required' => true]) !!}
+        {!! Form::number('value', null, ['class' => 'form-control', 'required' => true, 'min' => 1]) !!}
         <div class="input-group-append">
             <span class="input-group-text discountTypeValuePostFix" id="basic-addon2"></span>
         </div>
@@ -22,7 +22,7 @@
     <select name="type" id="" class="form-control select2" required=true >
         <option value="">Select Type</option>
         @foreach(App\Models\PromoCode::CONST_TYPE as $type)
-            <option value="{{ $type }}" 
+            <option value="{{ $type }}"
                 @if(old('type') == $type || (isset($promoCode) && $promoCode->type == $type)) selected @endif>
                 {{ $type }}
             </option>
@@ -36,7 +36,7 @@
     <select name="status" id="" class="form-control select2" required=true >
         <option value="">Select Status</option>
         @foreach(App\Models\PromoCode::CONST_STATUS as $status)
-            <option value="{{ $status }}" 
+            <option value="{{ $status }}"
                 @if(old('status') == $status || (isset($promoCode) && $promoCode->status == $status)) selected @endif>
                 {{ $status }}
             </option>

@@ -26,7 +26,11 @@
 <div class="col-sm-12">
     {!! Form::label('package_id', 'Package Id:') !!}
     <p>
-        <a href="{{ route('packages.show', $appointment->package_id) }}">{{ '#'.$appointment->package_id }}</a>
+        @if($appointment->package_id)
+            <a href="{{ route('packages.show', $appointment->package_id) }}">{{ '#'.$appointment->package_id }}</a>
+        @else
+            N/A
+        @endif
     </p>
 </div>
 

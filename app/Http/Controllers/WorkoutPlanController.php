@@ -9,17 +9,16 @@ use App\Http\Requests\UpdateWorkoutPlanRequest;
 use App\Repositories\WorkoutPlanRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
+use App\Models\WorkoutPlan;
 use Response;
 
 class WorkoutPlanController extends AppBaseController
 {
     /** @var WorkoutPlanRepository $workoutPlanRepository*/
-    private $workoutPlanRepository;
 
-    public function __construct(WorkoutPlanRepository $workoutPlanRepo)
-    {
-        $this->workoutPlanRepository = $workoutPlanRepo;
-    }
+    public function __construct(
+        private WorkoutPlanRepository $workoutPlanRepository
+    ) {}
 
     /**
      * Display a listing of the WorkoutPlan.
@@ -70,7 +69,7 @@ class WorkoutPlanController extends AppBaseController
      */
     public function show($id)
     {
-        $workoutPlan = $this->workoutPlanRepository->find($id);
+        $workoutPlan = WorkoutPlan::find($id);
 
         if (empty($workoutPlan)) {
             Flash::error('Workout Plan not found');

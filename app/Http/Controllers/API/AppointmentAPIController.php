@@ -109,7 +109,7 @@ class AppointmentAPIController extends AppBaseController
                     $slotsIds = collect($request->appointments)->pluck('slot_id');
                     $slots = $this->slotRepository->whereIn('id', $slotsIds)->get();
                     if (count($slotsIds) > count($slots))
-                        throw new Error('Some selected slot is not found');
+                        throw new Error('Please choose a different time for the same day');
 
                     foreach ($input['appointments'] as $key => $appointment) {
                         $eachSlot = $slots->find($appointment['slot_id']);

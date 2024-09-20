@@ -410,6 +410,10 @@
 <script>
     $(function () {
         bsCustomFileInput.init();
+
+        setTimeout(()=>{
+            $('.alert').addClass('d-none')
+        },5000);
     });
 
     function iformat(icon) {

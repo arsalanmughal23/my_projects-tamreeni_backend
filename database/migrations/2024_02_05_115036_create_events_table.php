@@ -26,7 +26,7 @@ class CreateEventsTable extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->integer('body_part_id')->unsigned()->nullable();
             $table->integer('equipment_id')->unsigned()->nullable();
-            $table->integer('status')->nullable();
+            $table->integer('status')->default(10); // UPCOMING => 10, ONGOING => 20, COMPLETE => 30
             $table->timestamps();
             $table->softDeletes();
 

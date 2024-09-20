@@ -26,6 +26,7 @@ use Spatie\Translatable\HasTranslations;
  * @property integer $user_id
  * @property integer $body_part_id
  * @property integer $equipment_id
+ * @property integer $status
  */
 class Event extends Model
 {
@@ -109,6 +110,7 @@ class Event extends Model
     public static function booted()
     {
         static::creating(function (self $event) {
+            $event->status = 10;
             $event->duration = Carbon::parse($event->start_time)->diffInMinutes($event->end_time);
         });
 

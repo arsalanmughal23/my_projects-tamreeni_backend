@@ -411,6 +411,15 @@
     $(function () {
         bsCustomFileInput.init();
 
+        $('.card-footer>a').on('click', function(){
+            $('.card-footer>input[type=submit]').attr('disabled', true);
+        })
+        const form = $('.card-footer').closest('form');
+        form.on('submit', function (e) {
+            $('.card-footer>input[type=submit]').attr('disabled', true);
+            $('.card-footer>a').addClass('d-none');
+        });
+
         setTimeout(()=>{
             $('.alert').addClass('d-none')
         },5000);

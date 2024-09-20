@@ -18,7 +18,7 @@
         <option></option>
         @foreach ($meal_categories as $meal_category)
             <option value="{{ $meal_category->id }}"
-                    @if(isset($meal) && $meal->meal_category_id == $meal_category->id) selected @endif>{{ $meal_category->name }}</option>
+                @if(@old('meal_category_id', $meal?->meal_category_id) == $meal_category->id) selected @endif>{{ $meal_category->name }}</option>
         @endforeach
     </select>
 </div>
@@ -29,11 +29,11 @@
 
     <select name="diet_type" class="form-control" required>
         <option value="traditional"
-                @if(isset($meal) && $meal->diet_type == \App\Models\Meal::DIET_TYPE_TRADITION_EN) selected @endif>
+            @if(@old('diet_type', $meal?->diet_type) == \App\Models\Meal::DIET_TYPE_TRADITION_EN) selected @endif>
             Traditional
         </option>
         <option value="keto"
-                @if(isset($meal) && $meal->diet_type == \App\Models\Meal::DIET_TYPE_KETO_EN) selected @endif>Keto
+            @if(@old('diet_type', $meal?->diet_type) == \App\Models\Meal::DIET_TYPE_KETO_EN) selected @endif>Keto
         </option>
     </select>
 </div>
@@ -46,7 +46,7 @@
         <option></option>
         @foreach ($meal_types as $meal_type)
             <option value="{{ $meal_type->id }}"
-                    @if(isset($meal) && $meal->meal_type_id == $meal_type->id) selected @endif>{{ $meal_type->name }}</option>
+                @if(@old('meal_type_id', $meal?->meal_type_id) == $meal_type->id) selected @endif>{{ $meal_type->name }}</option>
         @endforeach
     </select>
 </div>
@@ -64,13 +64,13 @@
 <!-- Description Field -->
 <div class="form-group col-sm-6 col-lg-6">
     {!! Form::label('description', 'Description (English):', ['class'=>'required']) !!}
-    {!! Form::textarea('description[en]', isset($meal)?$meal->getTranslation('description', 'en'):null, ['class' => 'form-control', 'rows'=>3, 'cols'=>3, 'required', 'maxlength' => 100]) !!}
+    {!! Form::textarea('description[en]', isset($meal)?$meal->getTranslation('description', 'en'):null, ['class' => 'form-control', 'rows'=>3, 'cols'=>3, 'required', 'maxlength' => 256]) !!}
 </div>
 
 <!-- Description Field -->
 <div class="form-group col-sm-6 col-lg-6">
     {!! Form::label('description', 'Description (Arabic):', ['class'=>'required']) !!}
-    {!! Form::textarea('description[ar]', isset($meal)?$meal->getTranslation('description', 'ar'):null, ['class' => 'form-control', 'rows'=>3, 'cols'=>3, 'required', 'dir'=>'rtl']) !!}
+    {!! Form::textarea('description[ar]', isset($meal)?$meal->getTranslation('description', 'ar'):null, ['class' => 'form-control', 'rows'=>3, 'cols'=>3, 'required', 'maxlength' => 256, 'dir'=>'rtl']) !!}
 </div>
 
 <!-- Calories Field -->

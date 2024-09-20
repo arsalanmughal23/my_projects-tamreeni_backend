@@ -58,9 +58,10 @@ class EventRepository extends BaseRepository
             $query->whereDate('date', $parameters['all_day_event']);
         }
         if (isset($parameters['date'])) {
-            $startOfWeek = Carbon::parse($parameters['date'])->startOfWeek()->format('Y-m-d');
-            $endOfWeek   = Carbon::parse($parameters['date'])->endOfWeek()->format('Y-m-d');
-            $query->whereBetween('date', [$startOfWeek, $endOfWeek])->orderBy('created_at', 'asc');
+            // $startOfWeek = Carbon::parse($parameters['date'])->startOfWeek()->format('Y-m-d');
+            // $endOfWeek   = Carbon::parse($parameters['date'])->endOfWeek()->format('Y-m-d');
+            // $query->whereBetween('date', [$startOfWeek, $endOfWeek])->orderBy('created_at', 'asc');
+            $query->where('date', $parameters['date'])->orderBy('created_at', 'asc');
         }
 
         if (isset($parameters['user_ids'])) {

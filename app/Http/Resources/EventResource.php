@@ -22,6 +22,7 @@ class EventResource extends JsonResource
             'start_time'       => $this->start_time,
             'end_time'         => $this->end_time,
             'duration'         => $this->duration,
+            'status'           => $this->status,
             'description'      => $this->getTranslation('description', app()->getLocale()),
             'image'            => $this->image,
             'record_video_url' => $this->record_video_url,

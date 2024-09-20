@@ -35,12 +35,13 @@ class Permission extends SpatiePermission
     const ROUTES = ['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'];
 
     const MODULES = [
-        'users', 'questions', 'options',
+        'users', 'user_details', 'questions', 'options',
         'meals', 'meal_types', 'meal_categories', 'meal_breakdowns',
         'recipes', 'recipe_ingredients',
         'exercises', 'exercise_equipments', 'body_parts',
         'appointments', 'packages',
-        'transactions', 'promo_codes',
+        'transactions', 'promo_codes', 'used_promo_codes',
+        'memberships', 'membership_durations', 'user_memberships',
         'settings', 'pages'
     ];
     // users,transactions,settings,questions,pages,packages,options,meals,meal_types,meal_categories,exercises,exercise_equipments,body_parts

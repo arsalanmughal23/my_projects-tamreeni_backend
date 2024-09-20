@@ -63,6 +63,13 @@ class BodyPart extends Model
         'image'   => 'nullable|file|mimes:jpeg,png|max:5000',
     ];
 
+    public function setNameAttribute($name)
+    {
+        $slug = \Str::slug($name['en'] ?? $name);
+        $this->attributes['name'] = $name;
+        $this->attributes['slug'] = $slug;
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      **/

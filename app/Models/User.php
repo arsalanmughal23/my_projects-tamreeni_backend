@@ -78,8 +78,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public static $update_rules = [
         'password'     => 'nullable|confirmed|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]+$/',
-        'roles'        => 'required|array',
-        'roles.*'      => 'required|exists:roles,name',
+        'roles'        => 'sometimes|array',
+        'roles.*'      => 'sometimes|exists:roles,name',
         'first_name'   => 'nullable|string|max:250',
         'last_name'    => 'nullable|string|max:250',
         'address'      => 'nullable|string|max:250',

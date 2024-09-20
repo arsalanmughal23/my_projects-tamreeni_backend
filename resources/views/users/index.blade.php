@@ -32,17 +32,17 @@
 
                 <select name="userRole" class="select2 form-control">
                     <option value="">Select</option>
-                    <option value="User">User</option>
-                    <option value="Mentor">Mentor</option>
-                    <option value="Coach">Coach</option>
-                    <option value="Dietitian">Dietitian</option>
-                    <option value="Therapist">Therapist</option>
+                    <option value="User" {{ request()->get('userRole') == 'User' ? 'selected' : '' }}>User</option>
+                    <option value="Mentor" {{ request()->get('userRole') == 'Mentor' ? 'selected' : '' }}>Mentor</option>
+                    <option value="Coach" {{ request()->get('userRole') == 'Coach' ? 'selected' : '' }}>Coach</option>
+                    <option value="Dietitian" {{ request()->get('userRole') == 'Dietitian' ? 'selected' : '' }}>Dietitian</option>
+                    <option value="Therapist" {{ request()->get('userRole') == 'Therapist' ? 'selected' : '' }}>Therapist</option>
                 </select>
             </div>
             <div class="col-8">
                 <label></label>
                 {!! Form::submit('Search', ['class' => 'btn btn-primary']) !!}
-                <a href="{!! route('users.index') !!}" class="btn btn-default">Cancel</a>
+                <a href="{!! route('users.index') !!}" class="btn btn-default">Reset</a>
             </div>
             {!! Form::close() !!}
         </div>
@@ -56,3 +56,10 @@
 
 @endsection
 
+@push('page_scripts')
+    <script>
+        $(function(){
+            $('input[type=search]').val('');
+        })
+    </script>
+@endpush

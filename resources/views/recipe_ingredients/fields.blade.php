@@ -37,7 +37,7 @@
 <!-- Quantity Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('quantity', 'Quantity:', ['class' => 'required']) !!}
-    {!! Form::number('quantity', null, ['class' => 'form-control', 'required' => true]) !!}
+    {!! Form::number('quantity', null, ['class' => 'form-control', 'step' => 1, 'min' => 0, 'max' => 3000, 'required' => true]) !!}
 </div>
 
 <!-- Unit Field -->

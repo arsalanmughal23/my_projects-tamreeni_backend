@@ -163,7 +163,9 @@ class UsersController extends AppBaseController
         }
 
         $user = $this->userRepository->updateRecord($request, $id);
-        $user->syncRoles($request->roles);
+
+        if(count($request->roles ?? []))
+            $user->syncRoles($request->roles);
 
         $userDetail = ['user_id' => $user->id];
 

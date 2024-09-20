@@ -15,13 +15,19 @@
 <!-- Amount Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('amount', 'Amount:',  ['class'=>'required']) !!}
-    {!! Form::text('amount', null, ['class' => 'form-control', 'required', 'min'=>0, 'max'=>1000, 'oninput' => 'allowOnlyNumbers(this, 6, true)']) !!}
+
+    <div class="input-group mb-3">
+        {!! Form::number('amount', null, ['class' => 'form-control', 'required', 'min' => 1, 'step' => '0.01', 'oninput' => 'allowOnlyNumbers(this, 6, true)']) !!}
+        <div class="input-group-append">
+            <span class="input-group-text amountPostFix" id="basic-addon2">SAR</span>
+        </div>
+    </div>
 </div>
 
 <!-- Sessions Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('sessions', 'Sessions:',  ['class'=>'required']) !!}
-    {!! Form::text('sessions', null, ['class' => 'form-control', 'required', 'min'=>0, 'max'=>1000, 'oninput' => 'allowOnlyNumbers(this, 3)']) !!}
+    {!! Form::number('sessions', null, ['class' => 'form-control', 'required', 'min' => 1, 'oninput' => 'allowOnlyNumbers(this, 3)']) !!}
 </div>
 
 <!-- Description Field -->

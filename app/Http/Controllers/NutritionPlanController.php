@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateNutritionPlanRequest;
 use App\Repositories\NutritionPlanRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
+use App\Models\NutritionPlan;
 use Response;
 
 class NutritionPlanController extends AppBaseController
@@ -70,7 +71,7 @@ class NutritionPlanController extends AppBaseController
      */
     public function show($id)
     {
-        $nutritionPlan = $this->nutritionPlanRepository->find($id);
+        $nutritionPlan = NutritionPlan::find($id);
 
         if (empty($nutritionPlan)) {
             Flash::error('Nutrition Plan not found');

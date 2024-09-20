@@ -75,7 +75,7 @@ class RecipeIngredient extends Model
         'name.en'  => 'required|string|max:120',
         'name.ar'  => 'required|string|max:120',
 
-        'quantity' => 'required|numeric',
+        'quantity' => 'required|numeric|min:0|max:3000',
         'unit' => 'required|string',
         'created_at' => 'nullable',
         'updated_at' => 'nullable',

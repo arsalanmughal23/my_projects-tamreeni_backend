@@ -34,3 +34,11 @@
 
 @endsection
 
+
+@push('page_scripts')
+    <script>
+        $(function(){
+            $('input[type=search]').val('');
+        })
+    </script>
+@endpush

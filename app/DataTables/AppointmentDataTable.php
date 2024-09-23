@@ -23,6 +23,20 @@ class AppointmentDataTable extends DataTable
         $dataTable->editColumn('user_id', function(Appointment $model){
             return '<a href="'.route('users.show', $model->user_id).'">'.$model->user?->name ?? null.'</a>';
         });
+
+        // Add custom filters
+        $dataTable->filterColumn('customer_id', function ($query, $keyword) {
+            $query->whereHas('customer', function ($q) use ($keyword) {
+                $q->where('name', 'like', "%{$keyword}%");
+            });
+        });
+
+        $dataTable->filterColumn('user_id', function ($query, $keyword) {
+            $query->whereHas('user', function ($q) use ($keyword) {
+                $q->where('name', 'like', "%{$keyword}%");
+            });
+        });
+
         $dataTable->editColumn('status', function(Appointment $model){
             return $model->status_label ?? null;
         });
@@ -44,7 +58,11 @@ class AppointmentDataTable extends DataTable
      */
     public function query(Appointment $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()
+                    ->with(['user', 'customer']) // eager load the related models
+                    ->select('appointments.*') // ensure only relevant columns are selected to avoid conflicts
+                    ->leftJoin('users as customers', 'appointments.customer_id', '=', 'customers.id')
+                    ->leftJoin('users as users', 'appointments.user_id', '=', 'users.id');
     }
 
     /**

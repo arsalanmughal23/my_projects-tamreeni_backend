@@ -32,6 +32,6 @@
 <!-- Status Field -->
 <div class="col-sm-12">
     {!! Form::label('method', 'Method:') !!}
-    <p>{{ $transaction->method ?? 'No Payment Method' }}</p>
+    <p>{{ $transaction->method ?? 'Test Card' }}</p>
 </div>
 

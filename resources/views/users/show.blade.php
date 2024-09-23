@@ -12,9 +12,11 @@
                         href="{{ route('users.index') }}">
                         Back
                     </a>
-                    <a href="{{ route('user_details.show', $users?->details?->id ?? 0) }}" class="btn btn-primary">
-                        View User Details
-                    </a>
+                    @if($users?->details)
+                        <a href="{{ route('user_details.show', $users?->details?->id ?? 0) }}" class="btn btn-primary">
+                            View User Details
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>

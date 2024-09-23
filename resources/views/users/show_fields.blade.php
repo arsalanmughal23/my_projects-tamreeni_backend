@@ -6,7 +6,7 @@
             {!! Form::label('image', 'Image:') !!}
             <br>
             <img class="user-image"
-                src="{{ isset($users?->details)? $users?->details->image : asset('public/image/user.png') }}"
+                src="{{ isset($users?->details)? $users?->details?->image : asset('public/image/user.png') }}"
                 width="100" onerror="brokenImageHandler(this);">
         @endif
     </p>

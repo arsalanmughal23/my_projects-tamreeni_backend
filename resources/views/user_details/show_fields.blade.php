@@ -25,8 +25,13 @@
                 <p>{{ $userDetail->dob?->format('Y-m-d') }}</p>
 
                 <!-- Image Field -->
-                {!! Form::label('image', 'Image:') !!}
-                <p><img src="{{ $userDetail->image }}" alt=""></p>
+                <p>
+                    {!! Form::label('image', 'Image:') !!}
+                    <br>
+                    <img class="user-image"
+                        src="{{ isset($userDetail)? $userDetail?->image : asset('public/image/user.png') }}"
+                        width="100" onerror="brokenImageHandler(this);">
+                </p>
 
                 <!-- Is Social Login Field -->
                 {!! Form::label('is_social_login', 'Is Social Login:') !!}

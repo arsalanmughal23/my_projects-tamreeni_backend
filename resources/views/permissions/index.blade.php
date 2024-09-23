@@ -36,3 +36,11 @@
 
 @endsection
 
+
+@push('page_scripts')
+    <script>
+        $(function(){
+            $('input[type=search]').parent('label').addClass('d-none');
+        })
+    </script>
+@endpush

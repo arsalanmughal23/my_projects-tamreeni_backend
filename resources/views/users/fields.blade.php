@@ -42,8 +42,8 @@
 
 @if(\App\Models\Role::SUPER_ADMIN || \App\Models\Role::ADMIN)
     <div class="form-group col-md-6 {{ isset($users) && $users->id == auth()?->id() ? 'd-none' : '' }}">
-        {!! Form::label('roles', 'Roles:') !!}
-        <select name="roles[]" class="form-control select2">
+        {!! Form::label('roles', 'Roles:', ['class' => isset($users) ? ($users->hasAnyRole(\App\Models\Role::API_USER) ? '' : 'required') : 'required']) !!}
+        <select name="roles[]" class="form-control select2" {{ isset($users) ? ($users->hasAnyRole(\App\Models\Role::API_USER) ? '' : 'required') : 'required' }}>
             <option value="" disabled selected>Select Role</option>
             @foreach ($roles as $role)
                 <option value="{{ $role->name }}"
@@ -53,12 +53,14 @@
     </div>
 @endif
 
-<!-- App User Field -->
-<div class="form-group col-sm-6 {{ isset($users) && $users->id == auth()?->id() ? 'd-none' : '' }}">
-    {!! Form::label('api_user', 'App User:', [ 'class' => '' ]) !!}
-    {!! Form::checkbox('roles[]', \App\Models\Role::API_USER, isset($users) && $users->hasRole(\App\Models\Role::API_USER) ? true : false, ['class' => 'form-control w-25', 'style' => 'width:40px !important;', 'disabled' => true]) !!}
-    {!! Form::checkbox('roles[]', \App\Models\Role::API_USER, isset($users) && $users->hasRole(\App\Models\Role::API_USER) ? true : false, ['class' => 'd-none form-control w-25']) !!}
-</div>
+@if(isset($users))
+    <!-- App User Field -->
+    <div class="form-group col-sm-6 {{ isset($users) && $users->id == auth()?->id() ? 'd-none' : '' }}">
+        {!! Form::label('api_user', 'App User:', [ 'class' => '' ]) !!}
+        {!! Form::checkbox('roles[]', \App\Models\Role::API_USER, isset($users) && $users->hasRole(\App\Models\Role::API_USER) ? true : false, ['class' => 'form-control w-25', 'style' => 'width:40px !important;', 'disabled' => true]) !!}
+        {!! Form::checkbox('roles[]', \App\Models\Role::API_USER, isset($users) && $users->hasRole(\App\Models\Role::API_USER) ? true : false, ['class' => 'd-none form-control w-25']) !!}
+    </div>
+@endif
 
 <!-- Image Field -->
 <div class="form-group col-sm-6">

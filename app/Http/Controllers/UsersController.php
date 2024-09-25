@@ -12,6 +12,7 @@ use App\Repositories\UsersRepository;
 use Flash;
 use App\Repositories\RolesRepository;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\UpdateUserProfileRequest;
 use Illuminate\Http\Request;
 use App\Models\Role;
 use App\Models\User as User;
@@ -142,6 +143,45 @@ class UsersController extends AppBaseController
         $roles = $this->getPossibleRoles(auth()->user());
 
         return view('users.edit')->with(['users' => $user, 'roles' => $roles]);
+    }
+
+    public function editUserProfile(Request $request)
+    {
+        $userId = $request->user()->id ?? null;
+        $user  = $this->userRepository->find($userId);
+
+        if (empty($user)) {
+            Flash::error('User not found');
+            return redirect(route('users.index'));
+        }
+
+        $roles = $this->getPossibleRoles(auth()->user());
+
+        return view('user_profile.edit')->with(['users' => $user, 'roles' => $roles]);
+    }
+    public function updateUserProfile(UpdateUserProfileRequest $request)
+    {
+        $userId = $request->user()->id ?? null;
+        $user = $this->userRepository->find($userId);
+
+        if (empty($user)) {
+            Flash::error('User not found');
+
+            return redirect(route('users.index'));
+        }
+
+        $user = $this->userRepository->updateRecord($request, $userId);
+
+        $userDetail = ['user_id' => $user->id];
+
+        if ($request->hasFile('image')) {
+            $userDetail['image'] = FileHelper::s3Upload($request->image);
+        }
+        $this->userDetailRepository->updateRecord($userDetail, $user);
+
+        Flash::success('User updated successfully.');
+
+        return redirect(route('user_profile.edit'));
     }
 
     /**

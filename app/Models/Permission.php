@@ -40,6 +40,7 @@ class Permission extends SpatiePermission
         'recipes', 'recipe_ingredients',
         'exercises', 'exercise_equipments', 'body_parts',
         'appointments', 'packages',
+        'events', 'user_events',
         'transactions', 'promo_codes', 'used_promo_codes',
         'memberships', 'membership_durations', 'user_memberships',
         'settings', 'pages'

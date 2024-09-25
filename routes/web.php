@@ -34,6 +34,9 @@ Route::post('/paytabs-callback', [App\Http\Controllers\PayTabsController::class,
 
 Route::group(['middleware' => ['auth', 'verified:web']], function () {
     Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('user_profile/edit', [App\Http\Controllers\UsersController::class, 'editUserProfile'])->name('user_profile.edit');
+    Route::post('user_profile/update', [App\Http\Controllers\UsersController::class, 'updateUserProfile'])->name('user_profile.update');
+
 
     Route::group(['middleware' => ['dynamic_permission']], function () {
         Route::resource('users', App\Http\Controllers\UsersController::class);

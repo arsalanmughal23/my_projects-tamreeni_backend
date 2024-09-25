@@ -56,10 +56,10 @@ class SubmitAnswersAPIRequest extends BaseAPIRequest
 
             'physically_active' => 'required|string|exists:options,option_variable_name,question_variable_name,' . Question::Q20_PHYSICALLY_ACTIVE,
 
-            'squat__one_rep_max_in_kg'      => 'numeric|min:1|max:200|required_if:level,intermediate,advanced',
-            'deadlift__one_rep_max_in_kg'   => 'numeric|min:1|max:200|required_if:level,intermediate,advanced',
-            'bench__one_rep_max_in_kg'      => 'numeric|min:1|max:200|required_if:level,intermediate,advanced',
-            'overhead__one_rep_max_in_kg'   => 'numeric|min:1|max:200|required_if:level,intermediate,advanced'
+            'squat__one_rep_max_in_kg'      => 'numeric|min:1|max:1000|required_if:level,intermediate,advanced',
+            'deadlift__one_rep_max_in_kg'   => 'numeric|min:1|max:1000|required_if:level,intermediate,advanced',
+            'bench__one_rep_max_in_kg'      => 'numeric|min:1|max:1000|required_if:level,intermediate,advanced',
+            'overhead__one_rep_max_in_kg'   => 'numeric|min:1|max:1000|required_if:level,intermediate,advanced'
         ];
     }
 

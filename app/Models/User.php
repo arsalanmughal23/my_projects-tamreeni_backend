@@ -76,6 +76,16 @@ class User extends Authenticatable implements MustVerifyEmail
         'remember_token' => 'nullable|string|max:100'
     ];
 
+    public static $update_user_profile_rules = [
+        'password'     => 'nullable|confirmed|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]+$/',
+        'first_name'   => 'nullable|string|max:250',
+        'last_name'    => 'nullable|string|max:250',
+        'address'      => 'nullable|string|max:250',
+        'phone_number' => 'nullable|string|max:250',
+        'dob'          => 'nullable|date',
+        'image'        => 'nullable|file|mimes:jpeg,png|max:5000',
+        'gender'       => 'nullable|string|in:male,female'
+    ];
     public static $update_rules = [
         'password'     => 'nullable|confirmed|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]+$/',
         'roles'        => 'sometimes|array',

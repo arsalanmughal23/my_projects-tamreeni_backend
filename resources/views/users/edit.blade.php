@@ -12,9 +12,13 @@
                     @endif
                 </div>
                 <div>
-                    <a href="{{ route('user_details.edit', $users?->details?->id ?? 0) }}" class="btn btn-primary">
-                        Edit User Details
-                    </a>
+                    @can('user_details.edit')
+                        @if($users?->details?->id ?? null)
+                            <a href="{{ route('user_details.edit', $users?->details?->id) }}" class="btn btn-primary">
+                                Edit User Details
+                            </a>
+                        @endif
+                    @endcan
                 </div>
             </div>
         </div>

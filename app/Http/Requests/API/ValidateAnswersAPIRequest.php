@@ -62,10 +62,10 @@ class ValidateAnswersAPIRequest extends BaseAPIRequest
             // 'bench__one_rep_max_in_kg'      => 'required_if:level,intermediate,advanced|numeric|min:1|max:200',
             // 'overhead__one_rep_max_in_kg'   => 'required_if:level,intermediate,advanced|numeric|min:1|max:200',
 
-            'squat__one_rep_max_in_kg'      => 'sometimes|numeric|min:1|max:200',
-            'deadlift__one_rep_max_in_kg'   => 'sometimes|numeric|min:1|max:200',
-            'bench__one_rep_max_in_kg'      => 'sometimes|numeric|min:1|max:200',
-            'overhead__one_rep_max_in_kg'   => 'sometimes|numeric|min:1|max:200'
+            'squat__one_rep_max_in_kg'      => 'sometimes|numeric|min:1|max:1000',
+            'deadlift__one_rep_max_in_kg'   => 'sometimes|numeric|min:1|max:1000',
+            'bench__one_rep_max_in_kg'      => 'sometimes|numeric|min:1|max:1000',
+            'overhead__one_rep_max_in_kg'   => 'sometimes|numeric|min:1|max:1000'
         ];
     }
 

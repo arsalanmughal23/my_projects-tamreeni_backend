@@ -138,7 +138,8 @@ class UserDetailController extends AppBaseController
 
         Flash::success('User Detail updated successfully.');
 
-        return redirect(route('user_details.index'));
+        return redirect(route('user_details.edit', $userDetail->id));
+        // return redirect(route('user_details.index'));
     }
 
     /**

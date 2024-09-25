@@ -423,6 +423,15 @@
         setTimeout(()=>{
             $('.alert').addClass('d-none')
         },5000);
+
+        setTimeout(()=>{
+            // Clear the search input
+            $('input[type=search]').val('');
+
+            // Get the DataTable instance and clear the search
+            var table = $('#dataTableBuilder').DataTable();
+            table.search('').draw();  // Clear search and redraw the table
+        })
     });
 
     function iformat(icon) {

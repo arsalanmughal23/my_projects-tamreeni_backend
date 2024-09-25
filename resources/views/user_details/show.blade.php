@@ -9,7 +9,7 @@
                 </div>
                 <div>
                     <a class="btn btn-default"
-                        href="{{ route('user_details.index') }}">
+                        href="{{ url()->previous() }}">
                         Back
                     </a>
                     <a href="{{ route('users.show', $userDetail->user_id) }}" class="btn btn-primary">View User</a>

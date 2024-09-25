@@ -41,24 +41,43 @@
 </div>
 
 @if(\App\Models\Role::SUPER_ADMIN || \App\Models\Role::ADMIN)
-    <div class="form-group col-md-6 {{ isset($users) && $users->id == auth()?->id() ? 'd-none' : '' }}">
-        {!! Form::label('roles', 'Roles:') !!}
-        <select name="roles[]" class="form-control select2">
-            <option value="" disabled selected>Select Role</option>
-            @foreach ($roles as $role)
-                <option value="{{ $role->name }}"
-                        @if(isset($users) && $users->hasRole($role->name)) selected @endif>{{ $role->name }}</option>
-            @endforeach
-        </select>
-    </div>
+    @if(isset($users))
+
+        <!-- edit user profile -->
+        @if($users->id != auth()?->id())
+            <div class="form-group col-md-6">
+                {!! Form::label('roles', 'Roles:', ['class' => $users->hasAnyRole(\App\Models\Role::API_USER) ? '' : 'required']) !!}
+                <select name="roles[]" class="form-control select2" {{ $users->hasAnyRole(\App\Models\Role::API_USER) ? '' : 'required' }}>
+                    <option value="" disabled selected>Select Role</option>
+                    @foreach ($roles as $role)
+                        <option value="{{ $role->name }}"
+                                @if(isset($users) && $users->hasRole($role->name)) selected @endif>{{ $role->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+        @endif
+    @else
+        <!-- edit other user -->
+        <div class="form-group col-md-6">
+            {!! Form::label('roles', 'Roles:', ['class' => 'required']) !!}
+            <select name="roles[]" class="form-control select2" required>
+                <option value="" disabled selected>Select Role</option>
+                @foreach ($roles as $role)
+                    <option value="{{ $role->name }}">{{ $role->name }}</option>
+                @endforeach
+            </select>
+        </div>
+    @endif
 @endif
 
-<!-- App User Field -->
-<div class="form-group col-sm-6 {{ isset($users) && $users->id == auth()?->id() ? 'd-none' : '' }}">
-    {!! Form::label('api_user', 'App User:', [ 'class' => '' ]) !!}
-    {!! Form::checkbox('roles[]', \App\Models\Role::API_USER, isset($users) && $users->hasRole(\App\Models\Role::API_USER) ? true : false, ['class' => 'form-control w-25', 'style' => 'width:40px !important;', 'disabled' => true]) !!}
-    {!! Form::checkbox('roles[]', \App\Models\Role::API_USER, isset($users) && $users->hasRole(\App\Models\Role::API_USER) ? true : false, ['class' => 'd-none form-control w-25']) !!}
-</div>
+@if(isset($users) && $users->id != auth()?->id())
+    <!-- App User Field -->
+    <div class="form-group col-sm-6">
+        {!! Form::label('api_user', 'App User:', [ 'class' => '' ]) !!}
+        {!! Form::checkbox('roles[]', \App\Models\Role::API_USER, isset($users) && $users->hasRole(\App\Models\Role::API_USER) ? true : false, ['class' => 'form-control w-25', 'style' => 'width:40px !important;', 'disabled' => true]) !!}
+        {!! Form::checkbox('roles[]', \App\Models\Role::API_USER, isset($users) && $users->hasRole(\App\Models\Role::API_USER) ? true : false, ['class' => 'd-none form-control w-25']) !!}
+    </div>
+@endif
 
 <!-- Image Field -->
 <div class="form-group col-sm-6">

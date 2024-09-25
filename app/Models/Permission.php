@@ -44,6 +44,9 @@ class Permission extends SpatiePermission
         'memberships', 'membership_durations', 'user_memberships',
         'settings', 'pages'
     ];
+    // admin should not have permission for
+        // favourites, used_promo_codes, user_memberships
+
     // users,transactions,settings,questions,pages,packages,options,meals,meal_types,meal_categories,exercises,exercise_equipments,body_parts
 
     public $fillable = [

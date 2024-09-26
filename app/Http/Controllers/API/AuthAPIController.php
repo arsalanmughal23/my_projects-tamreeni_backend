@@ -46,7 +46,7 @@ class AuthAPIController extends AppBaseController
         $credentials = request(['email', 'password']);
 
         if (!auth()->attempt($credentials)) {
-            return $this->sendError('Invalid login credentials, please try again.', 401);
+            return $this->sendError('Invalid login credentials, please try again.', 400);
         }
 
         $user = auth()->user();

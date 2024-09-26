@@ -77,9 +77,9 @@ class ValidateAnswersAPIRequest extends BaseAPIRequest
     protected function getConditionalHeightRule($fieldName)
     {
         $rules = match ($this->input($fieldName.'_unit')){
-            'cm' => 'min:40', // Minimum Height is 40 when unit is cm
-            'ft' => 'min:1', // Minimum Height is 1 when unit is ft
-            default => 'min:1' // Minimum Height is 1 when unit is ft
+            'cm' => 'min:40|max:500', // Minimum Height is 40 when unit is cm
+            'ft' => 'min:2|max:15', // Minimum Height is 2 when unit is ft
+            default => 'min:2|max:500' // Minimum Height is 2 when unit is ft
         };
         return $rules;
     }

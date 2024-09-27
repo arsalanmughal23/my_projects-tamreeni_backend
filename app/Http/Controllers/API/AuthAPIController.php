@@ -248,15 +248,26 @@ class AuthAPIController extends AppBaseController
         try {
             $userModel = $this->userRepository->model();
             $user      = $userModel::where('email', $request->email)->first();
+            $type = $request->type;
 
             if (!$user)
                 return $this->sendError('User not found.', 404);
 
             $otp     = $request->otp;
-            $otpCode = match ($request->type) {
-                'email' => VerifyEmail::where(['user_id' => $user->id, 'code' => $otp])->first(),
-                'password' => PasswordReset::where(['email' => $user->email, 'token' => $otp])->first()
-            };
+
+            // Need to remove if block Before GO-LIVE
+            if ($otp == 0000) {
+                $otpCode = match ($type) {
+                    'email' => VerifyEmail::where(['user_id' => $user->id])->first(),
+                    'password' => PasswordReset::where(['email' => $user->email])->first()
+                };
+
+            } else {
+                $otpCode = match ($type) {
+                    'email' => VerifyEmail::where(['user_id' => $user->id, 'code' => $otp])->first(),
+                    'password' => PasswordReset::where(['email' => $user->email, 'token' => $otp])->first()
+                };
+            }
 
             if (!$otpCode)
                 return $this->sendError('Invalid OTP Code.', 404);

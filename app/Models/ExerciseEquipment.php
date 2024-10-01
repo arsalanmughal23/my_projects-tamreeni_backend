@@ -70,12 +70,12 @@ class ExerciseEquipment extends Model
         'name.en' => 'required|string|max:70',
         'name.ar' => 'required|string|max:70',
         'icon'    => 'nullable|file|mimes:jpeg,png|max:5000',
-        'type_slug' => 'required',
+        'type_slug' => 'nullable|in:machines,free_weight',
     ];
 
     public function getTypeAttribute()
     {
-        return __('options.'.$this->type_slug, [], app()->getLocale()) ?? $this->type_slug;
+        return $this->type_slug ? __('options.'.$this->type_slug, [], app()->getLocale()) : 'No Equipment';
     }
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

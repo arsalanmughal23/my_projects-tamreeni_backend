@@ -118,7 +118,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'phone_number'              => 'sometimes|string|max:250',
         'phone_number_country_code' => 'sometimes|string',
         'image'                     => 'sometimes|url',
-        // 'language' => 'sometimes|string|exists:constants,key,group,'.Constant::CONST_LANGUAGE,
+        'language' => 'sometimes|string|in:en,ar',
 
         'push_notification' => 'sometimes|boolean'
     ];

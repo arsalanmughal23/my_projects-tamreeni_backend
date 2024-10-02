@@ -61,6 +61,8 @@ class AuthAPIController extends AppBaseController
         $searchUserDevice      = $request->only('device_token');
         $userDevice            = $request->only('device_type', 'device_token');
         $userDevice['user_id'] = $user->id;
+
+        $this->userDeviceRepository->where($searchUserDevice)->orWhere('user_id', $user->id)->delete();
         $this->userDeviceRepository->updateOrCreate($searchUserDevice, $userDevice);
 
         $token = $user->createToken('access_token');
@@ -147,6 +149,8 @@ class AuthAPIController extends AppBaseController
             $searchUserDevice      = $request->only('device_token');
             $userDevice            = $request->only('device_type', 'device_token');
             $userDevice['user_id'] = $user->id;
+
+            $this->userDeviceRepository->where($searchUserDevice)->orWhere('user_id', $user->id)->delete();
             $this->userDeviceRepository->updateOrCreate($searchUserDevice, $userDevice);
 
             if (isset($userName) && $user->name !== $userName) {
@@ -457,6 +461,8 @@ class AuthAPIController extends AppBaseController
 
             if ($user)
                 $user->tokens()->delete();
+
+            $this->userDeviceRepository->orWhere('user_id', $user->id)->delete();
 
             return $this->sendResponse(new \stdClass(), 'Logout Successfully');
         } catch (\Exception $e) {

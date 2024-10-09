@@ -391,3 +391,13 @@
         </a>
     </li>
 @endcan -->
+@canany(['exercise_breakdowns.index', 'exercise_breakdowns.create', 'exercise_breakdowns.show', 'exercise_breakdowns.edit', 'exercise_breakdowns.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('exercise_breakdowns.index') }}"
+        class="nav-link {{ Request::is('exercise_breakdowns*') ? 'active' : '' }}">
+            <p>Exercise Breakdowns</p>
+        </a>
+    </li>
+@endcan
+
+

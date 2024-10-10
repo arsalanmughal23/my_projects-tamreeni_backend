@@ -221,6 +221,7 @@ class WorkoutPlanRepository extends BaseRepository
             $workoutPlanDayExercises[] = WorkoutDayExercise::create([
                 'name'                  => $exercise['name'],
                 'description'           => $exercise['description'],
+                'is_finisher'           => $exercise['is_finisher'],
                 'exercise_category_name'=> $exercise['exercise_category_name'],
                 'exercise_type_name'    => $exercise['exercise_type_name'],
                 'duration_in_m'         => $exerciseDetails['time_in_m'],
@@ -230,6 +231,7 @@ class WorkoutPlanRepository extends BaseRepository
                 'burn_calories'         => $exercise['burn_calories'],
 
                 'image' => $exercise['image'],
+                'audio' => $exercise['audio'],
                 'video' => $exercise['video'],
 
                 'workout_day_id'=> $workoutDayId,

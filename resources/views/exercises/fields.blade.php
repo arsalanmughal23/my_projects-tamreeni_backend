@@ -23,6 +23,12 @@
     {!! Form::textarea('description[ar]', isset($exercise)?$exercise->getTranslation('description', 'ar'):null, ['class' => 'form-control', 'rows'=>3, 'cols'=>3, 'required', 'dir'=>'rtl', 'maxlength' => 100]) !!}
 </div>
 
+<!-- Is Finisher Field -->
+<div class="form-group col-12">
+    {!! Form::label('is_finisher', 'Is Finisher:') !!}
+    {!! Form::checkbox('is_finisher', null, (isset($exercise) && $exercise->is_finisher) ? true : false, ['class' => 'form-control w-auto']) !!}
+</div>
+
 <!-- Exercise Category Field -->
 <div class="form-group col-sm-3">
     {!! Form::label('exercise_category_name', 'Exercise Category:', ['class'=>'required']) !!}
@@ -96,35 +102,45 @@
 </div>
 
 <!-- Image Field -->
-<div class="form-group col-sm-6 col-lg-3">
+<div class="form-group col-4">
     {!! Form::label('image', 'Image:', ['class'=>'required']) !!}
     {!! Form::file('image', ['class' => 'form-control', (isset($exercise)) ? '' : 'required' => 'required', 'accept' => 'image/jpeg,image/png']) !!}
     <p class="text-muted">Max File Size 5MB</p>
-
 </div>
 
+<!-- Audio Field -->
+<div class="form-group col-4">
+    {!! Form::label('audio', 'Audio:', ['class'=>'required']) !!}
+    {!! Form::file('audio', ['class' => 'form-control', (isset($exercise)) ? '' : 'required' => 'required', 'accept' => 'audio/*']) !!}
+    <p class="text-muted">Max File Size 20MB</p>
+</div>
 
 <!-- Video Field -->
-<div class="form-group col-sm-6 col-lg-3">
+<div class="form-group col-4">
     {!! Form::label('video', 'Video:', ['class'=>'required']) !!}
     {!! Form::file('video', ['class' => 'form-control', (isset($exercise)) ? '' : 'required' => 'required', 'accept' => 'video/mp4']) !!}
     <p class="text-muted">Max File Size 20MB</p>
-
 </div>
 
-<div class="offset-6"></div>
-
-<!-- video Field -->
+<!-- image Field -->
 @if(isset($exercise))
-    <div class="form-group col-sm-6 col-lg-6">
+    <div class="form-group col-4">
         <img src="{{ $exercise->image}}" width="360" onerror="brokenImageHandler(this);">
+    </div>
+@endif
+
+<!-- audio Field -->
+@if(isset($exercise))
+    <div class="form-group col-4">
+        <audio controls>
+            <source src="{{ $exercise->audio }}">
+        </audio>
     </div>
 @endif
 
 <!-- video Field -->
 @if(isset($exercise))
-
-    <div class="form-group col-sm-6 col-lg-6">
+    <div class="form-group col-4">
         <video width="360" height="315" controls>
             <source src="{{ $exercise->video}}" type="video/mp4">
             Your browser does not support the video tag.

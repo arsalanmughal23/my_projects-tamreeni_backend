@@ -26,8 +26,10 @@ class CreateExercisesTable extends Migration
             $table->integer('reps')->nullable();
             $table->float('burn_calories')->nullable();
             $table->text('image')->nullable();
+            $table->text('audio')->nullable();
             $table->text('video')->nullable();
             $table->text('record')->nullable();
+            $table->boolean('is_finisher')->default(0);
             $table->timestamps();
             $table->softDeletes();
 

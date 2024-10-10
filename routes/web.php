@@ -168,6 +168,8 @@ Route::group(['middleware' => ['auth', 'verified:web']], function () {
         Route::resource('question_answer_attempts', App\Http\Controllers\QuestionAnswerAttemptController::class)->only('index', 'show');
 
         Route::resource('meal_breakdowns', App\Http\Controllers\MealBreakdownController::class);
+        Route::resource('exercise_breakdowns', App\Http\Controllers\ExerciseBreakdownController::class);
+
 
         Route::resource('recipes', App\Http\Controllers\RecipeController::class);
         Route::resource('recipe_ingredients', App\Http\Controllers\RecipeIngredientController::class);

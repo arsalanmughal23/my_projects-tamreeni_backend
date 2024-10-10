@@ -25,6 +25,7 @@ class CreateWorkoutDayExercisesTable extends Migration
             $table->float('weight_in_kg')->default(0);
             $table->double('burn_calories', 8, 2)->nullable(false);
             $table->text('image')->nullable();
+            $table->text('audio')->nullable();
             $table->text('video')->nullable();
             $table->integer('status')->nullable(false);
 
@@ -32,6 +33,7 @@ class CreateWorkoutDayExercisesTable extends Migration
             $table->unsignedBigInteger('workout_day_id');
             $table->unsignedInteger('exercise_id');
 
+            $table->boolean('is_finisher')->default(0);
             $table->timestamps();
             $table->softDeletes();
 

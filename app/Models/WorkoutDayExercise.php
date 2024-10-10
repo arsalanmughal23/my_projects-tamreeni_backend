@@ -21,6 +21,7 @@ use Spatie\Translatable\HasTranslations;
  * @property integer $reps
  * @property number $burn_calories
  * @property integer $status
+ * @property boolean $is_finisher
  */
 class WorkoutDayExercise extends Model
 {
@@ -60,6 +61,7 @@ class WorkoutDayExercise extends Model
         'body_part_id',
         'workout_day_id',
         'exercise_id',
+        'is_finisher'
     ];
 
     /**
@@ -75,7 +77,8 @@ class WorkoutDayExercise extends Model
         'sets'           => 'integer',
         'reps'           => 'integer',
         'burn_calories'  => 'float',
-        'status'         => 'integer'
+        'status'         => 'integer',
+        'is_finisher'   => 'boolean'
     ];
 
     /**
@@ -93,7 +96,8 @@ class WorkoutDayExercise extends Model
         'status'         => 'required|integer',
         'created_at'     => 'nullable',
         'updated_at'     => 'nullable',
-        'deleted_at'     => 'nullable'
+        'deleted_at'     => 'nullable',
+        'is_finisher'    => 'nullable'
     ];
 
     /**

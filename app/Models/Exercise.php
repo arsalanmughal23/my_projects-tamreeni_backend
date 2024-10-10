@@ -26,6 +26,7 @@ use Spatie\Translatable\HasTranslations;
  * @property string $video
  * @property string $audio
  * @property string $description
+ * @property boolean $is_finisher
  */
 class Exercise extends Model
 {
@@ -85,7 +86,8 @@ class Exercise extends Model
         'audio',
         'description',
         'exercise_category_name',
-        'exercise_type_name'
+        'exercise_type_name',
+        'is_finisher'
     ];
 
     public $appends = ['category_name', 'type_name', 'is_favourite'];
@@ -107,7 +109,8 @@ class Exercise extends Model
         'image'         => 'string',
         'video'         => 'string',
         'audio'         => 'string',
-        'description'   => 'string'
+        'description'   => 'string',
+        'is_finisher'   => 'boolean'
     ];
 
     /**
@@ -133,6 +136,7 @@ class Exercise extends Model
         'image'          => 'nullable|file|mimes:jpeg,png|max:5000',
         'video'          => 'nullable|file|mimes:mp4|max:20000',
         'audio'          => 'nullable|file|mimes:mp3,wav,ogg,aac,m4a,flac|max:20000',
+        'is_finisher'    => 'nullable'
     ];
 
     /**

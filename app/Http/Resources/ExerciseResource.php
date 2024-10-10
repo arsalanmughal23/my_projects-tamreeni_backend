@@ -17,6 +17,7 @@ class ExerciseResource extends JsonResource
     {
         return [
             'id'                  => $this->id,
+            'is_finisher'         => $this->is_finisher,
             'name'                => $this->getTranslation('name', app()->getLocale()),
             'description'         => $this->getTranslation('description', app()->getLocale()),
             'user_id'             => $this->user_id,

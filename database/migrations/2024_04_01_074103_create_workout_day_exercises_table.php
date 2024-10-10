@@ -33,6 +33,7 @@ class CreateWorkoutDayExercisesTable extends Migration
             $table->unsignedBigInteger('workout_day_id');
             $table->unsignedInteger('exercise_id');
 
+            $table->boolean('is_finisher')->default(0);
             $table->timestamps();
             $table->softDeletes();
 

@@ -29,6 +29,7 @@ class CreateExercisesTable extends Migration
             $table->text('audio')->nullable();
             $table->text('video')->nullable();
             $table->text('record')->nullable();
+            $table->boolean('is_finisher')->default(0);
             $table->timestamps();
             $table->softDeletes();
 

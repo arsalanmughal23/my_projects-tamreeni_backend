@@ -23,6 +23,12 @@
     {!! Form::textarea('description[ar]', isset($exercise)?$exercise->getTranslation('description', 'ar'):null, ['class' => 'form-control', 'rows'=>3, 'cols'=>3, 'required', 'dir'=>'rtl', 'maxlength' => 100]) !!}
 </div>
 
+<!-- Is Finisher Field -->
+<div class="form-group col-12">
+    {!! Form::label('is_finisher', 'Is Finisher:') !!}
+    {!! Form::checkbox('is_finisher', null, (isset($exercise) && $exercise->is_finisher) ? true : false, ['class' => 'form-control w-auto']) !!}
+</div>
+
 <!-- Exercise Category Field -->
 <div class="form-group col-sm-3">
     {!! Form::label('exercise_category_name', 'Exercise Category:', ['class'=>'required']) !!}

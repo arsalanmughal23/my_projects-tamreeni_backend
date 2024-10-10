@@ -81,6 +81,7 @@ class ExerciseController extends AppBaseController
             $input['video'] = FileHelper::s3Upload($input['video']);
         }
 
+        $input['is_finisher'] = $request->is_finisher ? 1 : 0;
         $exercise = $this->exerciseRepository->create($input);
 
         if (isset($input['exercise_equipments'])) {
@@ -173,6 +174,7 @@ class ExerciseController extends AppBaseController
             $input['video'] = FileHelper::s3Upload($input['video']);
         }
 
+        $input['is_finisher'] = $request->is_finisher ? 1 : 0;
         $this->exerciseRepository->update($input, $id);
 
         $exercise->equipment()->sync($equipmentIds);

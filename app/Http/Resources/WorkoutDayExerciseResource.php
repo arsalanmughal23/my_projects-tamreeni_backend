@@ -17,6 +17,7 @@ class WorkoutDayExerciseResource extends JsonResource
     {
         return [
             'id'            => $this->id,
+            'is_finisher'   => $this->is_finisher,
             'name'          => $this->getTranslation('name', app()->getLocale()),
             'description'   => $this->getTranslation('description', app()->getLocale()),
             'exercise_category_name'=> $this->exercise_category_name,

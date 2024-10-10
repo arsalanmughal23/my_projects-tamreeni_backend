@@ -73,6 +73,10 @@ class ExerciseController extends AppBaseController
             $input['image'] = FileHelper::s3Upload($input['image']);
         }
 
+        if ($request->hasFile('audio')) {
+            $input['audio'] = FileHelper::s3Upload($input['audio']);
+        }
+
         if ($request->hasFile('video')) {
             $input['video'] = FileHelper::s3Upload($input['video']);
         }
@@ -159,6 +163,10 @@ class ExerciseController extends AppBaseController
 
         if ($request->hasFile('image')) {
             $input['image'] = FileHelper::s3Upload($input['image']);
+        }
+
+        if ($request->hasFile('audio')) {
+            $input['audio'] = FileHelper::s3Upload($input['audio']);
         }
 
         if ($request->hasFile('video')) {

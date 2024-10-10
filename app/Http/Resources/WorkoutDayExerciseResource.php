@@ -22,6 +22,7 @@ class WorkoutDayExerciseResource extends JsonResource
             'exercise_category_name'=> $this->exercise_category_name,
             'exercise_type_name'    => $this->exercise_type_name,
             'image'                 => $this->image,
+            'audio'                 => $this->audio,
             'video'                 => $this->video,
             'sets'          => $this->sets,
             'reps'          => $this->reps,

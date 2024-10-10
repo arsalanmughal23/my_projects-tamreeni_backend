@@ -29,6 +29,7 @@ class ExerciseResource extends JsonResource
             'reps'                => $this->reps,
             'burn_calories'       => $this->burn_calories,
             'image'               => $this->image,
+            'audio'               => $this->audio,
             'video'               => $this->video,
             'exercise_equipments' => ExerciseEquipmentResource::collection($this->whenLoaded('equipment')),
             'created_at'          => $this->created_at,

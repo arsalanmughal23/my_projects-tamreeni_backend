@@ -230,6 +230,7 @@ class WorkoutPlanRepository extends BaseRepository
                 'burn_calories'         => $exercise['burn_calories'],
 
                 'image' => $exercise['image'],
+                'audio' => $exercise['audio'],
                 'video' => $exercise['video'],
 
                 'workout_day_id'=> $workoutDayId,

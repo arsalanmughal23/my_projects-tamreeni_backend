@@ -114,6 +114,15 @@
     </li>
 @endcan
 
+@canany(['exercise_breakdowns.index', 'exercise_breakdowns.create', 'exercise_breakdowns.show', 'exercise_breakdowns.edit', 'exercise_breakdowns.destroy'])
+    <li class="nav-item">
+        <a href="{{ route('exercise_breakdowns.index') }}"
+        class="nav-link {{ Request::is('exercise_breakdowns*') ? 'active' : '' }}">
+            <i class="fa fa-person-running"></i><p>Exercise Breakdowns</p>
+        </a>
+    </li>
+@endcan
+
 <!--
 @canany(['exercise_equipment_pivots.index', 'exercise_equipment_pivots.create', 'exercise_equipment_pivots.show', 'exercise_equipment_pivots.edit', 'exercise_equipment_pivots.destroy'])
     @if(Route::has('exercise_equipment_pivots.index'))
@@ -391,13 +400,3 @@
         </a>
     </li>
 @endcan -->
-@canany(['exercise_breakdowns.index', 'exercise_breakdowns.create', 'exercise_breakdowns.show', 'exercise_breakdowns.edit', 'exercise_breakdowns.destroy'])
-    <li class="nav-item">
-        <a href="{{ route('exercise_breakdowns.index') }}"
-        class="nav-link {{ Request::is('exercise_breakdowns*') ? 'active' : '' }}">
-            <p>Exercise Breakdowns</p>
-        </a>
-    </li>
-@endcan
-
-

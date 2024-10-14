@@ -17,6 +17,9 @@ class UserMembershipDataTable extends DataTable
     public function dataTable($query)
     {
         $dataTable = new EloquentDataTable($query);
+        $dataTable->editColumn('title', function(UserMembership $query) {
+            return $query->title;
+        });
 
         return $dataTable->addColumn('action', 'user_memberships.datatables_actions');
     }

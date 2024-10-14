@@ -13,6 +13,7 @@
             </a>
         @endif
     @endcan
+
     @can('user_memberships.destroy')
         @if(Route::has('user_memberships.destroy'))
             {!! Form::button('<i class="fa fa-trash"></i>', [
@@ -22,6 +23,5 @@
             ]) !!}
         @endif
     @endcan
-
 </div>
 {!! Form::close() !!}

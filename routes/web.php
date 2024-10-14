@@ -108,7 +108,7 @@ Route::group(['middleware' => ['auth', 'verified:web']], function () {
         Route::resource('wellness_tips', App\Http\Controllers\WellnessTipController::class);
 
 
-        Route::resource('favourites', App\Http\Controllers\FavouriteController::class);
+        // Route::resource('favourites', App\Http\Controllers\FavouriteController::class);
 
 
         Route::resource('body_parts', App\Http\Controllers\BodyPartController::class);
@@ -180,8 +180,8 @@ Route::group(['middleware' => ['auth', 'verified:web']], function () {
         Route::resource('promo_codes', App\Http\Controllers\PromoCodeController::class);
         Route::resource('used_promo_codes', App\Http\Controllers\UsedPromoCodeController::class)->only('index', 'show', 'destroy');
 
-        Route::resource('memberships', App\Http\Controllers\MembershipController::class);
-        Route::resource('membership_durations', App\Http\Controllers\MembershipDurationController::class);
-        Route::resource('user_memberships', App\Http\Controllers\UserMembershipController::class)->only('index', 'show', 'destroy');
+        Route::resource('memberships', App\Http\Controllers\MembershipController::class)->only('index', 'show', 'edit', 'update');
+        Route::resource('membership_durations', App\Http\Controllers\MembershipDurationController::class)->only('index', 'show', 'edit', 'update');
+        Route::resource('user_memberships', App\Http\Controllers\UserMembershipController::class)->only('index', 'show');
     });
 });

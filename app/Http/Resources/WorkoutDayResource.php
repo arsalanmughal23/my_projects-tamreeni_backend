@@ -18,6 +18,9 @@ class WorkoutDayResource extends JsonResource
         return [
             'id'                    => $this->id,
             'workout_plan_id'       => $this->workout_plan_id,
+            'day_number'            => $this->day_number,
+            'week_number'           => $this->week_number,
+            'week_day_number'       => $this->week_day_number,
             'name'                  => $this->getTranslation('name', app()->getLocale()),
             'description'           => $this->getTranslation('description', app()->getLocale()),
             'image'                 => $this->image,

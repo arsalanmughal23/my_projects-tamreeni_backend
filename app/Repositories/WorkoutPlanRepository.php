@@ -22,6 +22,7 @@ class WorkoutPlanRepository extends BaseRepository
 {
     public function __construct(
         private ExerciseRepository $exerciseRepository,
+        private ExerciseBreakdownRepository $exerciseBreakdownRepository
     ){}
     /**
      * @var array
@@ -90,6 +91,7 @@ class WorkoutPlanRepository extends BaseRepository
             $dayCount = $key + 1;
             $dayNumber = str_pad($dayCount, 2, '0', STR_PAD_LEFT);
 
+            $workoutPlan->refresh();
             $workoutDay = WorkoutDay::create([
                 'workout_plan_id' => $workoutPlan->id,
                 'name'            => [
@@ -109,8 +111,12 @@ class WorkoutPlanRepository extends BaseRepository
             $isRestDay = !in_array($generatedDate, $randomDates);
             // if (!$isRestDay) {
                 // TODO : assign workoutday exercises
-                $workoutDayExercises = collect($this->assignWorkoutDayExercises($userDetails, $workoutDay->id));
-                $workoutDay->update(['is_rest_day' => $isRestDay, 'duration' => $workoutDayExercises->sum('duration_in_m'), 'image' => $workoutDayExercises->first()->image ?? null ]);
+                $workoutDayExercises = collect($this->assignWorkoutDayExercises($userDetails, $workoutDay, $workoutPlan));
+                $workoutDayExercisesDuration = $workoutDayExercises->whereIn('exercise_category_name', [
+                        Exercise::CATEGORY_MAJOR_LIFT, Exercise::CATEGORY_SINGLE_JOINT, Exercise::CATEGORY_MULTI_JOINT
+                    ])->sum('duration_in_m');
+
+                $workoutDay->update(['is_rest_day' => $isRestDay, 'duration' => $workoutDayExercisesDuration, 'image' => $workoutDayExercises->first()->image ?? null ]);
                 $workoutDay['workout_day_exercises'] = $workoutDayExercises;
                 $workoutPlanDays[] = $workoutDay;
             // }
@@ -241,6 +247,53 @@ class WorkoutPlanRepository extends BaseRepository
             ]);
         }
         return $workoutPlanDayExercises;
+    }
+
+    public function setExerciseDetails($majorLift, $singleJoint, $multiJoint, $cardio)
+    {
+        return [
+            Exercise::CATEGORY_MAJOR_LIFT => $majorLift,
+            Exercise::CATEGORY_SINGLE_JOINT => $singleJoint,
+            Exercise::CATEGORY_MULTI_JOINT => $multiJoint,
+            Exercise::CATEGORY_CARDIO => $cardio
+        ];
+    }
+    // getExerciseSetRepTimeWeight
+    public function getExerciseBreakdown($goal, $howLongTimeToWorkout)
+    {
+        return match ($goal) {
+
+            Option::Q1_OPT1__LOSE_WEIGHT => match ($howLongTimeToWorkout) {
+                Option::Q12_OPT1__30_MINS => $this->setExerciseDetails(1, 1, 0, 1, 1),
+                Option::Q12_OPT2__45_MINS => $this->setExerciseDetails(1, 1, 1, 1, 1),
+                Option::Q12_OPT3__1_HOUR => $this->setExerciseDetails(1, 2, 1, 1, 1),
+                Option::Q12_OPT4__MORE_THAN_1_HOUR => $this->setExerciseDetails(1, 3, 2, 1, 1),
+                default => $this->setExerciseDetails(1, 1, 0, 1, 1)
+            },
+            // GET STRONGER
+            Option::Q1_OPT2__GAIN_WEIGHT => match ($howLongTimeToWorkout) {
+                Option::Q12_OPT1__30_MINS => $this->setExerciseDetails(1, 0, 1, 1, 1),
+                Option::Q12_OPT2__45_MINS => $this->setExerciseDetails(1, 1, 1, 1, 1),
+                Option::Q12_OPT3__1_HOUR => $this->setExerciseDetails(1, 2, 1, 1, 1),
+                Option::Q12_OPT4__MORE_THAN_1_HOUR => $this->setExerciseDetails(1, 2, 2, 1, 1),
+                default => $this->setExerciseDetails(1, 0, 1, 1, 1)
+            },
+            Option::Q1_OPT3__BUILD_MUSCLE => match ($howLongTimeToWorkout) {
+                Option::Q12_OPT1__30_MINS => $this->setExerciseDetails(1, 1, 0, 1, 1),
+                Option::Q12_OPT2__45_MINS => $this->setExerciseDetails(1, 1, 1, 1, 1),
+                Option::Q12_OPT3__1_HOUR => $this->setExerciseDetails(1, 2, 1, 1, 1),
+                Option::Q12_OPT4__MORE_THAN_1_HOUR => $this->setExerciseDetails(1, 3, 2, 1, 1),
+                default => $this->setExerciseDetails(1, 1, 0, 1, 1)
+            },
+            Option::Q1_OPT4__GET_FIT => match ($howLongTimeToWorkout) {
+                Option::Q12_OPT1__30_MINS => $this->setExerciseDetails(1, 0, 0, 1, 1),
+                Option::Q12_OPT2__45_MINS => $this->setExerciseDetails(1, 0, 1, 1, 1),
+                Option::Q12_OPT3__1_HOUR => $this->setExerciseDetails(1, 1, 1, 1, 1),
+                Option::Q12_OPT4__MORE_THAN_1_HOUR => $this->setExerciseDetails(1, 2, 2, 1, 1),
+                default => $this->setExerciseDetails(1, 0, 0, 1, 1)
+            },
+            default => throw new Error('Invalid Goal')
+        };
     }
 
     public function getImpectualWorkoutExercisesDetails($userDetails, $exerciseCategory, $exerciseFactors)

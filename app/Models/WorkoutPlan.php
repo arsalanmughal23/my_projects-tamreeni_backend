@@ -89,4 +89,9 @@ class WorkoutPlan extends Model
     {
         return $this->hasMany(\App\Models\WorkoutDay::class, 'workout_plan_id');
     }
+
+    public function workoutPlanDaysExercises()
+    {
+        return $this->hasManyThrough(\App\Models\WorkoutDayExercise::class, \App\Models\WorkoutDay::class, 'workout_plan_id');
+    }
 }

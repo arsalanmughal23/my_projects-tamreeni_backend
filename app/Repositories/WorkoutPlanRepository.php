@@ -261,17 +261,17 @@ class WorkoutPlanRepository extends BaseRepository
         $majorLiftExerciseBreakdown = clone $exerciseBreakdownCollection;
         $singleJointExerciseBreakdown = clone $exerciseBreakdownCollection;
         $multiJointExerciseBreakdown = clone $exerciseBreakdownCollection;
-        // $cardioExerciseBreakdown = clone $exerciseBreakdownCollection;
+        $cardioExerciseBreakdown = clone $exerciseBreakdownCollection;
 
         $majorLiftExerciseBreakdown = $majorLiftExerciseBreakdown->where('exercise_category', Exercise::CATEGORY_MAJOR_LIFT)->first();
         $singleJointExerciseBreakdown = $singleJointExerciseBreakdown->where('exercise_category', Exercise::CATEGORY_SINGLE_JOINT)->first();
         $multiJointExerciseBreakdown = $multiJointExerciseBreakdown->where('exercise_category', Exercise::CATEGORY_MULTI_JOINT)->first();
-        // $cardioExerciseBreakdown = $cardioExerciseBreakdown->where('exercise_category', Exercise::CATEGORY_CARDIO)->first();
+        $cardioExerciseBreakdown = $cardioExerciseBreakdown->where('exercise_category', Exercise::CATEGORY_CARDIO)->first();
 
 
-        $majorLiftExercises = $majorLiftExercises->where(['exercise_category_name' => Exercise::CATEGORY_MAJOR_LIFT])->inRandomOrder()->take($majorLiftExerciseBreakdown->exercise_count)->get();
-        $singleJointExercises = $singleJointExercises->where('exercise_category_name', Exercise::CATEGORY_SINGLE_JOINT)->inRandomOrder()->take($singleJointExerciseBreakdown->exercise_count)->get();
-        $multiJointExercises = $multiJointExercises->where('exercise_category_name', Exercise::CATEGORY_MULTI_JOINT)->inRandomOrder()->take($multiJointExerciseBreakdown->exercise_count)->get();
+        $majorLiftExercises = $majorLiftExercises->where(['exercise_category_name' => Exercise::CATEGORY_MAJOR_LIFT])->inRandomOrder()->take($majorLiftExerciseBreakdown?->exercise_count ?? 0)->get();
+        $singleJointExercises = $singleJointExercises->where('exercise_category_name', Exercise::CATEGORY_SINGLE_JOINT)->inRandomOrder()->take($singleJointExerciseBreakdown?->exercise_count ?? 0)->get();
+        $multiJointExercises = $multiJointExercises->where('exercise_category_name', Exercise::CATEGORY_MULTI_JOINT)->inRandomOrder()->take($multiJointExerciseBreakdown?->exercise_count ?? 0)->get();
         $accessoryMovementExercises = array_merge($singleJointExercises->toArray(), $multiJointExercises->toArray());
 
         if($currentWeekCardioExercises->count()){
@@ -279,7 +279,7 @@ class WorkoutPlanRepository extends BaseRepository
         }
         else {
             $cardioExercises = $cardioExercises->where(['exercise_category_name' => Exercise::CATEGORY_CARDIO])
-                                    ->inRandomOrder()->take($exercisesCounts[Exercise::CATEGORY_CARDIO])->get();
+                                    ->inRandomOrder()->take($cardioExerciseBreakdown?->exercise_count ?? 0)->get();
         }
 
         $exerciseBreakdownCollection = $exerciseBreakdownCollection->get();

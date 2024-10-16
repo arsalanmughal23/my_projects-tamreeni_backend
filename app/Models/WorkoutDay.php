@@ -130,9 +130,14 @@ class WorkoutDay extends Model
         return $this->hasMany(\App\Models\WorkoutDayExercise::class, 'workout_day_id')->with('exercise');
     }
 
+    public function workoutDayExercisesBodyParts()
+    {
+        return $this->belongsToMany(\App\Models\BodyPart::class, \App\Models\WorkoutDayExercise::class, 'workout_day_id');
+    }
+
     public function getBodyPartsAttribute()
     {
-        return $this->workoutDayExercises->pluck('bodyPart')->pluck('name')->unique('name')->toArray();
+        return $this->workoutDayExercisesBodyParts->unique('slug')->pluck('name')->toArray();
     }
 
     public function getEquipmentsAttribute()

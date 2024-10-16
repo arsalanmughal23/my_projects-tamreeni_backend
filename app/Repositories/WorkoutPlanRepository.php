@@ -212,35 +212,66 @@ class WorkoutPlanRepository extends BaseRepository
         };
     }
 
-    public function assignWorkoutDayExercises(UserDetail $userDetails, $workoutDayId)
+    public function assignWorkoutDayExercises(UserDetail $userDetails, WorkoutDay $workoutDay, WorkoutPlan $workoutPlan)
     {
+        $workoutDayId = $workoutDay->id;
         $workoutPlanDayExercises = [];
 
-        $exercise = $this->exerciseRepository->getExercises(['body_parts' => $userDetails->body_parts, 'equipment_type' => $userDetails->equipment_type]);
+        $exercise = $this->exerciseRepository->getExercises(['equipment_type' => $userDetails->equipment_type, 'is_finisher' => false]);
+        $finisherExercises = $this->exerciseRepository->getExercises([
+                                    'body_parts' => $userDetails->body_parts,
+                                    'equipment_type' => $userDetails->equipment_type,
+                                    'is_finisher' => true
+                                ])
+                                ->inRandomOrder()->take(1)->get();
 
         $majorLiftExercises = clone $exercise;
         $singleJointExercises = clone $exercise;
         $multiJointExercises = clone $exercise;
+
         $cardioExercises = clone $exercise;
 
         $exercisesCounts = $this->makeExercisesGrouping($userDetails->goal, $userDetails->how_long_time_to_workout);
+        $exerciseBreakdownCollection = $this->exerciseBreakdownRepository->where(['goal' => $userDetails->goal, 'how_long_time_to_workout' => $userDetails->how_long_time_to_workout]);
+        $majorLiftExerciseBreakdown = clone $exerciseBreakdownCollection;
+        $singleJointExerciseBreakdown = clone $exerciseBreakdownCollection;
+        $multiJointExerciseBreakdown = clone $exerciseBreakdownCollection;
+        // $cardioExerciseBreakdown = clone $exerciseBreakdownCollection;
 
-        $majorLiftExercises = $majorLiftExercises->where(['exercise_category_name' => Exercise::CATEGORY_MAJOR_LIFT])->inRandomOrder()->take($exercisesCounts[Exercise::CATEGORY_MAJOR_LIFT])->get();
-        $singleJointExercises = $singleJointExercises->where('exercise_category_name', Exercise::CATEGORY_SINGLE_JOINT)->inRandomOrder()->take($exercisesCounts[Exercise::CATEGORY_SINGLE_JOINT])->get();
-        $multiJointExercises = $multiJointExercises->where('exercise_category_name', Exercise::CATEGORY_MULTI_JOINT)->inRandomOrder()->take($exercisesCounts[Exercise::CATEGORY_MULTI_JOINT])->get();
+        $majorLiftExerciseBreakdown = $majorLiftExerciseBreakdown->where('exercise_category', Exercise::CATEGORY_MAJOR_LIFT)->first();
+        $singleJointExerciseBreakdown = $singleJointExerciseBreakdown->where('exercise_category', Exercise::CATEGORY_SINGLE_JOINT)->first();
+        $multiJointExerciseBreakdown = $multiJointExerciseBreakdown->where('exercise_category', Exercise::CATEGORY_MULTI_JOINT)->first();
+        // $cardioExerciseBreakdown = $cardioExerciseBreakdown->where('exercise_category', Exercise::CATEGORY_CARDIO)->first();
+
+
+        $majorLiftExercises = $majorLiftExercises->where(['exercise_category_name' => Exercise::CATEGORY_MAJOR_LIFT])->inRandomOrder()->take($majorLiftExerciseBreakdown->exercise_count)->get();
+        $singleJointExercises = $singleJointExercises->where('exercise_category_name', Exercise::CATEGORY_SINGLE_JOINT)->inRandomOrder()->take($singleJointExerciseBreakdown->exercise_count)->get();
+        $multiJointExercises = $multiJointExercises->where('exercise_category_name', Exercise::CATEGORY_MULTI_JOINT)->inRandomOrder()->take($multiJointExerciseBreakdown->exercise_count)->get();
         $accessoryMovementExercises = array_merge($singleJointExercises->toArray(), $multiJointExercises->toArray());
 
-        $cardioExercises = $cardioExercises->where(['exercise_category_name' => Exercise::CATEGORY_CARDIO])->inRandomOrder()->take($exercisesCounts[Exercise::CATEGORY_CARDIO])->get();
-        $exercises = array_merge($majorLiftExercises->toArray(), $accessoryMovementExercises, $cardioExercises->toArray());
+        $cardioExercises = $cardioExercises->where(['exercise_category_name' => Exercise::CATEGORY_CARDIO])
+                                ->inRandomOrder()->take($exercisesCounts[Exercise::CATEGORY_CARDIO])->get();
 
-        $exerciseGeneralFactors = $this->getExerciseGeneralFactors();
-        foreach ($exercises as $exercise) {
-            $exerciseDetails = $this->getImpectualWorkoutExercisesDetails($userDetails, $exercise['exercise_category_name'], $exerciseGeneralFactors);
+        $exerciseBreakdownCollection = $exerciseBreakdownCollection->get();
+        $exercises = array_merge($majorLiftExercises->toArray(), $accessoryMovementExercises, $cardioExercises->toArray(), $finisherExercises->toArray());
+        foreach ($exercises as $index => $exercise) {
+
+            $exerciseBreakdown = $exerciseBreakdownCollection->filter(function($eachExercise) use($exercise) {
+                return $eachExercise->exercise_category == $exercise['exercise_category_name'];
+            });
+            $exerciseBreakdown = $exerciseBreakdown->first();
+
+            if(!$exerciseBreakdown?->exercise_count)
+                continue;
+
             $majorLiftExercisesMaxRep = $exercise['exercise_type_name'];
             $majorLiftExercisesMaxRep ? $majorLiftExercisesMaxRep .='__one_rep_max_in_kg' : null;
             $weightInKg = 0;
             if($majorLiftExercisesMaxRep)
-                $weightInKg = calculateByPercentage($userDetails[$majorLiftExercisesMaxRep] ,$exerciseDetails['percentage']);
+                $weightInKg = calculateByPercentage($userDetails[$majorLiftExercisesMaxRep], 30);
+
+            $exerciseTime = explode('-', str_replace('m', '', $exerciseBreakdown['time'] ?? '0'));
+            $exerciseTime = end($exerciseTime);
 
             $workoutPlanDayExercises[] = WorkoutDayExercise::create([
                 'name'                  => $exercise['name'],
@@ -248,9 +279,10 @@ class WorkoutPlanRepository extends BaseRepository
                 'is_finisher'           => $exercise['is_finisher'],
                 'exercise_category_name'=> $exercise['exercise_category_name'],
                 'exercise_type_name'    => $exercise['exercise_type_name'],
-                'duration_in_m'         => $exerciseDetails['time_in_m'],
-                'sets'                  => $exerciseDetails['sets'],
-                'reps'                  => $exerciseDetails['reps'],
+                'duration_in_m'         => $exerciseTime,
+                'duration'              => $exerciseBreakdown['time'],
+                'sets'                  => $exerciseBreakdown['sets'],
+                'reps'                  => $exerciseBreakdown['reps'],
                 'weight_in_kg'          => $weightInKg,
                 'burn_calories'         => $exercise['burn_calories'],
 

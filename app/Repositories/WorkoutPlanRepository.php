@@ -217,6 +217,31 @@ class WorkoutPlanRepository extends BaseRepository
         $workoutDayId = $workoutDay->id;
         $workoutPlanDayExercises = [];
 
+        // Workout-Plan All Days Exercises
+        // $workoutPlanDaysExercises = $workoutPlan->workoutPlanDaysExercises;
+
+        // Current Week
+        $currentWeekStartDate = \Carbon\Carbon::parse($workoutDay->date)->startOfWeek()->format('Y-m-d');
+        $currentWeekEndDate = \Carbon\Carbon::parse($workoutDay->date)->endOfWeek()->format('Y-m-d');
+
+        $workoutPlanDays = WorkoutDay::where('workout_plan_id', $workoutPlan->id);
+        $workoutPlanCurrentWeekDays = clone $workoutPlanDays; // $workoutPlan->workoutPlanDays;
+        $workoutPlanCurrentWeekDays = $workoutPlanCurrentWeekDays->whereBetween('date', [$currentWeekStartDate, $currentWeekEndDate]);
+
+        // Previous Week
+        $previousWeekStartDate = \Carbon\Carbon::parse($workoutDay->date)->subWeek()->startOfWeek()->format('Y-m-d');
+        $previousWeekEndDate = \Carbon\Carbon::parse($workoutDay->date)->subWeek()->endOfWeek()->format('Y-m-d');
+
+        $workoutPlanPreviousWeekDays = clone $workoutPlanDays; // $workoutPlan->workoutPlanDays;
+        $workoutPlanPreviousWeekDays = $workoutPlanPreviousWeekDays->whereBetween('date', [$previousWeekStartDate, $previousWeekEndDate]);
+        $workoutPlanCurrentWeekDaysIds = $workoutPlanCurrentWeekDays->pluck('id');
+        $workoutPlanCurrentWeekExercises = WorkoutDayExercise::whereIn('workout_day_id', $workoutPlanCurrentWeekDaysIds)->get();
+
+        $currentWeekCardioExercises = $workoutPlanCurrentWeekExercises->filter(function($workoutExercise){
+            return $workoutExercise->exercise_category_name == Exercise::CATEGORY_CARDIO;
+        });
+
+        // $exercise = $this->exerciseRepository->getExercises(['body_parts' => $userDetails->body_parts, 'equipment_type' => $userDetails->equipment_type]);
         $exercise = $this->exerciseRepository->getExercises(['equipment_type' => $userDetails->equipment_type, 'is_finisher' => false]);
         $finisherExercises = $this->exerciseRepository->getExercises([
                                     'body_parts' => $userDetails->body_parts,
@@ -249,8 +274,13 @@ class WorkoutPlanRepository extends BaseRepository
         $multiJointExercises = $multiJointExercises->where('exercise_category_name', Exercise::CATEGORY_MULTI_JOINT)->inRandomOrder()->take($multiJointExerciseBreakdown->exercise_count)->get();
         $accessoryMovementExercises = array_merge($singleJointExercises->toArray(), $multiJointExercises->toArray());
 
-        $cardioExercises = $cardioExercises->where(['exercise_category_name' => Exercise::CATEGORY_CARDIO])
-                                ->inRandomOrder()->take($exercisesCounts[Exercise::CATEGORY_CARDIO])->get();
+        if($currentWeekCardioExercises->count()){
+            $cardioExercises = collect();
+        }
+        else {
+            $cardioExercises = $cardioExercises->where(['exercise_category_name' => Exercise::CATEGORY_CARDIO])
+                                    ->inRandomOrder()->take($exercisesCounts[Exercise::CATEGORY_CARDIO])->get();
+        }
 
         $exerciseBreakdownCollection = $exerciseBreakdownCollection->get();
         $exercises = array_merge($majorLiftExercises->toArray(), $accessoryMovementExercises, $cardioExercises->toArray(), $finisherExercises->toArray());

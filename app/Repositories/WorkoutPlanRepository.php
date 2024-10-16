@@ -86,23 +86,41 @@ class WorkoutPlanRepository extends BaseRepository
 
         // create workout day and workout day exercises
         $workoutPlanDays = [];
+        $dayNumber = 1;
+        $weekNumber = 1;
+        $weekDayNumber = 0;
         foreach ($generatedDates as $key => $generatedDate) {
 
-            $dayCount = $key + 1;
-            $dayNumber = str_pad($dayCount, 2, '0', STR_PAD_LEFT);
+            $dayNumber = $key + 1;
+            $dayNumberFormated = str_pad($dayNumber, 2, '0', STR_PAD_LEFT);
+
+            $lastWorkoutDate = collect($workoutPlanDays)?->last()?->date ?? null;
+            $nextWeekStartDay = $lastWorkoutDate?->addWeek()?->startOfWeek() ?? null;
+            $nextWeekStartDay2 = $nextWeekStartDay ? (clone $nextWeekStartDay)?->addDay(1) : null;
+            $generatedDateCarbon = Carbon::parse($generatedDate);
+
+            if($generatedDateCarbon?->between($nextWeekStartDay, $nextWeekStartDay2)){
+                $weekNumber++;
+                $weekDayNumber = 0;
+            }
+
+            $weekDayNumber++;
 
             $workoutPlan->refresh();
             $workoutDay = WorkoutDay::create([
-                'workout_plan_id' => $workoutPlan->id,
-                'name'            => [
-                    'en' => 'Day ' . $dayNumber,
-                    'ar' => 'اليوم ' . $dayNumber
+                'workout_plan_id'   => $workoutPlan->id,
+                'day_number'        => $dayNumber,
+                'week_number'       => $weekNumber,
+                'week_day_number'   => $weekDayNumber,
+                'name'  => [
+                    'en' => 'Day ' . $dayNumberFormated,
+                    'ar' => 'اليوم ' . $dayNumberFormated
                 ],
                 'description'     => [
                     'en' => WorkoutDay::DESCRIPTION_EN,
                     'ar' => WorkoutDay::DESCRIPTION_AR
                 ],
-                'date'            => Carbon::parse($generatedDate),
+                'date'            => $generatedDateCarbon,
                 'status'          => WorkoutDay::STATUS_TODO,
                 'duration'        => 0,
                 'image'           => null,

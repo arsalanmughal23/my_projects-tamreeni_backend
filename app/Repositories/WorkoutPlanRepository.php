@@ -22,7 +22,12 @@ class WorkoutPlanRepository extends BaseRepository
 {
     public function __construct(
         private ExerciseRepository $exerciseRepository,
-        private ExerciseBreakdownRepository $exerciseBreakdownRepository
+        private ExerciseBreakdownRepository $exerciseBreakdownRepository,
+        private BodyPartRepository $bodyPartRepository,
+        private $assignableExercisesBodypartSlugs = [],
+        private $assignableFinisherExercisesBodypartSlugs = [],
+        private $assignableBodypart = null,
+        private $assignableFinisherBodypart = null
     ){}
     /**
      * @var array
@@ -89,6 +94,7 @@ class WorkoutPlanRepository extends BaseRepository
         $dayNumber = 1;
         $weekNumber = 1;
         $weekDayNumber = 0;
+
         foreach ($generatedDates as $key => $generatedDate) {
 
             $dayNumber = $key + 1;
@@ -126,9 +132,30 @@ class WorkoutPlanRepository extends BaseRepository
                 'image'           => null,
             ]);
 
+            if (!count($this->assignableExercisesBodypartSlugs)) {
+                $this->assignableExercisesBodypartSlugs = $this->bodyPartRepository->pluck('slug');
+
+                $this->assignableBodypart = collect($this->assignableExercisesBodypartSlugs)->random();
+                collect($this->assignableExercisesBodypartSlugs)->reject(fn ($bodyPart) => $bodyPart == $this->assignableBodypart);
+            }
+
+            if(!count($this->assignableFinisherExercisesBodypartSlugs)) {
+                $this->assignableFinisherExercisesBodypartSlugs = $userDetails->body_parts;
+
+                $this->assignableFinisherBodypart = collect($this->assignableFinisherExercisesBodypartSlugs)->random();
+                collect($this->assignableFinisherExercisesBodypartSlugs)->reject(fn ($bodyPart) => $bodyPart == $this->assignableFinisherBodypart);
+            }
+
             $isRestDay = !in_array($generatedDate, $randomDates);
+            if (!$isRestDay) {
+                $this->assignableBodypart = collect($this->assignableExercisesBodypartSlugs)->random();
+                collect($this->assignableExercisesBodypartSlugs)->reject(fn ($bodyPart) => $bodyPart == $this->assignableBodypart);
+
+                $this->assignableFinisherBodypart = collect($this->assignableFinisherExercisesBodypartSlugs)->random();
+                collect($this->assignableFinisherExercisesBodypartSlugs)->reject(fn ($bodyPart) => $bodyPart == $this->assignableFinisherBodypart);
+            }
+
             // if (!$isRestDay) {
-                // TODO : assign workoutday exercises
                 $workoutDayExercises = collect($this->assignWorkoutDayExercises($userDetails, $workoutDay, $workoutPlan));
                 $workoutDayExercisesDuration = $workoutDayExercises->whereIn('exercise_category_name', [
                         Exercise::CATEGORY_MAJOR_LIFT, Exercise::CATEGORY_SINGLE_JOINT, Exercise::CATEGORY_MULTI_JOINT
@@ -242,9 +269,9 @@ class WorkoutPlanRepository extends BaseRepository
         });
 
         // $exercise = $this->exerciseRepository->getExercises(['body_parts' => $userDetails->body_parts, 'equipment_type' => $userDetails->equipment_type]);
-        $exercise = $this->exerciseRepository->getExercises(['equipment_type' => $userDetails->equipment_type, 'is_finisher' => false]);
+        $exercise = $this->exerciseRepository->getExercises(['body_parts' => $this->assignableBodypart, 'equipment_type' => $userDetails->equipment_type, 'is_finisher' => false]);
         $finisherExercises = $this->exerciseRepository->getExercises([
-                                    'body_parts' => $userDetails->body_parts,
+                                    'body_parts' => $this->assignableFinisherBodypart,
                                     'equipment_type' => $userDetails->equipment_type,
                                     'is_finisher' => true
                                 ])

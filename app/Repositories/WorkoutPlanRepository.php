@@ -256,7 +256,6 @@ class WorkoutPlanRepository extends BaseRepository
 
         $cardioExercises = clone $exercise;
 
-        $exercisesCounts = $this->makeExercisesGrouping($userDetails->goal, $userDetails->how_long_time_to_workout);
         $exerciseBreakdownCollection = $this->exerciseBreakdownRepository->where(['goal' => $userDetails->goal, 'how_long_time_to_workout' => $userDetails->how_long_time_to_workout]);
         $majorLiftExerciseBreakdown = clone $exerciseBreakdownCollection;
         $singleJointExerciseBreakdown = clone $exerciseBreakdownCollection;
@@ -284,6 +283,8 @@ class WorkoutPlanRepository extends BaseRepository
 
         $exerciseBreakdownCollection = $exerciseBreakdownCollection->get();
         $exercises = array_merge($majorLiftExercises->toArray(), $accessoryMovementExercises, $cardioExercises->toArray(), $finisherExercises->toArray());
+        $majorLiftWeightPercentage = 20 + ($workoutDay->week_number * 10);
+
         foreach ($exercises as $index => $exercise) {
 
             $exerciseBreakdown = $exerciseBreakdownCollection->filter(function($eachExercise) use($exercise) {
@@ -297,8 +298,13 @@ class WorkoutPlanRepository extends BaseRepository
             $majorLiftExercisesMaxRep = $exercise['exercise_type_name'];
             $majorLiftExercisesMaxRep ? $majorLiftExercisesMaxRep .='__one_rep_max_in_kg' : null;
             $weightInKg = 0;
-            if($majorLiftExercisesMaxRep)
-                $weightInKg = calculateByPercentage($userDetails[$majorLiftExercisesMaxRep], 30);
+
+            if ($majorLiftExercisesMaxRep) {
+                if($majorLiftWeightPercentage < 100)
+                    $weightInKg = calculateByPercentage($userDetails[$majorLiftExercisesMaxRep], $majorLiftWeightPercentage);
+                else
+                    $weightInKg = $userDetails[$majorLiftExercisesMaxRep];
+            }
 
             $exerciseTime = explode('-', str_replace('m', '', $exerciseBreakdown['time'] ?? '0'));
             $exerciseTime = end($exerciseTime);
@@ -313,7 +319,7 @@ class WorkoutPlanRepository extends BaseRepository
                 'duration'              => $exerciseBreakdown['time'],
                 'sets'                  => $exerciseBreakdown['sets'],
                 'reps'                  => $exerciseBreakdown['reps'],
-                'weight_in_kg'          => $weightInKg,
+                'weight_in_kg'          => round($weightInKg),
                 'burn_calories'         => $exercise['burn_calories'],
 
                 'image' => $exercise['image'],

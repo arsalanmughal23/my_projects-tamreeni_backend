@@ -50,8 +50,8 @@
             elem: $('input[name=value]'),
             postFixElem: $('.discountTypeValuePostFix'),
             maxValueElem: $('.maxValue'),
-            maxPercentageDiscount: 50,
-            maxFlatDiscount: 30,
+            maxPercentageDiscount: 100,
+            maxFlatDiscount: 1000,
             makeValidation(discountInPercentage = true) {
                 if (discountInPercentage) {
                     this.elem.prop('max', this.maxPercentageDiscount)

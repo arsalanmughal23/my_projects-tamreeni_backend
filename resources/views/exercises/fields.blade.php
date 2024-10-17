@@ -112,7 +112,7 @@
 <div class="form-group col-4">
     {!! Form::label('audio', 'Audio:', ['class'=>'required']) !!}
     {!! Form::file('audio', ['class' => 'form-control', (isset($exercise)) ? '' : 'required' => 'required', 'accept' => 'audio/*']) !!}
-    <p class="text-muted">Max File Size 20MB</p>
+    <p class="text-muted">Max File Size 1MB</p>
 </div>
 
 <!-- Video Field -->

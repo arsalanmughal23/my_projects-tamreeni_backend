@@ -135,7 +135,7 @@ class Exercise extends Model
         'burn_calories'  => 'nullable|numeric',
         'image'          => 'nullable|file|mimes:jpeg,png|max:5000',
         'video'          => 'nullable|file|mimes:mp4|max:20000',
-        'audio'          => 'nullable|file|mimes:mp3,wav,ogg,aac,m4a,flac|max:20000',
+        'audio'          => 'nullable|file|mimes:mp3,wav,ogg,aac,m4a,flac|max:1000',
         'is_finisher'    => 'nullable'
     ];
 

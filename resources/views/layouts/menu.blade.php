@@ -298,15 +298,6 @@
     </li>
 @endcan
 
-@canany(['favourites.index', 'favourites.create', 'favourites.show', 'favourites.edit', 'favourites.destroy'])
-    <li class="nav-item">
-        <a href="{{ route('favourites.index') }}"
-        class="nav-link {{ Request::is('favourites*') ? 'active' : '' }}">
-            <i class="fa fa-heart"></i><p>Favourites</p>
-        </a>
-    </li>
-@endcan
-
 
 @canany(['question_answer_attempts.index', 'question_answer_attempts.create', 'question_answer_attempts.show', 'question_answer_attempts.edit', 'question_answer_attempts.destroy'])
     <li class="nav-item">

@@ -16,7 +16,8 @@ use Spatie\Translatable\HasTranslations;
  * @property \App\Models\WorkoutDay $workoutDay
  * @property integer $workout_day_id
  * @property integer $exercise_id
- * @property integer $duration
+ * @property integer $duration_in_m
+ * @property string $duration
  * @property integer $sets
  * @property integer $reps
  * @property number $burn_calories
@@ -50,6 +51,7 @@ class WorkoutDayExercise extends Model
         'exercise_category_name',
         'exercise_type_name',
         'duration_in_m',
+        'duration',
         'sets',
         'reps',
         'weight_in_kg',
@@ -73,9 +75,9 @@ class WorkoutDayExercise extends Model
         'id'             => 'integer',
         'workout_day_id' => 'integer',
         'exercise_id'    => 'integer',
-        'duration'       => 'integer',
-        'sets'           => 'integer',
-        'reps'           => 'integer',
+        'duration'       => 'string',
+        'sets'           => 'string',
+        'reps'           => 'string',
         'burn_calories'  => 'float',
         'status'         => 'integer',
         'is_finisher'   => 'boolean'

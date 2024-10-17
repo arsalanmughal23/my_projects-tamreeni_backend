@@ -8,12 +8,14 @@
                     <h1>Memberships</h1>
                 </div>
                 @can('memberships.create')
-                    <div class="col-sm-6">
-                        <a class="btn btn-primary float-right"
-                        href="{{ route('memberships.create') }}">
-                            Add New
-                        </a>
-                    </div>
+                    @if(Route::has('memberships.create'))
+                        <div class="col-sm-6">
+                            <a class="btn btn-primary float-right"
+                            href="{{ route('memberships.create') }}">
+                                Add New
+                            </a>
+                        </div>
+                    @endif
                 @endcan
             </div>
         </div>

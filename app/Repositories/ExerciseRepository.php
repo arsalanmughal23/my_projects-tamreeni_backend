@@ -83,7 +83,7 @@ class ExerciseRepository extends BaseRepository
             $equipmentType = $params['equipment_type'];
 
             $query = match ($params['equipment_type']) {
-                ExerciseEquipment::EQUIPMENT_TYPE_ALL_EQUIPMENTS => $query->whereHas('equipment'),
+                ExerciseEquipment::EQUIPMENT_TYPE_ALL_EQUIPMENTS => $query, // $query->whereHas('equipment'),
                 ExerciseEquipment::EQUIPMENT_TYPE_NO_EQUIPMENT_AT_ALL => $query->whereDoesntHave('equipment'),
                 default => $query->whereHas('equipment', function($q) use($equipmentType) { return $q->whereTypeSlug($equipmentType); }),
             };
@@ -93,6 +93,9 @@ class ExerciseRepository extends BaseRepository
             $query->whereHas('favourites', function ($q) {
                 return $q->where('user_id', auth()->id());
             });
+        }
+        if (isset($params['is_finisher'])) {
+            return $query->where('is_finisher', $params['is_finisher']);
         }
 
         if (isset($params['exercise_equipment_ids'])) {

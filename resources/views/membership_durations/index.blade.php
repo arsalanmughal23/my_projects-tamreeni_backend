@@ -8,12 +8,14 @@
                     <h1>Membership Durations</h1>
                 </div>
                 @can('membership_durations.create')
-                    <div class="col-sm-6">
-                        <a class="btn btn-primary float-right"
-                        href="{{ route('membership_durations.create') }}">
-                            Add New
-                        </a>
-                    </div>
+                    @if(Route::has('membership_durations.create'))
+                        <div class="col-sm-6">
+                            <a class="btn btn-primary float-right"
+                            href="{{ route('membership_durations.create') }}">
+                                Add New
+                            </a>
+                        </div>
+                    @endif
                 @endcan
             </div>
         </div>

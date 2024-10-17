@@ -20,6 +20,9 @@ use Spatie\Translatable\HasTranslations;
  * @property integer $duration
  * @property integer $status
  * @property boolean $is_rest_day
+ * @property integer $day_number
+ * @property integer $week_number
+ * @property integer $week_day_number
  */
 class WorkoutDay extends Model
 {
@@ -50,6 +53,9 @@ class WorkoutDay extends Model
 
     public $fillable = [
         'workout_plan_id',
+        'day_number',
+        'week_number',
+        'week_day_number',
         'name',
         'description',
         'duration',
@@ -66,6 +72,9 @@ class WorkoutDay extends Model
      */
     protected $casts = [
         'id'          => 'integer',
+        'day_number'        =>'integer',
+        'week_number'       =>'integer',
+        'week_day_number'   =>'integer',
         'user_id'     => 'integer',
         'name'        => 'string',
         'description' => 'string',
@@ -81,6 +90,9 @@ class WorkoutDay extends Model
      */
     public static $rules        = [
         'user_id'     => 'required',
+        'day_number'        =>'required|integer',
+        'week_number'       =>'required|integer',
+        'week_day_number'   =>'required|integer',
         'name'        => 'required|string|max:255',
         'description' => 'nullable|string',
         'duration'    => 'required|integer',
@@ -118,9 +130,14 @@ class WorkoutDay extends Model
         return $this->hasMany(\App\Models\WorkoutDayExercise::class, 'workout_day_id')->with('exercise');
     }
 
+    public function workoutDayExercisesBodyParts()
+    {
+        return $this->belongsToMany(\App\Models\BodyPart::class, \App\Models\WorkoutDayExercise::class, 'workout_day_id');
+    }
+
     public function getBodyPartsAttribute()
     {
-        return $this->workoutDayExercises->pluck('bodyPart')->pluck('name')->unique('name')->toArray();
+        return $this->workoutDayExercisesBodyParts->unique('slug')->pluck('name')->toArray();
     }
 
     public function getEquipmentsAttribute()

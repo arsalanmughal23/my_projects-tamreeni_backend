@@ -31,8 +31,8 @@
 <!-- Name (Arabic) Field -->
 <div class="form-group col-sm-6 col-lg-6">
     {!! Form::label('name', 'Name (Arabic):', ['class' => 'required']) !!}
-    {!! Form::text('name[ar]', isset(recipeIngredient) ? ($recipeIngredient->getTranslation('name', 'ar') ?? null) : null, ['class' => 'form-control', 'required' => true, 'maxlength' => 255, 'dir'=>'rtl', 'pattern'=>'[ا-ي0-9_.\s+\-]{0,70}']) !!}
-    <!-- {!! Form::text('name[ar]', isset($recipeIngredient) ? $recipeIngredient->getTranslation('name', 'ar') ?? null : null, ['class' => 'form-control', 'required' => true, 'pattern' => '[ا-ي0-9_.\s+\-]{0,70}', 'dir' => 'rtl']) !!} -->
+    <!-- {!! Form::text('name[ar]', isset(recipeIngredient) ? ($recipeIngredient->getTranslation('name', 'ar') ?? null) : null, ['class' => 'form-control', 'required' => true, 'maxlength' => 255, 'dir'=>'rtl', 'pattern'=>'[ا-ي0-9_.\s+\-]{0,70}']) !!} -->
+    {!! Form::text('name[ar]', isset($recipeIngredient) ? $recipeIngredient->getTranslation('name', 'ar') ?? null : null, ['class' => 'form-control', 'required' => true, 'dir' => 'rtl', 'pattern' => '[ا-ي0-9_.\s+\-]{0,70}']) !!}
 </div>
 
 <!-- Quantity Field -->

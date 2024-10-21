@@ -192,3 +192,15 @@ a.btn-default, a.btn-default:hover, a.btn-default:focus, a.btn-default:visited {
         margin-right: 0;
     }
 }
+
+.nav-pills .submenu .nav-link.active, .nav-pills .submenu .show>.nav-link
+{ background-color: #117d69 !important; }
+
+.nav-pills .nav-link:not(.active):hover
+{ color: white; }
+
+.nav-pills .collapsing .nav-link:not(.active)
+{ background-color: transparent !important; }
+
+.submenu>ul>li
+{ margin-bottom: 0px; }

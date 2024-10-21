@@ -1,3 +1,8 @@
+@php
+    $mealManagementIsActive = Request::is('meal_categories*', 'meal_types*', 'meals*', 'meal_breakdowns*', 'recipes*', 'recipe_ingredients*');
+    $exerciseManagementIsActive = Request::is('exercise_categories*', 'exercise_equipments*', 'body_parts*', 'exercises*', 'exercise_breakdowns*', 'exercise_equipment_pivots*');
+@endphp
+
 @canany(['roles.index', 'roles.create', 'roles.show', 'roles.edit', 'roles.destroy'])
     <li class="nav-item">
         <a href="{{ route('roles.index') }}" class="nav-link {{ Request::is('roles*') ? 'active' : '' }}">
@@ -87,54 +92,6 @@
     </li>
 @endcan
 
-@canany(['body_parts.index', 'body_parts.create', 'body_parts.show', 'body_parts.edit', 'body_parts.destroy'])
-    <li class="nav-item">
-        <a href="{{ route('body_parts.index') }}"
-        class="nav-link {{ Request::is('body_parts*') ? 'active' : '' }}">
-            <i class="fa fa-person-walking"></i><p>Body Parts</p>
-        </a>
-    </li>
-@endcan
-
-@canany(['exercise_equipments.index', 'exercise_equipments.create', 'exercise_equipments.show', 'exercise_equipments.edit', 'exercise_equipments.destroy'])
-    <li class="nav-item">
-        <a href="{{ route('exercise_equipments.index') }}"
-        class="nav-link {{ Request::is('exercise_equipments*') ? 'active' : '' }}">
-            <i class="fa fa-dumbbell"></i><p>Exercise Equipments</p>
-        </a>
-    </li>
-@endcan
-
-@canany(['exercises.index', 'exercises.create', 'exercises.show', 'exercises.edit', 'exercises.destroy'])
-    <li class="nav-item">
-        <a href="{{ route('exercises.index') }}"
-        class="nav-link {{ Request::is('exercises*') ? 'active' : '' }}">
-            <i class="fa fa-person-running"></i><p>Exercises</p>
-        </a>
-    </li>
-@endcan
-
-@canany(['exercise_breakdowns.index', 'exercise_breakdowns.create', 'exercise_breakdowns.show', 'exercise_breakdowns.edit', 'exercise_breakdowns.destroy'])
-    <!-- <li class="nav-item">
-        <a href="{{ route('exercise_breakdowns.index') }}"
-        class="nav-link {{ Request::is('exercise_breakdowns*') ? 'active' : '' }}">
-            <i class="fa fa-person-running"></i><p>Exercise Breakdowns</p>
-        </a>
-    </li> -->
-@endcan
-
-<!--
-@canany(['exercise_equipment_pivots.index', 'exercise_equipment_pivots.create', 'exercise_equipment_pivots.show', 'exercise_equipment_pivots.edit', 'exercise_equipment_pivots.destroy'])
-    @if(Route::has('exercise_equipment_pivots.index'))
-        <li class="nav-item">
-            <a href="{{ route('exercise_equipment_pivots.index') }}"
-            class="nav-link {{ Request::is('exercise_equipment_pivots*') ? 'active' : '' }}">
-                <i class="fa fa-table-list"></i><p>Exercise Equipment Pivots</p>
-            </a>
-        </li>
-    @endif
-@endcan -->
-
 @canany(['slots.index', 'slots.create', 'slots.show', 'slots.edit', 'slots.destroy'])
     <li class="nav-item">
         <a href="{{ route('slots.index') }}"
@@ -153,59 +110,138 @@
     </li>
 @endcan
 
-@canany(['meal_types.index', 'meal_types.create', 'meal_types.show', 'meal_types.edit', 'meal_types.destroy'])
-    <li class="nav-item">
-        <a href="{{ route('meal_types.index') }}"
-        class="nav-link {{ Request::is('meal_types*') ? 'active' : '' }}">
-            <i class="fa fa-boxes-stacked"></i><p>Meal Types</p>
-        </a>
-    </li>
-@endcan
 
-@canany(['meal_categories.index', 'meal_categories.create', 'meal_categories.show', 'meal_categories.edit', 'meal_categories.destroy'])
-    <li class="nav-item">
-        <a href="{{ route('meal_categories.index') }}"
-        class="nav-link {{ Request::is('meal_categories*') ? 'active' : '' }}">
-            <i class="fa fa-box-open"></i><p>Meal Categories</p>
-        </a>
-    </li>
-@endcan
+<li class="nav-item">
+    <a class="nav-link {{ $exerciseManagementIsActive ? 'active' : '' }}"
+        aria-expanded="{{ $exerciseManagementIsActive ? 'true' : 'false' }}"
+        data-toggle="collapse" href="#exerciseManagementCollapse" role="button"
+        aria-controls="exerciseManagementCollapse">
 
-@canany(['meal_breakdowns.index', 'meal_breakdowns.create', 'meal_breakdowns.show', 'meal_breakdowns.edit', 'meal_breakdowns.destroy'])
-    <li class="nav-item">
-        <a href="{{ route('meal_breakdowns.index') }}"
-        class="nav-link {{ Request::is('meal_breakdowns*') ? 'active' : '' }}">
-            <i class="fa fa-table"></i><p>Meal Breakdowns</p>
-        </a>
-    </li>
-@endcan
+        <i class="fa fa-utensils"></i>
+        <p class="text-sm">Exercise Management</p>
+        <i class="fa fa-chevron-down float-right"></i>
+    </a>
+    <div class="collapse submenu {{ $exerciseManagementIsActive ? 'show' : '' }}" id="exerciseManagementCollapse">
+        <ul class="nav flex-column ml-3">
 
-<!-- @canany(['meals.index', 'meals.create', 'meals.show', 'meals.edit', 'meals.destroy'])
-    <li class="nav-item">
-        <a href="{{ route('meals.index') }}"
-        class="nav-link {{ Request::is('meals*') ? 'active' : '' }}">
-            <i class="fa fa-bread-slice"></i><p>Meals</p>
-        </a>
-    </li>
-@endcan -->
+            @canany(['exercise_equipments.index', 'exercise_equipments.create', 'exercise_equipments.show', 'exercise_equipments.edit', 'exercise_equipments.destroy'])
+                <li class="nav-item">
+                    <a href="{{ route('exercise_equipments.index') }}"
+                    class="nav-link {{ Request::is('exercise_equipments*') ? 'active' : '' }}">
+                        <i class="fa fa-dumbbell"></i><p>Exercise Equipments</p>
+                    </a>
+                </li>
+            @endcan
 
-@canany(['recipes.index', 'recipes.create', 'recipes.show', 'recipes.edit', 'recipes.destroy'])
-    <li class="nav-item">
-        <a href="{{ route('recipes.index') }}"
-        class="nav-link {{ Request::is('recipes*') ? 'active' : '' }}">
-            <i class="fa fa-rectangle-list"></i><p>Recipes</p>
-        </a>
-    </li>
-@endcan
+            @canany(['body_parts.index', 'body_parts.create', 'body_parts.show', 'body_parts.edit', 'body_parts.destroy'])
+                <li class="nav-item">
+                    <a href="{{ route('body_parts.index') }}"
+                    class="nav-link {{ Request::is('body_parts*') ? 'active' : '' }}">
+                        <i class="fa fa-person-walking"></i><p>Body Parts</p>
+                    </a>
+                </li>
+            @endcan
 
-@canany(['recipe_ingredients.index', 'recipe_ingredients.create', 'recipe_ingredients.show', 'recipe_ingredients.edit', 'recipe_ingredients.destroy'])
-    <li class="nav-item">
-        <a href="{{ route('recipe_ingredients.index') }}"
-        class="nav-link {{ Request::is('recipe_ingredients*') ? 'active' : '' }}">
-            <i class="fa fa-apple-alt"></i><p>Recipe Ingredients</p>
-        </a>
-    </li>
-@endcan
+            @canany(['exercises.index', 'exercises.create', 'exercises.show', 'exercises.edit', 'exercises.destroy'])
+                <li class="nav-item">
+                    <a href="{{ route('exercises.index') }}"
+                    class="nav-link {{ Request::is('exercises*') ? 'active' : '' }}">
+                        <i class="fa fa-person-running"></i><p>Exercises</p>
+                    </a>
+                </li>
+            @endcan
+
+            @canany(['exercise_breakdowns.index', 'exercise_breakdowns.create', 'exercise_breakdowns.show', 'exercise_breakdowns.edit', 'exercise_breakdowns.destroy'])
+                <li class="nav-item">
+                    <a href="{{ route('exercise_breakdowns.index') }}"
+                    class="nav-link {{ Request::is('exercise_breakdowns*') ? 'active' : '' }}">
+                        <i class="fa fa-person-running"></i><p>Exercise Breakdowns</p>
+                    </a>
+                </li>
+            @endcan
+
+            @canany(['exercise_equipment_pivots.index', 'exercise_equipment_pivots.create', 'exercise_equipment_pivots.show', 'exercise_equipment_pivots.edit', 'exercise_equipment_pivots.destroy'])
+                @if(Route::has('exercise_equipment_pivots.index'))
+                    <li class="nav-item">
+                        <a href="{{ route('exercise_equipment_pivots.index') }}"
+                        class="nav-link {{ Request::is('exercise_equipment_pivots*') ? 'active' : '' }}">
+                            <i class="fa fa-table-list"></i><p>Exercise Equipment Pivots</p>
+                        </a>
+                    </li>
+                @endif
+            @endcan
+
+        </ul>
+    </div>
+</li>
+
+<li class="nav-item">
+    <a class="nav-link {{ $mealManagementIsActive ? 'active' : '' }}"
+        aria-expanded="{{ $mealManagementIsActive ? 'true' : 'false' }}"
+        data-toggle="collapse" href="#mealManagementCollapse" role="button"
+        aria-controls="mealManagementCollapse">
+
+        <i class="fa fa-utensils"></i>
+        <p class="text-sm">Meal Management</p>
+        <i class="fa fa-chevron-down float-right"></i>
+    </a>
+    <div class="collapse submenu {{ $mealManagementIsActive ? 'show' : '' }}" id="mealManagementCollapse">
+        <ul class="nav flex-column ml-3">
+            @canany(['meal_categories.index', 'meal_categories.create', 'meal_categories.show', 'meal_categories.edit', 'meal_categories.destroy'])
+                <li class="nav-item">
+                    <a href="{{ route('meal_categories.index') }}" class="nav-link {{ Request::is('meal_categories*') ? 'active' : '' }}">
+                        <i class="fa fa-box-open"></i> Meal Categories
+                    </a>
+                </li>
+            @endcanany
+
+            @canany(['meal_types.index', 'meal_types.create', 'meal_types.show', 'meal_types.edit', 'meal_types.destroy'])
+                <li class="nav-item">
+                    <a href="{{ route('meal_types.index') }}" class="nav-link {{ Request::is('meal_types*') ? 'active' : '' }}">
+                        <i class="fa fa-boxes-stacked"></i> Meal Types
+                    </a>
+                </li>
+            @endcanany
+
+            @canany(['meals.index', 'meals.create', 'meals.show', 'meals.edit', 'meals.destroy'])
+                <li class="nav-item">
+                    <a href="{{ route('meals.index') }}"
+                        class="nav-link {{ Request::is('meals*') ? 'active' : '' }}">
+                        <i class="fa fa-bread-slice"></i> Meals
+                    </a>
+                </li>
+            @endcanany
+
+            @canany(['meal_breakdowns.index', 'meal_breakdowns.create', 'meal_breakdowns.show', 'meal_breakdowns.edit', 'meal_breakdowns.destroy'])
+                <li class="nav-item">
+                    <a href="{{ route('meal_breakdowns.index') }}"
+                        class="nav-link {{ Request::is('meal_breakdowns*') ? 'active' : '' }}">
+                        <i class="fa fa-table"></i><p>Meal Breakdowns</p>
+                    </a>
+                </li>
+            @endcan
+
+            @canany(['recipes.index', 'recipes.create', 'recipes.show', 'recipes.edit', 'recipes.destroy'])
+                <li class="nav-item">
+                    <a href="{{ route('recipes.index') }}"
+                    class="nav-link {{ Request::is('recipes*') ? 'active' : '' }}">
+                        <i class="fa fa-rectangle-list"></i><p>Recipes</p>
+                    </a>
+                </li>
+            @endcan
+
+            @canany(['recipe_ingredients.index', 'recipe_ingredients.create', 'recipe_ingredients.show', 'recipe_ingredients.edit', 'recipe_ingredients.destroy'])
+                <li class="nav-item">
+                    <a href="{{ route('recipe_ingredients.index') }}"
+                    class="nav-link {{ Request::is('recipe_ingredients*') ? 'active' : '' }}">
+                        <i class="fa fa-apple-alt"></i><p>Recipe Ingredients</p>
+                    </a>
+                </li>
+            @endcan
+        </ul>
+    </div>
+</li>
+
 
 @canany(['events.index', 'events.create', 'events.show', 'events.edit', 'events.destroy'])
     <li class="nav-item">

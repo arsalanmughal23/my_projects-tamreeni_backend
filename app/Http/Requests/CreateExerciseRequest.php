@@ -34,8 +34,8 @@ class CreateExerciseRequest extends FormRequest
             'name.ar.required'        => 'The Arabic name field is required.',
             'description.en.required' => 'The English description field is required.',
             'description.ar.required' => 'The Arabic description field is required.',
-            'image.max'               => 'The image must not be greater then 5MB.',
-            'video.max'               => 'The video must not be greater then 20MB.',
+            'image.max'               => 'The image must not be greater then 2MB.',
+            'video.max'               => 'The video must not be greater then 5MB.',
         ];
     }
 }

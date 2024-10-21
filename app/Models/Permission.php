@@ -36,7 +36,7 @@ class Permission extends SpatiePermission
 
     const MODULES = [
         'users', 'user_details', 'questions', 'options',
-        'meals', 'meal_types', 'meal_categories', 'meal_breakdowns',
+        'meals', 'meal_types', 'meal_categories', 'meal_breakdowns', 'exercise_breakdowns',
         'recipes', 'recipe_ingredients',
         'exercises', 'exercise_equipments', 'body_parts',
         'appointments', 'packages',

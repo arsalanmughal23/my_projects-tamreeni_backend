@@ -24,7 +24,9 @@ use Spatie\Translatable\HasTranslations;
  * @property number $burn_calories
  * @property string $image
  * @property string $video
+ * @property string $audio
  * @property string $description
+ * @property boolean $is_finisher
  */
 class Exercise extends Model
 {
@@ -81,9 +83,11 @@ class Exercise extends Model
         'burn_calories',
         'image',
         'video',
+        'audio',
         'description',
         'exercise_category_name',
-        'exercise_type_name'
+        'exercise_type_name',
+        'is_finisher'
     ];
 
     public $appends = ['category_name', 'type_name', 'is_favourite'];
@@ -104,7 +108,9 @@ class Exercise extends Model
         'burn_calories' => 'float',
         'image'         => 'string',
         'video'         => 'string',
-        'description'   => 'string'
+        'audio'         => 'string',
+        'description'   => 'string',
+        'is_finisher'   => 'boolean'
     ];
 
     /**
@@ -129,6 +135,8 @@ class Exercise extends Model
         'burn_calories'  => 'nullable|numeric',
         'image'          => 'nullable|file|mimes:jpeg,png|max:2000',
         'video'          => 'nullable|file|mimes:mp4|max:5000',
+        'audio'          => 'nullable|file|mimes:mp3,wav,ogg,aac,m4a,flac|max:1000',
+        'is_finisher'    => 'nullable'
     ];
 
     /**

@@ -16,11 +16,13 @@ use Spatie\Translatable\HasTranslations;
  * @property \App\Models\WorkoutDay $workoutDay
  * @property integer $workout_day_id
  * @property integer $exercise_id
- * @property integer $duration
+ * @property integer $duration_in_m
+ * @property string $duration
  * @property integer $sets
  * @property integer $reps
  * @property number $burn_calories
  * @property integer $status
+ * @property boolean $is_finisher
  */
 class WorkoutDayExercise extends Model
 {
@@ -49,16 +51,19 @@ class WorkoutDayExercise extends Model
         'exercise_category_name',
         'exercise_type_name',
         'duration_in_m',
+        'duration',
         'sets',
         'reps',
         'weight_in_kg',
         'burn_calories',
         'image',
+        'audio',
         'video',
         'status',
         'body_part_id',
         'workout_day_id',
         'exercise_id',
+        'is_finisher'
     ];
 
     /**
@@ -70,11 +75,12 @@ class WorkoutDayExercise extends Model
         'id'             => 'integer',
         'workout_day_id' => 'integer',
         'exercise_id'    => 'integer',
-        'duration'       => 'integer',
-        'sets'           => 'integer',
-        'reps'           => 'integer',
+        'duration'       => 'string',
+        'sets'           => 'string',
+        'reps'           => 'string',
         'burn_calories'  => 'float',
-        'status'         => 'integer'
+        'status'         => 'integer',
+        'is_finisher'   => 'boolean'
     ];
 
     /**
@@ -92,7 +98,8 @@ class WorkoutDayExercise extends Model
         'status'         => 'required|integer',
         'created_at'     => 'nullable',
         'updated_at'     => 'nullable',
-        'deleted_at'     => 'nullable'
+        'deleted_at'     => 'nullable',
+        'is_finisher'    => 'nullable'
     ];
 
     /**

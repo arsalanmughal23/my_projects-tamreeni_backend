@@ -17,6 +17,7 @@ class ExerciseResource extends JsonResource
     {
         return [
             'id'                  => $this->id,
+            'is_finisher'         => $this->is_finisher,
             'name'                => $this->getTranslation('name', app()->getLocale()),
             'description'         => $this->getTranslation('description', app()->getLocale()),
             'user_id'             => $this->user_id,
@@ -29,6 +30,7 @@ class ExerciseResource extends JsonResource
             'reps'                => $this->reps,
             'burn_calories'       => $this->burn_calories,
             'image'               => $this->image,
+            'audio'               => $this->audio,
             'video'               => $this->video,
             'exercise_equipments' => ExerciseEquipmentResource::collection($this->whenLoaded('equipment')),
             'created_at'          => $this->created_at,

@@ -17,15 +17,18 @@ class WorkoutDayExerciseResource extends JsonResource
     {
         return [
             'id'            => $this->id,
+            'is_finisher'   => $this->is_finisher,
             'name'          => $this->getTranslation('name', app()->getLocale()),
             'description'   => $this->getTranslation('description', app()->getLocale()),
             'exercise_category_name'=> $this->exercise_category_name,
             'exercise_type_name'    => $this->exercise_type_name,
             'image'                 => $this->image,
+            'audio'                 => $this->audio,
             'video'                 => $this->video,
             'sets'          => $this->sets,
             'reps'          => $this->reps,
             'weight_in_kg'  => $this->weight_in_kg,
+            'duration'      => $this->duration,
             'duration_in_m' => $this->duration_in_m,
             'burn_calories' => $this->burn_calories,
             'workout_day_id'=> $this->workout_day_id,

@@ -77,6 +77,9 @@ class UserMembershipAPIController extends AppBaseController
                 $user->createStripeCustomer();
 
             $discount = $promoCode ? calcualteDiscountPrice($membershipDuration->price, $promoCode->type ?? null, $promoCode->value ?? null) : 0;
+            if($discount > $membershipDuration->price)
+                throw new Error('This promo code should not applicable to selected Membership Duration');
+
             $amountInSAR = number_format($membershipDuration->price - $discount, 2);
 
             $titleEn = $membership->getTranslation('title', 'en') . ' | ' . $membershipDuration->getTranslation('title', 'en');

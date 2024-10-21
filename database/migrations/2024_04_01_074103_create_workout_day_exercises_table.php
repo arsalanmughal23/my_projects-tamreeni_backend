@@ -19,12 +19,14 @@ class CreateWorkoutDayExercisesTable extends Migration
             $table->string('exercise_category_name')->nullable()->comment('major_lift','accessory_movement','multi_joint','single_joint','cardio');
             $table->string('exercise_type_name')->nullable()->comment('squat','deadlift','bench','overhead');
             $table->text('description')->nullable();
-            $table->float('duration_in_m')->nullable();
-            $table->integer('sets')->nullable(false);
-            $table->integer('reps')->nullable(false);
+            $table->string('duration')->nullable(true);
+            $table->unsignedBigInteger('duration_in_m')->default(0);
+            $table->string('sets')->nullable(true);
+            $table->string('reps')->nullable(true);
             $table->float('weight_in_kg')->default(0);
             $table->double('burn_calories', 8, 2)->nullable(false);
             $table->text('image')->nullable();
+            $table->text('audio')->nullable();
             $table->text('video')->nullable();
             $table->integer('status')->nullable(false);
 
@@ -32,6 +34,7 @@ class CreateWorkoutDayExercisesTable extends Migration
             $table->unsignedBigInteger('workout_day_id');
             $table->unsignedInteger('exercise_id');
 
+            $table->boolean('is_finisher')->default(0);
             $table->timestamps();
             $table->softDeletes();
 

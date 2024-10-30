@@ -54,8 +54,8 @@ class RecipeRepository extends BaseRepository
         return $this->model()::pluck('title', 'id');
     }
 
-    // Filters Implemented: 'diet_type', 'meal_category_ids', 'meal_category_slugs', 'keyword', 'min_calories', 'max_calories', 'calories', 'meal_type', 'title',
-    // Filters UnAvailable: 'units_in_recipe', 'divide_recipe_by', 'number_of_units', 'carbs','fats','protein'
+    // Filters Implemented: 'units_in_recipe', 'diet_type', 'meal_category_ids', 'meal_category_slugs', 'keyword', 'min_calories', 'max_calories', 'calories', 'meal_type', 'title',
+    // Filters UnAvailable: 'divide_recipe_by', 'number_of_units', 'carbs','fats','protein'
     public function getRecipes($params = [])
     {
         $userId = auth()->id();
@@ -118,6 +118,10 @@ class RecipeRepository extends BaseRepository
 
         if(isset($params['calories'])){
             $query->where('calories', $params['calories']);
+        }
+
+        if(isset($params['units_in_recipe'])){
+            $query->where('units_in_recipe', $params['units_in_recipe']);
         }
 
         if(isset($params['meal_type'])){

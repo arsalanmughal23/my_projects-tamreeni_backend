@@ -97,6 +97,18 @@ class MealRepository extends BaseRepository
                 return $mealTypeQuery->whereSlug($mealType);
             });
         }
+        
+        if(isset($params['meal_types'])){
+            
+            $mealTypes = $params['meal_types'];
+
+            if(!is_array($mealTypes))
+                $mealTypes = explode(',', $mealTypes);
+
+            $query->whereHas('mealType', function($mealTypeQuery) use($mealTypes) {
+                return $mealTypeQuery->whereIn('slug', $mealTypes);
+            });
+        }
 
         return $query;
     }

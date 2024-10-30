@@ -52,8 +52,8 @@ class MealBreakdownRepository extends BaseRepository
             $query->where('diet_type', $params['diet_type']);
         }
 
-        if(isset($params['calories'])){
-            $query->where('total_calories', $params['calories']);
+        if(isset($params['total_calories'])){
+            $query->where('total_calories', $params['total_calories']);
         }
 
         return $query;

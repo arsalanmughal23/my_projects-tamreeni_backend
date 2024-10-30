@@ -161,10 +161,14 @@ class NutritionPlanRepository extends BaseRepository
                     continue;
             }
 
+            // TODO : Need to Improve NutritionPlan Algo
+            $recipeUnits = $mealBreakdown[$mealType.'_units'] ?? 0;
+
             // Get Recipe according to the Questionnaire and their algo
             $recipe = $this->recipeRepository->getRecipes([
+                // 'calories' => $mealTypeMealRequiredCalories,
+                'units_in_recipe' => $recipeUnits,
                 'meal_type' => $mealType,
-                'calories' => $requiredCalories,
                 'diet_type' => $userDetails->diet_type,
                 'meal_category_slugs' => $userDetails->food_preferences,
             ])
@@ -182,7 +186,6 @@ class NutritionPlanRepository extends BaseRepository
             if(!$recipeIngredients)
                 continue;
 
-            $recipeUnits = $mealBreakdown[$mealType.'_units'] ?? 0;
 
             $nPlanDayRecipeIngredients = [];
             // Add Multiple Recipe Ingredients on Nutrition Plan Recipe 
@@ -190,8 +193,9 @@ class NutritionPlanRepository extends BaseRepository
 
                 // Calculate Scaled Quantity According to the formula that given by client
                 // ingredient-quantity / units-in-recipe * no-of-units
-                $totalUnitsInRecipe = $recipe->units_in_recipe * $recipeUnits;
-                $recipeScaledQuantity = $this->calculateRecipeIngredientScaledQuantity($totalUnitsInRecipe, $recipeIngredient->quantity ?? 0);
+
+                // TODO : Need to fix this
+                $recipeScaledQuantity = $this->calculateRecipeIngredientScaledQuantity($recipe->units_in_recipe ?? 1, $recipeIngredient->quantity ?? 0);
 
                 $nutritionPlanDayRecipeIngredient = array_merge([
                     'scaled_unit' => $recipeIngredient->unit,
